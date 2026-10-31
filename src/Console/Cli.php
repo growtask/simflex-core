@@ -7,6 +7,8 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
+use Psr\Log\LogLevel;
+use Throwable;
 use Simflex\Core\System\Container;
 use Simflex\Core\System\DI\Injector;
 use Simflex\Core\Logger\Log;
@@ -14,10 +16,17 @@ use Simflex\Core\Logger\Log;
 /**
  * Запуск консольных команд: ./sf provider/method [аргументы], ./sf help provider/method - справка.
  * Провайдеры - классы-наследники ConsoleBase, объявленные ядром, расширениями и provider/commands.php сайта
- * (ConfigBase::getCommands()), команды - их методы с атрибутом Command
+ * (ConfigBase::getCommands()), команды - их методы с атрибутом Command.
+ * run() возвращает код завершения процесса: FAILURE при неверной команде, без обязательного аргумента или при
+ * исключении в команде (сообщение - в лог и в stderr)
  */
 class Cli
 {
+    /** Код завершения: команда выполнена или выведена справка */
+    public const SUCCESS = 0;
+    /** Код завершения: неверная команда, нет аргумента или исключение в команде */
+    public const FAILURE = 1;
+
     /**
      * @var array|mixed Список всех доступных провайдеров
      */
@@ -50,8 +59,9 @@ class Cli
 
     /**
      * Разбирает аргументы командной строки и выполняет команду или выводит справку
+     * @return int Код завершения процесса: SUCCESS или FAILURE
      */
-    public static function run(CliRequest $request): void
+    public static function run(CliRequest $request): int
     {
         $isHelp = strtolower((string)$request->arg(0)) === 'help';
 
@@ -59,7 +69,7 @@ class Cli
         if (!$request->arg() || ($isHelp && $request->arg(1) === null)) {
             Log::notice('Usage: ./sf provider/method [args], ./sf help provider/method. Providers:');
             (new static(['', '']))->printProviders();
-            return;
+            return self::SUCCESS;
         }
 
         $cmd = array_map(strtolower(...), explode('/', (string)$request->arg($isHelp ? 1 : 0)));
@@ -70,43 +80,45 @@ class Cli
             if ($cli->hasProvider() && $cli->tryLoadClass()) {
                 Log::notice('Commands of {provider}:', ['provider' => $cli->provider]);
                 $cli->printMethods();
-                return;
+                return self::SUCCESS;
             }
         }
 
         if (count($cmd) !== 2) {
-            Log::error('Usage: ./sf provider/method [args]');
-            return;
+            static::reportError('Usage: ./sf provider/method [args]');
+            return self::FAILURE;
         }
 
         $cli = new static($cmd);
 
         if (!$cli->hasProvider()) {
-            Log::error('Command provider {provider} not found. Available providers:', ['provider' => $cli->provider]);
+            static::reportError('Command provider {provider} not found. Available providers:', [
+                'provider' => $cli->provider,
+            ]);
             $cli->printProviders();
-            return;
+            return self::FAILURE;
         }
 
         if (!$cli->tryLoadClass()) {
-            Log::emergency('Provider {provider}\'s class does not exist', ['provider' => $cli->provider]);
-            return;
+            static::reportError('Provider {provider}\'s class does not exist', ['provider' => $cli->provider]);
+            return self::FAILURE;
         }
 
         if (!$cli->tryLoadMethod()) {
-            Log::error(
+            static::reportError(
                 'Method {method} not found in {provider}. Available methods:',
                 ['method' => $cli->command, 'provider' => $cli->provider]
             );
             $cli->printMethods();
-            return;
+            return self::FAILURE;
         }
 
         if ($isHelp) {
             $cli->printHelp();
-            return;
+            return self::SUCCESS;
         }
 
-        $cli->execute(array_slice($request->arg(), 1));
+        return $cli->execute(array_slice($request->arg(), 1));
     }
 
     /**
@@ -162,10 +174,12 @@ class Cli
     }
 
     /**
-     * Выполняет команду
+     * Выполняет команду. Исключение команды не выходит наружу: оно пишется в лог и в stderr, а процесс
+     * завершается с кодом FAILURE
      * @param array $args Список аргументов
+     * @return int Код завершения процесса: SUCCESS или FAILURE
      */
-    public function execute(array $args): void
+    public function execute(array $args): int
     {
         try {
             // готовим класс
@@ -190,16 +204,48 @@ class Cli
                 } elseif (isset($default)) {
                     $argList[] = $default;
                 } else {
-                    Log::error('No argument provided for parameter "{param}"', ['param' => $param->getName()]);
-                    return;
+                    static::reportError('No argument provided for parameter "{param}"', ['param' => $param->getName()]);
+                    return self::FAILURE;
                 }
             }
 
             // вызываем метод
             $this->method->invoke($instance, ...$argList);
-        } catch (Exception $ex) {
-            Log::emergency('Unable to execute. Error: {error}', ['error' => $ex->getMessage()]);
+        } catch (Throwable $ex) {
+            static::reportError(
+                'Unable to execute. Error: {error}',
+                ['error' => $ex->getMessage()],
+                LogLevel::EMERGENCY
+            );
+            return self::FAILURE;
         }
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Сообщает об ошибке: в лог, как раньше, и в stderr - сообщение видно и без логирования (оно включается
+     * только devMode или enableLogging), а вызывающий процесс (cron, CI) получает его отдельно от вывода команды
+     * @param string $message Сообщение с подстановками {ключ}
+     * @param array<string, mixed> $context Значения подстановок
+     * @param string $level Уровень лога, LogLevel::*
+     */
+    protected static function reportError(string $message, array $context = [], string $level = LogLevel::ERROR): void
+    {
+        Log::log($level, $message, $context);
+        $replace = [];
+        foreach ($context as $key => $value) {
+            $replace['{' . $key . '}'] = (string)$value;
+        }
+        static::writeStderr(strtr($message, $replace));
+    }
+
+    /**
+     * Пишет строку в stderr процесса
+     */
+    protected static function writeStderr(string $line): void
+    {
+        fwrite(STDERR, $line . PHP_EOL);
     }
 
     /**

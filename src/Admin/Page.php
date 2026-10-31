@@ -194,9 +194,7 @@ class Page
     protected function initContent(): void
     {
         if ($widgetId = (int)Container::getRequest()->get('sfwidget', 0)) {
-            $row = AdminWidget::findAdv()->asArray()->where(['active' => 1, 'widget_id' => $widgetId])->fetchOne();
-            $class = $row['class'];
-            $this->content = new $class($row)->execute();
+            $this->content = $this->getWidgetContent($widgetId);
             return;
         }
 
@@ -214,6 +212,26 @@ class Page
                 $this->positions[$module->position][] = $mod->execute();
             }
         }
+    }
+
+    /**
+     * Виджет по запросу ?sfwidget=id (обновление виджета страницы группы): как на странице группы, только активный
+     * и только пользователю с его привилегией. Нет такого виджета - 404, нет привилегии - 403, содержимое пустое
+     */
+    protected function getWidgetContent(int $widgetId): string
+    {
+        $row = AdminWidget::findAdv()->asArray()->where(['active' => 1, 'widget_id' => $widgetId])->fetchOne();
+        if (!is_array($row) || !is_subclass_of((string)$row['class'], WidgetBase::class)) {
+            http_response_code(404);
+            return '';
+        }
+        if ($row['privilege'] && !Container::getUser()?->ican($row['privilege'])) {
+            http_response_code(403);
+            return '';
+        }
+
+        $class = $row['class'];
+        return new $class($row)->execute();
     }
 
     /**

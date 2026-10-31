@@ -27,7 +27,7 @@ use Simflex\Core\System\Settings;
  * Ядро (kernel): загрузка и запуск сайта.
  *
  * Точки входа сайта подключают автозагрузчик composer, создают ядро с корнем сайта и вызывают один метод:
- * public/index.php - new Kernel(dirname(__DIR__))->runHttp(), консоль ./sf - new Kernel(__DIR__)->runConsole().
+ * public/index.php - new Kernel(dirname(__DIR__))->runHttp(), консоль ./sf - exit(new Kernel(__DIR__)->runConsole()).
  * Пути (корень сайта, public/, ядро) - Container::getPaths(), окружение (сайт, админка, API, консоль) -
  * Container::getLocation().
  *
@@ -76,11 +76,12 @@ class Kernel
 
     /**
      * Выполняет консольную команду из аргументов командной строки: ./sf provider/method [args]
+     * @return int Код завершения процесса (Cli::SUCCESS, Cli::FAILURE): ./sf передаёт его в exit()
      */
-    public function runConsole(): void
+    public function runConsole(): int
     {
         $this->init(Location::Cli);
-        Cli::run(Container::getRequest());
+        return Cli::run(Container::getRequest());
     }
 
     /**
@@ -150,15 +151,25 @@ class Kernel
     }
 
     /**
-     * Обрабатывает запрос к API файлового менеджера админки. Доступно только пользователям админки
+     * Обрабатывает запрос к API файлового менеджера админки. Доступ - canUseFileManager()
      */
     public function executeFileManager(): void
     {
-        $mgr = new \Simflex\FileManager\Manager(Container::getPaths()->getPublic('uf'), function () {
-            return (bool)Container::getUser()?->ican(\Simflex\Core\System\Privilege::ADMIN);
-        });
+        $mgr = new \Simflex\FileManager\Manager(Container::getPaths()->getPublic('uf'), $this->canUseFileManager(...));
 
         $mgr->handleRequest();
+    }
+
+    /**
+     * Может ли текущий пользователь работать с файловым менеджером: пользователь админки (Privilege::ADMIN)
+     * с привилегией из конфига fileManagerPrivilege
+     */
+    public function canUseFileManager(): bool
+    {
+        $user = Container::getUser();
+        return $user !== null
+            && $user->ican(\Simflex\Core\System\Privilege::ADMIN)
+            && $user->ican(Container::getConfig()->fileManagerPrivilege);
     }
 
     /**

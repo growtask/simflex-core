@@ -80,6 +80,12 @@ abstract class ConfigBase
     public string $adminModulesClass = \Simflex\Core\Admin\AdminModules::class;
 
     /**
+     * @var string Привилегия, без которой файловый менеджер админки недоступен (вдобавок к входу в админку,
+     *      Privilege::ADMIN); сайт может сузить доступ, например до Privilege::DEV
+     */
+    public string $fileManagerPrivilege = Privilege::ADMIN;
+
+    /**
      * @var string Тема по умолчанию
      */
     public string $theme = 'default';

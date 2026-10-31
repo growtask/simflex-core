@@ -357,9 +357,10 @@ abstract class ModelBase implements ArrayAccess, JsonSerializable
                 }
             }
 
-            if ($result = $this->query($query, $bind)) {
-                $this->id = (int)DB::insertId();
-                $this->data[static::$primaryKeyName] = $this->id;
+            // у таблицы без AUTO_INCREMENT insertId() - 0: остаётся ключ из данных модели
+            if (($result = $this->query($query, $bind)) && ($insertId = (int)DB::insertId()) > 0) {
+                $this->id = $insertId;
+                $this->data[static::$primaryKeyName] = $insertId;
             }
         }
 

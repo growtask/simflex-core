@@ -29,6 +29,9 @@ class Cron
      */
     public function execute(): void
     {
+        // расписания всех заданий сверяются с минутой запуска: долгое задание не сдвигает проверку следующих
+        $startTime = $this->getTime();
+
         CronRegistry::sync();
 
         if ($this->jobKey !== null) {
@@ -42,10 +45,18 @@ class Cron
 
         foreach (CronModel::find(['active' => 1]) as $row) {
             $job = CronRegistry::job($row->job);
-            if ($job && $this->testTiming($row->timing)) {
+            if ($job && $this->testTiming($row->timing, $startTime)) {
                 $this->runAndLog($row->job, $job);
             }
         }
+    }
+
+    /**
+     * Текущее время (unix timestamp)
+     */
+    protected function getTime(): int
+    {
+        return time();
     }
 
     protected function runAndLog(string $key, CronJob $job): void
@@ -87,9 +98,10 @@ class Cron
     /**
      * Проверяет, наступило ли время по расписанию
      * @param string $timing Строка расписания
+     * @param int $timestamp Момент проверки (unix timestamp): время запуска cron
      * @return bool true, если время наступило
      */
-    protected function testTiming(string $timing): bool
+    protected function testTiming(string $timing, int $timestamp): bool
     {
         // разбираем расписание
         $time = explode(' ', $timing);
@@ -97,8 +109,8 @@ class Cron
             return false;
         }
 
-        // получаем текущее время
-        $now = getdate();
+        // момент проверки по частям
+        $now = getdate($timestamp);
         $now = [
             $now['minutes'],
             $now['hours'],
@@ -120,7 +132,8 @@ class Cron
             // проверяем, есть ли в расписании разделитель
             if (str_contains($t, '/')) {
                 $range = explode('/', $t);
-                $t = $range[0];
+                // */n - каждое n-е значение
+                $t = $range[0] === '*' ? (string)$now[$i] : $range[0];
                 $delim = (int)$range[1];
             }
 
