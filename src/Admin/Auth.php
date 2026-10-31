@@ -28,7 +28,7 @@ class Auth
         if (strpos($redirect, '//') !== false) {
             $redirect = '/';
         }
-        if (preg_match('@^[0-9a-z\@\-\.]+$@i', $login)) {
+        if (preg_match('@^[0-9a-z_\@\-\.]+$@i', $login)) {
             // активный пользователь активной роли
             $row = User::findAdv()
                 ->asArray()

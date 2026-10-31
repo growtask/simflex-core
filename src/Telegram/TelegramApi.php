@@ -50,6 +50,14 @@ class TelegramApi implements Service
     }
 
     /**
+     * Отдельная фабрика позволяет тестировать запросы без обращения к Telegram
+     */
+    protected function createClient(): Curl
+    {
+        return new Curl();
+    }
+
+    /**
      * Отправляет сообщение в чат
      * @param string $chatId ID чата
      * @param string $message Сообщение (в формате Markdown)
@@ -59,7 +67,10 @@ class TelegramApi implements Service
     {
         $cfg = Container::getConfig();
 
-        $ch = new Curl();
+        $ch = $this->createClient();
+        if ($proxy = trim((string)($cfg->telegram['proxy'] ?? ''))) {
+            $ch->setOpt(CURLOPT_PROXY, $proxy);
+        }
         $ch->post('https://api.telegram.org/bot' . $cfg->telegram['token'] . '/sendMessage', [
             'chat_id' => $chatId,
             'parse_mode' => 'MarkdownV2',
