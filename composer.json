@@ -1,5 +1,5 @@
 {
-  "name": "growtask/simflex-core",
+  "name": "simflex/core",
   "description": "Core of Simflex CMS",
   "minimum-stability": "dev",
   "prefer-stable": true,
