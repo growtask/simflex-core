@@ -39,7 +39,7 @@ include 'modals/info.tpl'; ?>
 include 'modals/confirm.tpl'; ?>
 
 <?= \Simflex\Core\Http\View::render(
-    Container::getPaths()->getRoot('vendor/growtask/simflex-file-manager/src/tpl/index.tpl'),
+    Container::getPaths()->getRoot('vendor/simflex/file-manager/src/tpl/index.tpl'),
     [
         'fileManagerApi' => \Simflex\Core\Admin\Page::url('fm'),
         'fileManagerRoot' => '/uf',

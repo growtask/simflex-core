@@ -42,7 +42,7 @@ final readonly class Paths
     }
 
     /**
-     * Код ядра (src/ пакета growtask/simflex-core) или путь от него
+     * Код ядра (src/ пакета simflex/core) или путь от него
      */
     public function getCore(string $path = ''): string
     {

@@ -1,6 +1,6 @@
 # Журнал изменений
 
-Все заметные изменения ядра Simflex CMS (`growtask/simflex-core`). Формат — [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
+Все заметные изменения ядра Simflex CMS (`simflex/core`). Формат — [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
 версии — [SemVer](https://semver.org/lang/ru/). Журнал ведётся с версии 4.0; изменения шаблона сайта — в `CHANGELOG.md`
 репозитория `simflex-template`.
 
@@ -49,7 +49,7 @@
   Удалены bootstrap-пикеры `Admin/Plugins/UI` и `Admin/theme/ui` (datepicker, timepicker, datetimepicker,
   fileinput), шаблоны полей `datetime.tpl`, `time.tpl`, `select.tpl` (не использовался); шаблоны `tags.tpl`,
   `file.tpl`, `image.tpl` получают другие переменные (`selected`, `options`, `searchUrl`, `allowNew`).
-- Файловый менеджер (пакет `growtask/simflex-file-manager` 4.0) — новое окно на компонентах Layout: `body.tpl`
+- Файловый менеджер (пакет `simflex/file-manager` 4.0) — новое окно на компонентах Layout: `body.tpl`
   рендерит `src/tpl/index.tpl` пакета с переменными API, корня файлов, статики и темы, скрипт — модуль
   `file-manager.js` (`Admin\Page::jsModule()` — скрипт-модуль по веб-адресу), стили — со стилями админки. Глобальные
   `fileManager.apiBase`, `rootDir`, `assetsDir` и `styles.css` пакета не подключаются. Открытие —
@@ -179,8 +179,11 @@
 - **`ModelBase`:** `insert()`, `save()`, `update()`, `bulkUpdate()` и `upsert()` заполняют `COLUMN_TIME_CREATE` и `COLUMN_TIME_UPDATE`; модель таблицы без этих колонок обязана переопределить константы в `null` (журналы, связи, кэши).
 - **Пути без конечного «/»:** `content.path` и ключи меню — `/catalog`, `/blog/post` (раньше `/catalog/`); путь страницы в админке строится без слэша, `Resolver` разбирает меню по таким путям, запрос со слэшем на конце (`/catalog/`) отправляет на `/404`. `policyUrl` по умолчанию — `/policy`. Подсветка пункта меню сравнивает путь по границе сегмента (`/blog` не совпадает с `/blog2`). Что сделать на сайте: убрать слэш в `content.path`, `menu.link` и ссылках в шаблонах.
 - **`ModelBase`:** публичный `insert()` экземпляра убран — новая модель записывается через `save()`; статический `insertStatic()` переименован в `insert()` (`Model::insert([...])` возвращает модель или `null`).
-- **Пакет ядра переименован:** `growtask/simflex` → `growtask/simflex-core` (репозиторий `simflex-core`). Пакет
-  `growtask/simflex` остаётся для сайтов на 3.x; сайт 4.0 требует `growtask/simflex-core`.
+- **Пакет ядра переименован:** `growtask/simflex` → `simflex/core` (репозиторий `simflex-core`; промежуточное имя
+  4.0 — `growtask/simflex-core`). Пакет `growtask/simflex` остаётся для сайтов на 3.x; сайт 4.0 требует
+  `"simflex/core": "dev-master"` (тегов 4.0 пока нет). Файловый менеджер — `simflex/file-manager`
+  (было `growtask/simflex-file-manager`), ядро ищет его в `vendor/simflex/file-manager`. Что сделать на сайте:
+  имена пакетов в `composer.json`, пути `vendor/simflex/core` в `phpstan.neon` и `Extensions/Install/PackageInstaller.php`.
 - **PHP 8.4** (`"php": "^8.4"`), обязательно расширение `mbstring`.
 - **Структура админки в коде.** Таблицы `struct_table`, `struct_table_right`, `struct_field`, `struct_field_param`,
   `struct_param`, `struct_data`, их модели и разделы «Структура» удалены. Раздел админки описывается классом

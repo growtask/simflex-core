@@ -1,6 +1,6 @@
 # Ядро Simflex CMS — правила для агентов
 
-Это ядро CMS — composer-пакет `growtask/simflex-core`. Общие правила разработки CMS и устройство остальных
+Это ядро CMS — composer-пакет `simflex/core`. Общие правила разработки CMS и устройство остальных
 репозиториев — в `AGENTS.md` репозитория `simflex-agents`, локальные пути — в `.agents/local.md` (не в git).
 
 ## Устройство

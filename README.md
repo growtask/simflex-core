@@ -1,6 +1,6 @@
 # Simflex CMS — ядро
 
-Composer-пакет `growtask/simflex-core`: загрузка сайта, админка, ORM, миграции, консоль, cron, почта, компоненты
+Composer-пакет `simflex/core`: загрузка сайта, админка, ORM, миграции, консоль, cron, почта, компоненты
 вёрстки. Namespace — `Simflex\Core\`. PHP 8.4, MySQL 8 / MariaDB 10.5.
 
 Отдельно ядро не запускается: сайт создаётся из шаблона
@@ -12,7 +12,7 @@ composer create-project --no-install --ignore-platform-reqs growtask/simflex-tem
 
 ```json
 "require": {
-    "growtask/simflex-core": "4.0.x-dev"
+    "simflex/core": "dev-master"
 }
 ```
 
@@ -20,7 +20,7 @@ composer create-project --no-install --ignore-platform-reqs growtask/simflex-tem
 
 | Ветка | Версия | Пакет |
 |-------|--------|-------|
-| `master` | 4.0 (`4.0.x-dev`) | `growtask/simflex-core` |
+| `master` | 4.0 (`dev-master`) | `simflex/core` |
 | `v3` | 3.x (теги `3.*`) | `growtask/simflex` — для сайтов на 3.x |
 
 ## Устройство
