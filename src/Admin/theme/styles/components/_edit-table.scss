@@ -1,0 +1,115 @@
+/*
+ * Таблица строк в форме (компонент макета edit-table, Fields/tpl/table.tpl): кнопка «Добавить строку», таблица
+ * на разметке списка (th, tr, td, row-actions из _list.scss; на планшете и телефоне — карточки), подвал со страницами,
+ * окно строки с полем файла edit-table-file
+ */
+.edit-table {
+    --table-line: var(--color-main-gray-lighter);
+    --table-head-bg: var(--color-main-color1-lighter);
+
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    @include spacing(gap, 12px);
+
+    &-theme_dark {
+        --table-line: var(--color-main-gray-dark);
+        --table-head-bg: var(--color-main-gray-dark);
+    }
+
+    &__head {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__wrap {
+        min-width: 0;
+        overflow-x: auto;
+        @include scrollbar(classic, m);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__image {
+        display: block;
+        object-fit: cover;
+        border-radius: var(--radius-ui-small);
+        @include spacing(width, 48px);
+        @include spacing(height, 48px);
+    }
+
+    &__empty {
+        margin: 0;
+        text-align: center;
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+        @include spacing(padding, 16px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        @include spacing(gap, 8px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__info {
+        margin-right: auto;
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+    }
+
+    // убранная строка (товар заказа): приглушена
+    .tr_muted .td:not(.td_controls) {
+        opacity: 0.4;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 16px);
+    }
+}
+
+/* Поле файла в окне строки: превью или ссылка, «Загрузить» и «Удалить» */
+.edit-table-file {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    @include spacing(gap, 8px);
+
+    &__preview {
+        display: block;
+        object-fit: cover;
+        border-radius: var(--radius-ui-medium);
+        @include spacing(width, 120px);
+        @include spacing(height, 120px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__name[hidden] {
+        display: none;
+    }
+
+    &__input {
+        display: none;
+    }
+
+    &__buttons {
+        display: flex;
+        @include spacing(gap, 8px);
+    }
+}

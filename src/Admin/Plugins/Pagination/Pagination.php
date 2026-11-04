@@ -15,7 +15,6 @@ class Pagination
     private int $count = 0;
     private string $link = '?p={p}';
     private bool $pOnShow = false;
-    public int $pCountMax = 7;
 
     public function __construct($p, $pOn, $count, $link = '?p={p}', $pOnShow = false)
     {
@@ -38,27 +37,15 @@ class Pagination
         return $this->p * $this->pOn . ', ' . $this->pOn;
     }
 
+    /**
+     * Подвал списка: сведения о показанных записях и страницы; одна страница — только сведения
+     */
     public function content(): string
     {
-        if ($this->pCount <= 1) {
+        if ($this->count === 0) {
             return '';
         }
-        if ($this->pCount > $this->pCountMax) {
-            $pMaxCount = $this->pCountMax - 5;
-            $min = $this->p - (int)floor($pMaxCount / 2);
-            $max = $this->p + (int)ceil($pMaxCount / 2);
-            $since = max([1, $min]);
-            $till = min([$this->pCount - 2, $max]);
-            $since = $since === 2 ? $since - 1 : $since;
-            $till = $till === $this->pCount - 3 ? $till + 1 : $till;
-            if ($min < 2) {
-                $till = $this->pCountMax - 3;
-            }
-            if ($max > $this->pCount - 3) {
-                $since = $this->pCount - $this->pCountMax + 2;
-            }
-        }
 
-        return View::render(__DIR__ . '/tpl/control.tpl', get_defined_vars(), $this);
+        return View::render(__DIR__ . '/tpl/control.tpl', [], $this);
     }
 }

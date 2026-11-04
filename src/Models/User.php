@@ -81,10 +81,10 @@ class User extends ModelBase
         }
         $table = static::$table;
         $AQ->where("(
-            $table.user_id IN(SELECT user_id FROM user_privilege_personal WHERE privilege IN({$in['personal']}))
+            $table.user_id IN(SELECT user_id FROM user_privilege_personal WHERE user_privilege_personal.privilege IN({$in['personal']}))
             OR $table.role_id IN(
                 SELECT role_id FROM user_role_privilege JOIN user_role USING(role_id)
-                WHERE user_role.active = 1 AND privilege IN({$in['role']})
+                WHERE user_role.active = 1 AND user_role_privilege.privilege IN({$in['role']})
             )
         )")->bind($binds);
     }

@@ -19,7 +19,7 @@
     &__overlay {
         position: absolute;
         inset: 0;
-        background: color-mix(in srgb, var(--gray-black) 60%, transparent);
+        background: color-mix(in srgb, var(--color-main-gray-black) 60%, transparent);
         opacity: 0;
         @include transition(opacity);
     }
@@ -30,7 +30,7 @@
         flex-direction: column;
         width: 100%;
         max-height: 100%;
-        background: var(--gray-white);
+        background: var(--color-main-gray-white);
         border-radius: var(--radius-blocks);
         box-shadow: var(--shadow-gray-l);
         opacity: 0;
@@ -42,7 +42,7 @@
         }
 
         &:focus-visible {
-            outline: 2px solid var(--color1-main);
+            outline: 2px solid var(--color-main-color1-main);
             outline-offset: 2px;
         }
     }
@@ -127,7 +127,7 @@
 
     &-theme_dark {
         .modal__dialog {
-            background: var(--gray-darker);
+            background: var(--color-main-gray-darker);
         }
 
         .modal__title {
@@ -135,7 +135,7 @@
         }
 
         .modal__text {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
         }
     }
 
@@ -160,7 +160,7 @@
                 @include spacing(right, 8px);
                 @include spacing(left, 8px);
                 @include spacing(height, 2px);
-                background: var(--gray-lighter);
+                background: var(--color-main-gray-lighter);
                 pointer-events: none;
             }
         }
@@ -178,8 +178,8 @@
             left: auto;
             z-index: 1;
             border-radius: var(--radius-ui-medium);
-            background: var(--gray-lighter);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-lighter);
+            color: var(--color-main-gray-darker);
         }
 
         &__content {

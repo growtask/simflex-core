@@ -1,0 +1,66 @@
+/* Пагинация nav/pagination (design-base-nav.md) */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    @include spacing(gap, 12px);
+
+    &__pages {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 4px);
+    }
+
+    &__list {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(gap, 4px);
+    }
+
+    &__gap {
+        color: var(--color-text-icon-gray-medium);
+        @include ui-s;
+        @include spacing(padding-inline, 4px);
+    }
+
+    &__compact {
+        color: var(--color-text-icon-gray-darker);
+        @include ui-s;
+        @include spacing(padding-inline, 8px);
+    }
+
+    &-theme_dark &__compact {
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &__search {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 8px);
+    }
+
+    &__input {
+        @include spacing(width, 96px);
+    }
+
+    // телефон: номера и поле друг под другом, номера — первая, текущая, последняя
+    @include Mobile {
+        flex-direction: column;
+        align-items: stretch;
+
+        &__pages {
+            justify-content: center;
+        }
+
+        &__item_desktop {
+            display: none;
+        }
+
+        &__search {
+            justify-content: center;
+        }
+    }
+}

@@ -1,3 +1,17 @@
-<div class="form-control form-control--sm">
-    <input style="width:64px;height:64px;" name="<?= $name ?>" value="<?= htmlspecialchars((string)$value) ?>"<?php if (!empty($placeholder)): ?> placeholder="<?= $placeholder ?>"<?php endif ?><?= $readonly ? ' readonly' : '' ?> type="color" class="">
-</div>
+<?php
+
+/**
+ * Цвет: образец (input type=color) и код цвета
+ * @var string $name
+ * @var mixed $value
+ * @var bool $readonly
+ */
+
+?>
+<label class="form-color">
+    <input class="form-color__swatch" type="color" name="<?= htmlspecialchars($name) ?>"
+           value="<?= htmlspecialchars((string)$value) ?>"<?= $readonly ? ' disabled' : '' ?>
+           aria-label="<?= htmlspecialchars(strip_tags((string)$this->label)) ?>"
+           oninput="this.nextElementSibling.textContent = this.value">
+    <span class="form-color__value"><?= htmlspecialchars((string)$value) ?></span>
+</label>

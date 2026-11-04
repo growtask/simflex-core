@@ -190,6 +190,68 @@
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
+/*
+ * Полоса прокрутки дизайн-системы (design-ui-scrollbar.md): $style classic (дорожка и ползунок) или overlay
+ * (тонкий ползунок без дорожки), $size s/m/l — толщина ползунка 4/8/12 px, зона нажатия не меньше 12 px,
+ * $theme light/dark. Hover и press ползунка — в Chrome и Safari, в Firefox — цвет static (scrollbar-color)
+ */
+@mixin scrollbar($style: classic, $size: s, $theme: light) {
+    $thickness: map-get((s: 4px, m: 8px, l: 12px), $size);
+    $area: max($thickness, 12px);
+    $inset: ($area - $thickness) / 2;
+    $isDark: $theme == dark;
+    $track: if($style == classic, color-mix(in srgb, var(if($isDark, --color-main-gray-dark, --color-main-gray-lighter)) 20%, transparent), transparent);
+    $thumb: if($style == classic,
+        color-mix(in srgb, var(if($isDark, --color-main-color1-main, --color-main-color1-light)) 20%, transparent),
+        color-mix(in srgb, var(if($isDark, --color-main-gray-light, --color-main-gray-medium)) 60%, transparent));
+    $thumbHover: if($style == classic,
+        color-mix(in srgb, var(if($isDark, --color-main-color1-light, --color-main-color1-main)) 50%, transparent),
+        var(--color-main-color1-main));
+    $thumbPress: if($style == classic,
+        color-mix(in srgb, var(if($isDark, --color-main-color1-lighter, --color-main-color1-dark)) 50%, transparent),
+        var(if($isDark, --color-main-color1-light, --color-main-color1-dark)));
+
+    // стандартные свойства — только там, где нет ::-webkit-scrollbar (Firefox): Chrome с ними игнорирует стили ниже
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: if($size == s, thin, auto);
+        scrollbar-color: $thumb $track;
+    }
+
+    &::-webkit-scrollbar {
+        width: $area;
+        height: $area;
+    }
+    &::-webkit-scrollbar-track {
+        background: $track;
+        background-clip: content-box;
+        border: $inset solid transparent;
+        border-radius: 9999px;
+    }
+    &::-webkit-scrollbar-thumb {
+        min-height: 24px;
+        min-width: 24px;
+        background: $thumb;
+        background-clip: padding-box;
+        border: $inset solid transparent;
+        border-radius: 9999px;
+
+        &:hover {
+            background-color: $thumbHover;
+        }
+        &:active {
+            background-color: $thumbPress;
+        }
+    }
+
+    // на тач-устройствах — системная полоса
+    @media (pointer: coarse) {
+        &::-webkit-scrollbar {
+            width: auto;
+            height: auto;
+        }
+    }
+}
+
 /*----------HARDWARE ACCELERATION (ONLY USE WHEN NEEDED)-----------*/
 @mixin hardware-accelerate {
     will-change: transform, opacity;

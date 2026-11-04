@@ -14,7 +14,7 @@
     flex-direction: column;
     box-sizing: border-box;
     width: 100%;
-    background: var(--color1-lighter);
+    background: var(--color-main-color1-lighter);
     padding-bottom: var(--footer-indent-bottom, #{vw(80px)});
     @include spacing(gap, 40px, 40px, 32px, 32px);
     @include spacing(padding-top, 40px, 40px, 20px, 20px);
@@ -77,7 +77,7 @@
     }
 
     &__desc {
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
         @include t4;
     }
 
@@ -103,7 +103,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
         @include t2-b;
         @include spacing(padding-block, 12px);
     }
@@ -136,7 +136,7 @@
 
     &__copyright {
         margin: 0;
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
         @include t3-b;
     }
 
@@ -157,12 +157,12 @@
     /* Кнопка «Связаться с нами» в макете чёрная (main/gray/black) */
     .footer__button {
         &.btn-primary {
-            background: var(--gray-black);
-            color: var(--gray-white);
+            background: var(--color-main-gray-black);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--color1-main);
+                    background: var(--color-main-color1-main);
                 }
             }
         }

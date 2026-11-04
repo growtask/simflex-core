@@ -3,6 +3,11 @@
 namespace Simflex\Core\Extensions\Alert;
 
 use Simflex\Core\Http\Assets;
+use Simflex\Core\Layout\Components\UI\Core\Notice\Layout as Notice;
+use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeStyle;
+use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Core\Toast\Layout as Toast;
+use Simflex\Core\Layout\Components\UI\Core\Toast\ToastStyle;
 use Simflex\Core\Http\PageAssets;
 use Simflex\Core\Http\View;
 use Simflex\Core\System\Container;
@@ -11,8 +16,9 @@ use Simflex\Core\System\Session;
 
 /**
  * Сообщения пользователю (ошибка, успех, предупреждение, информация), которые переживают редирект: хранятся
- * в сессии до вывода getHTML(). Сообщения сайта и админки хранятся отдельно и выводятся вёрсткой своего окружения:
- * в админке - уведомления темы админки (Admin/theme/tpl/alert.tpl), на сайте - alert.tpl рядом с классом.
+ * в сессии до вывода. Сообщения сайта и админки хранятся отдельно: на сайте их выводит getHTML() (alert.tpl рядом
+ * с классом), в админке - макет (drawAdminMessages(): успех - тост, ошибка, предупреждение и информация -
+ * уведомления Notice в правом верхнем углу), getHTML() в админке ничего не выводит.
  *
  * $page - необязательный идентификатор группы сообщений (например, "profile"): сообщения группы выводятся
  * только getHTML() с тем же идентификатором
@@ -95,15 +101,15 @@ class Alert
     public static function getHTML(string $page = ''): string
     {
         self::init();
+        // в админке сообщения выводит макет (drawAdminMessages())
+        if (static::isAdmin()) {
+            return '';
+        }
         $html = '';
         foreach (static::SECTIONS as $section) {
             $html .= static::renderSection($page, $section);
         }
         static::save();
-
-        if (static::isAdmin()) {
-            return $html;
-        }
 
         return $html . "\n" . '<div class="alert-buffer"' . ($page ? ' id="alert-buffer-' . $page . '"' : '') . '></div>' . "\n";
     }
@@ -162,20 +168,39 @@ class Alert
         if ($section === 'text') {
             return $txt;
         }
-        if (!static::isAdmin()) {
-            return View::render(__DIR__ . '/alert.tpl', ['section' => $section, 'txt' => $txt]);
-        }
 
-        [$type, $title] = match ($section) {
-            'success' => ['success', 'Успешно!'],
-            'error' => ['error', 'Ошибка!'],
-            'warning' => ['notice', 'Внимание!'],
-            default => ['info', 'Информация'],
-        };
-        return View::render(
-            Container::getPaths()->getCore('Admin/theme/tpl/alert.tpl'),
-            ['type' => $type, 'title' => $title, 'txt' => $txt]
-        );
+        return View::render(__DIR__ . '/alert.tpl', ['section' => $section, 'txt' => $txt]);
+    }
+
+    /**
+     * Сообщения админки для макета: успех - тосты (стопка тостов), ошибка, предупреждение, информация и текст -
+     * уведомления Notice с крестиком. Выведенные сообщения удаляются. Текст сообщений выводится без разметки
+     * @param string $theme Тема админки (Admin\Page::getTheme())
+     * @return array{toasts: string, notices: string}
+     */
+    public static function drawAdminMessages(string $theme): array
+    {
+        self::init();
+        $toasts = $notices = '';
+        foreach (static::SECTIONS as $section) {
+            foreach (self::$s[''][$section] ?? [] as $message) {
+                $text = trim(html_entity_decode(strip_tags((string)$message)));
+                if ($section === 'success') {
+                    $toasts .= Toast::drawToast($text, ToastStyle::Success, icon: true, timer: true);
+                    continue;
+                }
+                [$style, $title] = match ($section) {
+                    'error' => [NoticeStyle::Error, 'Ошибка'],
+                    'warning' => [NoticeStyle::Alert, 'Внимание'],
+                    default => [NoticeStyle::Info, 'Информация'],
+                };
+                $notices .= Notice::drawNotice($title, $text, $style, NoticeTheme::from($theme), close: true);
+            }
+            self::$s[''][$section] = [];
+        }
+        static::save();
+
+        return ['toasts' => $toasts, 'notices' => $notices];
     }
 
     protected static function save(): void

@@ -36,7 +36,7 @@
     &__custom {
         flex-shrink: 0;
         position: relative;
-        border: solid var(--gray-medium);
+        border: solid var(--color-main-gray-medium);
         @include transition((border, background));
         @include border-w(2px);
 
@@ -67,17 +67,17 @@
         @include t3;
 
         a {
-            color: var(--color1-dark);
+            color: var(--color-main-color1-dark);
             @include transition((color));
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color1-main);
+                    color: var(--color-main-color1-main);
                 }
             }
 
             &:active {
-                color: var(--color1-darker);
+                color: var(--color-main-color1-darker);
             }
         }
     }
@@ -87,14 +87,14 @@
         @media (hover: hover) and (pointer: fine) {
             &:hover {
                 .checkbox__input:not(:checked) ~ .checkbox__custom::after {
-                    border-color: var(--gray-medium);
+                    border-color: var(--color-main-gray-medium);
                     transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
                 }
 
                 .checkbox__input:checked ~ .checkbox__custom,
 .checkbox__input:indeterminate ~ .checkbox__custom {
-                    background: var(--color1-light);
-                    border-color: var(--color1-light);
+                    background: var(--color-main-color1-light);
+                    border-color: var(--color-main-color1-light);
                 }
             }
         }
@@ -102,14 +102,14 @@
         .checkbox__input {
             &:checked ~ .checkbox__custom,
 &:indeterminate ~ .checkbox__custom {
-                background: var(--color1-main);
-                border-color: var(--color1-main);
+                background: var(--color-main-color1-main);
+                border-color: var(--color-main-color1-main);
             }
         }
 
         .checkbox__custom {
             &::after {
-                border: solid var(--gray-white);
+                border: solid var(--color-main-gray-white);
                 @include border-w(1px);
             }
         }
@@ -119,19 +119,19 @@
         @media (hover: hover) and (pointer: fine) {
             &:hover {
                 .checkbox__input:not(:checked) ~ .checkbox__custom::after {
-                    border-color: var(--color1-light);
+                    border-color: var(--color-main-color1-light);
                     transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
                 }
 
                 .checkbox__input:checked ~ .checkbox__custom,
 .checkbox__input:indeterminate ~ .checkbox__custom {
                     background: transparent;
-                    border-color: var(--color1-dark);
+                    border-color: var(--color-main-color1-dark);
                 }
 
                 .checkbox__input:checked ~ .checkbox__custom::after,
 .checkbox__input:indeterminate ~ .checkbox__custom::after {
-                    border-color: var(--color1-dark);
+                    border-color: var(--color-main-color1-dark);
                 }
             }
         }
@@ -140,13 +140,13 @@
             &:checked ~ .checkbox__custom,
 &:indeterminate ~ .checkbox__custom {
                 background: transparent;
-                border-color: var(--color1-main);
+                border-color: var(--color-main-color1-main);
             }
         }
 
         .checkbox__custom {
             &::after {
-                border: solid var(--color1-main);
+                border: solid var(--color-main-color1-main);
                 @include border-w(1px);
             }
         }
@@ -177,13 +177,13 @@
     /*----------THEME-----------*/
     &-theme_light {
         .checkbox__text {
-            color: var(--gray-darker);
+            color: var(--color-main-gray-darker);
         }
     }
 
     &-theme_dark {
         .checkbox__text {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
         }
     }
 }
@@ -201,13 +201,13 @@
 /*----------FOCUS-----------*/
 /* Кольцо фокуса вокруг самого бокса: 2 px цвета бренда, зазор 2 px */
 .checkbox__input:focus-visible ~ .checkbox__custom {
-    outline: 2px solid var(--color-main-color1-main, var(--color1-main));
+    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
     outline-offset: 2px;
 }
 
 /*----------STATES-----------*/
 .checkbox_error .checkbox__custom {
-    border-color: var(--error-dark);
+    border-color: var(--color-states-error-dark);
 }
 
 .checkbox_disabled {
@@ -215,45 +215,45 @@
 
     .checkbox__text,
     .checkbox__policy {
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
     }
 }
 
 .checkbox__input:disabled ~ .checkbox__custom {
-    border-color: var(--disable-medium);
+    border-color: var(--color-states-disabled-medium);
 }
 
 .checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom,
 .checkbox-solid .checkbox__input:disabled:indeterminate ~ .checkbox__custom {
-    background: var(--disable-medium);
-    border-color: var(--disable-medium);
+    background: var(--color-states-disabled-medium);
+    border-color: var(--color-states-disabled-medium);
 }
 
 .checkbox-line .checkbox__input:disabled:checked ~ .checkbox__custom,
 .checkbox-line .checkbox__input:disabled:indeterminate ~ .checkbox__custom {
     background: transparent;
-    border-color: var(--disable-medium);
+    border-color: var(--color-states-disabled-medium);
 }
 
 .checkbox-line .checkbox__input:disabled:checked ~ .checkbox__custom::after {
-    border-color: var(--disable-medium);
+    border-color: var(--color-states-disabled-medium);
 }
 
 .checkbox-theme_dark {
     .checkbox__input:disabled ~ .checkbox__custom,
     &.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom {
-        border-color: var(--disable-dark);
+        border-color: var(--color-states-disabled-dark);
     }
 
     &.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom {
-        background: var(--disable-dark);
+        background: var(--color-states-disabled-dark);
     }
 
     &.checkbox_error .checkbox__custom {
-        border-color: var(--error-medium);
+        border-color: var(--color-states-error-medium);
     }
 
     .checkbox__policy a {
-        color: var(--color1-light);
+        color: var(--color-main-color1-light);
     }
 }

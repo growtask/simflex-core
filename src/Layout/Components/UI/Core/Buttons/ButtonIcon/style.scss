@@ -1,0 +1,97 @@
+/* Кнопка-иконка Buttons/icon-small (design-ui-buttons.md): 24 px, иконка 16, flat и secondary */
+.btn-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 0 solid transparent;
+    background: transparent;
+    color: var(--color-text-icon-gray-light);
+    border-radius: var(--radius-ui-small);
+    @include spacing(width, 24px);
+    @include spacing(height, 24px);
+    @include transition((background, color, box-shadow));
+
+    &__icon {
+        fill: currentColor;
+        @include spacing(width, 16px);
+        @include spacing(height, 16px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+        cursor: not-allowed;
+        color: var(--color-states-disabled-medium);
+    }
+
+    &-flat {
+        &:not(:disabled, [aria-disabled="true"]) {
+            &:hover {
+                color: var(--color-text-icon-color1-light);
+            }
+
+            &:active {
+                color: var(--color-text-icon-color1-dark);
+            }
+        }
+
+        &.btn-icon-theme_dark {
+            color: var(--color-text-icon-gray-medium);
+
+            &:not(:disabled, [aria-disabled="true"]) {
+                &:hover {
+                    color: var(--color-text-icon-color1-darker);
+                }
+
+                &:active {
+                    color: var(--color-text-icon-color1-main);
+                }
+            }
+        }
+    }
+
+    &-secondary {
+        background: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-medium);
+
+        &:not(:disabled, [aria-disabled="true"]) {
+            &:hover {
+                background: var(--color-main-gray-lighter);
+                color: var(--color-text-icon-color1-light);
+            }
+
+            &:active {
+                background: var(--color-main-color1-lighter);
+                color: var(--color-text-icon-color1-dark);
+            }
+        }
+
+        &.btn-icon-theme_dark {
+            background: var(--color-main-gray-darker);
+
+            &:not(:disabled, [aria-disabled="true"]) {
+                &:hover {
+                    background: var(--color-main-gray-dark);
+                    color: var(--color-text-icon-color1-light);
+                }
+
+                &:active {
+                    background: var(--color-main-gray-darker);
+                    // вокруг darker в тёмной теме обводка 2 px внутрь main/gray/dark (design-tokens.md)
+                    box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+                    color: var(--color-text-icon-color1-light);
+                }
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}

@@ -1,0 +1,68 @@
+/* Хлебные крошки nav/breadcrumbs (design-base-nav.md) */
+.breadcrumbs {
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(min-height, 32px);
+        @include spacing(gap, 4px);
+    }
+
+    &__home {
+        display: flex;
+        @include spacing(margin-right, 8px);
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        @include spacing(gap, 4px);
+
+        // разделитель «/» перед пунктом
+        & + &::before {
+            content: '/';
+            color: var(--color-text-icon-gray-light);
+            @include ui-s;
+        }
+    }
+
+    &__text {
+        color: var(--color-text-icon-gray-medium);
+        @include ui-s;
+    }
+
+    &__current {
+        cursor: default;
+    }
+
+    &__more {
+        display: none;
+    }
+
+    &-theme_dark &__item + &__item::before {
+        color: var(--color-text-icon-gray-dark);
+    }
+
+    // телефон: дом, «…», родитель, текущая
+    @include Mobile {
+        &__more {
+            display: flex;
+        }
+
+        &__item_middle {
+            display: none;
+        }
+
+        &_expanded &__item_middle {
+            display: flex;
+        }
+
+        &_expanded &__more {
+            display: none;
+        }
+    }
+}

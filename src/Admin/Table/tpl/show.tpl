@@ -1,166 +1,300 @@
 <?php
-$colRowActionsWidth = 14 + 32 * $this->rowActionsCnt;
+
+/**
+ * Список раздела (компоненты макета page-head, table-card: table-toolbar, th-tags, thr/th, tr/td, table-footer,
+ * table-empty, table-bar). Поведение — theme/js/list.js
+ * @var \Simflex\Core\Admin\Table\Table $this
+ * @var list<array> $rows
+ * @var \Simflex\Core\Admin\Plugins\Pagination\Pagination $pagination
+ * @var int $saveId Запись, сохранённая перед возвратом в список
+ * @var string $treeName Колонка с отступом уровня дерева, пусто — список не дерево
+ * @var list<array{name: string, label: string, value: string, reset: string}> $filters Выбранные фильтры
+ * @var string $search Строка поиска
+ * @var int $count Записей по фильтрам
+ * @var string $theme
+ */
+
+use Simflex\Core\Admin\Fields\Field;
+use Simflex\Core\Admin\Fields\FieldString;
+use Simflex\Core\Admin\Fields\FieldText;
+use Simflex\Core\Admin\Page;
+use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
+use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Core\Checkbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Core\Checkbox\Layout as Checkbox;
+use Simflex\Core\Layout\Components\UI\Core\SortButton\Layout as SortButton;
+use Simflex\Core\Layout\Components\UI\Core\SortButton\SortButtonTheme;
+use Simflex\Core\Layout\Components\UI\Core\SortButton\SortDirection;
+use Simflex\Core\Layout\Components\UI\Core\Tag\Layout as Tag;
+use Simflex\Core\Layout\Components\UI\Core\Tag\TagSize;
+use Simflex\Core\Layout\Components\UI\Core\Tag\TagStyle;
+use Simflex\Core\Layout\Components\UI\Core\Tag\TagTheme;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputSize;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Core\Tooltip\Layout as Tooltip;
+use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipTheme;
+
+$buttonTheme = ButtonTheme::from($theme);
+$fields = array_filter($this->fields, fn(Field $field) => $field->isVisible);
+// главная колонка растягивается (минимум 280 px): поле с width 1, колонка дерева или первая текстовая
+$mainName = $treeName;
+foreach ($fields as $field) {
+    if ($field->width === 1.0) {
+        $mainName = $field->name;
+        break;
+    }
+}
+foreach ($fields as $field) {
+    if ($mainName === '' && ($field instanceof FieldString || $field instanceof FieldText)) {
+        $mainName = $field->name;
+    }
+}
+$sortColumn = $this->getSortColumn();
+$isFiltered = $filters || $search !== '';
+$hasSearch = (bool)$this->getSearchFields();
+$columnStyle = fn(Field $field) => $field->name !== $mainName && $field->width > 1
+    ? ' style="width: ' . (int)$field->width . 'px"' : '';
+$columnClasses = fn(Field $field, string $base) => implode(' ', array_filter([
+    $base,
+    'table-data-' . $field->name,
+    $field->name === $mainName ? $base . '_main' : '',
+    // главная колонка — заголовок карточки на телефоне, не скрывается
+    $field->widthMob === 0.0 && $field->name !== $mainName ? $base . '_hide-mobile' : '',
+]));
+
+echo Page::get()->drawPageHead(
+    $this->title,
+    $this->canAdd ? Button::drawButton(
+        text: 'Добавить',
+        link: '?action=form',
+        size: ButtonSize::Small,
+        theme: $buttonTheme,
+        iconLeft: 'plus',
+    ) : '',
+);
 ?>
-
-
-<div class="content">
-<div class="content__inner">
-    <div class="content__head">
-        <div class="content__head-wrap">
-            <div class="content__head-bg"></div>
-            <div class="content__head-left">
-                <h4 class="content__title"><?php echo $this->title ?></h4>
-                <button type="button" class="content__head-toggle BtnIconPrimarySm">
-                    <svg class="notification__close-icon" fill="#ffffff" viewBox="0 0 24 24">
-                        <use xlink:href="<?=asset('img/icons/svg-defs.svg')?>#arrow"></use>
-                    </svg>
-                </button>
-            </div>
-            <div class="content__head-right">
-                <div class="content__head-btns">
-                    <?= $this->showActions() ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="content__body">
-        <?= \Simflex\Core\Extensions\Alert\Alert::getHTML() ?>
-        <div class="tables">
-            <form class="table-top-form" >
-                <table class="table">
-                    <thead class="table__head">
-                        <tr class="table__head-row">
-                            <th class="table-data-select table__head-col table__head-col-first">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12L10 17L19 8" stroke="#0D0D0D" stroke-width="2" stroke-linecap="round"
-                                          stroke-linejoin="round" />
-                                </svg>
-                                <div class="form-control">
-                                    <input type="checkbox" class="form-control__checkbox" />
-                                </div>
-                            </th>
-                            <?php foreach ($this->fields as $f):?>
-                                <?php if ($f->isVisible): ?>
-                            <th class="table-data-<?=$f->name?> table__head-col">
-                                <div class="form-control table__head-sort">
-                                    <div class="form-control__sort">
-                                        <span class="form-control__sort-title"><?=$f->label?></span>
-                                        <?php if ($f->help !== ''): ?>
-                                        <span class="table__head-help" title="<?= htmlspecialchars(strip_tags($f->help)) ?>">?</span>
-                                        <?php endif ?>
-                                        <div class="form-control__sort-btns">
-                                            <div class="form-control__sort-up <?=($f->name === $this->getSortColumn() && !$this->isSortDesc()) ? 'form-control__sort-up--active' : ''?>">
-                                                <a class="form-control__sort-link" href="?o=<?=$f->name?>"></a>
-                                            </div>
-                                            <div class="form-control__sort-down <?=($f->name === $this->getSortColumn() && $this->isSortDesc()) ? 'form-control__sort-down--active' : ''?>" >
-                                                <a class="form-control__sort-link" href="?o=<?=$f->name?>"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?= $this->filterField($f) ?>
-                            </th>
-                            <?php endif; ?>
-                            <?php endforeach; ?>
-                            <th class="table-data-controls table__head-col">
-                                <div class="form-control">
-                                    <div class="form-control__sort">
-                                        <span class="form-control__sort-title">Действия</span>
-
-                                    </div>
-                                </div>
-                                <button class="btn-reset">
-                                    <div class="BtnSecondaryMonoSm">Сброс</div>
-                                </button>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-            </form>
-            <div class="table__wrapper" data-simplebar>
-                <table class="table">
-                    <tbody class="table__body">
-                        <?php
-                        $i = 0;
-                        foreach ($rows as $row): ?>
-                        <tr class="table__row table__body-row">
-                            <td class="table-data-select">
-                                <div class="form-control">
-                                    <input type="checkbox" name="row[]" value="<?=$row[$this->pk->name]?>" id="" class="form-control__checkbox" />
-                                </div>
-                            </td>
-                            <?php foreach ($this->fields as $field): ?>
-                                <?php if ($field->isVisible): ?>
-                                    <td  data-field="<?=$field->name?>" data-pk="<?=$row[$this->pk->name]?>" class="table-data-<?=$field->name?> <?=$field->fk?'table-data-id':''?>">
-                                            <?php $field->pkValue = $row[$this->pk->name]; ?>
-                                        <?=$this->showCell($field, $row)?>
-                                    </td>
-                                <?php endif ?>
-                            <?php endforeach ?>
-                            <td class="table-data-controls">
-                                                                    <?= $this->rowActions($row, $i) ?>
-                            </td>
-                        </tr>
-                        <?php
-                            $i++;
-                        endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <?= $pagination->content() ?>
-    </div>
-</div>
-
-<style>
-    .table__head-help {
-        display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-        width: 16px; height: 16px; margin-left: 4px; border-radius: 50%;
-        background: #c4cbd6; color: #fff; font-size: 11px; font-weight: 700; line-height: 1; cursor: help;
-    }
-</style>
-<script>
-    const nd =  document.createElement('style');
-    nd.innerHTML = `
-    <?php foreach ($this->fields as $f): ?>
-    <?php if ($f->isVisible && $f->width > 1): ?>
-    .table-data-<?=$f->name?> {
-        width: <?=(double)$f->width/1920.0*100?>vw !important;
-    }
-
-    @media screen and (max-width: 1401px) {
-        .table-data-<?=$f->name?> {
-            width: <?=(double)$f->width/1366.0*100?>vw !important;
-        }
-    }
-
-    @media screen and (max-width: 991px) {
-        .table-data-<?=$f->name?> {
-            width: <?=(double)$f->width/768.0*100?>vw !important;
-            <?php if ($f->widthMob === 0.0): ?>
-                display: none;
+<section class="table-card table-card-theme_<?= $theme ?>" data-sf="list"
+         data-pk="<?= htmlspecialchars($this->pk->name) ?>" aria-label="<?= htmlspecialchars($this->title) ?>">
+    <?php if ($hasSearch || $this->isFilter): ?>
+        <div class="table-toolbar">
+            <?php if ($hasSearch): ?>
+                <?= TextInput::drawInput(
+                    className: 'table-toolbar__search',
+                    placeholder: 'Поиск',
+                    size: TextInputSize::Medium,
+                    theme: TextInputTheme::from($theme),
+                    icon: 'search',
+                    id: 'sf-list-search',
+                    attributes: [
+                        'name' => 'q',
+                        'data-sf-filter' => '',
+                        'autocomplete' => 'off',
+                        'aria-label' => 'Поиск по списку',
+                    ],
+                    value: $search,
+                ) ?>
             <?php endif; ?>
-        }
-    }
-
+            <?php if ($this->isFilter): ?>
+                <?= Button::drawButton(
+                    className: 'table-toolbar__filters',
+                    text: 'Фильтры',
+                    style: ButtonStyle::Secondary,
+                    size: ButtonSize::Medium,
+                    theme: $buttonTheme,
+                    attributes: ['data-modal' => 'sf-modal-filters'],
+                    iconLeft: 'filter',
+                ) ?>
+            <?php endif; ?>
+        </div>
     <?php endif; ?>
 
-    <?php if ($f->isVisible && ($f->widthMob > 1 || $f->widthMob === 0.0)): ?>
-    @media screen and (max-width: 576px) {
-        .table-data-<?=$f->name?> {
-        <?php if ($f->widthMob > 1): ?>
-            width: <?=(double)$f->widthMob/375.0*100?>vw !important;
-        <?php elseif ($f->widthMob === 0.0): ?>
-            display: none;
+    <?php if ($filters): ?>
+        <div class="th-tags">
+            <span class="th-tags__title">Фильтры:</span>
+            <?php foreach ($filters as $filter): ?>
+                <?= Tag::drawTag(
+                    text: htmlspecialchars($filter['label'] . ': ' . $filter['value']),
+                    style: TagStyle::Secondary,
+                    size: TagSize::ExtraSmall,
+                    theme: TagTheme::from($theme),
+                    attributes: ['data-sf-filter-reset' => $filter['reset']],
+                    close: true,
+                    closeLabel: 'Сбросить фильтр «' . $filter['label'] . '»',
+                ) ?>
+            <?php endforeach; ?>
+            <?= Button::drawButton(
+                text: 'Сбросить всё',
+                link: '?action=filterReset',
+                style: ButtonStyle::Flat,
+                size: ButtonSize::ExtraSmall,
+                theme: $buttonTheme,
+            ) ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="table-card__scroll">
+        <table class="table-list">
+            <thead>
+            <tr class="thr">
+                <th class="th th_select" scope="col">
+                    <?= Checkbox::drawCheckbox(
+                        className: 'th__check',
+                        theme: CheckboxTheme::from($theme),
+                        attributes: ['data-sf-select-all' => '', 'aria-label' => 'Выбрать все записи'],
+                    ) ?>
+                </th>
+                <?php foreach ($fields as $field): ?>
+                    <?php
+                    $direction = $field->name !== $sortColumn ? SortDirection::None
+                        : ($this->isSortDesc() ? SortDirection::Descending : SortDirection::Ascending);
+                    ?>
+                    <th class="<?= $columnClasses($field, 'th') ?>" scope="col"
+                        aria-sort="<?= $direction->value ?>"<?= $columnStyle($field) ?>>
+                        <div class="th__head">
+                            <?= SortButton::drawSort(
+                                strip_tags($field->label),
+                                '?o=' . rawurlencode($field->name) . '&d=0',
+                                '?o=' . rawurlencode($field->name) . '&d=1',
+                                $direction,
+                                theme: SortButtonTheme::from($theme),
+                                className: 'th__sort',
+                            ) ?>
+                            <?php if ($field->help !== ''): ?>
+                                <span class="table__head-help">
+                                    <?= Tooltip::drawInfo(strip_tags($field->help), TooltipTheme::from($theme)) ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if ($field->filter): ?>
+                            <div class="th__filter"><?= $this->filterField($field) ?></div>
+                        <?php endif; ?>
+                    </th>
+                <?php endforeach; ?>
+                <th class="th th_controls table-data-controls" scope="col">
+                    <div class="th__head"><span class="th__label">Действия</span></div>
+                    <?php if ($isFiltered || isset($this->getState()['order_by'])): ?>
+                        <?= Button::drawButton(
+                            className: 'btn-reset',
+                            text: 'Сброс',
+                            link: '?action=filterReset',
+                            style: ButtonStyle::Flat,
+                            size: ButtonSize::ExtraSmall,
+                            theme: $buttonTheme,
+                            attributes: ['title' => 'Сбросить фильтры и сортировку'],
+                        ) ?>
+                    <?php endif; ?>
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table__body">
+            <?php foreach ($rows as $i => $row): ?>
+                <?php $id = $row[$this->pk->name]; ?>
+                <tr class="tr table__body-row<?= (int)$id === $saveId ? ' tr_saved' : '' ?>"
+                    data-id="<?= htmlspecialchars((string)$id) ?>">
+                    <td class="td td_select table-data-select">
+                        <?= Checkbox::drawCheckbox(
+                            className: 'td__check',
+                            theme: CheckboxTheme::from($theme),
+                            attributes: [
+                                'name' => 'row[]',
+                                'value' => (string)$id,
+                                'data-sf-row-select' => '',
+                                'aria-label' => 'Выбрать запись ' . $id,
+                            ],
+                        ) ?>
+                    </td>
+                    <?php foreach ($fields as $field): ?>
+                        <?php
+                        $field->pkValue = $id;
+                        $level = $field->name === $treeName ? (int)($row['tree_level'] ?? 0) : 0;
+                        ?>
+                        <td class="<?= $columnClasses($field, 'td') ?><?= $level ? ' td_level td_level_' . min($level, 6) : '' ?>"
+                            data-field="<?= htmlspecialchars($field->name) ?>" data-pk="<?= htmlspecialchars((string)$id) ?>"
+                            data-label="<?= htmlspecialchars(strip_tags($field->label)) ?>">
+                            <?= $this->showCell($field, $row) ?>
+                        </td>
+                    <?php endforeach; ?>
+                    <td class="td td_controls table-data-controls"><?= $this->rowActions($row, $i) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <?php if (!$rows): ?>
+            <div class="table-empty">
+                <span class="table-empty__icon">
+                    <?= renderIcon($isFiltered ? 'search-x' : 'package', 'table-empty__icon-svg') ?>
+                </span>
+                <h2 class="table-empty__title"><?= $isFiltered ? 'Ничего не найдено' : 'Записей пока нет' ?></h2>
+                <p class="table-empty__text">
+                    <?= $isFiltered ? 'Измените условия поиска или сбросьте фильтры.' : 'Добавьте первую запись раздела.' ?>
+                </p>
+                <?php if ($isFiltered): ?>
+                    <?= Button::drawButton(
+                        text: 'Сбросить фильтры',
+                        link: '?action=filterReset',
+                        style: ButtonStyle::Secondary,
+                        size: ButtonSize::Small,
+                        theme: $buttonTheme,
+                    ) ?>
+                <?php elseif ($this->canAdd): ?>
+                    <?= Button::drawButton(
+                        text: 'Добавить',
+                        link: '?action=form',
+                        size: ButtonSize::Small,
+                        theme: $buttonTheme,
+                        iconLeft: 'plus',
+                    ) ?>
+                <?php endif; ?>
+            </div>
         <?php endif; ?>
+    </div>
+
+    <?= $pagination->content() ?>
+</section>
+
+<div class="table-bar table-bar-theme_<?= $theme ?>" data-sf-table-bar role="toolbar" aria-label="Действия с записями">
+    <?= $this->showActions() ?>
+    <span class="table-bar__count" data-sf-selected hidden>
+        Выбрано: <b data-sf-selected-count>0</b>
+        <button type="button" class="table-bar__clear" data-sf-select-clear aria-label="Снять выбор">
+            <?= renderIcon('close', 'table-bar__clear-icon') ?>
+        </button>
+    </span>
+</div>
+
+<?php if ($this->isFilter): ?>
+    <?php
+    // окно фильтров (на планшете и телефоне шапки таблицы нет): те же фильтры колонок
+    $modalFilters = '';
+    foreach ($fields as $field) {
+        if ($field->filter) {
+            $modalFilters .= '<div class="modal-filters__field"><span class="modal-filters__label">'
+                . htmlspecialchars(strip_tags($field->label)) . '</span>' . $this->filterField($field) . '</div>';
         }
     }
-    <?php endif; ?>
-
-    <?php endforeach; ?>
-   `;
-   document.head.append(nd);
-</script>
-
-</div>
+    ?>
+    <?= Modal::drawModal(
+        id: 'sf-modal-filters',
+        title: 'Фильтры',
+        content: '<div class="modal-filters" data-sf-filters-modal>' . $modalFilters . '</div>',
+        footer: Button::drawButton(
+            text: 'Применить',
+            size: ButtonSize::Small,
+            theme: $buttonTheme,
+            attributes: ['data-sf-filters-apply' => ''],
+        ) . Button::drawButton(
+            text: 'Сбросить',
+            link: '?action=filterReset',
+            style: ButtonStyle::Outline,
+            size: ButtonSize::Small,
+            theme: $buttonTheme,
+        ),
+        theme: ModalTheme::from($theme),
+    ) ?>
+<?php endif; ?>

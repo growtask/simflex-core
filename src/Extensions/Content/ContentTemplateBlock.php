@@ -14,11 +14,13 @@ readonly class ContentTemplateBlock
      * @param string $label Заголовок блока
      * @param FieldDefinition[] $fields
      * @param string $pos Колонка формы: left|right
+     * @param string $tab Вкладка формы (как FieldDefinition::$tab)
      */
     public function __construct(
         public string $label,
         public array $fields,
         public string $pos = 'left',
+        public string $tab = '',
     ) {
     }
 }

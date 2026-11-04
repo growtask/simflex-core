@@ -1,32 +1,50 @@
+<?php
+
+/**
+ * Нет доступа к админке (вошёл пользователь без привилегии admin): карточка как у входа, «Выйти» и «На сайт»
+ * @var \Simflex\Core\Admin\Page $page
+ */
+
+use Simflex\Core\Admin\Page;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as Logo;
+use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
+use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
+
+$theme = $page->getTheme();
+$isDark = $theme === Page::THEME_DARK;
+// компоненты рисуются до head: их стили собирает $page->getMeta()
+$card = Logo::drawLogo(
+    className: 'auth__logo',
+    href: '/',
+    name: 'Simflex CMS',
+    label: 'Simflex CMS',
+    src: asset('img/brand/logo' . ($isDark ? '-dark' : '') . '.svg'),
+    type: LogoType::Static,
+    theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
+) . '<div class="auth-card auth-card-theme_' . $theme . '">'
+    . '<h1 class="auth-card__title">Недостаточно прав для входа в панель управления</h1>'
+    . '<p class="auth-card__text">Войдите под учётной записью с доступом к админке.</p>'
+    . '<div class="auth-card__buttons">'
+    . Button::drawButton(text: 'Выйти', link: Page::url('logout'), theme: ButtonTheme::from($theme), iconLeft: 'log-out')
+    . Button::drawButton(text: 'На сайт', link: '/', style: ButtonStyle::Secondary, theme: ButtonTheme::from($theme))
+    . '</div></div>'
+    . '<p class="auth__version">Simflex CMS v' . htmlspecialchars(getSimflexVersion()) . '</p>';
+?>
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="<?= $theme ?>">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="<?= asset('css/styles.css') ?>" />
         <link rel="stylesheet" href="<?= asset('fonts/inter.css') ?>"/>
         <link rel="shortcut icon" href="<?= asset('img/favicon-admin.ico') ?>" type="image/x-icon">
-
-        <title>Simflex Admin</title>
+        <title>Нет доступа | Simflex Admin</title>
+        <?= $page->getMeta() ?>
     </head>
     <body>
-        <div class="container">
-            <div class="login">
-                <div class="login__logo">
-                    <img class="login__logo-img" src="<?= asset('img/logo.svg') ?>" alt="" />
-                </div>
-                <div class="form login-form">
-                    <div class="login-form__text">
-                        <h4 class="login-form__title">Недостаточно прав для входа в панель управления</h4>
-                    </div>
-                    <div class="login-form__btns">
-                        <a class="BtnPrimarySm" href="<?= \Simflex\Core\Admin\Page::url('logout/') ?>">Выйти</a>
-                        <a class="BtnOutlineMonoSm" href="/">На сайт</a>
-                    </div>
-                </div>
-                <div class="login__text">Simflex CMS v<?= getSimflexVersion() ?></div>
-            </div>
-        </div>
+        <main class="auth"><?= $card ?></main>
     </body>
 </html>

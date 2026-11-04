@@ -2,8 +2,6 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Helpers\Str;
-use Simflex\Core\Admin\Plugins\UI\UI;
 use Simflex\Core\Media\File;
 
 class FieldFile extends Field
@@ -47,14 +45,6 @@ class FieldFile extends Field
         ]);
     }
 
-    public function loadUI(bool $onForm = false): string
-    {
-        if ($onForm) {
-            UI::fileInput();
-        }
-        return '';
-    }
-
     public function input($value): string
     {
         if ($this->readonly) {
@@ -63,11 +53,7 @@ class FieldFile extends Field
 
         return $this->render('file', [
             'name' => $this->name,
-            'value' => $value,
-            'activeClass' => $value ? 'form-control__file--active' : '',
-            'activeText' => $value ? $value : 'Перетащите или загрузите файл',
-            'activeDisplay' => $value ? 'display: block' : '',
-            'size' => Str::sizeToStr('/uf/files/' . $value),
+            'value' => (string)$value,
         ]);
     }
 

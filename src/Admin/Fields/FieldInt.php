@@ -158,6 +158,15 @@ class FieldInt extends Field
         return $this->e2n && $value === '' ? null : (int)$value;
     }
 
+    public function getFilterLabel(string $value): string
+    {
+        if ($this->fk && ($row = $this->getFkRow($value))) {
+            return (string)$row['name'];
+        }
+
+        return parent::getFilterLabel($value);
+    }
+
     public function filter($value): string
     {
         if (!$this->filter) {
@@ -166,7 +175,7 @@ class FieldInt extends Field
         if ($this->fk) {
             $sel = $this->getFkRow($value);
 
-            return $this->dropdown([
+            return $this->filterDropdown([
                 'name' => 'filter[' . $this->name . ']',
                 'value' => $value,
                 'action' => 'searchInt',

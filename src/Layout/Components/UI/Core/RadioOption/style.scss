@@ -29,17 +29,34 @@
         }
 
         &:checked + .radio-option__label .radio-option__indicator {
-            border-color: var(--color1-main);
-            background-color: var(--color1-main);
+            border-color: var(--color-main-color1-main);
+            background-color: var(--color-main-color1-main);
         }
 
         &:checked + .radio-option__label .radio-option__indicator::after {
             transform: translate(-50%, -50%) scale(1);
         }
 
+        // disabled: кольцо и точка states/disabled/medium (тёмная — states/disabled/dark), подпись gray/medium
         &:disabled + .radio-option__label {
-            opacity: 0.5;
             cursor: not-allowed;
+
+            .radio-option__indicator {
+                border-color: var(--color-states-disabled-medium);
+            }
+
+            .radio-option__text {
+                color: var(--color-text-icon-gray-medium);
+            }
+        }
+
+        &:disabled:checked + .radio-option__label .radio-option__indicator {
+            background-color: var(--color-states-disabled-medium);
+        }
+
+        &:focus-visible + .radio-option__label .radio-option__indicator {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
         }
     }
 
@@ -53,7 +70,7 @@
     &__indicator {
         flex-shrink: 0;
         position: relative;
-        border: solid var(--gray-medium);
+        border: solid var(--color-main-gray-medium);
         border-radius: 50%;
         @include transition((background, border));
 
@@ -122,12 +139,12 @@
     &-theme_light {
         .radio-option__input {
             &:not(:disabled, :checked) + .radio-option__label:hover .radio-option__indicator {
-                border-color: var(--color1-light);
+                border-color: var(--color-main-color1-light);
             }
         }
 
         .radio-option__text {
-            color: var(--gray-dark);
+            color: var(--color-main-gray-dark);
         }
 
 
@@ -135,12 +152,12 @@
     &-theme_dark {
         .radio-option__input {
             &:not(:disabled, :checked) + .radio-option__label:hover .radio-option__indicator {
-                border-color: var(--color1-darker);
+                border-color: var(--color-main-color1-darker);
             }
         }
 
         .radio-option__text {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
         }
     }
 }
@@ -156,4 +173,12 @@
     100% {
         transform: scale(1);
     }
+}
+
+.radio-option-theme_dark .radio-option__input:disabled + .radio-option__label .radio-option__indicator {
+    border-color: var(--color-states-disabled-dark);
+}
+
+.radio-option-theme_dark .radio-option__input:disabled:checked + .radio-option__label .radio-option__indicator {
+    background-color: var(--color-states-disabled-dark);
 }

@@ -33,10 +33,15 @@ class FieldBool extends FieldInt
         return $value ? 'Да' : 'Нет';
     }
 
+    public function getFilterLabel(string $value): string
+    {
+        return $value === '1' ? 'Да' : ($value === '0' ? 'Нет' : parent::getFilterLabel($value));
+    }
+
     public function filter($value): string
     {
         if ($this->filter) {
-            return $this->dropdown([
+            return $this->filterDropdown([
                 'name' => 'filter[' . $this->name . ']',
                 'value' => $value,
                 'items' => [['1', 'Да'], ['0', 'Нет'], ['', '—']],

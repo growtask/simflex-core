@@ -15,7 +15,7 @@
 
     &__label {
         flex-shrink: 0;
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
         @include t4;
         @include spacing(margin-bottom, 2px);
     }
@@ -31,7 +31,7 @@
         @include transition((background, border, color, opacity));
 
         &::placeholder {
-            color: var(--gray-medium);
+            color: var(--color-main-gray-medium);
         }
 
         &:focus {
@@ -39,14 +39,14 @@
         }
 
         &:focus-visible {
-            outline: 2px solid var(--color1-main);
+            outline: 2px solid var(--color-main-color1-main);
             outline-offset: 2px;
         }
 
         &:disabled {
             cursor: not-allowed;
-            color: var(--gray-medium);
-            background: var(--disable-light);
+            color: var(--color-main-gray-medium);
+            background: var(--color-states-disabled-light);
             border-color: transparent;
         }
     }
@@ -57,7 +57,7 @@
         bottom: 0;
         right: 0;
         pointer-events: none;
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
         @include t4;
         @include spacing(padding-block, 4px);
         @include spacing(padding-inline, 3px);
@@ -90,36 +90,36 @@
     /*----------STYLES-----------*/
     &-style_filled {
         .textarea__field {
-            background: var(--gray-lighter);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-lighter);
+            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:disabled) {
-                    border-color: var(--gray-light);
+                    border-color: var(--color-main-gray-light);
                 }
             }
 
             &:focus:not(:disabled) {
-                background: var(--gray-white);
-                border-color: var(--gray-light);
+                background: var(--color-main-gray-white);
+                border-color: var(--color-main-gray-light);
             }
         }
     }
 
     &-style_outline {
         .textarea__field {
-            background: var(--gray-white);
-            border-color: var(--gray-light);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-white);
+            border-color: var(--color-main-gray-light);
+            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:disabled) {
-                    border-color: var(--color1-light);
+                    border-color: var(--color-main-color1-light);
                 }
             }
 
             &:focus:not(:disabled) {
-                border-color: var(--color1-main);
+                border-color: var(--color-main-color1-main);
             }
         }
     }
@@ -127,23 +127,23 @@
     &-style_underline {
         .textarea__field {
             background: transparent;
-            border-bottom-color: var(--gray-light);
-            color: var(--gray-darker);
+            border-bottom-color: var(--color-main-gray-light);
+            color: var(--color-main-gray-darker);
             border-radius: 0 !important;
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:disabled) {
-                    border-bottom-color: var(--color1-light);
+                    border-bottom-color: var(--color-main-color1-light);
                 }
             }
 
             &:focus:not(:disabled) {
-                border-bottom-color: var(--color1-main);
+                border-bottom-color: var(--color-main-color1-main);
             }
 
             &:disabled {
                 background: transparent;
-                border-bottom-color: var(--disable-medium);
+                border-bottom-color: var(--color-states-disabled-medium);
             }
         }
     }
@@ -186,14 +186,14 @@
     &-state_error {
         .textarea__field,
         .textarea__message {
-            color: var(--error-dark);
+            color: var(--color-states-error-dark);
         }
     }
 
     &-state_success {
         .textarea__field,
         .textarea__message {
-            color: var(--success-dark);
+            color: var(--color-states-success-dark);
         }
     }
 
@@ -201,56 +201,56 @@
     &-theme_dark {
         .textarea__label,
         .textarea__counter {
-            color: var(--gray-medium);
+            color: var(--color-main-gray-medium);
         }
 
         &.textarea-style_filled .textarea__field {
-            background: var(--gray-dark);
-            color: var(--gray-lighter);
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
 
             &:focus:not(:disabled) {
-                background: var(--gray-black);
+                background: var(--color-main-gray-black);
             }
         }
 
         &.textarea-style_outline .textarea__field {
             background: transparent;
-            border-color: var(--gray-dark);
-            color: var(--gray-lighter);
+            border-color: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:disabled) {
-                    border-color: var(--gray-medium);
+                    border-color: var(--color-main-gray-medium);
                 }
             }
 
             &:focus:not(:disabled) {
-                border-color: var(--color1-main);
+                border-color: var(--color-main-color1-main);
             }
         }
 
         &.textarea-style_underline .textarea__field {
-            border-bottom-color: var(--gray-dark);
-            color: var(--gray-lighter);
+            border-bottom-color: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
         }
 
         &.textarea-state_error {
             .textarea__field,
             .textarea__message {
-                color: var(--error-medium);
+                color: var(--color-states-error-medium);
             }
         }
 
         &.textarea-state_success {
             .textarea__field,
             .textarea__message {
-                color: var(--success-medium);
+                color: var(--color-states-success-medium);
             }
         }
 
         .textarea__field:disabled {
-            background: var(--disable-dark);
-            color: var(--gray-medium);
+            background: var(--color-states-disabled-dark);
+            color: var(--color-main-gray-medium);
         }
     }
 }

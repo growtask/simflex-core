@@ -12,15 +12,23 @@ use Simflex\Core\Auth\CookieTokenBag;
 use Simflex\Core\Auth\Models\UserAuth;
 use Simflex\Core\Auth\SessionStorage;
 use Simflex\Core\Models\User;
+use Simflex\Core\Extensions\Alert\Alert;
 use Simflex\Core\System\Privilege;
 
 class Auth
 {
     public const REMEMBER_ME_INTERVAL = '1 WEEK';
 
+    /** Сообщение о неудачном входе: одно и то же для неверного логина, пароля и пользователя без доступа */
+    public const WRONG_LOGIN_MESSAGE = 'Неверный логин или пароль';
+
     public static function login($login, $password, bool $isRemember, string $redirect): void
     {
+        if ($login === null && $password === null) {
+            return;
+        }
         if (empty($login) || empty($password)) {
+            Alert::error('Введите логин и пароль');
             return;
         }
 
@@ -54,6 +62,7 @@ class Auth
         }
         if (!$successLogin) {
             Log::a('login_attempt', "Логин: {$login}");
+            Alert::error(static::WRONG_LOGIN_MESSAGE);
         }
 
         header("Location: $redirect");

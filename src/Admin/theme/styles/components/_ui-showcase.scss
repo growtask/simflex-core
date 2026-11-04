@@ -1,0 +1,105 @@
+/* Витрина компонентов /admin/ui (Handlers\Ui) */
+.ui-showcase {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    @include spacing(gap, 24px, 24px, 16px, 16px);
+
+    &__widths,
+    &__row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        @include spacing(gap, 12px, 12px, 8px, 8px);
+    }
+
+    &__row_tooltips {
+        // место под подсказки, раскрытые вниз и вбок
+        @include spacing(padding-block, 56px);
+        @include spacing(padding-inline, 120px);
+    }
+
+    &__row_dropdowns {
+        // место под раскрытые списки
+        @include spacing(padding-bottom, 320px);
+    }
+
+    &__field {
+        display: block;
+        @include spacing(width, 280px);
+    }
+
+    &__image {
+        display: block;
+        @include spacing(width, 80px);
+        @include spacing(height, 80px);
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        @include spacing(gap, 12px);
+
+        @include Mobile {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    &__theme {
+        display: flex;
+        flex-direction: column;
+        border-radius: var(--radius-ui-xlarge);
+        background: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-black);
+        @include spacing(gap, 16px, 16px, 12px, 12px);
+        @include spacing(padding, 24px, 24px, 16px, 16px);
+
+        &_dark {
+            background: var(--color-main-gray-black);
+            color: var(--color-text-icon-gray-white);
+        }
+    }
+
+    &__subtitle {
+        color: var(--color-text-icon-gray-medium);
+    }
+
+    &__icons {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(vw(120px), 1fr));
+        list-style: none;
+        @include spacing(gap, 8px, 8px, 8px, 8px);
+
+        @include Tablet {
+            grid-template-columns: repeat(auto-fill, minmax(vwt(100px), 1fr));
+        }
+        @include Mobile {
+            grid-template-columns: repeat(auto-fill, minmax(vwm(100px), 1fr));
+        }
+    }
+
+    &__icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        word-break: break-all;
+        color: var(--color-text-icon-gray-dark);
+        @include spacing(gap, 4px, 4px, 4px, 4px);
+    }
+
+    &__icon-svg {
+        fill: currentColor;
+        width: vw(24px);
+        height: vw(24px);
+
+        @include Tablet {
+            width: vwt(24px);
+            height: vwt(24px);
+        }
+        @include Mobile {
+            width: vwm(24px);
+            height: vwm(24px);
+        }
+    }
+}

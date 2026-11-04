@@ -119,12 +119,6 @@ abstract class Table extends Handler
     public string $extraRight = '';
 
     /**
-     * Количество кнопок у каждой строки в списке записей (метод show). Влияет на ширину колонки
-     * Необязательно задавать, пересчитывается на JS
-     */
-    protected int $rowActionsCnt = 1;
-
-    /**
      *
      * @var string ID записей при групповом редактировании (через запятую)
      */
@@ -274,7 +268,9 @@ abstract class Table extends Handler
         }
 
         $img = new Image($path);
-        $img->loadPost('img');
+        // source — файл из файлового менеджера (адрес в /uf), иначе — загруженный файл img
+        $source = $this->getLibrarySource();
+        $source !== null ? $img->load($source) : $img->loadPost('img');
         $name = $img->getName();
         $img->save();
 
@@ -287,18 +283,39 @@ abstract class Table extends Handler
      */
     public function uploadFile(): never
     {
-        $ext = strtolower(pathinfo((string)($this->request->file('file')['name'] ?? ''), PATHINFO_EXTENSION));
+        $source = $this->getLibrarySource();
+        $fileName = $source ?? (string)($this->request->file('file')['name'] ?? '');
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $allowed = array_merge(static::$uploadImageExtensions, static::$uploadFileExtensions);
         if (!($this->canAdd || $this->canEdit) || !in_array($ext, $allowed, true)) {
             die('');
         }
 
         $f = new File();
-        $f->loadPost('file');
+        $source !== null ? $f->loadFile($source) : $f->loadPost('file');
         $name = $f->getName();
         $f->save();
 
         die($name);
+    }
+
+    /**
+     * Файл из файлового менеджера (параметр source — адрес вида /uf/images/a.png): путь на диске, если файл лежит
+     * в каталоге загрузок; null — параметра нет или файл вне /uf
+     */
+    protected function getLibrarySource(): ?string
+    {
+        $source = (string)$this->request->request('source', '');
+        if ($source === '') {
+            return null;
+        }
+        $root = realpath(Container::getPaths()->getPublic('uf'));
+        $path = realpath(Container::getPaths()->getPublic(ltrim(rawurldecode($source), '/')));
+        if ($root === false || $path === false || !is_file($path) || !str_starts_with($path, $root . DIRECTORY_SEPARATOR)) {
+            return null;
+        }
+
+        return $path;
     }
 
     /**
@@ -570,8 +587,8 @@ abstract class Table extends Handler
     }
 
     /**
-     * Сортировка, выбранная кликом по заголовку колонки: ?o=column, повторный клик меняет порядок на обратный.
-     * Хранится в сессии
+     * Сортировка, выбранная в шапке колонки: ?o=column&d=0|1 (по возрастанию, по убыванию); без d повторный выбор
+     * колонки меняет порядок на обратный. Хранится в сессии
      */
     protected function changeSorting(): void
     {
@@ -581,7 +598,13 @@ abstract class Table extends Handler
         }
 
         $state = $this->getState();
-        $state['order_desc'] = ($state['order_by'] ?? '') === $column ? (int)!($state['order_desc'] ?? 0) : 0;
+        $direction = $this->request->request('d');
+        if ($direction !== null) {
+            // явное направление: кнопки «по возрастанию» и «по убыванию» в шапке
+            $state['order_desc'] = (int)((string)$direction === '1');
+        } else {
+            $state['order_desc'] = ($state['order_by'] ?? '') === $column ? (int)!($state['order_desc'] ?? 0) : 0;
+        }
         $state['order_by'] = $column;
         $this->setState($state);
     }
@@ -631,6 +654,7 @@ abstract class Table extends Handler
 
     protected function filterReset(): never
     {
+        // сбрасываются сортировка, фильтры и поиск
         $this->setState([]);
         header('location: ' . Page::get()->getPath());
         exit;
@@ -649,6 +673,22 @@ abstract class Table extends Handler
         }
         if ($posted) {
             $this->setState($state);
+        }
+
+        // поиск: подстрока в любой текстовой колонке с фильтром (поле поиска над таблицей)
+        $search = $this->request->request('q');
+        if ($search !== null) {
+            $state['q'] = trim((string)$search);
+            $this->setState($state);
+        }
+        $searchColumns = $this->getSearchFields();
+        if (($state['q'] ?? '') !== '' && $searchColumns) {
+            $conditions = [];
+            foreach ($searchColumns as $field) {
+                $conditions[] = $this->wrapColumn($this->table . '.' . $field->name) . ' LIKE :filter_q';
+            }
+            $query->andWhere('(' . implode(' OR ', $conditions) . ')')->bind(['filter_q' => '%' . $state['q'] . '%']);
+            $this->isHierarchy = false;
         }
 
         foreach ($this->fields as $field) {
@@ -683,6 +723,41 @@ abstract class Table extends Handler
             }
         }
         unset($filter);
+    }
+
+    /**
+     * Поля, по которым ищет поле поиска над таблицей: видимые текстовые поля с фильтром
+     * @return array<string, Field>
+     */
+    public function getSearchFields(): array
+    {
+        return array_filter(
+            $this->fields,
+            fn(Field $field) => $field->isVisible && $field->filter && $field instanceof FieldString
+        );
+    }
+
+    /**
+     * Фильтры, выбранные в списке, для тегов над таблицей: название поля, подпись значения, адрес сброса
+     * @return list<array{name: string, label: string, value: string, reset: string}>
+     */
+    public function getAppliedFilters(): array
+    {
+        $filters = [];
+        foreach ($this->getState()['filter'] ?? [] as $name => $value) {
+            $field = $this->fields[$name] ?? null;
+            if ($field === null || !$field->filter || (string)$value === '') {
+                continue;
+            }
+            $filters[] = [
+                'name' => $name,
+                'label' => $field->label,
+                'value' => $field->getFilterLabel((string)$value),
+                'reset' => Page::get()->getPath() . '?' . http_build_query(['filter' => [$name => ''], 'p' => 0]),
+            ];
+        }
+
+        return $filters;
     }
 
     public function show(): string
@@ -722,20 +797,27 @@ abstract class Table extends Handler
                 $tree[(int)$row[$this->pid->name]][(int)$row[$this->pk->name]] = $row;
             }
             $id_start = (int)$this->getFilterValue($this->pid->name);
-            $list = Tree::toList($tree, $id_start);
-            foreach ($list as $l) {
-                if ($l['tree_level']) {
-                    $l[$tree_name] = '<div style="padding-left:' . (25 * $l['tree_level']) . 'px">' . $l[$tree_name] . '</div>';
-                }
-                $rows[] = $l;
-            }
+            // уровень вложенности (tree_level) шаблон выводит классом ячейки колонки $tree_name
+            $rows = Tree::toList($tree, $id_start);
         } else {
             $rows = $listRows;
         }
 
         $saveId = (int)$this->request->get('save_id');
+        $treeName = $this->isHierarchy ? $tree_name : '';
+        $filters = $this->getAppliedFilters();
+        $search = (string)($this->getState()['q'] ?? '');
 
-        return $this->render(__DIR__ . '/tpl/show.tpl', get_defined_vars());
+        return $this->render(__DIR__ . '/tpl/show.tpl', [
+            'rows' => $rows,
+            'pagination' => $pagination,
+            'saveId' => $saveId,
+            'treeName' => $treeName,
+            'filters' => $filters,
+            'search' => $search,
+            'count' => $cnt,
+            'theme' => Page::get()->getTheme(),
+        ]);
     }
 
     protected function showCell(Field $field, array $row): string
@@ -812,7 +894,8 @@ abstract class Table extends Handler
 
     protected function filterField(Field $field): string
     {
-        return $field->filter($this->request->request('filter')[$field->name] ?? '');
+        // значение из запроса или выбранное раньше (хранится в сессии)
+        return $field->filter($this->request->request('filter')[$field->name] ?? $this->getFilterValue($field->name));
     }
 
     public function addField(Field $field): void
@@ -1481,10 +1564,14 @@ abstract class Table extends Handler
      *
      * @param array<string, mixed> $row Запись карточки
      */
-    protected function showDetailTimeRows(array $row): string
+    /**
+     * Время создания и изменения записи (колонки модели, которых нет среди полей раздела): подпись => значение
+     * @return array<string, string>
+     */
+    public function getTimeInfo(array $row): array
     {
         if (!isset(static::$model)) {
-            return '';
+            return [];
         }
 
         $model = static::getModel();
@@ -1492,17 +1579,21 @@ abstract class Table extends Handler
             'Создано' => $model::COLUMN_TIME_CREATE,
             'Изменено' => $model::COLUMN_TIME_UPDATE,
         ], fn(?string $column) => $column !== null && !isset($this->fields[$column]));
-        if (!$columns || !isset($row[$this->pk->name])) {
-            return '';
+        if (!$columns || empty($row[$this->pk->name])) {
+            return [];
         }
 
         $times = new AQ()->asArray()->from($this->table)->select(array_values($columns))
             ->where([$this->pk->name => $row[$this->pk->name]])->fetchOne();
 
+        return array_map(fn(string $column) => (string)($times[$column] ?? ''), $columns);
+    }
+
+    protected function showDetailTimeRows(array $row): string
+    {
         $html = '';
-        foreach ($columns as $label => $column) {
-            $html .= '<tr class="modal-info__table-row"><th>' . $label . '</th><td>'
-                . htmlspecialchars((string)($times[$column] ?? '')) . '</td></tr>';
+        foreach ($this->getTimeInfo($row) as $label => $value) {
+            $html .= '<tr class="modal-info__table-row"><th>' . $label . '</th><td>' . htmlspecialchars($value) . '</td></tr>';
         }
 
         return $html;

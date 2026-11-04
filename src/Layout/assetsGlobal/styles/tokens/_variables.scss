@@ -1,85 +1,73 @@
 /*----------GRAY-----------*/
-$grayBlack: var(--gray-black);
-$grayDarker: var(--gray-darker);
-$grayDark: var(--gray-dark);
-$grayMedium: var(--gray-medium);
-$grayLight: var(--gray-light);
-$grayLighter: var(--gray-lighter);
-$grayWhite: var(--gray-white);
+$grayBlack: var(--color-main-gray-black);
+$grayDarker: var(--color-main-gray-darker);
+$grayDark: var(--color-main-gray-dark);
+$grayMedium: var(--color-main-gray-medium);
+$grayLight: var(--color-main-gray-light);
+$grayLighter: var(--color-main-gray-lighter);
+$grayWhite: var(--color-main-gray-white);
 
 /*----------COLOR1-----------*/
-$color1Darker: var(--color1-darker);
-$color1Dark: var(--color1-dark);
-$color1Main: var(--color1-main);
-$color1Light: var(--color1-light);
-$color1Lighter: var(--color1-lighter);
+$color1Darker: var(--color-main-color1-darker);
+$color1Dark: var(--color-main-color1-dark);
+$color1Main: var(--color-main-color1-main);
+$color1Light: var(--color-main-color1-light);
+$color1Lighter: var(--color-main-color1-lighter);
 
 /*----------COLOR2-----------*/
-$color2Darker: var(--color2-darker);
-$color2Dark: var(--color2-dark);
-$color2Main: var(--color2-main);
-$color2Light: var(--color2-light);
-$color2Lighter: var(--color2-lighter);
+$color2Darker: var(--color-main-color2-darker);
+$color2Dark: var(--color-main-color2-dark);
+$color2Main: var(--color-main-color2-main);
+$color2Light: var(--color-main-color2-light);
+$color2Lighter: var(--color-main-color2-lighter);
 
 /*----------GRADIENT-----------*/
-$gradient1Dark: var(--gradient1-dark);
-$gradient1Main: var(--gradient1-main);
-$gradient1Light: var(--gradient1-light);
+$gradient1Dark: var(--color-main-gradient1-dark);
+$gradient1Main: var(--color-main-gradient1-main);
+$gradient1Light: var(--color-main-gradient1-light);
 
 /*----------BACKGROUND-----------*/
-$bgLight: var(--bg-light);
-$bgDark: var(--bg-dark);
-$bgGradient: var(--bg-gradient);
-
-/*----------ERROR-----------*/
-$errorDark: var(--error-dark);
-$errorMedium: var(--error-medium);
-$errorLight: var(--error-light);
-
-/*----------ALERT-----------*/
-$alertDark: var(--alert-dark);
-$alertMedium: var(--alert-medium);
-$alertLight: var(--alert-light);
-
-/*----------SUCCESS-----------*/
-$successDark: var(--success-dark);
-$successMedium: var(--success-medium);
-$successLight: var(--success-light);
-
-/*----------DISABLE-----------*/
-$disableDark: var(--disable-dark);
-$disableMedium: var(--disable-medium);
-$disableLight: var(--disable-light);
-
-/*----------TRANSPARENT-----------*/
-$transparent: var(--transparent);
-
-/*----------SOCIALS-----------*/
-$socialsIn: var(--socials-in);
-$socialsWt: var(--socials-wt);
-$socialsTg: var(--socials-tg);
-$socialsVk: var(--socials-vk);
-$socialsYa: var(--socials-ya);
-
-/*----------UNIQUE-----------*/
-$uniqDark: var(--uniq-dark);
-$uniqGreen: var(--uniq-green);
-$uniqBlue: var(--uniq-blue);
-$uniqViolet: var(--uniq-violet);
-$uniqPurple: var(--uniq-purple);
-$uniqPink: var(--uniq-pink);
-$uniqRed: var(--uniq-red);
-$uniqOrange: var(--uniq-orange);
-$uniqGold: var(--uniq-gold);
-$uniqLight: var(--uniq-light);
+$bgLight: var(--color-main-bg-light);
+$bgDark: var(--color-main-bg-dark);
+$bgGradient: var(--color-main-bg-gradient);
 
 /*----------STATES-----------*/
-$stateDisabledDark: var(--state-disabled-dark);
-$stateDisabledMedium: var(--state-disabled-medium);
-$stateDisabledLight: var(--state-disabled-light);
-$stateClearDark: var(--state-clear-dark);
-$stateClearMedium: var(--state-clear-medium);
-$stateClearLight: var(--state-clear-light);
+$errorDark: var(--color-states-error-dark);
+$errorMedium: var(--color-states-error-medium);
+$errorLight: var(--color-states-error-light);
+
+$alertDark: var(--color-states-alert-dark);
+$alertMedium: var(--color-states-alert-medium);
+$alertLight: var(--color-states-alert-light);
+
+$successDark: var(--color-states-success-dark);
+$successMedium: var(--color-states-success-medium);
+$successLight: var(--color-states-success-light);
+
+/*----------SOCIALS-----------*/
+$socialsIn: var(--color-social-instagram-main);
+$socialsWt: var(--color-social-whatsapp-main);
+$socialsTg: var(--color-social-telegram-main);
+$socialsVk: var(--color-social-vk-main);
+$socialsYa: var(--color-social-yandex-main);
+
+/*----------UNIQUE-----------*/
+$uniqDark: var(--color-uniq-dark);
+$uniqGreen: var(--color-uniq-green);
+$uniqBlue: var(--color-uniq-blue);
+$uniqViolet: var(--color-uniq-violet);
+$uniqPurple: var(--color-uniq-purple);
+$uniqPink: var(--color-uniq-pink);
+$uniqRed: var(--color-uniq-red);
+$uniqOrange: var(--color-uniq-orange);
+$uniqGold: var(--color-uniq-gold);
+$uniqLight: var(--color-uniq-light);
+$stateDisabledDark: var(--color-states-disabled-dark);
+$stateDisabledMedium: var(--color-states-disabled-medium);
+$stateDisabledLight: var(--color-states-disabled-light);
+$stateClearDark: var(--color-states-clear-dark);
+$stateClearMedium: var(--color-states-clear-medium);
+$stateClearLight: var(--color-states-clear-light);
 
 /*----------SHADOWS-----------*/
 $shadowGrayXl: var(--shadow-gray-xl);

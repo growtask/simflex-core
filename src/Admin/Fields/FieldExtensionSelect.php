@@ -33,6 +33,11 @@ abstract class FieldExtensionSelect extends Field
         ]);
     }
 
+    public function getFilterLabel(string $value): string
+    {
+        return (string)($this->options()[$value] ?? $value);
+    }
+
     public function filter($value): string
     {
         if (!$this->filter) {
@@ -45,7 +50,7 @@ abstract class FieldExtensionSelect extends Field
             $items[] = [$optionValue, $name];
         }
 
-        return $this->dropdown([
+        return $this->filterDropdown([
             'name' => 'filter[' . $this->name . ']',
             'value' => (string)$value,
             'current' => $options[$value] ?? $this->label,

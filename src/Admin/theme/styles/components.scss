@@ -1,0 +1,15 @@
+/*
+ * Компоненты макета админки SimflexCMS (menu, page-head, table-bar…): LayoutManager подключает файл после стилей
+ * компонентов Layout, выведенных на странице, — локальные компоненты переопределяют их
+ */
+@import 'components/app';
+@import 'components/menu';
+@import 'components/topbar';
+@import 'components/page-head';
+@import 'components/support';
+@import 'components/group';
+@import 'components/auth';
+@import 'components/list';
+@import 'components/form';
+@import 'components/edit-table';
+@import 'components/ui-showcase';

@@ -30,6 +30,7 @@ class Layout extends LayoutBase
      * @param bool $closeOnOverlay Закрывать ли окно кликом по подложке
      * @param string $className Дополнительные CSS-классы корня
      * @param array<string,mixed> $attributes HTML-атрибуты корня
+     * @param bool $alert Окно требует ответа (подтверждение удаления и т. п.): role="alertdialog"
      */
     public static function drawModal(
         string $id,
@@ -42,7 +43,8 @@ class Layout extends LayoutBase
         ModalSize $size = ModalSize::ExtraSmall,
         ModalTheme $theme = ModalTheme::Light,
         string $className = '',
-        array $attributes = []
+        array $attributes = [],
+        bool $alert = false,
     ): string {
         $closeButton = Button::drawButton(
             className: 'modal__close',
@@ -54,7 +56,18 @@ class Layout extends LayoutBase
         );
 
         return static::draw(
-            compact('id', 'title', 'text', 'content', 'footer', 'closeOnOverlay', 'className', 'attributes', 'closeButton') + [
+            compact(
+                'id',
+                'title',
+                'text',
+                'content',
+                'footer',
+                'closeOnOverlay',
+                'className',
+                'attributes',
+                'closeButton',
+                'alert'
+            ) + [
                 'size' => $size->value,
                 'theme' => $theme->value,
             ]

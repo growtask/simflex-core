@@ -6,6 +6,11 @@ use Simflex\Core\Admin\Plugins\Editor\Editor;
 
 class FieldText extends Field
 {
+    public function isWide(): bool
+    {
+        return true;
+    }
+
     public function __construct($row)
     {
         parent::__construct($row);

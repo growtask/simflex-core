@@ -5,8 +5,8 @@
     z-index: z('modal');
     display: flex;
     flex-direction: column;
-    background: var(--gray-white);
-    color: var(--gray-darker);
+    background: var(--color-main-gray-white);
+    color: var(--color-main-gray-darker);
     opacity: 0;
     @include transition(opacity);
 

@@ -1,0 +1,94 @@
+/* Служебные страницы без меню: вход, восстановление пароля, нет доступа (компоненты макета login-card, restore-card) */
+.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 100vh;
+    @include spacing(padding, 24px, 24px, 16px, 16px);
+    @include spacing(gap, 24px);
+
+    &__logo .logo__image {
+        display: block;
+        width: auto;
+        @include spacing(height, 40px);
+    }
+
+    // форма восстановления пароля (growtask.ru) поверх страницы
+    &__restore-frame {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+        border: 0;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__version {
+        margin: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+    }
+}
+
+.auth-card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-blocks);
+    box-shadow: var(--shadow-gray-m);
+    @include spacing(max-width, 560px, 560px, 560px, 382px);
+    @include spacing(padding, 40px, 40px, 24px, 24px);
+    @include spacing(gap, 24px);
+
+    &-theme_dark {
+        background: var(--color-main-gray-darker);
+        box-shadow: none;
+    }
+
+    &__title {
+        margin: 0;
+        @include h4;
+    }
+
+    &__text {
+        margin: 0;
+        color: var(--color-text-icon-gray-dark);
+        @include t2;
+
+        .auth-card-theme_dark & {
+            color: var(--color-text-icon-gray-lighter);
+        }
+    }
+
+    &__fields {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 16px);
+    }
+
+    &__text[hidden] {
+        display: none;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        @include spacing(gap, 12px);
+
+        @include Mobile {
+            flex-direction: column;
+
+            .btn {
+                width: 100%;
+            }
+        }
+    }
+}

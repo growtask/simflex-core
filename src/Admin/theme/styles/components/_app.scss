@@ -1,0 +1,108 @@
+/*
+ * Каркас админки AppShell (simflexcms-pages.md, §1): меню слева (на планшете и телефоне — шторка и topbar-mobile),
+ * справа колонка page: блоки через 20 (16), снизу 88 под плавающую панель действий
+ */
+// прокрутка к элементу (фокус, якорь) не прячет его под плавающей панелью действий внизу
+html {
+    scroll-padding-top: vw(24px);
+    scroll-padding-bottom: vw(104px);
+}
+
+// фон и цвет текста страницы (в components.scss: поверх старых стилей админки до их удаления в 8.1)
+body {
+    // прокручивается страница (старые стили прятали прокрутку body и прокручивали блок внутри)
+    overflow: visible;
+    height: auto;
+    min-height: 100vh;
+    background: var(--color-background);
+    background-attachment: fixed;
+    color: var(--color-text-icon-gray-black);
+    font-family: var(--font-main);
+
+    [data-theme="dark"] & {
+        color: var(--color-text-icon-gray-white);
+    }
+}
+
+.app {
+    display: flex;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+    @include spacing(gap, 24px);
+    @include spacing(padding, 24px, 24px, 0, 0);
+
+    @include Tablet {
+        display: block;
+    }
+
+    &__main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__skip {
+        position: absolute;
+        z-index: z('debug');
+        left: 8px;
+        top: -100px;
+        padding: 8px 12px;
+        background: var(--color-main-gray-white);
+        color: var(--color-text-icon-color1-dark);
+        border-radius: var(--radius-ui-small);
+        @include ui-s;
+
+        &:focus {
+            top: 8px;
+        }
+    }
+
+    // тосты: по центру колонки страницы (справа от меню 280 или 72 px с отступом 24), над нижней панелью действий
+    &__toasts {
+        left: calc(50% + #{vw(152px)});
+        @include spacing(bottom, 88px, 88px, 88px, 80px);
+
+        .sf-menu-collapsed & {
+            left: calc(50% + #{vw(48px)});
+        }
+
+        @include Tablet {
+            left: 50%;
+        }
+    }
+
+    // нотификаторы (notice): правый верхний угол, стопка вниз
+    &__notices {
+        position: fixed;
+        z-index: z('notification');
+        display: flex;
+        flex-direction: column;
+        @include spacing(top, 24px, 24px, 16px, 16px);
+        @include spacing(right, 24px, 24px, 16px, 16px);
+        @include spacing(gap, 12px);
+        @include spacing(width, 420px, 420px, 360px, 382px);
+
+        &:empty {
+            display: none;
+        }
+    }
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    @include spacing(gap, 20px, 20px, 16px, 16px);
+    @include spacing(padding-bottom, 88px);
+
+    &:focus {
+        outline: none;
+    }
+
+    @include Tablet {
+        padding-inline: vwt(16px);
+    }
+    @include Mobile {
+        padding-inline: vwm(12px);
+    }
+}

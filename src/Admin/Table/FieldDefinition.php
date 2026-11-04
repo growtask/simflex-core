@@ -17,6 +17,7 @@ readonly class FieldDefinition
      * @param bool $filter Фильтр по полю над списком
      * @param bool $isFk, $fkTable, $fkKey, $fkLabel, $fkIsPid Внешний ключ: таблица, её ключ, колонка, показываемая
      *        вместо ключа, родитель в той же таблице. Проще через пресеты ForeignKeyField, ParentField
+     * @param string $tab Вкладка формы: поля без вкладки — на первой («Основное»); вкладки видны, если их больше одной
      * @param array<string, mixed> $params Параметры типа поля, которых нет среди аргументов: структура FieldTable
      *        ('struct'), таблицы FieldMultiKey ('table_values', 'table_relations', 'key'...), формат FieldDouble
      *        ('decimals'...), подзапрос FieldVirtual ('subquery') и т.п. Попадают в params['main'] поля, где их читает
@@ -47,6 +48,7 @@ readonly class FieldDefinition
         public bool $fkIsPid = false,
         public string $pos = '',
         public string $posGroup = '',
+        public string $tab = '',
         public string $source = '',
         public string $path = '',
         public string $small = '',
@@ -86,6 +88,7 @@ readonly class FieldDefinition
                 'fk_is_pid' => $this->fkIsPid,
                 'pos' => $this->pos,
                 'pos_group' => $this->posGroup,
+                'tab' => $this->tab,
                 'source' => $this->source,
                 'path' => $this->path,
                 'small' => $this->small,

@@ -11,6 +11,7 @@ $inputClasses = [
     "text-input-kind_{$data['kind']}",
     $data['value'] !== '' ? 'text-input_filled' : '',
     $data['error'] !== '' ? 'text-input_error' : '',
+    $data['success'] && $data['error'] === '' ? 'text-input_success' : '',
     $isDisabled ? 'text-input_disabled' : '',
     $data['className'] ?? ''
 ];
@@ -53,8 +54,14 @@ if ($data['counter']) {
                 <span class="text-input__counter" aria-hidden="true"><?= (int)$data['length'] ?>/<?= (int)$data['maxLength'] ?></span>
             <?php endif; ?>
 
+            <?php if ($data['slot'] !== ''): ?>
+                <span class="text-input__slot"><?= $data['slot'] ?></span>
+            <?php endif; ?>
+
+            <?= $data['popup'] ?? '' ?>
+
             <?php if ($data['reset']): ?>
-                <button class="text-input__reset reset-button" type="button" aria-hidden="true">
+                <button class="text-input__reset reset-button" type="button" aria-label="Очистить" aria-hidden="true" tabindex="-1">
                     <?= renderIcon('close', 'text-input__reset-icon') ?>
                 </button>
             <?php endif; ?>

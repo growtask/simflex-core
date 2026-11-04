@@ -1,0 +1,238 @@
+/* Выпадающий список Dropdown/main, Dropdown/input (design-ui-dropdown.md) */
+.dropdown {
+    --dropdown-gap: #{vw(8px)};
+    --dropdown-padding: #{vw(12px)};
+    --dropdown-radius: var(--radius-ui-xlarge);
+    --dropdown-max-height: #{vw(348px)};
+    --dropdown-field-height: #{vw(48px)};
+    --dropdown-field-padding: #{vw(12px)};
+
+    position: relative;
+    display: inline-flex;
+
+    @include Tablet {
+        --dropdown-gap: #{vwt(8px)};
+    }
+    @include Mobile {
+        --dropdown-gap: #{vwm(8px)};
+    }
+
+    $sizes: (
+        xs: (field: 32px, fieldPadding: 8px, padding: 8px, maxHeight: 232px),
+        s: (field: 40px, fieldPadding: 8px, padding: 12px, maxHeight: 304px),
+        m: (field: 48px, fieldPadding: 12px, padding: 12px, maxHeight: 348px),
+        l: (field: 56px, fieldPadding: 16px, padding: 12px, maxHeight: 392px),
+    );
+    @each $name, $size in $sizes {
+        &_size_#{$name} {
+            --dropdown-field-height: #{vw(map-get($size, field))};
+            --dropdown-field-padding: #{vw(map-get($size, fieldPadding))};
+            --dropdown-padding: #{vw(map-get($size, padding))};
+            --dropdown-max-height: #{vw(map-get($size, maxHeight))};
+
+            @include HD {
+                --dropdown-field-height: #{vwh(map-get($size, field))};
+                --dropdown-field-padding: #{vwh(map-get($size, fieldPadding))};
+                --dropdown-padding: #{vwh(map-get($size, padding))};
+                --dropdown-max-height: #{vwh(map-get($size, maxHeight))};
+            }
+            @include Tablet {
+                --dropdown-field-height: #{vwt(map-get($size, field))};
+                --dropdown-field-padding: #{vwt(map-get($size, fieldPadding))};
+                --dropdown-padding: #{vwt(map-get($size, padding))};
+                --dropdown-max-height: #{vwt(map-get($size, maxHeight))};
+            }
+            @include Mobile {
+                --dropdown-field-height: #{vwm(map-get($size, field))};
+                --dropdown-field-padding: #{vwm(map-get($size, fieldPadding))};
+                --dropdown-padding: #{vwm(map-get($size, padding))};
+                --dropdown-max-height: #{vwm(map-get($size, maxHeight))};
+            }
+        }
+    }
+
+    // радиус контейнера = радиус пункта + отступ: у xs пункт ui/small, контейнер ui/large
+    &_size_xs {
+        --dropdown-radius: var(--radius-ui-large);
+    }
+
+    &_view_select {
+        display: flex;
+        width: 100%;
+    }
+
+    // поле-селект: как Inputs/main filled
+    &__field {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        height: var(--dropdown-field-height);
+        padding: 0 var(--dropdown-field-padding);
+        cursor: pointer;
+        border: 0;
+        background: var(--color-main-gray-lighter);
+        color: var(--color-text-icon-gray-darker);
+        text-align: left;
+        border-radius: var(--radius-ui-medium);
+        @include spacing(gap, 4px);
+        @include t2;
+        @include transition((background, box-shadow));
+
+        &:focus-visible,
+        &[aria-expanded="true"] {
+            outline: none;
+            background: var(--color-main-gray-white);
+            box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            background: var(--color-states-disabled-light);
+            color: var(--color-text-icon-gray-medium);
+        }
+    }
+
+    &_size_xs &__field {
+        border-radius: var(--radius-ui-small);
+    }
+
+    &__value {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &_placeholder {
+            color: var(--color-text-icon-gray-medium);
+        }
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        fill: currentColor;
+        color: var(--color-text-icon-gray-medium);
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+        @include transition(transform);
+    }
+
+    &__field[aria-expanded="true"] &__chevron {
+        transform: rotate(180deg);
+    }
+
+    &__panel {
+        position: absolute;
+        z-index: z('dropdown');
+        top: calc(100% + var(--dropdown-gap));
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        min-width: 100%;
+        padding: var(--dropdown-padding);
+        gap: var(--dropdown-padding);
+        background: var(--color-main-gray-white);
+        border-radius: var(--dropdown-radius);
+        box-shadow: var(--shadow-gray-m);
+
+        &[hidden] {
+            display: none;
+        }
+
+        &_position_top {
+            top: auto;
+            bottom: calc(100% + var(--dropdown-gap));
+        }
+
+        &_side_right {
+            left: auto;
+            right: 0;
+        }
+    }
+
+    &_view_menu &__panel {
+        @include spacing(width, 200px);
+        gap: 0;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        max-height: var(--dropdown-max-height);
+        overscroll-behavior: contain;
+        @include scrollbar(overlay, s);
+    }
+
+    &__option {
+        flex-shrink: 0;
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+
+        .tab__text {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        // галочка только у выбранного: выбор виден не только цветом
+        &:not(.active) .tab__icon-right {
+            visibility: hidden;
+        }
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__panel_align_center &__option {
+        justify-content: center;
+        text-align: center;
+    }
+
+    &__empty {
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+        @include spacing(padding, 8px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    // тёмная тема: панель main/gray/darker с обводкой 2 px внутрь main/gray/dark, без тени
+    &-theme_dark &__list {
+        @include scrollbar(overlay, s, dark);
+    }
+
+    &-theme_dark &__panel {
+        background: var(--color-main-gray-darker);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+    }
+
+    &-theme_dark &__field {
+        background: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-lighter);
+
+        &:focus-visible,
+        &[aria-expanded="true"] {
+            background: var(--color-main-gray-black);
+        }
+
+        &:disabled {
+            background: var(--color-states-disabled-dark);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__field,
+        &__chevron {
+            transition: none;
+        }
+    }
+}

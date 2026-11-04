@@ -1,66 +1,70 @@
 <?php
+
 /**
+ * Привилегии из кода (Handlers\Privilege): переключатель активности сохраняется сразу (?action=switch)
  * @var array<array{name: string, title: string, active: bool, switchable: bool}> $rows
  */
+
+use Simflex\Core\Admin\Page;
+use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\Layout as Toggle;
+use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleSize;
+use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleTheme;
+
+$theme = Page::get()->getTheme();
 ?>
-<div class="content">
-    <div class="content__inner">
-        <div class="content__head">
-            <div class="content__head-wrap">
-                <div class="content__head-bg"></div>
-                <div class="content__head-left">
-                    <h4 class="content__title"><?= htmlspecialchars($this->title ?: 'Привилегии') ?></h4>
-                </div>
-            </div>
-        </div>
-        <div class="content__body">
-            <div class="privilege-tables">
-                <table class="table privilege-table">
-                    <thead>
-                    <tr class="table__head-row">
-                        <th class="table__head-col privilege-table__active"><span class="form-control__sort-title">Активно</span></th>
-                        <th class="table__head-col privilege-table__name"><span class="form-control__sort-title">Название</span></th>
-                        <th class="table__head-col"><span class="form-control__sort-title">Описание</span></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($rows as $row): ?>
-                        <tr class="table__row privilege-table__row" data-privilege="<?= htmlspecialchars($row['name']) ?>">
-                            <td class="privilege-table__active">
-                                <div class="form-control">
-                                    <label class="form-control__switch"<?= $row['switchable'] ? '' : ' title="Без неё никто не сможет включить остальные привилегии обратно"' ?>>
-                                        <input class="form-control__switch-check" type="checkbox"
-                                            <?= $row['active'] ? 'checked' : '' ?><?= $row['switchable'] ? '' : ' disabled' ?> />
-                                        <div class="form-control__switch-slider"></div>
-                                    </label>
-                                </div>
-                            </td>
-                            <td class="privilege-table__name"><div class="table__row-text"><?= htmlspecialchars($row['name']) ?></div></td>
-                            <td><div class="table__row-text"><?= htmlspecialchars($row['title']) ?></div></td>
-                        </tr>
-                    <?php endforeach ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<section class="table-card table-card-theme_<?= $theme ?>" aria-label="<?= htmlspecialchars($this->title ?: 'Привилегии') ?>">
+    <div class="table-card__scroll">
+        <table class="table-list privilege-table">
+            <thead>
+            <tr class="thr">
+                <th class="th th_toggle" scope="col">Активно</th>
+                <th class="th" scope="col">Название</th>
+                <th class="th th_main" scope="col">Описание</th>
+            </tr>
+            </thead>
+            <tbody class="table__body">
+            <?php foreach ($rows as $row): ?>
+                <?php
+                $attributes = ['aria-label' => 'Привилегия ' . $row['name'], 'data-sf-privilege-switch' => ''];
+                if ($row['active']) {
+                    $attributes['checked'] = 'checked';
+                }
+                if (!$row['switchable']) {
+                    $attributes['disabled'] = 'disabled';
+                    $attributes['title'] = 'Без неё никто не сможет включить остальные привилегии обратно';
+                }
+                ?>
+                <tr class="tr privilege-table__row" data-privilege="<?= htmlspecialchars($row['name']) ?>">
+                    <td class="td" data-label="Активно">
+                        <?= Toggle::drawToggle(
+                            className: 'privilege-table__switch',
+                            icon: false,
+                            size: ToggleSize::Small,
+                            theme: ToggleTheme::from($theme),
+                            attributes: $attributes,
+                        ) ?>
+                    </td>
+                    <td class="td td_main" data-label="Название"><?= htmlspecialchars($row['name']) ?></td>
+                    <td class="td" data-label="Описание"><?= htmlspecialchars($row['title']) ?></td>
+                </tr>
+            <?php endforeach ?>
+            </tbody>
+        </table>
     </div>
-</div>
-<style>
-    .privilege-table th, .privilege-table td { padding: 12px 16px; text-align: left; }
-    .privilege-table__row { border-top: 1px solid #eef1f5; }
-    .privilege-table .table__row-text { padding: 0; margin: 0; }
-    .privilege-table__active { width: 120px; }
-    .privilege-table__name { width: 240px; }
-    .privilege-table .form-control__switch:has(input:disabled) { opacity: .5; cursor: not-allowed; }
-</style>
-<script>
-    document.querySelectorAll('.privilege-table [data-privilege] .form-control__switch-check').forEach(function (input) {
-        input.addEventListener('change', function () {
-            const body = new URLSearchParams({name: input.closest('[data-privilege]').dataset.privilege, active: input.checked ? '1' : '0'});
-            fetch('?action=switch', {method: 'POST', body: body, headers: {'X-Requested-With': 'XMLHttpRequest'}})
-                .then(function (res) { return res.json(); })
-                .then(function (data) { input.checked = !!data.active; })
-                .catch(function () { input.checked = !input.checked; });
+</section>
+<script type="module">
+    import {request, toast} from '<?= Page::webVendorPath() ?>/theme/js/admin.js';
+
+    document.querySelectorAll('[data-sf-privilege-switch]').forEach((input) => {
+        input.addEventListener('change', async () => {
+            const name = input.closest('[data-privilege]').dataset.privilege;
+            try {
+                const data = await request('?action=switch', {method: 'POST', data: {name, active: input.checked ? '1' : '0'}});
+                input.checked = Boolean(data.active);
+            } catch {
+                input.checked = !input.checked;
+                toast('Не удалось изменить привилегию', {type: 'error'});
+            }
         });
     });
 </script>

@@ -6,6 +6,151 @@
 
 ## [4.0.0] — не выпущена
 
+- Страница редактирования в новом дизайне (`Table/tpl/form.tpl`, `theme/js/form.js`): page-head с «Сохранить»,
+  уведомление об ошибках сохранения и ошибка под полем, секции полей (поля без группы — «Основное», `posGroup` и
+  группы параметров — свои секции, раскрытие по шапке, сетка 4/3/2/1), правая панель (`pos: 'right'`, параметры
+  `right`, «Создано/Изменено» — `Table::getTimeInfo()`) со скрытием, плавающая панель «Сохранить / Сохранить и выйти /
+  Отмена», групповое редактирование — «Изменять это поле». Вкладки формы: параметр `tab` у `FieldDefinition`,
+  `ParamDefinition`, `ParamGroup`, `ContentTemplateBlock` (вкладки видны, если их больше одной; `#tab-…` в адресе,
+  вкладка с ошибкой открывается сама). Поля формы на компонентах Layout: строка и пароль — `TextInput`, текст —
+  `Textarea` (с редактором — карточка TinyMCE), переключатель — `ToggleSwitch`, порядок — `Stepper`, цвет — образец и
+  код, выпадающие списки (`Field::dropdown()`, внешние ключи, перечисления, выбор расширения, фильтры колонок) —
+  `Dropdown` с поиском на сервере (`searchUrl`, `inputAttributes`); шаблоны `dropdown.tpl`, `form.actions.tpl` удалены.
+  TinyMCE: скин и стили содержимого по теме админки, неиспользуемые скины удалены. «Профиль» и «Привилегии» — в
+  новом дизайне. `Dropdown::drawSelect()`: параметры `searchUrl`, `inputAttributes`.
+
+- Список раздела админки в новом дизайне (`Table/tpl/show.tpl`, `theme/js/list.js`): page-head с «Добавить»,
+  карточка таблицы, поиск по текстовым колонкам с фильтром (`?q=`), теги выбранных фильтров, фильтры колонок —
+  `TextInput` и `Dropdown` (`Field::filterDropdown()`, подпись значения — `Field::getFilterLabel()`), окно «Фильтры» на
+  планшете и телефоне, сортировка `SortButton` с явным направлением (`?o=<поле>&d=0|1`, `aria-sort`), ячейки на
+  компонентах Layout (переключатель, статус `Dropdown`, порядок `Stepper`, превью / `Placeholder`), действия строки
+  `ButtonIcon` и меню «Ещё», плавающая панель `table-bar` по числу выбранных записей, удаление с подтверждением,
+  подвал «Показано 1–20 из 50» + `Pagination`, пустая таблица, карточки на планшете и телефоне, отступ дерева
+  классом (`td_level_N`) вместо inline-стиля. `width: 1` — главная колонка. Удалены скрипт ширин колонок в `vw` и
+  `Table::$rowActionsCnt`. Что сделать в разделах со своими `showActions()`/`rowActions()`: кнопки на компонентах
+  Layout; ссылка `?action=change_enum` вместо `?action=changeENUM`.
+
+- Окна админки на `Common/Modal`: удаление (`alertdialog`), сведения о записи, подтверждение `sfAdmin.confirm()`
+  (`theme/js/modals.js`); панель поддержки `support-bar` (форма обращения грузится при первом открытии); страница
+  группы меню — карточки подпунктов, виджеты — карточки (обёртка `widgets` перенесена в шаблон); страница «нет доступа»
+  в стиле входа. Удалены окна `help`, `context`, `account`, `sidebar`, `mobilebar`.
+
+- Компоненты Layout: `UI/Core/Calendar` (виды дни, месяцы, годы, время, клавиатура, `min`/`max`, событие
+  `calendar:select`), `UI/Core/TagsInput` (поле тегов с подсказками и поиском на сервере), `Common/Uploader`
+  (загрузка одного файла: перетаскивание, прогресс, «Из библиотеки», удаление). `TextInputKind::Date`, `DateTime`,
+  `Time` — поле с маской и календарём.
+- Поля админки на новых компонентах: `FieldDate`, `FieldDateTime`, `FieldTime` — маска и календарь (значение
+  в форме `ДД.ММ.ГГГГ [ЧЧ:ММ]`, `getPOST()` переводит в формат БД); `FieldTags`, `FieldMultiKey`, `FieldRelation` —
+  `TagsInput`; `FieldImage`, `FieldFile` — `Uploader`. Действия `upload_img` и `upload_file` принимают `source` —
+  адрес файла в `/uf` (выбор из файлового менеджера): файл копируется в каталог поля (`Media\File::loadFile()`).
+  Удалены bootstrap-пикеры `Admin/Plugins/UI` и `Admin/theme/ui` (datepicker, timepicker, datetimepicker,
+  fileinput), шаблоны полей `datetime.tpl`, `time.tpl`, `select.tpl` (не использовался); шаблоны `tags.tpl`,
+  `file.tpl`, `image.tpl` получают другие переменные (`selected`, `options`, `searchUrl`, `allowNew`).
+- Файловый менеджер (пакет `growtask/simflex-file-manager` 4.0) — новое окно на компонентах Layout: `body.tpl`
+  рендерит `src/tpl/index.tpl` пакета с переменными API, корня файлов, статики и темы, скрипт — модуль
+  `file-manager.js` (`Admin\Page::jsModule()` — скрипт-модуль по веб-адресу), стили — со стилями админки. Глобальные
+  `fileManager.apiBase`, `rootDir`, `assetsDir` и `styles.css` пакета не подключаются. Открытие —
+  `window.fileManager.open({multiple, onSelect})`. В окне строки поля-таблицы у колонок `image` и `file` —
+  «Из библиотеки». Плагин TinyMCE `fm` вставляет картинку тегом `img`, другой файл — ссылкой, несколько файлов сразу;
+  заглушки `plugin.js`, `plugin.ts` удалены. TinyMCE: `relative_urls: false` — адреса от корня сайта (`/uf/...`).
+- `Common/Modal`: окна открываются стопкой — окно поверх открытого (подтверждение, файловый менеджер поверх окна
+  строки) при закрытии возвращает предыдущее; раньше второе окно закрывало первое.
+- Поля-таблицы `FieldTable` и `FieldVirtualTable` — таблица `edit-table` на разметке списка (карточки на планшете
+  и телефоне) и окно строки на компонентах Layout (`Fields/tpl/table.tpl`, ES-модуль `theme/js/table-editor.js` без
+  jQuery). Удалены `theme/js/table.js` (`TableEditor`), `theme/js/vtable.js` (`VTableEditor`), `Table/js/struct.table.js`,
+  `Fields/tpl/vtable.tpl`, окно `theme/tpl/modals/point.tpl` (`window.openPointModal()`). Контракт действий раздела
+  `vtGet`, `vtAdd`, `vtEdit`, `vtDelete`, `upload_table_file` прежний. `Plugins/Editor/Editor::getConfig()` — настройки
+  TinyMCE для редактора, который запускается скриптом. У новой записи `FieldVirtualTable` выводит уведомление
+  (`vtable-notice.tpl` был пустым).
+- Модули сайта (`Handlers\ModuleItem`): `Table/js/moduleitem.js` — ES-модуль без jQuery; параметры модуля
+  загружаются при выборе модуля (событие `change` списка), выполняются их скрипты (редактор TinyMCE), редакторы
+  прежнего модуля удаляются. Поле `module` без `onchange` (раньше срабатывал и в фильтре списка). Исправлено:
+  редактор в параметрах модуля не запускался (`Editor::tinymce('full')` без класса давал селектор `.` и отменял
+  инициализацию поля; скрипт TinyMCE не подключался к ajax-ответу — `Editor::addScript()`).
+- `Field::isWide()` — поле формы на всю строку (`form-input_wide`): `FieldText`, `FieldTable`, `FieldVirtualTable`,
+  `FieldMultiKey`, `FieldRelation`, `FieldTags` и поля с редактором; используется формой и параметрами модуля
+  (`form.field.tpl`).
+
+- Вход в админку (`login.tpl`) — карточка `auth-card` на компонентах Layout (логин и пароль с иконками, показ пароля,
+  «Запомнить меня»), тема как в админке. Форма отправляется POST (раньше GET — пароль попадал в адрес и журналы
+  сервера). При ошибке входа — уведомление «Неверный логин или пароль» (`Admin\Auth::WRONG_LOGIN_MESSAGE`, один текст
+  для неверного логина, пароля и пользователя без доступа), при пустых полях — «Введите логин и пароль».
+
+- Сообщения в админке (`Alert`) выводит макет: успех — тост (`Toast`), ошибка, предупреждение, информация —
+  уведомление `Notice` в правом верхнем углу (`Alert::drawAdminMessages()`); `Alert::getHTML()` в админке ничего
+  не выводит, шаблон `Admin/theme/tpl/alert.tpl` удалён. Старая разметка действий строки — класс `row-tip` вместо
+  `tooltip` (класс занят компонентом `Tooltip`); что сделать в расширениях: заменить `class="tooltip"` в своих
+  шаблонах админки.
+
+- Каркас админки нового дизайна: меню (`theme/tpl/partial/sidebar.tpl`, сворачивание, поиск, группы, шторка на
+  планшете и телефоне), `topbar-mobile`, `page-head` (`Admin\Page::drawPageHead()`), переключатель темы. Иконки
+  `MenuItem::$icon` — ID дизайн-системы (`lock-mini` → `lock-on`, `settings` → `setting` и т. д., таблица в плане
+  `admin-4.0.md`, 0.2); что сделать на сайте и в расширениях: заменить старые имена иконок пунктов меню. Модуль
+  `Breadcrumbs` выводит компонент `Breadcrumbs`. `LayoutManager` подключает `components.scss` глобальной директории
+  после стилей компонентов.
+
+- Новые компоненты `Layout`: `Buttons/ButtonIcon` (кнопка-иконка 24 px, Figma `Buttons/icon-small`), `Tooltip`
+  (подсказка и иконка «i», задержка 150 мс, `Esc`, `aria-describedby`), `Notice` (уведомление info/error/alert/success),
+  `Toast` (тост и стопка, `window.sfToast()`, не меньше 5 секунд, пауза таймера при наведении и фокусе). `Common/Breadcrumbs`
+  (сворачивание середины на телефоне), `Common/Pagination` (номера, компактный вид, переход по номеру),
+  `Other/Placeholder` (аватар, «нет картинки»). `Tab` стиль `soft`: нажатие и активное состояние по дизайн-системе
+  (`main/color1/light`, `main/color1/lighter`; раньше совпадали с `secondary`).
+  `Dropdown`: `drawSelect()` (поле-селект со скрытым полем, поиск, `listbox`) и `drawMenu()` (меню действий),
+  клавиатура, открытие вверх при нехватке места.
+  `SortButton` (кнопка направления и заголовок столбца с сортировкой), `Stepper` (число с кнопками, min/max/step).
+  `TextInput`: `TextInputKind::Password` (кнопка «Показать пароль»), параметры `success` и `slot` (HTML справа в
+  поле); кнопка очистки — с именем «Очистить» и вне порядка фокуса, пока поле пустое.
+- Доработки компонентов `Layout` по дизайн-системе: `ToggleSwitch` — корень `<label>` (подпись — имя переключателя),
+  состояние `disabled`, `focus-visible`, галочка из спрайта (`check`) вместо inline-SVG; `RadioOption` — `disabled`
+  на `states/disabled`, `focus-visible`; `Modal` — параметр `alert` (`role="alertdialog"`); `LoaderIcon::drawLoader()`
+  (размеры xs–xl, primary/monochrome, `role="status"`); `Button` — недоступная кнопка на `states/disabled/*`
+  (было `main/gray/medium`), стили `Success` и `Error`; `Tag` — `icon`, `close` (отдельная кнопка «Удалить …»),
+  `closeLabel`; `Badge` — метки `badges/product` по дизайну (`Sale`, `New`, `NoStock` — новые цвета; `Hit`, `Info`,
+  `Preorder`, `Video`, `ThreeD`); миксин `scrollbar()` (classic/overlay, s/m/l, тёмная тема). Вид на сайте меняется
+  у недоступных кнопок и меток `Sale`/`New`/`NoStock`.
+
+- **Меню админки двухуровневое (несовместимо):** группа и её пункты; пункт третьего уровня (`children` у подпункта,
+  `Menu::add(..., parent: <подпункт>)`) — `LogicException`. «Редактор страниц» перенесён в новую группу «Контент»:
+  группа `/content`, раздел `/content/page` (было `/content`). Что сделать на сайте: ссылки на `/admin/content` как на
+  редактор заменить на `/admin/content/page`; `before: '/content'` и `remove('/content')` теперь относятся к группе.
+
+- Админка, основа нового дизайна: компоненты `Layout` выводятся в админке, их стили собираются
+  `LayoutManager` в `Admin\Page::getMeta()` с корневым стилем `Admin/theme/styles/style.scss` в отдельный кеш
+  `cache/css/admin*.css` (переопределения сайта `Layout/assetsGlobal` не подключаются). Десктоп админки — в px:
+  свой `Admin/theme/styles/tokens/_functions.scss` (`vw()`, `vwh()` → px, `vwt()`, `vwm()` → `vw`). Тело макета
+  (`theme/tpl/body.tpl`) рендерится до head, `login.tpl` и `denied.tpl` выводят `$page->getMeta()`.
+  Спрайт иконок админки `Admin/theme/img/icons.svg` (ID дизайн-системы), `renderIcon()` в `Location::Admin`
+  берёт его. `Admin\Page::coreJsModule()` — скрипты-модули (`<script type="module">`). Витрина компонентов
+  `/admin/ui` (`Handlers\Ui`) — только в режиме разработки, привилегия `DEV`. Тема админки — cookie `sf_admin_theme`
+  (`Admin\Page::getTheme()`, `data-theme` на `<html>`). Шрифт админки — только вариативный Inter (статические
+  начертания и InterDisplay удалены). Общий JS-модуль `Admin/theme/js/admin.js` (`window.sfAdmin`: `request()` с
+  CSRF-токеном, `register()`, `toast()`, `confirm()`), CSRF-токен страницы — `<meta name="csrf-token">`.
+
+- **Токены цветов `Layout` переименованы по дизайн-системе (несовместимо):** `--gray-*` → `--color-main-gray-*`,
+  `--color1-*`/`--color2-*` → `--color-main-color1-*`/`--color-main-color2-*`, `--gradient1-*` →
+  `--color-main-gradient1-*`, `--bg-*` → `--color-main-bg-*`, `--error-*`/`--alert-*`/`--success-*` →
+  `--color-states-*`, `--disable-*` и `--state-disabled-*` → `--color-states-disabled-*` (значения из дизайн-системы:
+  `#616466`, `#C1C7CC`, `#DFE4EB`), `--state-clear-*` → `--color-states-clear-*` (прозрачные), `--uniq-*` →
+  `--color-uniq-*`, `--socials-<xx>` → `--color-social-<сервис>-main` (`wt` → `whatsapp`, `tg` → `telegram`,
+  `ya` → `yandex`, `in` → `instagram`, `go` → `google`, `yt` → `youtube`, `fg` → `figma`), `--delivery-*` →
+  `--color-delivery-*`. `--color-text-icon-*` — свои значения, а не ссылки на заливки. Удалены `--transparent`
+  (пишется `transparent`), тени `--shadow-near`/`--shadow-medium`/`--shadow-far` (→ `--shadow-gray-s`/`-m`/`-l`),
+  SCSS-переменные `$disable*` и `$transparent`. Новые классы текста `.heading-h1`…, `.text-t1`…, `.ui-m`…,
+  `.uniq-hero` (`styles/utils/_text.scss`). Что сделать на сайте: заменить старые имена в стилях темы
+  (`public/assets/<тема>/css`) и в переопределённых `Layout/assetsGlobal/styles/*`.
+
+- camelCase-доступ к колонкам ModelBase работает также до вставки записи и сохраняет значения 0, false, пустую строку и null; загрузка связей по-прежнему требует сохранённую модель.
+
+- `User::aqModifyHasPrivileges()` квалифицирует колонку привилегии в подзапросе связи ролей: устранена неоднозначность с `user_role.privilege`.
+
+- Schema сохраняет все безымянные индексы и ограничения: внутренние ключи больше не зависят от microtime(), исключено случайное перезаписывание элементов при быстром создании.
+
+- `System\Session::regenerateId()` обновляет PHP session id при смене авторизации в контроллере сайта.
+
+- Общий `Http\Csrf`: токен сессии, проверка POST-поля `csrf` или заголовка `X-CSRF-Token`,
+  отклонение неверного токена. `Auth\SessionStorage::set()` обновляет токен при входе и выходе.
+  Сайт подключает проверку явно через `Csrf::check($request)` до изменяющего действия.
+
 - Вход в админку принимает логины с подчёркиванием, соответствующие сохранённым учётным записям.
 
 - Исправлено сохранение новой модели с первичным ключом `id`: идентификатор записывается также в данные модели, последующее `save()` обновляет существующую запись.
@@ -327,6 +472,11 @@
 - Раздел «Меню» админки, разделы «Структура», «Компоненты», «Модули» (справочник), «Шаблоны страниц»
   и их параметры — всё это теперь в коде.
 - `FieldTypeSelect`, `FieldTableSelect`, `typeLabel()`/`typeParams()` полей, `TableDefinition`, `FieldParams`.
+- Старая вёрстка админки: `Admin/theme/css/styles.css`, `theme/js/app.js`, `theme/js/extra.js`, отдельные иконки
+  `theme/img/icons/*` и `svg-defs.svg`, `theme/img/logo.svg`, `user.jpg`; jQuery (CDN `cdn.sn9.ru`), simplebar,
+  `window.sfAdminUrl`. Классы старой вёрстки (`Btn*`, `form-control*`, `table__body-item-*`, `modal-point`,
+  `row-tip`, `list1`) больше не стилизуются: шаблоны и скрипты расширений переводятся на компоненты Layout
+  (`Button`, `TextInput`, `Dropdown`, `Common/Modal`, `Tooltip`) и `window.sfAdmin` (`request`, `confirm`, `toast`).
 
 ### Исправлено
 

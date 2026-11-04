@@ -60,7 +60,6 @@ class ModuleItem extends Table
                 label: 'Модуль',
                 width: '200',
                 filter: true,
-                onchange: 'onChangeModule(this)',
             ),
             new ForeignKeyField(
                 name: 'menu_id',
@@ -117,7 +116,11 @@ class ModuleItem extends Table
     public function __construct()
     {
         parent::__construct();
-        Page::get()->coreJs('/Table/js/moduleitem.js');
+        Page::get()->coreJsModule('/Table/js/moduleitem.js');
+        // в параметрах модуля может быть визуальный редактор: его инициализацию (FieldText) вернёт module_param
+        if ($this->request->get('action') === 'form') {
+            Editor::addScript();
+        }
         $this->actionHandlers['module_param'] = ['method' => 'moduleParam'];
     }
 
@@ -135,8 +138,6 @@ class ModuleItem extends Table
             : [];
         $positions = ['left' => '', 'right' => ''];
         if (count($rows)) {
-            $editorInited = false;
-
             $hasWithoutGroup = false;
             foreach ($rows[''] as $pid => $row) {
                 if (!isset($rows[$pid]) && $row['class']) {
@@ -151,15 +152,13 @@ class ModuleItem extends Table
                         $field = Helper::create($row);
                         $field->value = $tableParams[$row['name']] ?? $field->defaultValue;
                         $fields[] = $field;
+                        // скрипты поля (инициализация редактора)
+                        $positions['right'] .= $field->loadUI(true);
                     }
                 }
                 $group = ['label' => 'Параметры'];
                 $group['fields'] = $fields;
                 $portletClass = 'field-params-nogroup';
-                if (!empty($field->params['editor_full']) && !$editorInited) {
-                    $positions['right'] .= Editor::tinymce('full');
-                    $editorInited = true;
-                }
                 $positions['right'] .= $this->render(__DIR__ . '/../Table/tpl/form.portlet.tpl', get_defined_vars());
             }
 
@@ -172,15 +171,12 @@ class ModuleItem extends Table
                     $field = new $row['class']($row);
                     $field->value = $tableParams[$row['name']] ?? $field->defaultValue;
                     $fields[] = $field;
+                    $positions[$row0['position']] .= $field->loadUI(true);
                 }
 
                 $group = ['label' => $row0['label']];
                 $group['fields'] = $fields;
                 $portletClass = "field-params-{$row0['name']}";
-                if (!empty($field->params['editor_full']) && !$editorInited) {
-                    $positions[$row0['position']] .= Editor::tinymce('full');
-                    $editorInited = true;
-                }
                 $positions[$row0['position']] .= $this->render(__DIR__ . '/../Table/tpl/form.portlet.tpl', get_defined_vars());
             }
         }

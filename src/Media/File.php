@@ -68,6 +68,24 @@ class File
     }
 
     /**
+     * Копирует файл с диска (выбранный в файловом менеджере) под сгенерированным именем
+     * @return bool false - файла нет или его расширение запрещено
+     */
+    public function loadFile(string $filename): bool
+    {
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        if (!is_file($filename) || $ext === '' || in_array($ext, static::FORBIDDEN_EXTENSIONS, true)) {
+            return false;
+        }
+        if (!copy($filename, $this->path . $this->name . '.' . $ext)) {
+            return false;
+        }
+
+        $this->type = $ext;
+        return true;
+    }
+
+    /**
      * Дописывает файл на диск. Файл сохраняется уже в loadPost(), у изображений - здесь (Image::save())
      */
     public function save(): void

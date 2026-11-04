@@ -5,13 +5,13 @@
 
     &__item {
         flex-shrink: 0;
-        background: var(--gray-medium);
+        background: var(--color-main-gray-medium);
         @include transition((width, background));
         @include border-r(8px);
     }
 
     &__item_active {
-        background: var(--gray-dark);
+        background: var(--color-main-gray-dark);
     }
 
     /*----------SIZES-----------*/
@@ -46,7 +46,7 @@
     /*----------THEME-----------*/
     &-theme_dark {
         .step-indicator__item_active {
-            background: var(--gray-lighter);
+            background: var(--color-main-gray-lighter);
         }
     }
 

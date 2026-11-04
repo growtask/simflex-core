@@ -1,0 +1,43 @@
+/*
+ * Функции размеров для стилей админки: подключаются вместо styles/tokens/_functions.scss ядра
+ * (решение 11 плана admin-4.0). Десктоп админки (FullHD и HD) верстается в px без масштабирования: vw() и vwh()
+ * возвращают px; планшет и телефон — в vw, как на сайте. Так spacing(), border-r(), border-w() и стили компонентов
+ * Layout, выведенных в админке, работают без правки.
+ */
+
+/*----------RESPONSIVE MEDIA-----------*/
+@function stripUnit($value) {
+    @return $value / ($value * 0 + 1);
+}
+
+@function vw($px, $media: 1920) {
+    @return stripUnit($px) * 1px;
+}
+
+@function vwh($px, $media: 1366) {
+    @return stripUnit($px) * 1px;
+}
+
+@function vwt($px, $media: 768) {
+    @return #{stripUnit($px) / stripUnit($media) * 100}vw;
+}
+
+@function vwm($px, $media: 414) {
+    @return #{stripUnit($px) / stripUnit($media) * 100}vw;
+}
+
+/*----------DEFAULT Z-INDEXES-----------*/
+@function z($layer: 'default') {
+    $z-layers: (
+        'debug': 9999,
+        'notification': 1200,
+        'tooltip': 1100,
+        'modal': 1000,
+        'overlay': 900,
+        'dropdown': 500,
+        'header': 100,
+        'footer': 90,
+        'default': 1
+    );
+    @return map-get($z-layers, $layer);
+}

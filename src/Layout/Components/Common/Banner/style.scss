@@ -16,7 +16,7 @@
         position: relative;
         width: 100%;
         overflow: hidden;
-        background: var(--gray-lighter);
+        background: var(--color-main-gray-lighter);
         border-radius: var(--radius-blocks);
         /* Горизонтальный свайп обрабатывает скрипт, вертикальная прокрутка страницы остаётся */
         touch-action: pan-y;
@@ -63,13 +63,13 @@
 
     &__title {
         margin: 0;
-        color: var(--gray-black);
+        color: var(--color-main-gray-black);
         @include h1;
     }
 
     &__text {
         margin: 0;
-        color: var(--gray-dark);
+        color: var(--color-main-gray-dark);
         @include t1;
 
         /* На tablet и mobile описание 16 (Figma: text/t2) */
@@ -106,15 +106,15 @@
     /*----------THEME-----------*/
     &-theme_dark {
         .banner__viewport {
-            background: var(--gray-darker);
+            background: var(--color-main-gray-darker);
         }
 
         .banner__title {
-            color: var(--gray-white);
+            color: var(--color-main-gray-white);
         }
 
         .banner__text {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
         }
     }
 

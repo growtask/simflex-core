@@ -55,7 +55,7 @@
 
     /* Фокус с клавиатуры: кольцо 2 px цвета бренда, зазор 2 px, повторяет радиус кнопки */
     &:focus-visible {
-        outline: 2px solid var(--color-main-color1-main, var(--color1-main));
+        outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
         outline-offset: 2px;
     }
 
@@ -80,163 +80,163 @@
 
     /*----------STYLES-----------*/
     &-primary {
-        background: var(--color1-main);
-        color: var(--gray-white);
+        background: var(--color-main-color1-main);
+        color: var(--color-main-gray-white);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color1-light);
+                background: var(--color-main-color1-light);
             }
         }
 
         &:active {
-            background: var(--color1-dark);
+            background: var(--color-main-color1-dark);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
+            background: var(--color-states-disabled-medium);
         }
     }
 
     &-secondary {
-        background: var(--gray-lighter);
-        color: var(--gray-darker);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color1-lighter);
+                background: var(--color-main-color1-lighter);
             }
         }
 
         &:active {
-            background: var(--color1-light);
+            background: var(--color-main-color1-light);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-states-disabled-medium);
+            color: var(--color-main-gray-white);
         }
     }
 
     &-accent {
-        background: var(--color2-dark);
-        color: var(--gray-white);
+        background: var(--color-main-color2-dark);
+        color: var(--color-main-gray-white);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color2-main);
+                background: var(--color-main-color2-main);
             }
         }
 
         &:active {
-            background: var(--color2-darker);
+            background: var(--color-main-color2-darker);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
+            background: var(--color-states-disabled-medium);
         }
     }
 
     &-gray {
-        background: var(--gray-black);
-        color: var(--gray-white);
+        background: var(--color-main-gray-black);
+        color: var(--color-main-gray-white);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-dark);
+                background: var(--color-main-gray-dark);
             }
         }
 
         &:active {
-            background: var(--gray-darker);
+            background: var(--color-main-gray-darker);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
+            background: var(--color-states-disabled-medium);
         }
     }
 
     &-outline {
         background: transparent;
-        color: var(--gray-darker);
-        border-color: var(--color1-main);
+        color: var(--color-main-gray-darker);
+        border-color: var(--color-main-color1-main);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color1-light);
-                color: var(--gray-white);
-                border-color: var(--color1-light);
+                background: var(--color-main-color1-light);
+                color: var(--color-main-gray-white);
+                border-color: var(--color-main-color1-light);
             }
         }
 
         &:active {
-            background: var(--color1-dark);
-            color: var(--gray-white);
-            border-color: var(--color1-dark);
+            background: var(--color-main-color1-dark);
+            color: var(--color-main-gray-white);
+            border-color: var(--color-main-color1-dark);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-states-disabled-medium);
+            color: var(--color-main-gray-white);
             border-color: transparent;
         }
     }
 
     &-monochrome {
         background: transparent;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-light);
-                color: var(--color1-dark);
+                background: var(--color-main-gray-light);
+                color: var(--color-main-color1-dark);
             }
         }
 
         &:active {
-            background: var(--color1-lighter);
-            color: var(--color1-darker);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-darker);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-states-disabled-medium);
+            color: var(--color-main-gray-white);
         }
     }
 
     &-flat {
         background: transparent;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-lighter);
-                color: var(--color1-dark);
+                background: var(--color-main-gray-lighter);
+                color: var(--color-main-color1-dark);
             }
         }
 
         &:active {
-            background: var(--color1-lighter);
-            color: var(--color1-darker);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-darker);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-states-disabled-medium);
+            color: var(--color-main-gray-white);
         }
     }
 
@@ -436,166 +436,186 @@
     /*----------THEME-----------*/
     &-theme_dark {
         &.btn-primary {
-            background: var(--color1-main);
-            color: var(--gray-white);
+            background: var(--color-main-color1-main);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--color1-light);
+                    background: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--color1-dark);
+                background: var(--color-main-color1-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
             }
         }
 
         &.btn-accent {
-            background: var(--color2-dark);
-            color: var(--gray-white);
+            background: var(--color-main-color2-dark);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--color2-main);
+                    background: var(--color-main-color2-main);
                 }
             }
 
             &:active {
-                background: var(--color2-darker);
+                background: var(--color-main-color2-darker);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
             }
         }
 
         &.btn-secondary {
-            background: var(--gray-dark);
-            color: var(--gray-white);
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-medium);
+                    background: var(--color-main-gray-medium);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                border-color: var(--gray-dark);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
+                color: var(--color-main-gray-dark);
             }
         }
 
         &.btn-gray {
-            background: var(--gray-white);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-white);
+            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-light);
+                    background: var(--color-main-gray-light);
                 }
             }
 
             &:active {
-                background: var(--gray-medium);
+                background: var(--color-main-gray-medium);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
+                color: var(--color-main-gray-dark);
             }
         }
 
         &.btn-outline {
             background: transparent;
-            color: var(--gray-white);
-            border-color: var(--color1-main);
+            color: var(--color-main-gray-white);
+            border-color: var(--color-main-color1-main);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--color1-light);
-                    border-color: var(--color1-light);
+                    background: var(--color-main-color1-light);
+                    border-color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--color1-dark);
-                border-color: var(--color1-dark);
+                background: var(--color-main-color1-dark);
+                border-color: var(--color-main-color1-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
+                color: var(--color-main-gray-dark);
                 border-color: transparent;
             }
         }
 
         &.btn-monochrome {
             background: transparent;
-            color: var(--gray-white);
-            border-color: var(--gray-medium);
+            color: var(--color-main-gray-white);
+            border-color: var(--color-main-gray-medium);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-medium);
+                    background: var(--color-main-gray-medium);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
+                background: var(--color-main-gray-darker);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
+                color: var(--color-main-gray-dark);
                 border-color: transparent;
             }
         }
 
         &.btn-flat {
             background: transparent;
-            color: var(--gray-white);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-dark);
-                    color: var(--color1-lighter);
+                    background: var(--color-main-gray-dark);
+                    color: var(--color-main-color1-lighter);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                color: var(--color1-light);
-                border-color: var(--gray-dark);
+                background: var(--color-main-gray-darker);
+                color: var(--color-main-color1-light);
+                border-color: var(--color-main-gray-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-states-disabled-dark);
+                color: var(--color-main-gray-dark);
                 border-color: transparent;
             }
         }
     }
+}
+
+/*----------STATES (Buttons/states): success и error — обратная связь, блокировка нажатия — в коде-----------*/
+.btn-success,
+.btn-error {
+    color: var(--color-main-gray-white);
+    border-color: transparent;
+
+    &:disabled,
+    &[aria-disabled='true'] {
+        cursor: not-allowed;
+    }
+}
+
+.btn-success {
+    background: var(--color-states-success-dark);
+}
+
+.btn-error {
+    background: var(--color-states-error-dark);
 }

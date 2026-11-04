@@ -18,27 +18,36 @@ class Group extends Handler
         return $this->widgets() . $this->subitems();
     }
 
+    /**
+     * Подпункты группы карточками; на главной админки — группы верхнего уровня с их пунктами
+     */
     protected function subitems(): string
     {
-        $cur_id = Page::get()->getCurrentMenuItem('id') ?? '';
-        $menu = Page::get()->getMenu();
-        if (!isset($menu[$cur_id])) {
+        $page = Page::get();
+        $currentId = (string)($page->getCurrentMenuItem('id') ?? '');
+        $menu = $page->getMenu();
+        if (!isset($menu[$currentId])) {
             return '';
         }
-        return $this->render(__DIR__ . '/tpl/group.tpl', get_defined_vars());
+
+        return $this->render(__DIR__ . '/tpl/group.tpl', [
+            'menu' => $menu,
+            'currentId' => $currentId,
+            'theme' => $page->getTheme(),
+        ]);
     }
 
     protected function widgets(): string
     {
         $rows = AdminWidget::findAdv()->asArray()->where(['active' => 1])->orderBy('npp, widget_id')->all();
-        $html = '';
+        $widgets = [];
         foreach ($rows as $row) {
             if (!$row['privilege'] || Container::getUser()?->ican($row['privilege'])) {
                 $class = $row['class'];
-                $widget = new $class($row);
-                $html .= $widget->execute();
+                $widgets[] = new $class($row)->execute();
             }
         }
-        return $html === '' ? '' : '<div class="widgets">' . $html . '</div>';
+
+        return $widgets ? $this->render(__DIR__ . '/tpl/widgets.tpl', ['widgets' => $widgets]) : '';
     }
 }

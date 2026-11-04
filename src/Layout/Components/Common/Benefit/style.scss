@@ -19,7 +19,7 @@
     }
 
     &__number {
-        color: var(--color1-main);
+        color: var(--color-main-color1-main);
     }
 
     &__body {
@@ -32,12 +32,12 @@
 
     &__title {
         margin: 0;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
     }
 
     &__text {
         margin: 0;
-        color: var(--gray-dark);
+        color: var(--color-main-gray-dark);
     }
 
     /*----------SIZES-----------*/
@@ -105,7 +105,7 @@
 
     /*----------CARD-----------*/
     &-card {
-        background: var(--gray-lighter);
+        background: var(--color-main-gray-lighter);
         border-radius: var(--radius-ui-large);
         @include spacing(padding, 20px);
     }
@@ -113,19 +113,19 @@
     /*----------THEME-----------*/
     &-theme_dark {
         .benefit__title {
-            color: var(--gray-white);
+            color: var(--color-main-gray-white);
         }
 
         .benefit__text {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
         }
 
         .benefit__number {
-            color: var(--color1-light);
+            color: var(--color-main-color1-light);
         }
 
         &.benefit-card {
-            background: var(--gray-darker);
+            background: var(--color-main-gray-darker);
         }
     }
 }

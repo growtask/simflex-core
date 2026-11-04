@@ -40,6 +40,7 @@ class Repository
                     'name' => $item->name,
                     'label' => $item->label,
                     'position' => $item->pos,
+                    'tab' => $item->tab,
                     'help' => '',
                     'field_type' => '',
                     'class' => '',
@@ -49,6 +50,7 @@ class Repository
                 foreach ($item->fields as $field) {
                     $row = static::extensionFieldRow($field, $class, $groupId, $table);
                     $row['position'] = $item->pos;
+                    $row['tab'] = $item->tab;
                     $out[$groupId][$row['param_id']] = $row;
                 }
             } else {
@@ -77,6 +79,7 @@ class Repository
                 $row['param_pid'] = '';
                 $row['pos'] = $row['position'] = $block->pos;
                 $row['group_name'] = $block->label;
+                $row['tab'] = $block->tab;
                 $row['field_type'] = $row['class'];
                 $row['default_value'] = $field->defaultValue;
                 $out[''][$row['param_id']] = $row;

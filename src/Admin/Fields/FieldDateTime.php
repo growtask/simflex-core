@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Admin\Plugins\UI\UI;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
 
 class FieldDateTime extends Field
 {
@@ -12,21 +12,17 @@ class FieldDateTime extends Field
         $this->defaultValue = !empty($this->params['defaultValue']) ? $this->params['defaultValue'] : date('Y-m-d H:i');
     }
 
-    public function loadUI(bool $onForm = false): string
-    {
-        if ($onForm) {
-            UI::dateTimePicker();
-        }
-        return '';
-    }
-
     public function input($value): string
     {
-        $value = \Simflex\Core\Helpers\Time::normal($value, true, false);
-        return $this->render('datetime', [
-            'value' => date('Y-m-d H:i:s', strtotime($value)),
+        $time = $value ? strtotime((string)$value) : false;
+        if (!$value && !$this->e2n) {
+            $time = time();
+        }
+        return $this->render('date', [
+            'value' => $time ? date('d.m.Y H:i', $time) : '',
             'name' => $this->inputName(),
-            'placeholder' => $this->placeholder,
+            'kind' => TextInputKind::DateTime,
+            'readonly' => $this->readonly,
         ]);
     }
 

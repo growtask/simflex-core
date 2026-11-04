@@ -1,0 +1,133 @@
+/* Страница группы меню: карточки подпунктов; виджеты главной админки */
+.group-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(vw(320px), 1fr));
+    @include spacing(gap, 20px, 20px, 16px, 16px);
+
+    @include Tablet {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @include Mobile {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.group-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(padding, 16px);
+    @include spacing(gap, 8px);
+
+    .group-cards-theme_dark & {
+        background: var(--color-main-gray-darker);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        border-radius: var(--radius-ui-medium);
+        @include spacing(gap, 12px);
+        @include spacing(padding, 4px);
+
+        &:hover .group-card__name {
+            color: var(--color-text-icon-color1-main);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    &__icon {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-main-color1-lighter);
+        color: var(--color-text-icon-color1-main);
+        border-radius: var(--radius-ui-small);
+        @include spacing(width, 40px);
+        @include spacing(height, 40px);
+
+        .group-cards-theme_dark & {
+            background: var(--color-main-gray-dark);
+            color: var(--color-text-icon-color1-light);
+        }
+    }
+
+    &__icon-svg,
+    &__chevron {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+    }
+
+    &__name {
+        flex: 1;
+        min-width: 0;
+        @include ui-l;
+        @include transition(color);
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(gap, 4px);
+    }
+
+    &__item {
+        justify-content: flex-start;
+        width: 100%;
+        @include spacing(padding-inline, 8px);
+    }
+}
+
+.widgets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(vw(480px), 1fr));
+    @include spacing(gap, 20px, 20px, 16px, 16px);
+
+    @include Tablet {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.widget-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(padding, 20px, 20px, 16px, 16px);
+    @include spacing(gap, 16px);
+
+    [data-theme="dark"] & {
+        background: var(--color-main-gray-darker);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 12px);
+    }
+
+    &__title {
+        margin: 0;
+        @include h5;
+    }
+
+    &__body {
+        min-width: 0;
+        overflow-x: auto;
+    }
+}

@@ -31,7 +31,7 @@
 
     &__icon {
         flex-shrink: 0;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
         @include icon(24px);
         @include transition((color));
     }
@@ -42,12 +42,12 @@
     }
 
     &__title {
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
         @include transition((color));
     }
 
     &__subtitle {
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
     }
 
     &__controls-wrapper {
@@ -57,15 +57,15 @@
     }
 
     &__comment {
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
         @include t3;
     }
 
     &__badge {
         @include spacing(height, 16px);
         @include spacing(padding-inline, 4px);
-        color: var(--gray-white);
-        background: var(--error-dark);
+        color: var(--color-main-gray-white);
+        background: var(--color-states-error-dark);
         @include t4;
         @include border-r(12px);
     }
@@ -85,7 +85,7 @@
 
     &__chevron {
         flex-shrink: 0;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
         @include icon(24px);
         @include transition((transform, color));
     }
@@ -97,79 +97,79 @@
     }
 
     &__description {
-        color: var(--gray-dark);
+        color: var(--color-main-gray-dark);
         @include t2;
     }
 
     /*----------STYLES-----------*/
     &-filled {
-        background: var(--gray-lighter);
+        background: var(--color-main-gray-lighter);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover:not(:has(.accordion__content:hover)) {
-                border-color: var(--gray-light);
+                border-color: var(--color-main-gray-light);
             }
         }
 
         &:active:not(:has(.accordion__content:active)) {
-            background: var(--gray-light);
-            border-color: var(--gray-light);
+            background: var(--color-main-gray-light);
+            border-color: var(--color-main-gray-light);
         }
     }
 
     &-underline {
         background: transparent;
         border-radius: 0 !important;
-        border-bottom-color: var(--gray-light);
+        border-bottom-color: var(--color-main-gray-light);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover:not(:has(.accordion__content:hover)) {
-                border-bottom-color: var(--color1-main);
+                border-bottom-color: var(--color-main-color1-main);
 
                 .accordion__icon, .accordion__title, .accordion__chevron {
-                    color: var(--color1-main);
+                    color: var(--color-main-color1-main);
                 }
             }
         }
 
         &:active:not(:has(.accordion__content:active)) {
-            border-bottom-color: var(--color1-dark);
+            border-bottom-color: var(--color-main-color1-dark);
 
             .accordion__icon, .accordion__title, .accordion__chevron {
-                color: var(--color1-dark);
+                color: var(--color-main-color1-dark);
             }
         }
     }
 
     &-button {
-        background: var(--gray-lighter);
+        background: var(--color-main-gray-lighter);
 
         .accordion__button {
-            background: var(--gray-black);
+            background: var(--color-main-gray-black);
             @include icon(40px);
             @include border-r(12px);
         }
 
         .accordion__chevron {
-            color: var(--gray-white);
+            color: var(--color-main-gray-white);
         }
 
         @media (hover: hover) and (pointer: fine) {
             &:hover:not(:has(.accordion__content:hover)) {
-                border-color: var(--gray-light);
+                border-color: var(--color-main-gray-light);
 
                 .accordion__button {
-                    background: var(--gray-dark);
+                    background: var(--color-main-gray-dark);
                 }
             }
         }
 
         &:active:not(:has(.accordion__content:active)) {
-            background: var(--gray-light);
-            border-color: var(--gray-light);
+            background: var(--color-main-gray-light);
+            border-color: var(--color-main-gray-light);
 
             .accordion__button {
-                background: var(--gray-darker);
+                background: var(--color-main-gray-darker);
             }
         }
     }
@@ -253,99 +253,99 @@
     /*----------THEME-----------*/
     &-theme_dark {
         &.accordion-filled {
-            background: var(--gray-dark);
+            background: var(--color-main-gray-dark);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:has(.accordion__content:hover)) {
-                    border-color: var(--gray-light);
+                    border-color: var(--color-main-gray-light);
                 }
             }
 
             &:active:not(:has(.accordion__content:active)) {
-                background: var(--gray-darker);
-                border-color: var(--gray-light);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-light);
             }
 
             .accordion__title, .accordion__chevron, .accordion__icon, .accordion__description {
-                color: var(--gray-white);
+                color: var(--color-main-gray-white);
             }
 
             .accordion__subtitle, .accordion__comment {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
         }
 
         &.accordion-underline {
-            border-bottom-color: var(--gray-dark);
+            border-bottom-color: var(--color-main-gray-dark);
 
             .accordion__title, .accordion__chevron, .accordion__icon, .accordion__description {
-                color: var(--gray-white);
+                color: var(--color-main-gray-white);
             }
 
             .accordion__subtitle, .accordion__comment {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:has(.accordion__content:hover)) {
-                    border-bottom-color: var(--color1-main);
+                    border-bottom-color: var(--color-main-color1-main);
 
                     .accordion__icon, .accordion__title, .accordion__chevron {
-                        color: var(--color1-main);
+                        color: var(--color-main-color1-main);
                     }
                 }
             }
 
             &:active:not(:has(.accordion__content:active)) {
-                border-bottom-color: var(--color1-dark);
+                border-bottom-color: var(--color-main-color1-dark);
 
                 .accordion__icon, .accordion__title, .accordion__chevron {
-                    color: var(--color1-dark);
+                    color: var(--color-main-color1-dark);
                 }
             }
         }
 
         &.accordion-button {
-            background: var(--gray-dark);
+            background: var(--color-main-gray-dark);
 
             .accordion__button {
-                background: var(--gray-white);
+                background: var(--color-main-gray-white);
                 @include icon(40px);
                 @include border-r(12px);
             }
 
             .accordion__chevron {
-                color: var(--gray-darker);
+                color: var(--color-main-gray-darker);
             }
 
             .accordion__title, .accordion__icon, .accordion__description {
-                color: var(--gray-white);
+                color: var(--color-main-gray-white);
             }
 
             .accordion__subtitle, .accordion__comment {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover:not(:has(.accordion__content:hover)) {
-                    border-color: var(--gray-light);
+                    border-color: var(--color-main-gray-light);
 
                     .accordion__button {
-                        background: var(--gray-light);
+                        background: var(--color-main-gray-light);
                     }
                 }
             }
 
             &:active:not(:has(.accordion__content:active)) {
-                background: var(--gray-darker);
-                border-color: var(--gray-light);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-light);
 
                 .accordion__button {
-                    background: var(--gray-medium);
+                    background: var(--color-main-gray-medium);
                 }
 
                 .accordion__chevron {
-                    color: var(--gray-white);
+                    color: var(--color-main-gray-white);
                 }
             }
         }

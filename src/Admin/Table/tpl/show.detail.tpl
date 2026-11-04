@@ -1,4 +1,4 @@
-<table class="modal-info__table">
+<table class="modal-info__table kv">
     <?php foreach (array_keys($row) as $key): ?>
     <?php
     try {

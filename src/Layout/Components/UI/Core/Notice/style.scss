@@ -1,0 +1,91 @@
+/* Уведомление Feedback/notice (design-ui-feedback.md) */
+.notice {
+    --notice-bg: var(--color-main-gray-lighter);
+    --notice-title: var(--color-text-icon-gray-darker);
+    --notice-text: var(--color-text-icon-gray-dark);
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--notice-bg);
+    border-radius: var(--radius-ui-large);
+    @include spacing(padding, 12px);
+    @include spacing(gap, 20px);
+
+    &__main {
+        display: flex;
+        align-items: flex-start;
+        @include spacing(gap, 12px);
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        fill: currentColor;
+        color: var(--notice-title);
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+    }
+
+    &__body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+        @include spacing(gap, 4px);
+    }
+
+    &__title {
+        color: var(--notice-title);
+        @include t2;
+    }
+
+    &__text {
+        color: var(--notice-text);
+        @include t3;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        @include spacing(gap, 8px);
+    }
+
+    &_style_error {
+        --notice-bg: var(--color-states-error-light);
+        --notice-title: var(--color-states-error-dark);
+        --notice-text: var(--color-states-error-dark);
+    }
+
+    &_style_alert {
+        --notice-bg: var(--color-states-alert-light);
+        --notice-title: var(--color-states-alert-dark);
+        --notice-text: var(--color-states-alert-dark);
+    }
+
+    &_style_success {
+        --notice-bg: var(--color-states-success-light);
+        --notice-title: var(--color-states-success-dark);
+        --notice-text: var(--color-states-success-dark);
+    }
+
+    // тёмная тема: заливка main/gray/darker с обводкой 2 px внутрь main/gray/dark
+    &-theme_dark {
+        --notice-bg: var(--color-main-gray-darker);
+        --notice-title: var(--color-text-icon-gray-white);
+        --notice-text: var(--color-text-icon-gray-lighter);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+
+        &.notice_style_error {
+            --notice-title: var(--color-states-error-medium);
+        }
+
+        &.notice_style_alert {
+            --notice-title: var(--color-states-alert-medium);
+        }
+
+        &.notice_style_success {
+            --notice-title: var(--color-states-success-medium);
+        }
+    }
+}

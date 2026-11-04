@@ -66,17 +66,24 @@ function url(string $path, array $get = []): string
 }
 
 /**
- * Выводит SVG-иконку из спрайта сайта public/assets/<тема>/icons/icons.svg (символ icon-<имя>)
- * @param string $iconName Имя иконки
+ * Выводит SVG-иконку из спрайта (символ icon-<имя>): на сайте - public/assets/<тема>/icons/icons.svg,
+ * в админке - спрайт ядра Admin/theme/img/icons.svg (админка не зависит от темы сайта)
+ * @param string $iconName Имя иконки: ID из каталога дизайн-системы (check, chevron-s-down, notify-info)
  * @param string $className Дополнительные CSS-классы
  * @return string HTML SVG со ссылкой на спрайт
  */
 function renderIcon(string $iconName, string $className = ''): string
 {
+    if (\Simflex\Core\System\Container::getLocation() === \Simflex\Core\System\Location::Admin) {
+        $sprite = asset('img/icons.svg');
+    } else {
+        $sprite = '/assets/' . \Simflex\Core\System\Container::getConfig()->theme . '/icons/icons.svg';
+    }
+
     return sprintf(
-        '<svg class="%s" aria-hidden="true"><use href="/assets/%s/icons/icons.svg#icon-%s"></use></svg>',
+        '<svg class="%s" aria-hidden="true"><use href="%s#icon-%s"></use></svg>',
         htmlspecialchars($className),
-        htmlspecialchars(\Simflex\Core\System\Container::getConfig()->theme),
+        htmlspecialchars($sprite),
         htmlspecialchars($iconName)
     );
 }

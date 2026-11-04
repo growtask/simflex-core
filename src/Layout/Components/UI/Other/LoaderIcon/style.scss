@@ -42,3 +42,62 @@
         stroke-dashoffset: -100;
     }
 }
+/* Лоадер с рамкой: drawLoader() (design-ui-loaders.md, раздел 2) */
+.loader {
+    --loader-frame: #{vw(32px)};
+    --loader-ring: #{vw(24px)};
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--loader-frame);
+    height: var(--loader-frame);
+    color: var(--color-text-icon-color1-main);
+
+    .loader-icon {
+        width: var(--loader-ring);
+        height: var(--loader-ring);
+    }
+
+    $sizes: (xs: (16px, 12px), s: (24px, 20px), m: (32px, 24px), l: (40px, 32px), xl: (48px, 40px));
+    @each $name, $size in $sizes {
+        &_size_#{$name} {
+            --loader-frame: #{vw(nth($size, 1))};
+            --loader-ring: #{vw(nth($size, 2))};
+
+            @include HD {
+                --loader-frame: #{vwh(nth($size, 1))};
+                --loader-ring: #{vwh(nth($size, 2))};
+            }
+            @include Tablet {
+                --loader-frame: #{vwt(nth($size, 1))};
+                --loader-ring: #{vwt(nth($size, 2))};
+            }
+            @include Mobile {
+                --loader-frame: #{vwm(nth($size, 1))};
+                --loader-ring: #{vwm(nth($size, 2))};
+            }
+        }
+    }
+
+    // primary в дизайне — градиент text-icon/gradient1: обводка svg его не принимает, берётся основной цвет
+    &-theme_dark {
+        color: var(--color-text-icon-color1-light);
+    }
+
+    &_style_monochrome {
+        color: var(--color-text-icon-gray-dark);
+
+        &.loader-theme_dark {
+            color: var(--color-text-icon-gray-lighter);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .loader-icon,
+        .loader-icon__car {
+            animation-duration: 6s;
+        }
+    }
+}

@@ -1,0 +1,14 @@
+/*
+ * Тема админки: атрибут data-theme на <html> (Admin\Page::getTheme(), cookie sf_admin_theme).
+ * Фон страницы: в светлой — локальный стиль макета SimflexCMS `background` (мягкий градиент), в тёмной —
+ * main/gray/black; тени в тёмной теме не используются (simflexcms-pages.md).
+ */
+:root {
+    --color-background: linear-gradient(225deg, #F5F7FA 0%, #F5F5FF 100%);
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    --color-background: var(--color-main-gray-black);
+    color-scheme: dark;
+}

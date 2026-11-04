@@ -769,11 +769,15 @@ abstract class ModelBase implements ArrayAccess, JsonSerializable
 
     public function offsetGet(mixed $offset): mixed
     {
-        if ($this->id && !isset($this->data[$offset])) {
-            if ($maybe = ($this->data[Str::toUnderscore($offset)] ?? null)) {
-                return $maybe;
-            }
+        if (array_key_exists($offset, $this->data)) {
+            return $this->data[$offset];
+        }
+        $column = Str::toUnderscore((string)$offset);
+        if (array_key_exists($column, $this->data)) {
+            return $this->data[$column];
+        }
 
+        if ($this->id) {
             // если это автоматическая связь, загружаем здесь
             if (isset($this->relations[$offset])) {
                 $rel = $this->relations[$offset];

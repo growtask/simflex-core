@@ -3,6 +3,7 @@
 namespace Simflex\Core\Admin;
 
 use Simflex\Core\System\CodeRegistry;
+use Simflex\Core\System\Container;
 use Simflex\Core\System\ExtensionConfig;
 use Simflex\Core\System\Privilege;
 
@@ -27,36 +28,44 @@ class Menu extends CodeRegistry
     protected static function init(): void
     {
         static::add(new MenuItem('Аккаунт', '/account', handler: Handlers\Account::class, icon: 'user', hidden: true));
+        // витрина компонентов для сверки с макетами: только в режиме разработки
+        if (Container::getConfig()->devMode ?? false) {
+            static::add(
+                new MenuItem('Витрина UI', '/ui', handler: Handlers\Ui::class, privilege: Privilege::DEV, hidden: true)
+            );
+        }
 
         static::add(new MenuItem('Управление', '/admin', icon: 'home', privilege: Privilege::DEV, children: [
-            new MenuItem('Привилегии', '/admin/privilege', handler: Handlers\Privilege::class, icon: 'lock-mini'),
-            new MenuItem('Роли', '/admin/role', handler: Handlers\UserRole::class, icon: 'users-mini'),
+            new MenuItem('Привилегии', '/admin/privilege', handler: Handlers\Privilege::class, icon: 'lock-on'),
+            new MenuItem('Роли', '/admin/role', handler: Handlers\UserRole::class, icon: 'users'),
             new MenuItem(
                 'Привилегии ролей',
                 '/admin/role_privilege',
                 handler: Handlers\UserRolePrivilege::class,
-                icon: 'file-shield-mini',
+                icon: 'shield-check',
                 privilege: Privilege::DEV,
             ),
-            new MenuItem('Пользователи', '/admin/user', handler: Handlers\User::class, icon: 'user-mini'),
+            new MenuItem('Пользователи', '/admin/user', handler: Handlers\User::class, icon: 'user'),
             new MenuItem(
                 'Персональные привилегии',
                 '/admin/privilege_personal',
                 handler: Handlers\UserPrivilegePersonal::class,
-                icon: 'fingerprint-mini',
+                icon: 'fingerprint',
                 privilege: Privilege::DEV,
             ),
-            new MenuItem('Cron', '/cron', handler: Handlers\Cron::class, icon: 'calendar-mini'),
+            new MenuItem('Cron', '/cron', handler: Handlers\Cron::class, icon: 'calendar'),
         ]));
 
-        static::add(new MenuItem('Настройки сайта', '/site', icon: 'settings', children: [
-            new MenuItem('Меню', '/site/menu', handler: Handlers\Menu::class, icon: 'container-mini'),
-            new MenuItem('Модули', '/site/module', handler: Handlers\ModuleItem::class, icon: 'puzzle-mini'),
-            new MenuItem('Настройки', '/site/settings', handler: Handlers\Settings::class, icon: 'settings-mini'),
-            new MenuItem('SEO', '/site/seo', handler: Handlers\Seo::class, icon: 'chart-mini'),
+        static::add(new MenuItem('Настройки сайта', '/site', icon: 'setting', children: [
+            new MenuItem('Меню', '/site/menu', handler: Handlers\Menu::class, icon: 'layout-list'),
+            new MenuItem('Модули', '/site/module', handler: Handlers\ModuleItem::class, icon: 'puzzle'),
+            new MenuItem('Настройки', '/site/settings', handler: Handlers\Settings::class, icon: 'setting'),
+            new MenuItem('SEO', '/site/seo', handler: Handlers\Seo::class, icon: 'trending-up'),
         ]));
 
-        static::add(new MenuItem('Редактор страниц', '/content', handler: Handlers\Content::class, icon: 'edit'));
+        static::add(new MenuItem('Контент', '/content', icon: 'notepad-text', children: [
+            new MenuItem('Редактор страниц', '/content/page', handler: Handlers\Content::class, icon: 'layout-template'),
+        ]));
 
         // пункты расширений; сайт может переставить, заменить или убрать их в своём наследнике после parent::init()
         foreach (ExtensionConfig::getAll() as $config) {
@@ -67,7 +76,8 @@ class Menu extends CodeRegistry
     }
 
     /**
-     * Добавляет пункт с подпунктами. Пункт с той же ссылкой заменяется
+     * Добавляет пункт с подпунктами. Пункт с той же ссылкой заменяется. Меню двухуровневое: группа и её пункты,
+     * пункт третьего уровня - исключение
      *
      * @param string $parent Ссылка родительского пункта, '' для корневого
      * @param string|null $before Ссылка соседнего пункта, перед которым поставить пункт, null — после остальных
@@ -76,6 +86,11 @@ class Menu extends CodeRegistry
     {
         if ($parent !== '' && !isset(self::$items[$parent])) {
             throw new \LogicException("Admin menu: no parent item $parent for $item->link");
+        }
+        if ($parent !== '' && self::$parents[$parent] !== '') {
+            throw new \LogicException(
+                "Admin menu: $item->link is on the third level (parent $parent); the menu has groups and items only"
+            );
         }
 
         if ($before !== null && isset(self::$items[$before])) {

@@ -12,54 +12,54 @@
     @include transition((background, border-color, color));
 
     &:focus-visible {
-        outline: 2px solid var(--color1-main);
+        outline: 2px solid var(--color-main-color1-main);
         outline-offset: 2px;
     }
 
     /*----------STYLES-----------*/
     /* Синий текст без плашки, цвета одинаковы в обеих темах */
     &-flat {
-        color: var(--color1-main);
+        color: var(--color-main-color1-main);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color1-light);
+                color: var(--color-main-color1-light);
             }
         }
 
         &:active {
-            color: var(--color1-dark);
+            color: var(--color-main-color1-dark);
         }
     }
 
     &-filled {
-        background: var(--gray-lighter);
-        color: var(--gray-darker);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color1-main);
+                color: var(--color-main-color1-main);
             }
         }
 
         &:active {
-            background: var(--color1-lighter);
-            color: var(--color1-dark);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-dark);
         }
     }
 
     /* Серый текст, синеет по наведению */
     &-monochrome {
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color1-main);
+                color: var(--color-main-color1-main);
             }
         }
 
         &:active {
-            color: var(--color1-dark);
+            color: var(--color-main-color1-dark);
         }
     }
 
@@ -108,33 +108,33 @@
     /*----------THEME-----------*/
     &-theme_dark {
         &.contact-filled {
-            background: var(--gray-dark);
-            color: var(--gray-lighter);
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color1-light);
+                    color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                border-color: var(--gray-dark);
-                color: var(--color1-main);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-dark);
+                color: var(--color-main-color1-main);
             }
         }
 
         &.contact-monochrome {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color1-light);
+                    color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                color: var(--color1-main);
+                color: var(--color-main-color1-main);
             }
         }
     }

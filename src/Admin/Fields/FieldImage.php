@@ -2,7 +2,6 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Helpers\Str;
 use Simflex\Core\Media\Image;
 
 class FieldImage extends FieldFile
@@ -25,19 +24,10 @@ class FieldImage extends FieldFile
 
     public function input($value): string
     {
-        $defaultImg = asset('img/default-img.png');
-        $imgPath = $value ? '/uf/images/' . $this->path . 'preview/' . $value : $defaultImg;
-
         return $this->render('image', [
-            'imgPath' => $imgPath,
-            'defaultImg' => $defaultImg,
             'path' => $this->path,
             'name' => $this->name,
-            'value' => $value,
-            'activeClass' => $value ? 'form-control__file--active' : '',
-            'activeText' => $value ?: 'Перетащите или загрузите файл',
-            'activeDisplay' => $value ? 'display:block;' : '',
-            'size' => Str::sizeToStr($imgPath),
+            'value' => (string)$value,
         ]);
     }
 
@@ -58,7 +48,7 @@ class FieldImage extends FieldFile
         $defaultImg = asset('img/default-img.png');
 
         return $this->render('image-preview', [
-            'src' => $value ? '/uf/images/' . $this->path . 'preview/' . $value : $defaultImg,
+            'src' => $value ? '/uf/images/' . $this->path . 'preview/' . $value : '',
             'defaultImg' => $defaultImg,
         ]);
     }

@@ -11,4 +11,8 @@ enum ButtonStyle: string
     case Outline = 'outline';
     case Monochrome = 'monochrome';
     case Flat = 'flat';
+    /** Buttons/states: успех */
+    case Success = 'success';
+    /** Buttons/states: ошибка */
+    case Error = 'error';
 }

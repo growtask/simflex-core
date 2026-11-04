@@ -1,0 +1,271 @@
+/*
+ * Календарь Calendar/calendar, day, item (design-ui-calendar.md): ширина 304 (7 × 40 и отступы 12), день 40 × 40,
+ * месяц и год 70 × 40, зазор 8 между шапкой, днями недели и сеткой; радиус карточки ui/xlarge, ячеек ui/medium.
+ */
+.calendar {
+    --calendar-text: var(--color-text-icon-gray-darker);
+    --calendar-muted: var(--color-text-icon-gray-medium);
+    --calendar-disabled: var(--color-text-icon-gray-light);
+    --calendar-weekend: var(--color-states-error-dark);
+    --calendar-hover: var(--color-main-gray-lighter);
+    --calendar-press: var(--color-main-gray-light);
+    --calendar-accent: var(--color-text-icon-color1-main);
+    --calendar-line: var(--color-main-gray-lighter);
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    color: var(--calendar-text);
+    @include spacing(width, 304px);
+    @include spacing(padding, 12px);
+    @include spacing(gap, 8px);
+
+    &-theme_dark {
+        --calendar-text: var(--color-text-icon-gray-white);
+        --calendar-disabled: var(--color-text-icon-gray-dark);
+        --calendar-weekend: var(--color-states-error-medium);
+        --calendar-hover: var(--color-main-gray-dark);
+        --calendar-press: var(--color-main-gray-medium);
+        --calendar-accent: var(--color-text-icon-color1-light);
+        --calendar-line: var(--color-main-gray-dark);
+    }
+
+    &_card {
+        background: var(--color-main-gray-white);
+        border-radius: var(--radius-ui-xlarge);
+        box-shadow: var(--shadow-gray-m);
+    }
+
+    &_card#{&}-theme_dark {
+        background: var(--color-main-gray-darker);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 8px);
+
+        .calendar__arrow[hidden] {
+            visibility: hidden;
+            display: inline-flex;
+        }
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        min-width: 0;
+        @include spacing(gap, 8px);
+        @include ui-m;
+    }
+
+    &__title-button {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        border-radius: var(--radius-ui-xsmall);
+
+        &:hover {
+            color: var(--calendar-accent);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__year,
+    &__time {
+        color: var(--calendar-accent);
+    }
+
+    &__line {
+        width: 1px;
+        align-self: stretch;
+        background: var(--calendar-line);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__days {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 8px);
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    &__weekday {
+        text-align: center;
+        color: var(--calendar-muted);
+        @include t4;
+    }
+
+    &__days &__row + &__row {
+        margin-top: calc(-1 * #{vw(8px)});
+    }
+
+    &__day,
+    &__item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--calendar-text);
+        cursor: pointer;
+        border-radius: var(--radius-ui-medium);
+        @include spacing(height, 40px);
+        @include ui-s;
+        font-weight: 400;
+
+        &:hover {
+            background: var(--calendar-hover);
+        }
+
+        &:active {
+            background: var(--calendar-press);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: -2px;
+        }
+
+        &[aria-current='date'],
+        &.calendar__item_current {
+            box-shadow: inset 0 0 0 1px var(--color-main-color1-main);
+            color: var(--calendar-accent);
+        }
+
+        &[aria-selected='true'] {
+            background: var(--color-main-color1-main);
+            color: var(--color-text-icon-gray-white);
+
+            &:hover {
+                background: var(--color-main-color1-light);
+            }
+
+            &:active {
+                background: var(--color-main-color1-dark);
+            }
+        }
+
+        &:disabled {
+            color: var(--calendar-disabled);
+            text-decoration: line-through;
+            background: none;
+            cursor: default;
+        }
+    }
+
+    &__day {
+        @include spacing(width, 40px);
+        justify-self: center;
+
+        &_weekend {
+            color: var(--calendar-weekend);
+        }
+
+        &_muted {
+            color: var(--calendar-muted);
+        }
+    }
+
+    &__items {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        @include spacing(row-gap, 8px);
+    }
+
+    &__item {
+        @include spacing(width, 70px);
+        justify-self: center;
+    }
+
+    &__columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        @include spacing(gap, 8px);
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        @include spacing(gap, 8px);
+    }
+
+    &__column-title {
+        text-align: center;
+        color: var(--calendar-muted);
+        @include t4;
+    }
+
+    &__column-list {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        @include spacing(height, 200px);
+
+        .calendar__item {
+            flex-shrink: 0;
+            width: 100%;
+        }
+    }
+
+    &__time-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--calendar-line);
+        @include spacing(padding-top, 8px);
+    }
+
+    &__time-label {
+        color: var(--color-text-icon-gray-dark);
+        @include t3;
+    }
+
+    &-theme_dark &__time-label {
+        color: var(--color-text-icon-gray-lighter);
+    }
+
+    &__time-field {
+        border: 0;
+        background: var(--color-main-gray-lighter);
+        color: var(--calendar-text);
+        cursor: pointer;
+        border-radius: var(--radius-ui-small);
+        @include spacing(width, 120px);
+        @include spacing(height, 40px);
+        @include ui-s;
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    &-theme_dark &__time-field {
+        background: var(--color-main-gray-dark);
+    }
+}

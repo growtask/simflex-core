@@ -64,7 +64,7 @@
     &__error {
         display: block;
         @include spacing(margin-top, 2px);
-        color: var(--error-dark);
+        color: var(--color-states-error-dark);
         @include t4;
 
         &[hidden] {
@@ -75,12 +75,12 @@
     /* Поле с ошибкой: цвет текста, обводка и сообщение (не только цветом: есть текст ошибки) */
     .text-input__field[aria-invalid="true"],
     .textarea__field[aria-invalid="true"] {
-        color: var(--error-dark);
-        border-color: var(--error-medium);
+        color: var(--color-states-error-dark);
+        border-color: var(--color-states-error-medium);
     }
 
     .checkbox__input[aria-invalid="true"] ~ .checkbox__custom {
-        outline: 2px solid var(--error-medium);
+        outline: 2px solid var(--color-states-error-medium);
         outline-offset: 0;
     }
 

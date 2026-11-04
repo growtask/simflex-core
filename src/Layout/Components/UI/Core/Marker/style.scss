@@ -4,8 +4,8 @@
     justify-content: center;
     border: transparent solid;
     width: fit-content;
-    color: var(--gray-white);
-    background: var(--color1-main);
+    color: var(--color-main-gray-white);
+    background: var(--color-main-color1-main);
     @include transition((border, background, color, opacity));
     @include border-w(2px);
 
@@ -64,60 +64,60 @@
 
     /*----------STYLES (Figma Marker/main)-----------*/
     &-main {
-        color: var(--gray-white);
-        background: var(--color1-main);
+        color: var(--color-main-gray-white);
+        background: var(--color-main-color1-main);
     }
 
     &-gray {
-        color: var(--gray-darker);
-        background: var(--gray-lighter);
+        color: var(--color-main-gray-darker);
+        background: var(--color-main-gray-lighter);
     }
 
     &-load {
-        color: var(--color1-main);
-        background: var(--color1-lighter);
+        color: var(--color-main-color1-main);
+        background: var(--color-main-color1-lighter);
     }
 
     &-success {
-        color: var(--success-dark);
-        background: var(--success-light);
+        color: var(--color-states-success-dark);
+        background: var(--color-states-success-light);
     }
 
     &-alert {
-        color: var(--alert-dark);
-        background: var(--alert-light);
+        color: var(--color-states-alert-dark);
+        background: var(--color-states-alert-light);
     }
 
     &-error {
-        color: var(--error-dark);
-        background: var(--error-light);
+        color: var(--color-states-error-dark);
+        background: var(--color-states-error-light);
     }
 
     /*----------THEME-----------*/
     /* В тёмной теме заливка и иконка меняются местами: плотная заливка и светлая иконка */
     &-theme_dark {
         &.marker-gray {
-            color: var(--gray-lighter);
-            background: var(--gray-dark);
+            color: var(--color-main-gray-lighter);
+            background: var(--color-main-gray-dark);
         }
 
         &.marker-load {
-            background: var(--color1-darker);
+            background: var(--color-main-color1-darker);
         }
 
         &.marker-success {
-            color: var(--success-light);
-            background: var(--success-dark);
+            color: var(--color-states-success-light);
+            background: var(--color-states-success-dark);
         }
 
         &.marker-alert {
-            color: var(--alert-light);
-            background: var(--alert-dark);
+            color: var(--color-states-alert-light);
+            background: var(--color-states-alert-dark);
         }
 
         &.marker-error {
-            color: var(--error-light);
-            background: var(--error-dark);
+            color: var(--color-states-error-light);
+            background: var(--color-states-error-dark);
         }
     }
 }

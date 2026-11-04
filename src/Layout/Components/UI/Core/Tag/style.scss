@@ -21,6 +21,39 @@
         @include truncate();
     }
 
+    &__icon-left {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include spacing(width, 16px);
+        @include spacing(height, 16px);
+        @include spacing(margin-inline-end, 4px);
+    }
+
+    // удаляемый тег: крестик — отдельная кнопка, виден всегда
+    &_removable {
+        cursor: default;
+
+        .tag__icon {
+            display: flex;
+        }
+    }
+
+    &__close {
+        display: inline-flex;
+        flex-shrink: 0;
+        padding: 0;
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: inherit;
+        border-radius: var(--radius-ui-xsmall);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
     &__icon {
         display: none;
         align-items: center;
@@ -50,83 +83,83 @@
 
     /*----------STYLES-----------*/
     &-primary {
-        background: var(--color1-main);
-        color: var(--gray-white);
+        background: var(--color-main-color1-main);
+        color: var(--color-main-gray-white);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color1-light);
+                background: var(--color-main-color1-light);
             }
         }
 
         &:active {
-            background: var(--color1-dark);
+            background: var(--color-main-color1-dark);
         }
 
         &:disabled {
             cursor: not-allowed;
-            background: var(--gray-medium);
+            background: var(--color-main-gray-medium);
         }
     }
 
     &-secondary {
-        background: var(--gray-lighter);
-        color: var(--gray-darker);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color1-lighter);
+                background: var(--color-main-color1-lighter);
             }
         }
 
         &:active {
-            background: var(--color1-light);
+            background: var(--color-main-color1-light);
         }
 
         &:disabled {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-main-gray-medium);
+            color: var(--color-main-gray-white);
         }
     }
 
     &-accent {
-        background: var(--color2-dark);
-        color: var(--gray-white);
+        background: var(--color-main-color2-dark);
+        color: var(--color-main-gray-white);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--color2-main);
+                background: var(--color-main-color2-main);
             }
         }
 
         &:active {
-            background: var(--color2-darker);
+            background: var(--color-main-color2-darker);
         }
 
         &:disabled {
             cursor: not-allowed;
-            background: var(--gray-medium);
+            background: var(--color-main-gray-medium);
         }
     }
 
     &-gray {
-        background: var(--gray-dark);
-        color: var(--gray-white);
+        background: var(--color-main-gray-dark);
+        color: var(--color-main-gray-white);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-medium);
+                background: var(--color-main-gray-medium);
             }
         }
 
         &:active {
-            background: var(--gray-darker);
+            background: var(--color-main-gray-darker);
         }
 
         &:disabled {
             cursor: not-allowed;
-            background: var(--gray-medium);
+            background: var(--color-main-gray-medium);
         }
     }
 
@@ -190,86 +223,86 @@
     /*----------THEME-----------*/
     &-theme_dark {
         &.tag-primary {
-            background: var(--color1-main);
-            color: var(--gray-white);
+            background: var(--color-main-color1-main);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--color1-light);
+                    background: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--color1-dark);
+                background: var(--color-main-color1-dark);
             }
 
             &:disabled {
                 cursor: not-allowed;
-                background: var(--gray-dark);
+                background: var(--color-main-gray-dark);
             }
         }
 
         &.tag-accent {
-            background: var(--color2-dark);
-            color: var(--gray-white);
+            background: var(--color-main-color2-dark);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--color2-main);
+                    background: var(--color-main-color2-main);
                 }
             }
 
             &:active {
-                background: var(--color2-darker);
+                background: var(--color-main-color2-darker);
             }
 
             &:disabled {
                 cursor: not-allowed;
-                background: var(--gray-dark);
+                background: var(--color-main-gray-dark);
             }
         }
 
         &.tag-secondary {
-            background: var(--gray-dark);
-            color: var(--gray-white);
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-white);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-medium);
+                    background: var(--color-main-gray-medium);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                border-color: var(--gray-dark);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-dark);
             }
 
             &:disabled {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-main-gray-medium);
+                color: var(--color-main-gray-dark);
             }
         }
 
         &.tag-gray {
-            background: var(--gray-white);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-white);
+            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-light);
+                    background: var(--color-main-gray-light);
                 }
             }
 
             &:active {
-                background: var(--gray-medium);
-                color: var(--gray-white);
+                background: var(--color-main-gray-medium);
+                color: var(--color-main-gray-white);
             }
 
             &:disabled {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-dark);
+                background: var(--color-main-gray-medium);
+                color: var(--color-main-gray-dark);
             }
         }
     }

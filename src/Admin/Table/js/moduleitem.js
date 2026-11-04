@@ -1,25 +1,49 @@
-function onChangeModule(select) {
-    var module = select.value;
-    var params = {action: 'module_param', module: module, item_id: $('#info-key-value').val()};
+/**
+ * Модули сайта (Handlers\ModuleItem): при выборе модуля в форме его параметры загружаются с сервера
+ * (?action=module_param) — группы left в основную колонку, right в правую панель (без панели — в основную).
+ * Скрипты в ответе (инициализация редактора) выполняются, компоненты data-sf инициализирует admin.js
+ */
+const FORM = '.edit-form';
+const SELECT = 'input[name="module"]';
 
-    if (!$('.ajax-params-left').length) {
-        $('.row-content .col-main').append('<div class="ajax-params-left">');
-    }
-
-    $.get(location.pathname, params, function (r) {
-        r = $.parseJSON(r);
-        if (r.right && !$('.ajax-params').length) {
-            $('.row-content .col-md-12').removeClass('col-md-12').addClass('col-md-8').after('<div class="col-md-4"><div class="ajax-params"></div></div>');
-        }
-
-        $('.ajax-params').html(r.right);
-        $('.ajax-params-left').html(r.left);
-        $('.ajax-params :checkbox, .ajax-params-left :checkbox').uniform();
+/** Вставляет HTML и выполняет его скрипты (innerHTML их не запускает) */
+const setHtml = (container, html) => {
+    // редакторы прежнего модуля
+    container.querySelectorAll('textarea[id]').forEach((textarea) => window.tinymce?.get(textarea.id)?.remove());
+    container.innerHTML = html;
+    container.querySelectorAll('script').forEach((old) => {
+        const script = document.createElement('script');
+        [...old.attributes].forEach((attribute) => script.setAttribute(attribute.name, attribute.value));
+        script.textContent = old.textContent;
+        old.replaceWith(script);
     });
-}
+};
 
-$(function () {
-    if ($('#info-key-value').length) {
-        $('[onchange]').trigger('change');
+const loadParams = async (form, module) => {
+    const itemId = form.querySelector('#info-key-value')?.value ?? '0';
+    const query = new URLSearchParams({action: 'module_param', module, item_id: itemId});
+    const response = await window.sfAdmin.request(`${location.pathname}?${query}`);
+    const positions = typeof response === 'string' ? JSON.parse(response) : response;
+    const left = form.querySelector('.ajax-params-left');
+    const right = form.querySelector('.ajax-params');
+    if (right) {
+        setHtml(left, positions.left ?? '');
+        setHtml(right, positions.right ?? '');
+    } else {
+        setHtml(left, (positions.left ?? '') + (positions.right ?? ''));
+    }
+};
+
+document.addEventListener('change', (event) => {
+    const form = event.target.matches?.(SELECT) && event.target.closest(FORM);
+    if (form) {
+        loadParams(form, event.target.value);
     }
 });
+
+// форма существующей записи: параметры выбранного модуля сразу
+const form = document.querySelector(FORM);
+const select = form?.querySelector(SELECT);
+if (select?.value) {
+    loadParams(form, select.value);
+}

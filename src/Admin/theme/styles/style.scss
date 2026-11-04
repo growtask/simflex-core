@@ -1,0 +1,36 @@
+/*
+ * Корневой стиль админки: собирается LayoutManager вместо assetsGlobal/style.scss ядра, вместе со стилями
+ * компонентов Layout, выведенных на странице, в отдельный кеш (cache/css/admin*.css).
+ * Токены, миксины и база — из Layout/assetsGlobal ядра; функции размеров — свои (tokens/_functions.scss: px на десктопе).
+ * Локальные компоненты макета SimflexCMS (menu, page-head, table-bar…) — components/_<компонент>.scss.
+ */
+@layer reset, base, utilities, components, overrides;
+
+@import 'tokens/functions';
+@import 'styles/tokens/mixins';
+@import 'styles/tokens/breakpoints';
+@import 'styles/tokens/variables';
+@import 'styles/tokens/typography';
+
+@layer reset {
+    @import 'styles/base/reset';
+}
+
+@layer base {
+    @import 'styles/base/root';
+    @import 'styles/abstract/colors';
+    @import 'styles/abstract/shadows';
+    @import 'styles/abstract/radius';
+    @import 'base/theme';
+}
+
+@layer utilities {
+    @import 'styles/utils/utility';
+    @import 'styles/utils/text';
+}
+
+@layer components {
+    @import 'styles/abstract/animations';
+}
+
+/* Компоненты макета админки — components.scss: подключается после стилей компонентов Layout */

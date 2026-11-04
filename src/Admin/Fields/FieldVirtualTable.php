@@ -3,6 +3,7 @@
 namespace Simflex\Core\Admin\Fields;
 
 use Simflex\Core\DB\AQ;
+use Simflex\Core\System\Container;
 
 /**
  * Таблица записей другой таблицы в форме (например, фото отзыва): строки добавляются, меняются и удаляются ajax-
@@ -12,6 +13,11 @@ use Simflex\Core\DB\AQ;
  */
 class FieldVirtualTable extends Field
 {
+    public function isWide(): bool
+    {
+        return true;
+    }
+
     /**
      * Запрос строк страницы, первая колонка __id — id строки; количество строк считается по нему же,
      * без ORDER BY и LIMIT
@@ -33,11 +39,18 @@ class FieldVirtualTable extends Field
             return $this->render('vtable-notice');
         }
 
-        $value = $this->getValue();
-        $jsId = (string)crc32($this->inputName());
+        $value = (string)$this->getValue();
         $total = $this->getCount();
+        $attributes = [
+            'data-sf-table-mode' => 'virtual',
+            // адрес действий раздела и запись формы: ?action=vtGet&<pk>=<id>
+            'data-sf-table-url' => Container::getRequest()->getPath(),
+            'data-sf-table-pk' => $this->tablePk . '=' . $this->getRecordId(),
+            'data-sf-table-total' => (string)$total,
+        ];
 
-        return $this->render('vtable', compact('value', 'jsId', 'total')) . $this->customjs;
+        return $this->render('table', ['value' => $value, 'isVirtual' => true] + compact('total', 'attributes'))
+            . $this->customjs;
     }
 
     public function getCount(): int

@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Admin\Plugins\UI\UI;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
 use Simflex\Core\Helpers\Time;
 
 class FieldTime extends Field
@@ -19,24 +19,13 @@ class FieldTime extends Field
         }
     }
 
-    public function loadUI(bool $onForm = false): string
-    {
-        if ($onForm) {
-            UI::timePicker();
-        }
-        return '';
-    }
-
     public function input($value): string
     {
-        $classes = ['form-control'];
-        if (!$this->readonly) {
-            $classes[] = 'form-timepicker' . (@$this->params['use_seconds'] ? '-seconds' : '');
-        }
-        return $this->render('time', [
-            'classes' => $classes,
+        return $this->render('date', [
             'name' => $this->inputName(),
-            'value' => $value ? Time::convert($value, $this->pattern, false) : '',
+            'value' => $value ? (string)Time::convert($value, $this->pattern, false) : '',
+            // с секундами — поле без календаря: в нём только часы и минуты
+            'kind' => @$this->params['use_seconds'] ? TextInputKind::Text : TextInputKind::Time,
             'readonly' => $this->readonly,
         ]);
     }

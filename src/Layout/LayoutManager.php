@@ -16,7 +16,11 @@ use tubalmartin\CssMin\Minifier;
  *
  * Глобальные стили - assetsGlobal ядра; сайт переопределяет их в Layout/assetsGlobal: одноимённый файл сайта
  * (например, styles/tokens/_variables.scss) импортируется вместо файла ядра, style.scss сайта заменяет корневой
- * style.scss ядра, script.js сайта подключается после script.js ядра.
+ * style.scss ядра, script.js сайта подключается после script.js ядра. components.scss глобальной директории
+ * подключается после стилей компонентов (переопределяет их).
+ *
+ * В админке (Location::Admin) корневой стиль - Admin/theme/styles/style.scss ядра (свои функции размеров: px на
+ * десктопе), переопределения сайта не подключаются, стили собираются в отдельный кеш cache/css/admin*.css.
  */
 class LayoutManager
 {
@@ -80,11 +84,6 @@ class LayoutManager
      */
     public static function init(): string
     {
-        // у админки свои стили и скрипты
-        if (Container::getLocation() === Location::Admin) {
-            return '';
-        }
-
         Profiler::traceStart(__CLASS__, __FUNCTION__);
         foreach (static::globalDirs() as $dir) {
             if (is_file($dir . '/script.js')) {
@@ -98,16 +97,17 @@ class LayoutManager
         static::$usedStyles = array_unique(static::$usedStyles);
         $config = Container::getConfig();
 
-        // путь к кэшу.
+        // путь к кэшу: у админки свой, стили сайта и админки не смешиваются
+        $cachePrefix = Container::getLocation() === Location::Admin ? 'admin-' : '';
         if (!$config->devMode) {
             $cachePath = '';
             foreach (static::$usedStyles as $style) {
                 $cachePath .= md5($style);
             }
 
-            $cachePath = '/cache/css/' . md5($cachePath) . '.css';
+            $cachePath = '/cache/css/' . $cachePrefix . md5($cachePath) . '.css';
         } else {
-            $cachePath = '/cache/css/style.css';
+            $cachePath = '/cache/css/' . ($cachePrefix ? 'admin' : 'style') . '.css';
         }
 
         // файлы сайта находятся раньше файлов ядра
@@ -147,6 +147,15 @@ class LayoutManager
                 }
             }
 
+            // components.scss глобальной директории — после стилей компонентов: локальные компоненты (например,
+            // каркас админки) переопределяют компоненты Layout, которые в них выведены
+            foreach (static::globalDirs() as $dir) {
+                if (is_file($dir . '/components.scss')) {
+                    $imports[] = $dir;
+                    $compileString .= file_get_contents($dir . '/components.scss');
+                }
+            }
+
             // компилируем то, что нужно
             $compiler->setImportPaths($imports);
             $compileString = $compiler->compileString($compileString)->getCss();
@@ -172,11 +181,16 @@ class LayoutManager
     }
 
     /**
-     * @return list<string> Директории глобальных стилей и скриптов: ядра и, если есть, сайта
+     * @return list<string> Директории глобальных стилей и скриптов: ядра и, если есть, сайта; в админке - ядра
+     *                      и стилей админки ядра
      */
     protected static function globalDirs(): array
     {
         $dirs = [__DIR__ . '/assetsGlobal'];
+        if (Container::getLocation() === Location::Admin) {
+            $dirs[] = dirname(__DIR__) . '/Admin/theme/styles';
+            return $dirs;
+        }
         if (is_dir(Container::getPaths()->getRoot('Layout/assetsGlobal'))) {
             $dirs[] = Container::getPaths()->getRoot('Layout/assetsGlobal');
         }

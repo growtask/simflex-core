@@ -119,7 +119,11 @@ class Table extends ElementBase
     {
         $const = new Constraint($name);
 
-        $this->elements[$name ?: md5(microtime())] = $const;
+        if ($name !== '') {
+            $this->elements[$name] = $const;
+        } else {
+            $this->elements[] = $const;
+        }
         return $const;
     }
 
@@ -132,7 +136,11 @@ class Table extends ElementBase
     {
         $idx = new Index($name);
 
-        $this->elements[$name ?: md5(microtime())] = $idx;
+        if ($name !== '') {
+            $this->elements[$name] = $idx;
+        } else {
+            $this->elements[] = $idx;
+        }
         return $idx;
     }
 

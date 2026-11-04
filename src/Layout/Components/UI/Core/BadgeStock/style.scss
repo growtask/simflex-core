@@ -20,23 +20,23 @@
 
     /*----------STYLES-----------*/
     &-many {
-        background: var(--gray-lighter);
-        color: var(--success-dark);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-states-success-dark);
     }
 
     &-normal {
-        background: var(--gray-lighter);
-        color: var(--color1-main);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-color1-main);
     }
 
     &-few {
-        background: var(--gray-lighter);
-        color: var(--error-dark);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-states-error-dark);
     }
 
     &-no-stock {
-        background: var(--gray-lighter);
-        color: var(--gray-medium);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-gray-medium);
     }
 
     /*----------SIZES-----------*/

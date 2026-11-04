@@ -65,10 +65,15 @@ class FieldEnum extends FieldString
         return $buffer;
     }
 
+    public function getFilterLabel(string $value): string
+    {
+        return (string)($this->fetchValues()[$value] ?? parent::getFilterLabel($value));
+    }
+
     public function filter($value): string
     {
         if ($this->filter) {
-            return $this->dropdown([
+            return $this->filterDropdown([
                 'name' => 'filter[' . $this->name . ']',
                 'value' => $value,
                 'items' => $this->dropdownItems(true),
@@ -86,13 +91,32 @@ class FieldEnum extends FieldString
 
     public function show($row): string
     {
-        $values = $this->fetchValues();
+        $options = [];
+        foreach ($this->fetchValues() as $key => $label) {
+            $options[(string)$key] = strip_tags((string)$label);
+        }
+        $value = $row[$this->name] ?? null;
 
-        return $this->dropdown([
-            'name' => $this->name,
-            'value' => @$values[$row[$this->name]],
-            'data' => ['data-enum' => $this->tablePk, 'data-enumv' => $row[$this->tablePk]],
-            'items' => $this->dropdownItems(true),
-        ]);
+        // смена статуса сохраняется сразу (action=change_enum, theme/js/list.js)
+        return \Simflex\Core\Layout\Components\UI\Core\Dropdown\Layout::drawSelect(
+            $this->name . '_' . $row[$this->tablePk],
+            $options,
+            $value === null || $value === '' ? null : (string)$value,
+            placeholder: '—',
+            size: \Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownSize::Small,
+            theme: \Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownTheme::from(
+                \Simflex\Core\Admin\Page::get()->getTheme()
+            ),
+            disabled: $this->readonly,
+            className: 'td-enum',
+            attributes: [
+                'aria-label' => strip_tags($this->label),
+                'data-sf-enum-change' => '?' . http_build_query([
+                    'action' => 'change_enum',
+                    'field' => $this->name,
+                    $this->tablePk => $row[$this->tablePk],
+                ]),
+            ],
+        );
     }
 }

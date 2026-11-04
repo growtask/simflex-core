@@ -1,149 +1,137 @@
+/*
+ * Цвета дизайн-системы (update-template-layout/tokens/design-tokens.md, раздел 5).
+ * Имя стиля Figma → переменная: «/» заменяется на «-», префикс --color-
+ * (main/gray/black → --color-main-gray-black, states/error/dark → --color-states-error-dark).
+ */
 :root {
-    /*----------GRAY-----------*/
-    --gray-black: #0D0D0D;
-    --gray-darker: #262626;
-    --gray-dark: #4D4D4D;
-    --gray-medium: #919599;
-    --gray-light: #DADFE5;
-    --gray-lighter: #EDF3FA;
-    --gray-white: #FFFFFF;
+    /*----------MAIN: GRAY-----------*/
+    --color-main-gray-black: #0D0D0D;
+    --color-main-gray-darker: #262626;
+    --color-main-gray-dark: #4D4D4D;
+    --color-main-gray-medium: #919599;
+    --color-main-gray-light: #DADFE5;
+    --color-main-gray-lighter: #EDF3FA;
+    --color-main-gray-white: #FFFFFF;
 
-    /*----------COLOR1-----------*/
-    --color1-darker: #104FA6;
-    --color1-dark: #1461CC;
-    --color1-main: #1975F7;
-    --color1-light: #63A1F7;
-    --color1-lighter: #D2E2F7;
+    /*----------MAIN: COLOR1-----------*/
+    --color-main-color1-darker: #104FA6;
+    --color-main-color1-dark: #1461CC;
+    --color-main-color1-main: #1975F7;
+    --color-main-color1-light: #63A1F7;
+    --color-main-color1-lighter: #D2E2F7;
 
-    /*----------COLOR2-----------*/
-    --color2-darker: #38388C;
-    --color2-dark: #4D4DBF;
-    --color2-main: #6161F2;
-    --color2-light: #9191F2;
-    --color2-lighter: #E5E5FF;
+    /*----------MAIN: COLOR2-----------*/
+    --color-main-color2-darker: #38388C;
+    --color-main-color2-dark: #4D4DBF;
+    --color-main-color2-main: #6161F2;
+    --color-main-color2-light: #9191F2;
+    --color-main-color2-lighter: #E5E5FF;
 
-    /*----------GRADIENT-----------*/
-    --gradient1-dark: linear-gradient(90deg, #008FD9 0%, #003073 100%);
-    --gradient1-main: linear-gradient(90deg, #0DAEFF 0%, #004099 100%);
-    --gradient1-light: linear-gradient(90deg, #4DC3FF 0%, #3388FF 100%);
+    /*----------MAIN: GRADIENT1-----------*/
+    --color-main-gradient1-dark: linear-gradient(90deg, #008FD9 0%, #003073 100%);
+    --color-main-gradient1-main: linear-gradient(90deg, #0DAEFF 0%, #004099 100%);
+    --color-main-gradient1-light: linear-gradient(90deg, #4DC3FF 0%, #3388FF 100%);
 
-    /*----------BACKGROUND-----------*/
-    --bg-light: #FFFFFF;
-    --bg-dark: #262626;
-    --bg-gradient: linear-gradient(90deg, #F2FBFF 0%, #CEE0F2 100%);
+    /*----------MAIN: BACKGROUND-----------*/
+    --color-main-bg-light: #FFFFFF;
+    --color-main-bg-dark: #262626;
+    --color-main-bg-gradient: linear-gradient(90deg, #F2FBFF 0%, #CEE0F2 100%);
 
-    /*----------ERROR-----------*/
-    --error-dark: #CC2929;
-    --error-medium: #FFA6A6;
-    --error-light: #FFCCCC;
+    /*----------TEXT-ICON (значения как у main, меняются независимо от заливок)-----------*/
+    --color-text-icon-gray-black: #0D0D0D;
+    --color-text-icon-gray-darker: #262626;
+    --color-text-icon-gray-dark: #4D4D4D;
+    --color-text-icon-gray-medium: #919599;
+    --color-text-icon-gray-light: #DADFE5;
+    --color-text-icon-gray-lighter: #EDF3FA;
+    --color-text-icon-gray-white: #FFFFFF;
+    --color-text-icon-color1-darker: #104FA6;
+    --color-text-icon-color1-dark: #1461CC;
+    --color-text-icon-color1-main: #1975F7;
+    --color-text-icon-color1-light: #63A1F7;
+    --color-text-icon-color1-lighter: #D2E2F7;
+    --color-text-icon-color2-darker: #38388C;
+    --color-text-icon-color2-dark: #4D4DBF;
+    --color-text-icon-color2-main: #6161F2;
+    --color-text-icon-color2-light: #9191F2;
+    --color-text-icon-color2-lighter: #E5E5FF;
+    --color-text-icon-gradient1-dark: linear-gradient(90deg, #008FD9 0%, #003073 100%);
+    --color-text-icon-gradient1-main: linear-gradient(90deg, #0DAEFF 0%, #004099 100%);
+    --color-text-icon-gradient1-light: linear-gradient(90deg, #4DC3FF 0%, #3388FF 100%);
 
-    /*----------ALERT-----------*/
-    --alert-dark: #737300;
-    --alert-medium: #D9D998;
-    --alert-light: #F2F2AA;
+    /*----------STATES-----------*/
+    --color-states-error-dark: #CC2929;
+    --color-states-error-medium: #FFA6A6;
+    --color-states-error-light: #FFCCCC;
+    --color-states-alert-dark: #737300;
+    --color-states-alert-medium: #D9D998;
+    --color-states-alert-light: #F2F2AA;
+    --color-states-success-dark: #0E8C0E;
+    --color-states-success-medium: #98D998;
+    --color-states-success-light: #C3E5C3;
+    --color-states-disabled-dark: #616466;
+    --color-states-disabled-medium: #C1C7CC;
+    --color-states-disabled-light: #DFE4EB;
+    /* clear: цвет с нулевой прозрачностью — «нет заливки», переход анимируется от этого цвета */
+    --color-states-clear-dark: rgba(52, 52, 52, 0);
+    --color-states-clear-medium: rgba(145, 149, 153, 0);
+    --color-states-clear-light: rgba(223, 228, 235, 0);
 
-    /*----------SUCCESS-----------*/
-    --success-dark: #0E8C0E;
-    --success-medium: #98D998;
-    --success-light: #C3E5C3;
+    /*----------UNIQ (разовые акценты)-----------*/
+    --color-uniq-dark: #332E31;
+    --color-uniq-violet: #7D31DE;
+    --color-uniq-green: #1F6739;
+    --color-uniq-blue: #515ECC;
+    --color-uniq-red: #E35130;
+    --color-uniq-purple: #C279A3;
+    --color-uniq-orange: #E57A45;
+    --color-uniq-gold: #D9BA21;
+    --color-uniq-pink: #F9AFCA;
+    --color-uniq-light: #D9D9D7;
 
-    /*----------DISABLE-----------*/
-    --disable-dark: #343434;
-    --disable-medium: #919599;
-    --disable-light: #DFE4EB;
-
-    /*----------TRANSPARENT-----------*/
-    --transparent: transparent;
-
-    /*----------SOCIALS-----------*/
-    --socials-in: radial-gradient(230.93% 230.93% at 102.01% 2.03%, #F9ED32 0%, #EE2A7B 36%, #D22A8A 44%, #8B2AB2 60%, #1B2AF0 83%, #002AFF 88%);
-    --socials-wt: #48C95F;
-    --socials-tg: #27A6E5;
-    --socials-vk: #0077FF;
-    --socials-ya: #FC3F1D;
-
-    /*----------UNIQUE-----------*/
-    --uniq-dark: #332E31;
-    --uniq-green: #1F6739;
-    --uniq-blue: #515ECC;
-    --uniq-violet: #7D31DE;
-    --uniq-purple: #C279A3;
-    --uniq-pink: #F9AFCA;
-    --uniq-red: #E35130;
-    --uniq-orange: #E57A45;
-    --uniq-gold: #D9BA21;
-    --uniq-light: #D9D9D7;
-}
-
-:root {
-    /*----------STATES (Figma: disabled и clear; --disable-* выше оставлены как есть)-----------*/
-    --state-disabled-dark: #616466;
-    --state-disabled-medium: #C1C7CC;
-    --state-disabled-light: #DFE4EB;
-    --state-clear-dark: #343434;
-    --state-clear-medium: #919599;
-    --state-clear-light: #DFE4EB;
-
-    /*----------TEXT-ICON (значения совпадают с main, меняются независимо от заливок)-----------*/
-    --color-text-icon-gray-black: var(--gray-black);
-    --color-text-icon-gray-darker: var(--gray-darker);
-    --color-text-icon-gray-dark: var(--gray-dark);
-    --color-text-icon-gray-medium: var(--gray-medium);
-    --color-text-icon-gray-light: var(--gray-light);
-    --color-text-icon-gray-lighter: var(--gray-lighter);
-    --color-text-icon-gray-white: var(--gray-white);
-    --color-text-icon-color1-darker: var(--color1-darker);
-    --color-text-icon-color1-dark: var(--color1-dark);
-    --color-text-icon-color1-main: var(--color1-main);
-    --color-text-icon-color1-light: var(--color1-light);
-    --color-text-icon-color1-lighter: var(--color1-lighter);
-    --color-text-icon-color2-darker: var(--color2-darker);
-    --color-text-icon-color2-dark: var(--color2-dark);
-    --color-text-icon-color2-main: var(--color2-main);
-    --color-text-icon-color2-light: var(--color2-light);
-    --color-text-icon-color2-lighter: var(--color2-lighter);
-    --color-text-icon-gradient1-dark: var(--gradient1-dark);
-    --color-text-icon-gradient1-main: var(--gradient1-main);
-    --color-text-icon-gradient1-light: var(--gradient1-light);
-
-    /*----------FADE (маска затухания внизу прокручиваемого содержимого)-----------*/
-    --backdrop-fade-light: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
-    --backdrop-fade-dark: linear-gradient(180deg, rgba(38, 38, 38, 0) 0%, #262626 100%);
-
-    /*----------SOCIALS: оттенки dark / light и остальные сервисы-----------*/
-    --socials-wt-dark: #299B3E;
-    --socials-wt-light: #70D783;
-    --socials-tg-dark: #0082B8;
-    --socials-tg-light: #53BBE9;
-    --socials-vk-dark: #0063CC;
-    --socials-vk-light: #3D99FF;
-    --socials-ya-dark: #C92E13;
-    --socials-ya-light: #FD7560;
-    --socials-go-dark: #3367D6;
-    --socials-go: #4285F4;
-    --socials-go-light: #78A7F7;
-    --socials-yt-dark: #CC0000;
-    --socials-yt: #F40000;
-    --socials-yt-light: #FF5964;
-    --socials-fg-dark: #007BE5;
-    --socials-fg: #0D99FF;
-    --socials-fg-light: #B2DFFF;
-    --socials-zen-dark: #121213;
-    --socials-zen: #202022;
-    --socials-zen-light: #4A4A4D;
-    --socials-ru-dark: #080226;
-    --socials-ru: #100943;
-    --socials-ru-light: #3927B4;
-    --socials-max-dark: #2B43FF;
-    --socials-max: radial-gradient(circle at 50% 50%, #9F4FDC 0%, #6C2FDE 25%, #5130E8 50%, #214EFA 75%, #43BBFC 100%);
-    --socials-max-light: radial-gradient(circle at 50% 50%, #B272E3 0%, #8959E5 25%, #7459ED 50%, #4D71FB 75%, #69C9FD 100%);
-    --socials-in-dark: radial-gradient(230.93% 230.93% at 102.01% 2.03%, #C7BE28 0%, #BE2262 36%, #A8226E 44%, #6F228E 60%, #1622C0 83%, #0022CC 88%);
-    --socials-in-light: #E01A89;
+    /*----------SOCIAL (брендовые цвета, не меняются между проектами)-----------*/
+    --color-social-whatsapp-dark: #299B3E;
+    --color-social-whatsapp-main: #48C95F;
+    --color-social-whatsapp-light: #70D783;
+    --color-social-telegram-dark: #0082B8;
+    --color-social-telegram-main: #27A6E5;
+    --color-social-telegram-light: #53BBE9;
+    --color-social-vk-dark: #0063CC;
+    --color-social-vk-main: #0077FF;
+    --color-social-vk-light: #3D99FF;
+    --color-social-yandex-dark: #C92E13;
+    --color-social-yandex-main: #FC3F1D;
+    --color-social-yandex-light: #FD7560;
+    --color-social-google-dark: #3367D6;
+    --color-social-google-main: #4285F4;
+    --color-social-google-light: #78A7F7;
+    --color-social-youtube-dark: #CC0000;
+    --color-social-youtube-main: #F40000;
+    --color-social-youtube-light: #FF5964;
+    --color-social-figma-dark: #007BE5;
+    --color-social-figma-main: #0D99FF;
+    --color-social-figma-light: #B2DFFF;
+    --color-social-zen-dark: #121213;
+    --color-social-zen-main: #202022;
+    --color-social-zen-light: #4A4A4D;
+    --color-social-ru-dark: #080226;
+    --color-social-ru-main: #100943;
+    --color-social-ru-light: #3927B4;
+    --color-social-max-dark: #2B43FF;
+    --color-social-max-main: radial-gradient(circle at 50% 50%, #9F4FDC 0%, #6C2FDE 25%, #5130E8 50%, #214EFA 75%, #43BBFC 100%);
+    --color-social-max-light: radial-gradient(circle at 50% 50%, #B272E3 0%, #8959E5 25%, #7459ED 50%, #4D71FB 75%, #69C9FD 100%);
+    --color-social-instagram-dark: radial-gradient(230.93% 230.93% at 102.01% 2.03%, #C7BE28 0%, #BE2262 36%, #A8226E 44%, #6F228E 60%, #1622C0 83%, #0022CC 88%);
+    --color-social-instagram-main: radial-gradient(230.93% 230.93% at 102.01% 2.03%, #F9ED32 0%, #EE2A7B 36%, #D22A8A 44%, #8B2AB2 60%, #1B2AF0 83%, #002AFF 88%);
+    --color-social-instagram-light: #E01A89;
 
     /*----------DELIVERY (службы доставки)-----------*/
-    --delivery-cdek: #00E755;
-    --delivery-russian-post: #1928DC;
-    --delivery-5post: #5EBC52;
-    --delivery-ozon: #005BFF;
-    --delivery-yandex-delivery: #FC4714;
+    --color-delivery-cdek: #00E755;
+    --color-delivery-russian-post: #1928DC;
+    --color-delivery-5post: #5EBC52;
+    --color-delivery-ozon: #005BFF;
+    --color-delivery-yandex-delivery: #FC4714;
+
+    /*----------BACKDROP (маска затухания внизу прокручиваемого содержимого)-----------*/
+    --backdrop-fade-light: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
+    --backdrop-fade-dark: linear-gradient(180deg, rgba(38, 38, 38, 0) 0%, #262626 100%);
 }

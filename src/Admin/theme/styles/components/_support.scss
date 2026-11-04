@@ -1,0 +1,65 @@
+/*
+ * Панель поддержки (компонент макета support-bar, modal-support): без затемнения; на десктопе выглядывает из-под
+ * меню справа (заходит под него на 40 px), одной высоты с меню; на планшете и телефоне — окно на всю ширину
+ */
+.support-bar {
+    position: fixed;
+    z-index: calc(#{z('header')} - 1);
+    top: vw(24px);
+    left: calc(#{vw(24px + 280px - 40px)});
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: calc(100vh - #{vw(48px)});
+    background: var(--color-main-gray-lighter);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(width, 360px + 40px);
+    @include spacing(padding, 16px);
+    padding-left: vw(16px + 40px);
+    @include spacing(gap, 12px);
+
+    .sf-menu-collapsed & {
+        left: calc(#{vw(24px + 72px - 40px)});
+    }
+
+    &[hidden] {
+        display: none;
+    }
+
+    &-theme_dark {
+        background: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 12px);
+    }
+
+    &__title {
+        margin: 0;
+        @include h5;
+    }
+
+    &__frame {
+        flex: 1;
+        width: 100%;
+        border: 0;
+        background: var(--color-main-gray-white);
+        border-radius: var(--radius-ui-large);
+    }
+
+    @include Tablet {
+        z-index: z('modal');
+        inset: vwt(12px);
+        width: auto;
+        height: auto;
+        padding: vwt(16px);
+    }
+    @include Mobile {
+        inset: vwm(12px);
+        padding: vwm(16px);
+    }
+}

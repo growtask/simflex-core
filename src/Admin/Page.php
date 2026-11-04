@@ -6,6 +6,8 @@ use Simflex\Core\Models\AdminWidget;
 use Simflex\Core\Admin\Notify\Collection;
 use Simflex\Core\Admin\Handlers\Group;
 use Simflex\Core\Http\Assets;
+use Simflex\Core\Http\View;
+use Simflex\Core\Layout\LayoutManager;
 use Simflex\Core\System\Container;
 use Simflex\Core\Http\Html\HtmlRequest;
 use Simflex\Core\Http\Html\HtmlResponse;
@@ -22,6 +24,11 @@ use Simflex\Core\System\Privilege;
  */
 class Page
 {
+    /** Cookie с темой админки: light или dark (пишет переключатель темы в меню) */
+    public const THEME_COOKIE = 'sf_admin_theme';
+    public const THEME_LIGHT = 'light';
+    public const THEME_DARK = 'dark';
+
     /** Ajax-запрос: в ответе только содержимое раздела, без макета админки */
     protected bool $ajax = false;
     /** @var list<string> сегменты пути относительно корня админки */
@@ -36,11 +43,17 @@ class Page
     protected array $crumbs = [];
 
     protected string $content = '';
+    /** @var bool Раздел вывел свой page-head (drawPageHead()): макет не выводит заголовок по умолчанию */
+    protected bool $pageHeadDrawn = false;
     /** @var array<string, list<string>> позиция => HTML модулей */
     protected array $positions = [];
     /** @var array<string, string> */
     protected array $modules = [];
+    /** @var bool Стили админки и компонентов Layout уже собраны (LayoutManager::init()) */
+    protected bool $layoutReady = false;
     protected array $css = [];
+    /** @var array<string, int> Скрипты-модули (script type="module"): url => приоритет */
+    protected array $jsModules = [];
     protected array $cssCheck = [];
     protected array $js = [];
     protected array $jsCheck = [];
@@ -383,15 +396,88 @@ class Page
 
     /**
      * Скрипт из статики админки ядра
-     * @param string $file Путь относительно src/Admin ядра, например '/theme/js/table.js'
+     * @param string $file Путь относительно src/Admin ядра, например '/Table/js/moduleitem.js'
      */
     public function coreJs(string $file, int $idx = 100): void
     {
         $this->js(static::webVendorPath() . $file, $idx);
     }
 
+    /**
+     * Заголовок страницы (локальный компонент макета page-head): хлебные крошки (на телефоне — «Назад»),
+     * название h1, «На сайт» и одна главная кнопка. Раздел, который вывел его сам, отменяет заголовок по умолчанию
+     * в макете (theme/tpl/body.tpl)
+     *
+     * @param string $title Название; пусто — название текущего пункта меню
+     * @param string $action HTML главной кнопки (Button primary, «Добавить», «Сохранить»)
+     * @param list<array{name: string, link?: string}>|null $crumbs Хлебные крошки; null — путь текущего пункта меню
+     */
+    public function drawPageHead(string $title = '', string $action = '', ?array $crumbs = null): string
+    {
+        $this->pageHeadDrawn = true;
+        $title = $title !== '' ? $title : ((string)$this->getCurrentMenuItem('name') ?: 'Главная');
+        // крошки — если в разделе есть модуль позиции breadcrumbs (сайт может убрать его в AdminModules); раздел
+        // выводит page-head раньше, чем выполняются модули, поэтому крошки рисуются здесь
+        $hasCrumbs = (bool)array_filter(
+            AdminModules::getForSection((string)$this->getCurrentMenuItem('id')),
+            fn(AdminModule $module) => $module->position === 'breadcrumbs'
+        );
+        $crumbsHtml = $hasCrumbs ? Modules\Breadcrumbs\Breadcrumbs::draw($crumbs ?? $this->getCrumbs()) : '';
+
+        return View::render(__DIR__ . '/theme/tpl/partial/page-head.tpl', [
+            'page' => $this,
+            'title' => $title,
+            'action' => $action,
+            'crumbs' => $crumbs ?? $this->getCrumbs(),
+            'crumbsHtml' => $crumbsHtml,
+        ]);
+    }
+
+    public function isPageHeadDrawn(): bool
+    {
+        return $this->pageHeadDrawn;
+    }
+
+    /**
+     * Тема админки из cookie THEME_COOKIE, по умолчанию светлая. Значение совпадает со значением enum темы
+     * компонентов Layout (ButtonTheme::from($page->getTheme())) и с атрибутом data-theme на <html>
+     */
+    public function getTheme(): string
+    {
+        $theme = Container::getRequest()?->cookie(static::THEME_COOKIE);
+
+        return $theme === static::THEME_DARK ? static::THEME_DARK : static::THEME_LIGHT;
+    }
+
+    /**
+     * Скрипт-модуль из статики админки ядра (Admin/theme/js): выводится как <script type="module">,
+     * модули импортируют друг друга относительными путями
+     * @param string $file Путь относительно src/Admin ядра, например '/theme/js/admin.js'
+     */
+    public function coreJsModule(string $file, int $idx = 100): void
+    {
+        $this->jsModule(static::webVendorPath() . $file, $idx);
+    }
+
+    /**
+     * Скрипт-модуль по веб-адресу (например, статика пакета после Http\Assets::publish()): <script type="module">
+     */
+    public function jsModule(string $url, int $idx = 100): void
+    {
+        $this->jsModules[$url] = $idx;
+    }
+
+    /**
+     * Мета-теги, стили и скрипты для head макета админки. Стили админки (Admin/theme/styles) и компонентов Layout
+     * собираются здесь: шаблон макета вызывает getMeta() после того, как отрисовал body
+     */
     public function getMeta(): string
     {
+        if (!$this->layoutReady) {
+            $this->layoutReady = true;
+            LayoutManager::init();
+        }
+
         $html = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\r\n";
 
         ksort($this->css);
@@ -405,6 +491,10 @@ class Page
             foreach ($js_arr as $js) {
                 $html .= '<script type="text/javascript" src="' . $js . '"></script>' . "\r\n";
             }
+        }
+        asort($this->jsModules);
+        foreach (array_keys($this->jsModules) as $js) {
+            $html .= '<script type="module" src="' . $js . '"></script>' . "\r\n";
         }
 
         if (Container::getConfig()->devMode) {

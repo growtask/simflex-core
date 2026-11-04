@@ -1,0 +1,432 @@
+/*
+ * Меню админки (компоненты макета menu, menu-group-*, menu-tab-compact, menu-actions): 280 px, свёрнутое 72 px,
+ * на планшете и телефоне — шторка 320 px поверх затемнения
+ */
+.menu {
+    --menu-bg: var(--color-main-gray-white);
+    --menu-line: var(--color-main-gray-lighter);
+
+    position: sticky;
+    z-index: z('header');
+    top: vw(24px);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    height: calc(100vh - #{vw(48px)});
+    background: var(--menu-bg);
+    color: var(--color-text-icon-gray-darker);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(width, 280px);
+    @include spacing(padding, 20px);
+    padding-inline: vw(16px);
+    padding-bottom: vw(16px);
+
+    &.menu_ready {
+        @include transition((width, transform), 0.3s);
+    }
+
+    // тёмная тема: панель main/gray/darker, разделители main/gray/dark (design-tokens.md, тёмные панели)
+    &-theme_dark {
+        --menu-bg: var(--color-main-gray-darker);
+        --menu-line: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &__head {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 8px);
+        @include spacing(min-height, 40px);
+    }
+
+    &__logo {
+        min-width: 0;
+
+        .logo__image {
+            display: block;
+            width: auto;
+            @include spacing(height, 32px);
+        }
+    }
+
+    &__close {
+        display: none;
+    }
+
+    &__search {
+        flex-shrink: 0;
+        @include spacing(margin-top, 16px);
+    }
+
+    &__scroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        @include spacing(margin-top, 8px);
+        @include scrollbar(overlay, s);
+    }
+
+    &-theme_dark &__scroll {
+        @include scrollbar(overlay, s, dark);
+    }
+
+    &__groups {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__leaf {
+        @include spacing(padding-block, 8px);
+        border-bottom: 1px solid var(--menu-line);
+    }
+
+    &__tooltip {
+        display: flex;
+        width: 100%;
+
+        // подсказки с названием — только у иконок свёрнутого меню
+        > .tooltip {
+            display: none;
+        }
+    }
+
+    &__empty {
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+        @include spacing(padding, 8px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__bottom {
+        flex-shrink: 0;
+        border-top: 1px solid var(--menu-line);
+        @include spacing(padding-top, 8px);
+        @include spacing(margin-top, 8px);
+    }
+
+    &__version {
+        margin: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include t4;
+        @include spacing(margin-top, 8px);
+    }
+
+    /*----------СВЁРНУТОЕ МЕНЮ: 72 px, только иконки групп с подсказками-----------*/
+    &_collapsed {
+        @include spacing(width, 72px);
+        padding-inline: vw(16px);
+
+        .menu__head {
+            justify-content: center;
+        }
+
+        .menu__logo,
+        .menu__search,
+        .menu-group__name,
+        .menu-group__chevron,
+        .menu-group__body,
+        .menu-account__text,
+        .menu-account__chevron,
+        .menu__version,
+        .menu-item .tab__text {
+            display: none;
+        }
+
+        .menu__collapse .btn__icon {
+            transform: rotate(180deg);
+        }
+
+        .menu__tooltip > .tooltip {
+            display: block;
+        }
+
+        .menu-group__head {
+            justify-content: center;
+            padding: 0;
+        }
+
+        .menu-actions {
+            flex-direction: column;
+        }
+
+        .menu-account {
+            justify-content: center;
+            padding-inline: 0;
+        }
+    }
+
+    /*----------ПЛАНШЕТ И ТЕЛЕФОН: шторка 320 px слева-----------*/
+    @include Tablet {
+        position: fixed;
+        z-index: z('modal');
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        border-radius: 0;
+        transform: translateX(-100%);
+        visibility: hidden;
+        width: vwt(320px);
+        padding: vwt(16px);
+
+        &.menu_open {
+            transform: none;
+            visibility: visible;
+        }
+
+        .menu__collapse {
+            display: none;
+        }
+
+        .menu__close {
+            display: inline-flex;
+        }
+    }
+    @include Mobile {
+        width: vwm(320px);
+        padding: vwm(16px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &.menu_ready {
+            transition: none;
+        }
+    }
+}
+
+.menu-overlay {
+    position: fixed;
+    z-index: calc(#{z('modal')} - 1);
+    inset: 0;
+    background: rgba(13, 13, 13, 0.5);
+
+    [data-theme="dark"] & {
+        background: rgba(13, 13, 13, 0.65);
+    }
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+/* Группа меню: заметная плашка, раскрытие 300 мс, текущая выделена и в свёрнутом виде */
+.menu-group {
+    @include spacing(padding-block, 8px);
+    border-bottom: 1px solid var(--menu-line);
+
+    &__head {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0 vw(4px);
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: inherit;
+        text-align: left;
+        border-radius: var(--radius-ui-medium);
+        @include spacing(height, 40px);
+        @include spacing(gap, 10px);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+
+        &:hover .menu-group__name {
+            color: var(--color-text-icon-color1-main);
+        }
+    }
+
+    &__icon {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-main-gray-lighter);
+        color: var(--color-text-icon-gray-darker);
+        border-radius: var(--radius-ui-small);
+        @include spacing(width, 32px);
+        @include spacing(height, 32px);
+        @include transition((background, color));
+    }
+
+    &__icon-svg {
+        fill: currentColor;
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+    }
+
+    &__name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @include ui-m;
+        @include transition(color);
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+        @include transition(transform, 0.3s);
+    }
+
+    &_open &__chevron {
+        transform: rotate(180deg);
+    }
+
+    // раскрытие: высота от 0 до содержимого
+    &__body {
+        display: grid;
+        grid-template-rows: 0fr;
+        @include transition((grid-template-rows), 0.3s, ease-out);
+    }
+
+    &_open &__body {
+        grid-template-rows: 1fr;
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(gap, 8px);
+
+        > li:first-child {
+            @include spacing(margin-top, 4px);
+        }
+    }
+
+    &_current &__icon {
+        background: var(--color-main-color1-lighter);
+        color: var(--color-text-icon-color1-main);
+    }
+
+    &_current &__name {
+        color: var(--color-text-icon-color1-main);
+    }
+
+    .menu-theme_dark & {
+        &__icon {
+            background: var(--color-main-gray-dark);
+            color: var(--color-text-icon-gray-white);
+        }
+
+        &_current .menu-group__icon {
+            background: var(--color-main-gray-black);
+            color: var(--color-text-icon-color1-light);
+        }
+
+        &_current .menu-group__name,
+        &__head:hover .menu-group__name {
+            color: var(--color-text-icon-color1-light);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__body,
+        &__chevron {
+            transition: none;
+        }
+    }
+}
+
+/* Пункт меню: Tabs/main flat, текущий — soft active */
+.menu-item {
+    justify-content: flex-start;
+    width: 100%;
+    // у flat нет отступов, у пунктов меню они как у soft: иконка не сдвигается у текущего пункта
+    @include spacing(padding-inline, 8px);
+
+    .tab__text {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: left;
+    }
+}
+
+/* Кнопки над профилем: поддержка, тема */
+.menu-actions {
+    display: flex;
+    @include spacing(gap, 8px);
+
+    &__item {
+        flex: 1;
+        display: flex;
+    }
+
+    &__button {
+        width: 100%;
+    }
+}
+
+/* Аккаунт: ссылка на профиль */
+.menu-account {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-ui-medium);
+    @include spacing(margin-top, 8px);
+    @include spacing(padding, 4px);
+    @include spacing(gap, 12px);
+    @include transition(background);
+
+    &:hover {
+        background: var(--color-main-gray-lighter);
+    }
+
+    .menu-theme_dark &:hover {
+        background: var(--color-main-gray-dark);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    &__text {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    &__name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @include ui-m;
+    }
+
+    &__hint {
+        color: var(--color-text-icon-gray-medium);
+        @include t4;
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+    }
+}

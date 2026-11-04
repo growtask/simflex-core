@@ -36,13 +36,13 @@
         @include transition((color, opacity));
 
         &-icon {
-            color: var(--gray-light);
+            color: var(--color-main-gray-light);
             @include icon(24px);
         }
     }
 
     &__label {
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
         @include spacing(margin-bottom, 2px);
         flex-shrink: 0;
         @include t4;
@@ -66,7 +66,7 @@
     }
 
     &__error-message {
-        color: var(--error-dark);
+        color: var(--color-states-error-dark);
         @include spacing(margin-top, 2px);
         @include t4;
     }
@@ -76,7 +76,7 @@
         &.text-input__label {
             display: block;
             @include spacing(margin-bottom, 2px);
-            color: var(--gray-medium);
+            color: var(--color-main-gray-medium);
             order: -1;
             @include t4;
         }
@@ -104,64 +104,64 @@
     /*----------STYLES-----------*/
     &-style_filled {
         .text-input__field {
-            background: var(--gray-lighter);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-lighter);
+            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    border-color: var(--gray-light);
+                    border-color: var(--color-main-gray-light);
                 }
             }
 
             &:focus {
-                background: var(--gray-white);
-                border-color: var(--gray-light);
+                background: var(--color-main-gray-white);
+                border-color: var(--color-main-gray-light);
             }
 
             &::placeholder {
-                color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
             }
         }
 
         .text-input__icon {
-            color: var(--gray-light);
+            color: var(--color-main-gray-light);
         }
 
         .text-input__reset {
             &-icon {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
         }
     }
 
     &-style_outline {
         .text-input__field {
-            background: var(--gray-white);
-            border-color: var(--gray-light);
-            color: var(--gray-darker);
+            background: var(--color-main-gray-white);
+            border-color: var(--color-main-gray-light);
+            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    border-color: var(--color1-light);
+                    border-color: var(--color-main-color1-light);
                 }
             }
 
             &:focus {
-                border-color: var(--color1-main);
+                border-color: var(--color-main-color1-main);
             }
 
             &::placeholder {
-                color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
             }
         }
 
         .text-input__icon {
-            color: var(--gray-light);
+            color: var(--color-main-gray-light);
         }
 
         .text-input__reset {
             &-icon {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
         }
     }
@@ -169,32 +169,32 @@
     &-style_underline {
         .text-input__field {
             background: transparent;
-            border-bottom-color: var(--gray-light);
-            color: var(--gray-darker);
+            border-bottom-color: var(--color-main-gray-light);
+            color: var(--color-main-gray-darker);
             border-radius: 0 !important;
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    border-bottom-color: var(--color1-light);
+                    border-bottom-color: var(--color-main-color1-light);
                 }
             }
 
             &:focus {
-                border-bottom-color: var(--color1-main);
+                border-bottom-color: var(--color-main-color1-main);
             }
 
             &::placeholder {
-                color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
             }
         }
 
         .text-input__icon {
-            color: var(--gray-light);
+            color: var(--color-main-gray-light);
         }
 
         .text-input__reset {
             &-icon {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
         }
     }
@@ -351,70 +351,70 @@
     /*----------THEME-----------*/
     &-theme_dark {
         .text-input__label {
-            color: var(--gray-light);
+            color: var(--color-main-gray-light);
         }
 
         &.text-input-style_filled {
             .text-input__field {
-                background: var(--gray-dark);
-                border-color: var(--gray-dark);
-                color: var(--gray-white);
+                background: var(--color-main-gray-dark);
+                border-color: var(--color-main-gray-dark);
+                color: var(--color-main-gray-white);
 
                 @media (hover: hover) and (pointer: fine) {
                     &:hover {
-                        border-color: var(--gray-medium);
+                        border-color: var(--color-main-gray-medium);
                     }
                 }
 
                 &:focus {
-                    background: var(--gray-black);
-                    border-color: var(--gray-medium);
+                    background: var(--color-main-gray-black);
+                    border-color: var(--color-main-gray-medium);
                 }
 
                 &::placeholder {
-                    color: var(--gray-light);
+                    color: var(--color-main-gray-light);
                 }
             }
 
             .text-input__icon {
-                color: var(--gray-light);
+                color: var(--color-main-gray-light);
             }
 
             .text-input__reset {
                 &-icon {
-                    color: var(--gray-light);
+                    color: var(--color-main-gray-light);
                 }
             }
         }
 
         &.text-input-style_outline {
             .text-input__field {
-                background: var(--gray-black);
-                border-color: var(--gray-dark);
-                color: var(--gray-white);
+                background: var(--color-main-gray-black);
+                border-color: var(--color-main-gray-dark);
+                color: var(--color-main-gray-white);
 
                 @media (hover: hover) and (pointer: fine) {
                     &:hover {
-                        border-color: var(--color1-darker);
+                        border-color: var(--color-main-color1-darker);
                     }
                 }
 
                 &:focus {
-                    border-color: var(--color1-main);
+                    border-color: var(--color-main-color1-main);
                 }
 
                 &::placeholder {
-                    color: var(--gray-light);
+                    color: var(--color-main-gray-light);
                 }
             }
 
             .text-input__icon {
-                color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
             }
 
             .text-input__reset {
                 &-icon {
-                    color: var(--gray-medium);
+                    color: var(--color-main-gray-medium);
                 }
             }
         }
@@ -422,32 +422,32 @@
         &.text-input-style_underline {
             .text-input__field {
                 background: transparent;
-                border-bottom-color: var(--gray-dark);
-                color: var(--gray-white);
+                border-bottom-color: var(--color-main-gray-dark);
+                color: var(--color-main-gray-white);
                 border-radius: 0 !important;
 
                 @media (hover: hover) and (pointer: fine) {
                     &:hover {
-                        border-bottom-color: var(--color1-darker);
+                        border-bottom-color: var(--color-main-color1-darker);
                     }
                 }
 
                 &:focus {
-                    border-bottom-color: var(--color1-main);
+                    border-bottom-color: var(--color-main-color1-main);
                 }
 
                 &::placeholder {
-                    color: var(--gray-light);
+                    color: var(--color-main-gray-light);
                 }
             }
 
             .text-input__icon {
-                color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
             }
 
             .text-input__reset {
                 &-icon {
-                    color: var(--gray-medium);
+                    color: var(--color-main-gray-medium);
                 }
             }
         }
@@ -466,7 +466,7 @@
     position: absolute;
     pointer-events: none;
     z-index: 2;
-    color: var(--gray-medium);
+    color: var(--color-main-gray-medium);
     @include t4;
 }
 
@@ -552,12 +552,12 @@ $text-input-counter-room: 40px;
 /*----------FOCUS-----------*/
 /* Кольцо фокуса: 2 px цвета бренда, зазор 2 px (вид самого поля в focus задан выше) */
 .text-input__field:focus-visible {
-    outline: 2px solid var(--color-main-color1-main, var(--color1-main));
+    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
     outline-offset: 2px;
 }
 
 .text-input__reset:focus-visible {
-    outline: 2px solid var(--color-main-color1-main, var(--color1-main));
+    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
     outline-offset: 2px;
 }
 
@@ -565,29 +565,91 @@ $text-input-counter-room: 40px;
 /* error: цвет меняют набранный текст, счётчик и сообщение; заливка и обводка остаются как в focus */
 .text-input_error {
     .text-input__field {
-        color: var(--error-dark);
+        color: var(--color-states-error-dark);
     }
 
     .text-input__counter {
-        color: var(--error-dark);
+        color: var(--color-states-error-dark);
     }
 
     &.text-input-style_filled .text-input__field {
-        background: var(--gray-white);
-        border-color: var(--gray-light);
+        background: var(--color-main-gray-white);
+        border-color: var(--color-main-gray-light);
     }
 
     &.text-input-theme_dark {
         .text-input__field,
         .text-input__counter,
         .text-input__error-message {
-            color: var(--error-medium);
+            color: var(--color-states-error-medium);
         }
 
         &.text-input-style_filled .text-input__field {
-            background: var(--gray-black);
-            border-color: var(--gray-dark);
+            background: var(--color-main-gray-black);
+            border-color: var(--color-main-gray-dark);
         }
+    }
+}
+
+/* success: ввод принят (design-ui-inputs.md) */
+.text-input_success {
+    .text-input__field {
+        color: var(--color-states-success-dark);
+    }
+
+    &.text-input-style_filled .text-input__field {
+        background: var(--color-main-gray-white);
+        border-color: var(--color-main-gray-light);
+    }
+
+    &.text-input-theme_dark {
+        .text-input__field {
+            color: var(--color-states-success-medium);
+        }
+
+        &.text-input-style_filled .text-input__field {
+            background: var(--color-main-gray-black);
+            border-color: var(--color-main-gray-dark);
+        }
+    }
+}
+
+/* слот справа (кнопка-глаз пароля, календарь): на месте кнопки очистки */
+.text-input__slot {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    @include spacing(gap, 4px);
+}
+
+$text-input-slot-edges: (l: 16px, m: 12px, s: 10px, xs: 8px);
+@each $size, $edge in $text-input-slot-edges {
+    .text-input-size_#{$size} {
+        .text-input__slot {
+            @include spacing(right, $edge);
+        }
+
+        .text-input__input-container:has(.text-input__slot) .text-input__field {
+            @include spacing(padding-right, $edge + 32px);
+        }
+    }
+}
+
+/* Календарь поля даты (Inputs/calendar): слой в 8 под полем по правому краю, сверху — если снизу нет места */
+.text-input__calendar {
+    position: absolute;
+    right: 0;
+    z-index: 20;
+    top: calc(100% + #{vw(8px)});
+
+    &[hidden] {
+        display: none;
+    }
+
+    &_top {
+        top: auto;
+        bottom: calc(100% + #{vw(8px)});
     }
 }
 
@@ -595,22 +657,22 @@ $text-input-counter-room: 40px;
 .text-input__field:disabled {
     opacity: 1;
     filter: none;
-    background: var(--disable-light);
-    color: var(--gray-medium);
+    background: var(--color-states-disabled-light);
+    color: var(--color-main-gray-medium);
 
     &::placeholder {
-        color: var(--gray-medium);
+        color: var(--color-main-gray-medium);
     }
 }
 
 .text-input-theme_dark .text-input__field:disabled {
-    background: var(--disable-dark);
-    color: var(--gray-medium);
+    background: var(--color-states-disabled-dark);
+    color: var(--color-main-gray-medium);
 }
 
 .text-input-style_underline .text-input__field:disabled {
     background: transparent;
-    border-bottom-color: var(--disable-medium);
+    border-bottom-color: var(--color-states-disabled-medium);
 }
 
 .text-input_disabled {

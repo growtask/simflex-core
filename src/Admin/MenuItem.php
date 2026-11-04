@@ -5,7 +5,7 @@ namespace Simflex\Core\Admin;
 use Simflex\Core\System\Privilege;
 
 /**
- * Пункт меню админки, объявленный в коде, см. Menu::init()
+ * Пункт меню админки, объявленный в коде, см. Menu::init(): группа (без обработчика, с подпунктами) или пункт
  */
 readonly class MenuItem
 {
@@ -16,10 +16,10 @@ readonly class MenuItem
      * @param class-string<\Simflex\Core\Admin\Handler>|'' $handler Обработчик раздела: таблица (Table\Table,
      *        зарегистрированная в Admin/handlers.php) или раздел без таблицы (Handler).
      *        Пусто — группа со списком своих подпунктов
-     * @param string $icon id символа из theme/img/icons/svg-defs.svg
+     * @param string $icon ID иконки дизайн-системы из спрайта админки theme/img/icons.svg (renderIcon())
      * @param string $privilege Привилегия, нужная, чтобы видеть пункт, см. \Simflex\Core\System\Privilege
      * @param bool $hidden Не показывается в меню, но раздел доступен по ссылке
-     * @param MenuItem[] $children Подпункты
+     * @param MenuItem[] $children Подпункты группы; у подпунктов своих подпунктов нет (меню двухуровневое)
      */
     public function __construct(
         public string $name,
@@ -30,5 +30,12 @@ readonly class MenuItem
         public bool $hidden = false,
         public array $children = [],
     ) {
+        foreach ($children as $child) {
+            if ($child->children) {
+                throw new \LogicException(
+                    "Admin menu: $child->link has children; the menu has groups and items only"
+                );
+            }
+        }
     }
 }

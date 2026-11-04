@@ -158,6 +158,14 @@ class Field
         $field->value = $value;
     }
 
+    /**
+     * Поле формы занимает всю строку сетки (form-input_wide): длинный текст, редактор, таблица, список значений
+     */
+    public function isWide(): bool
+    {
+        return !empty($this->params['editor_full']) || !empty($this->params['editor_mini']);
+    }
+
     public function input($value): string
     {
         return $this->render('input', ['value' => $value] + $this->inputVars());
@@ -194,32 +202,46 @@ class Field
     }
 
     /**
-     * @param array $vars name, value, onchange, data, readonly, disabled, action, search, current, items [[value, label]]
+     * Выпадающий список поля (Dropdown из Layout): варианты, поиск по ним; с action — поиск вариантов на сервере
+     * (?action=<action>&name=<поле>&text=..., ответ JSON [{id, name}]). Выбор — событие change на скрытом поле
+     * (атрибут onchange поля и data-* передаются ему)
+     *
+     * @param array $vars name, value, onchange, data, readonly, disabled, action, search, current, items
+     *        [[value, label]], placeholder, className, ariaLabel
      */
     protected function dropdown(array $vars): string
     {
-        // подпись выбранного пункта — сразу в разметке, не только после скрипта админки
-        if (!isset($vars['current'])) {
-            foreach ($vars['items'] ?? [] as [$itemValue, $itemLabel]) {
-                if ((string)$itemValue === (string)($vars['value'] ?? '')) {
-                    $vars['current'] = $itemLabel;
-                    break;
-                }
-            }
+        $options = [];
+        foreach ($vars['items'] ?? [] as [$itemValue, $itemLabel]) {
+            $options[(string)$itemValue] = html_entity_decode(strip_tags((string)$itemLabel));
         }
+        $value = (string)($vars['value'] ?? '');
+        if ($value !== '' && !isset($options[$value]) && ($vars['current'] ?? '') !== '') {
+            $options = [$value => html_entity_decode(strip_tags((string)$vars['current']))] + $options;
+        }
+        $inputAttributes = (array)($vars['data'] ?? []);
+        if (($vars['onchange'] ?? '') !== '' && $vars['onchange'] !== null) {
+            $inputAttributes['onchange'] = (string)$vars['onchange'];
+        }
+        $action = (string)($vars['action'] ?? '');
+        $name = (string)($vars['name'] ?? '');
 
-        return $this->render('dropdown', $vars + [
-            'name' => '',
-            'value' => '',
-            'onchange' => null,
-            'data' => [],
-            'readonly' => false,
-            'disabled' => false,
-            'action' => '',
-            'search' => false,
-            'current' => '—',
-            'items' => [],
-        ]);
+        return \Simflex\Core\Layout\Components\UI\Core\Dropdown\Layout::drawSelect(
+            $name,
+            $options,
+            $value === '' && !isset($options['']) ? null : $value,
+            placeholder: (string)($vars['placeholder'] ?? '—'),
+            size: \Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownSize::Small,
+            theme: \Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownTheme::from(
+                \Simflex\Core\Admin\Page::get()->getTheme()
+            ),
+            search: !empty($vars['search']) || count($options) > 10,
+            disabled: !empty($vars['disabled']) || !empty($vars['readonly']),
+            className: (string)($vars['className'] ?? 'form-dropdown'),
+            attributes: ['aria-label' => (string)($vars['ariaLabel'] ?? strip_tags((string)$this->label))],
+            searchUrl: $action !== '' ? '?' . http_build_query(['action' => $action, 'name' => $name]) : '',
+            inputAttributes: $inputAttributes,
+        );
     }
 
     public function inputName(): string
@@ -336,6 +358,37 @@ class Field
             ]);
         }
         return '';
+    }
+
+    /**
+     * Подпись выбранного значения фильтра для тега над списком
+     */
+    public function getFilterLabel(string $value): string
+    {
+        return $value === 'null' ? '—' : $value;
+    }
+
+    /**
+     * Фильтр-список в шапке колонки (Dropdown из Layout): выбор отправляет форму фильтров списка (theme/js/list.js)
+     * @param array{name: string, value: mixed, items: list<array{0: mixed, 1: string}>, action?: string,
+     *        search?: bool} $vars
+     */
+    protected function filterDropdown(array $vars): string
+    {
+        $items = array_values(array_filter($vars['items'], fn(array $item) => (string)$item[0] !== ''));
+        $value = (string)($vars['value'] ?? '');
+
+        return $this->dropdown([
+            'name' => $vars['name'],
+            'value' => $value,
+            'items' => [['', 'Все'], ...$items],
+            'action' => $vars['action'] ?? '',
+            'search' => $vars['search'] ?? false,
+            'current' => $value !== '' ? $this->getFilterLabel($value) : '',
+            'placeholder' => 'Все',
+            'className' => 'th-filter',
+            'ariaLabel' => 'Фильтр: ' . strip_tags($this->label),
+        ]);
     }
 
     /**

@@ -1,7 +1,7 @@
 /* Figma: Promo/Header/static, набор static (fullhd, hd, tablet, mobile) */
 .header-banner {
-    background: var(--gradient1-main);
-    color: var(--gray-white);
+    background: var(--color-main-gradient1-main);
+    color: var(--color-main-gray-white);
 
     &[hidden] {
         display: none;
@@ -31,7 +31,7 @@
         margin: 0;
         text-align: left;
         @include h5;
-        color: var(--gray-white);
+        color: var(--color-main-gray-white);
     }
 
     &__button,
@@ -41,17 +41,17 @@
 
     /* Белая кнопка справа (Figma: static, buttons/main) */
     &__button {
-        background: var(--gray-white);
-        color: var(--gray-darker);
+        background: var(--color-main-gray-white);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-lighter);
+                background: var(--color-main-gray-lighter);
             }
         }
 
         &:active {
-            background: var(--gray-light);
+            background: var(--color-main-gray-light);
         }
     }
 

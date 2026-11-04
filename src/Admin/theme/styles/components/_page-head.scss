@@ -1,0 +1,45 @@
+/* Заголовок страницы (компонент макета page-head): крошки, название, «На сайт» и главная кнопка */
+.page-head {
+    display: flex;
+    flex-direction: column;
+    @include spacing(gap, 12px);
+    @include spacing(padding-top, 16px, 16px, 0, 0);
+
+    &__back {
+        display: none;
+    }
+
+    &__row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 12px);
+    }
+
+    &__title {
+        margin: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        @include h3;
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        @include spacing(gap, 12px, 12px, 8px, 8px);
+    }
+
+    // телефон: вместо крошек «Назад»
+    @include Mobile {
+        &__breadcrumbs {
+            display: none;
+        }
+
+        &__back {
+            display: inline-flex;
+            align-self: flex-start;
+        }
+    }
+}

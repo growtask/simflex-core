@@ -1,6 +1,8 @@
 /**
  * Модальные окна: открытие по data-modal="<id>", ловушка фокуса, Esc, закрытие по подложке и кнопке,
  * блокировка прокрутки страницы, inert для фона, возврат фокуса на кнопку, открывшую окно.
+ * Окна открываются стопкой: окно поверх открытого (подтверждение поверх формы) закрывается и возвращает
+ * предыдущее; Esc и подложка закрывают верхнее.
  * Публичный API: window.SimflexModal.open(id, opener?), close(id?), isOpen(id?).
  * События на корне окна: modal:open, modal:close.
  */
@@ -16,6 +18,8 @@
     let opener = null;
     let inerted = [];
     let closeTimer = null;
+    // окна под верхним: {modal, opener, inerted}
+    const stack = [];
 
     const find = id => document.getElementById(id);
 
@@ -32,20 +36,24 @@
     };
 
     const unlockPage = () => {
-        document.documentElement.classList.remove('modal-open');
         inerted.forEach(el => el.removeAttribute('inert'));
         inerted = [];
+        if (!stack.length) {
+            document.documentElement.classList.remove('modal-open');
+        }
     };
 
     const open = (id, trigger = null) => {
         const modal = find(id);
-        if (!modal || active === modal) {
+        if (!modal || active === modal || stack.some(level => level.modal === modal)) {
             return;
         }
-        if (active) {
-            close();
-        }
         clearTimeout(closeTimer);
+        if (active) {
+            // текущее окно уходит под новое и недоступно, пока открыто новое
+            stack.push({modal: active, opener, inerted});
+            inerted = [];
+        }
 
         // окно лежит в body, чтобы inert фона его не затрагивал
         if (modal.parentElement !== document.body) {
@@ -54,6 +62,8 @@
 
         opener = trigger || document.activeElement;
         active = modal;
+        // окно поверх другого: нижнее окно сделало его недоступным вместе с остальной страницей
+        modal.removeAttribute('inert');
         modal.hidden = false;
         lockPage(modal);
         // принудительный reflow, чтобы переход запустился
@@ -72,9 +82,21 @@
         active = null;
         modal.classList.remove('is-open');
         unlockPage();
+        const back = opener;
+        opener = null;
+        // предыдущее окно стопки снова верхнее
+        const previous = stack.pop();
+        if (previous) {
+            active = previous.modal;
+            opener = previous.opener;
+            inerted = previous.inerted;
+            if (inerted.includes(modal)) {
+                modal.setAttribute('inert', '');
+            }
+        }
 
         const finish = () => {
-            if (!active) {
+            if (active !== modal) {
                 modal.hidden = true;
             }
         };
@@ -84,8 +106,6 @@
             closeTimer = setTimeout(finish, CLOSE_DELAY);
         }
 
-        const back = opener;
-        opener = null;
         if (back && document.contains(back) && typeof back.focus === 'function') {
             back.focus({preventScroll: true});
         }

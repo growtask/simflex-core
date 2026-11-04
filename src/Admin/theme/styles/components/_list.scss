@@ -1,0 +1,542 @@
+/*
+ * Список раздела (компоненты макета table-card, table-toolbar, th-tags, thr/th, tr/td, row-actions, table-footer,
+ * table-empty, table-bar, modal-filters, kv): на десктопе таблица в px, главная колонка растягивается (минимум 280),
+ * на планшете и телефоне — карточки
+ */
+.table-card {
+    --table-line: var(--color-main-gray-lighter);
+    --table-head-bg: var(--color-main-color1-lighter);
+
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(padding, 12px);
+    @include spacing(gap, 12px);
+
+    &-theme_dark {
+        --table-line: var(--color-main-gray-dark);
+        --table-head-bg: var(--color-main-gray-dark);
+        background: var(--color-main-gray-darker);
+    }
+
+    &__scroll {
+        min-width: 0;
+        overflow-x: auto;
+        @include scrollbar(classic, m);
+    }
+
+    &-theme_dark &__scroll {
+        @include scrollbar(classic, m, dark);
+    }
+}
+
+/* Поиск и кнопка окна фильтров над таблицей */
+.table-toolbar {
+    display: flex;
+    align-items: flex-start;
+    @include spacing(gap, 12px);
+
+    &__search {
+        flex: 1;
+        min-width: 0;
+    }
+
+    // окно фильтров нужно там, где нет шапки таблицы
+    &__filters {
+        display: none;
+
+        @include Tablet {
+            display: inline-flex;
+        }
+    }
+}
+
+/* Применённые фильтры тегами */
+.th-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    @include spacing(gap, 8px);
+
+    &__title {
+        color: var(--color-text-icon-gray-medium);
+        @include ui-xs;
+    }
+}
+
+/* Таблица */
+.table-list {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    @include t3;
+}
+
+.th {
+    box-sizing: border-box;
+    vertical-align: top;
+    text-align: left;
+    font-weight: 600;
+    background: var(--table-head-bg);
+    @include spacing(padding, 8px);
+
+    &:first-child {
+        border-top-left-radius: var(--radius-ui-medium);
+        border-bottom-left-radius: var(--radius-ui-medium);
+    }
+
+    &:last-child {
+        border-top-right-radius: var(--radius-ui-medium);
+        border-bottom-right-radius: var(--radius-ui-medium);
+    }
+
+    &_main {
+        @include spacing(min-width, 280px);
+    }
+
+    &_select {
+        @include spacing(width, 40px);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 4px);
+        // высота кнопки сортировки: подписи колонок без неё на той же линии
+        @include spacing(min-height, 26px);
+        @include ui-s;
+    }
+
+    &__filter {
+        @include spacing(margin-top, 8px);
+        @include spacing(min-width, 120px);
+    }
+
+    &_controls {
+        position: sticky;
+        right: 0;
+        z-index: 1;
+        white-space: nowrap;
+
+        .th__label {
+            display: block;
+            @include spacing(min-height, 24px);
+            @include ui-s;
+        }
+    }
+}
+
+.tr {
+    @include transition(background);
+
+    .td {
+        box-sizing: border-box;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--table-line);
+        @include spacing(padding, 8px);
+    }
+
+    &:hover .td {
+        background: color-mix(in srgb, var(--color-main-color1-lighter) 35%, transparent);
+    }
+
+    &_selected .td {
+        background: color-mix(in srgb, var(--color-main-color1-lighter) 60%, transparent);
+    }
+
+    // запись, сохранённая перед возвратом в список: подсветка 1,6 с
+    &_saved .td {
+        animation: tr-saved 1.6s ease-out;
+    }
+
+    .table-card-theme_dark &:hover .td,
+    .table-card-theme_dark &_selected .td {
+        background: var(--color-main-gray-dark);
+    }
+}
+
+@keyframes tr-saved {
+    from {
+        background: var(--color-main-color1-lighter);
+    }
+}
+
+.td {
+    &_main {
+        @include spacing(min-width, 280px);
+    }
+
+    // отступ уровня дерева
+    @for $level from 1 through 6 {
+        &_level_#{$level} {
+            padding-left: calc(#{vw(8px)} + #{vw(24px)} * #{$level}) !important;
+        }
+    }
+
+    &_controls {
+        position: sticky;
+        z-index: 1;
+        right: 0;
+        width: 1%;
+
+        // открытое меню «Ещё» — поверх следующих строк
+        &:has(.dropdown_open) {
+            z-index: 3;
+        }
+
+        white-space: nowrap;
+        background: var(--color-main-gray-white);
+
+        .table-card-theme_dark & {
+            background: var(--color-main-gray-darker);
+        }
+    }
+}
+
+.td-value {
+    overflow-wrap: anywhere;
+
+    &_num {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}
+
+.table-list a:not([class]),
+.table-list .table__row-name {
+    color: var(--color-text-icon-color1-main);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.td-image {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-ui-small);
+    @include spacing(width, 64px);
+    @include spacing(height, 64px);
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.td-enum {
+    @include spacing(min-width, 160px);
+}
+
+/* Действия строки: изменить, удалить, «Ещё» (td .row-actions — сильнее старых стилей .table__body-item-btns) */
+.td .row-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    width: auto;
+    height: auto;
+    align-items: center;
+    justify-content: flex-end;
+    @include spacing(gap, 4px);
+}
+
+/* Подвал: показано записей, страницы */
+.table-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    @include spacing(gap, 12px);
+    @include spacing(padding-inline, 4px);
+
+    &__info {
+        margin: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+    }
+}
+
+/* Пустая таблица */
+.table-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    @include spacing(padding-block, 48px);
+    @include spacing(gap, 12px);
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-main-color1-lighter);
+        color: var(--color-text-icon-color1-main);
+        border-radius: var(--radius-ui-large);
+        @include spacing(width, 64px);
+        @include spacing(height, 64px);
+    }
+
+    &__icon-svg {
+        fill: currentColor;
+        @include spacing(width, 32px);
+        @include spacing(height, 32px);
+    }
+
+    &__title {
+        margin: 0;
+        @include h5;
+    }
+
+    &__text {
+        margin: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+    }
+}
+
+/* Плавающая панель действий: внизу по центру колонки страницы, на подложке-затухании */
+.table-bar {
+    position: fixed;
+    z-index: calc(#{z('header')} - 2);
+    bottom: vw(16px);
+    left: calc(50% + #{vw(152px)});
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    // ширина по кнопкам: у fixed с left 50% доступная ширина — только правая половина экрана
+    width: max-content;
+    max-width: calc(100% - #{vw(380px)});
+    transform: translateX(-50%);
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-ui-large);
+    box-shadow: var(--shadow-gray-m);
+    @include spacing(padding, 8px);
+    @include spacing(gap, 8px);
+
+    .sf-menu-collapsed & {
+        left: calc(50% + #{vw(48px)});
+        max-width: calc(100% - #{vw(160px)});
+    }
+
+    &:not(:has(.btn)) {
+        display: none;
+    }
+
+    &-theme_dark {
+        background: var(--color-main-gray-darker);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+    }
+
+    // отключённые кнопки на 40 % непрозрачности (макет table-bar)
+    .table-bar__button:disabled,
+    .table-bar__button[aria-disabled="true"] {
+        opacity: 0.4;
+    }
+
+    &__count {
+        display: inline-flex;
+        align-items: center;
+        color: var(--color-text-icon-gray-dark);
+        @include ui-s;
+        @include spacing(gap, 4px);
+        @include spacing(padding-inline, 8px);
+
+        &[hidden] {
+            display: none;
+        }
+
+        .table-bar-theme_dark & {
+            color: var(--color-text-icon-gray-lighter);
+        }
+    }
+
+    &__clear {
+        display: inline-flex;
+        padding: 0;
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: inherit;
+        border-radius: var(--radius-ui-xsmall);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    &__clear-icon {
+        fill: currentColor;
+        @include spacing(width, 16px);
+        @include spacing(height, 16px);
+    }
+
+    @include Tablet {
+        left: 50%;
+        bottom: vwt(16px);
+        flex-wrap: nowrap;
+        max-width: calc(100% - #{vwt(32px)});
+
+        // кнопки, кроме «Добавить», — только иконки, подпись остаётся для скринридера
+        .table-bar__button:not(.table-bar__add) .btn__text {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+    }
+    @include Mobile {
+        bottom: vwm(12px);
+        max-width: calc(100% - #{vwm(24px)});
+    }
+}
+
+/* Окно фильтров и сведения о записи */
+.modal-filters {
+    display: flex;
+    flex-direction: column;
+    @include spacing(gap, 12px);
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 4px);
+    }
+
+    &__label {
+        @include ui-s;
+    }
+}
+
+.kv {
+    width: 100%;
+    border-collapse: collapse;
+    @include t3;
+
+    th,
+    td {
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--color-main-gray-lighter);
+        @include spacing(padding, 8px);
+    }
+
+    th {
+        width: 35%;
+        color: var(--color-text-icon-gray-medium);
+        font-weight: 400;
+    }
+
+    [data-theme="dark"] & th,
+    [data-theme="dark"] & td {
+        border-color: var(--color-main-gray-dark);
+    }
+}
+
+/* Планшет и телефон: строки — карточки (tc/mtd), шапки нет, фильтры — в окне */
+@include Tablet {
+    .table-list,
+    .table-list tbody {
+        display: block;
+    }
+
+    .table-list thead {
+        display: none;
+    }
+
+    .table-list .table__body {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: vwt(12px);
+
+        @include Mobile {
+            grid-template-columns: minmax(0, 1fr);
+            gap: vwm(12px);
+        }
+    }
+
+    .tr {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--table-line);
+        border-radius: var(--radius-ui-large);
+        padding: vwt(12px);
+        gap: vwt(8px);
+
+        @include Mobile {
+            padding: vwm(12px);
+            gap: vwm(8px);
+        }
+
+        .td {
+            display: flex;
+            justify-content: space-between;
+            gap: vwt(12px);
+            padding: 0;
+            border: 0;
+            background: none !important;
+
+            // название поля слева от значения
+            &::before {
+                content: attr(data-label);
+                flex-shrink: 0;
+                color: var(--color-text-icon-gray-medium);
+            }
+
+            &_hide-mobile {
+                display: none;
+            }
+        }
+
+        // заголовок карточки: главная колонка
+        .td_main {
+            order: -1;
+            // место под чекбокс выбора
+            padding-right: vwt(36px);
+            @include ui-m;
+
+            @include Mobile {
+                padding-right: vwm(36px);
+            }
+
+            &::before {
+                content: none;
+            }
+        }
+
+        .td_select {
+            position: absolute;
+            top: vwt(12px);
+            right: vwt(12px);
+
+            @include Mobile {
+                top: vwm(12px);
+                right: vwm(12px);
+            }
+
+            &::before {
+                content: none;
+            }
+        }
+
+        // .table-list .tr — сильнее старого правила, которое прятало колонку действий на мобильном
+        .td.td_controls {
+            position: static;
+            display: flex;
+            width: auto;
+            justify-content: flex-end;
+
+            &::before {
+                content: none;
+            }
+        }
+    }
+}

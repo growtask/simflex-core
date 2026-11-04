@@ -1,0 +1,81 @@
+/*
+ * Поле тегов Inputs/tags (design-ui-inputs.md): поле, под ним ряд тегов Tag secondary s с отступом 8, ряд
+ * переносится с тем же отступом; подсказки — панель под полем, как у Dropdown
+ */
+.tags-input {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    @include spacing(gap, 8px);
+
+    &__control {
+        position: relative;
+    }
+
+    &__panel {
+        position: absolute;
+        top: calc(100% + #{vw(4px)});
+        left: 0;
+        right: 0;
+        z-index: 20;
+        overflow-y: auto;
+        background: var(--color-main-gray-white);
+        border-radius: var(--radius-ui-large);
+        box-shadow: var(--shadow-gray-m);
+        @include spacing(max-height, 280px);
+        @include spacing(padding, 8px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &-theme_dark &__panel {
+        background: var(--color-main-gray-darker);
+    }
+
+    &__options {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 2px);
+    }
+
+    &__option {
+        justify-content: flex-start;
+        width: 100%;
+        text-align: left;
+
+        &[hidden] {
+            display: none;
+        }
+
+        &.active {
+            background: var(--color-main-color1-lighter);
+        }
+    }
+
+    &-theme_dark &__option.active {
+        background: var(--color-main-gray-dark);
+    }
+
+    &__empty {
+        margin: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include spacing(padding, 8px);
+        @include t3;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        @include spacing(gap, 8px);
+
+        &:empty {
+            display: none;
+        }
+    }
+}

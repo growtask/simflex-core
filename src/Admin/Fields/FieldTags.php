@@ -7,6 +7,11 @@ use Simflex\Core\DB\DB;
 
 class FieldTags extends Field
 {
+    public function isWide(): bool
+    {
+        return true;
+    }
+
     public array $values = [];
 
     public function input($value): string
@@ -22,13 +27,13 @@ class FieldTags extends Field
             $this->values = array_values(array_unique($this->values));
         }
 
+        $selected = array_values(array_filter(array_map('trim', explode(',', (string)$value)), 'strlen'));
         return $this->render('tags', [
-            'readonly' => false,
-            'ajax' => false,
-            'addNew' => true,
             'name' => $this->name,
-            'value' => $value,
-            'items' => array_map(fn($v) => [$v, $v], $this->values),
+            'selected' => array_combine($selected, $selected),
+            'options' => array_combine($this->values, $this->values),
+            'searchUrl' => '',
+            'allowNew' => true,
         ]);
     }
 }

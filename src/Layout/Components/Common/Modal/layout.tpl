@@ -14,7 +14,7 @@ $hasTitle = $data['title'] !== '';
 $hasText = $data['text'] !== '';
 
 $dialogAttrs = [
-    'role' => 'dialog',
+    'role' => $data['alert'] ? 'alertdialog' : 'dialog',
     'aria-modal' => 'true',
     'tabindex' => '-1',
 ];

@@ -1,113 +1,31 @@
 <?php
 
-$req = \Simflex\Core\System\Container::getRequest(); ?>
-<div class="table__pagination">
-    <div class="table__pagination-text">Показаны записи: с <?= $this->p * $this->pOn + 1 ?> по <?= min($this->count, $this->p * $this->pOn + $this->pOn) ?> из <?= $this->count ?></div>
-    <div class="table__pagination-text-mobile">с <?= $this->p * $this->pOn + 1 ?> по <?= min($this->count, $this->p * $this->pOn + $this->pOn) ?> из <?= $this->count ?></div>
-    <div class="table__pagination-btns">
-        <?php
-        if ($this->p !== 0): ?>
-            <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $this->p - 1]) ?>"
-               class="BtnIconOutlineMonoXs table__pagination-btns-mobile-prev">
-                <svg viewBox="0 0 24 24">
-                    <use xlink:href="<?= asset('img/icons/svg-defs.svg') ?>#chevron-mini"></use>
-                </svg>
-            </a>
-        <?php
-        endif; ?>
-        <?php
-        if ($this->pCount > $this->pCountMax): ?>
-            <?php
-            $i = 0; ?>
-            <?php
-            if (!$this->p): ?>
-                <button class="BtnSecondaryMonoXs">1</button>
-            <?php
-            else: ?>
-                <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => 0]) ?>" class="BtnOutlineMonoXs">1</a>
-            <?php
-            endif; ?>
+/**
+ * Подвал списка (компоненты макета table-footer): «Показано 1–20 из 50», страницы (nav/pagination) и переход
+ * на страницу. Номер страницы в адресе — ?p= с нуля
+ * @var \Simflex\Core\Admin\Plugins\Pagination\Pagination $this
+ */
 
-            <?php
-            if ($since > 1): ?>
-                <button class="BtnIconOutlineNoneXs table__pagination-btns-mobile-next">
-                    ...
-                </button>
-            <?php
-            endif; ?>
+use Simflex\Core\Admin\Page;
+use Simflex\Core\Layout\Components\Common\Pagination\Layout as PaginationLayout;
+use Simflex\Core\Layout\Components\Common\Pagination\PaginationTheme;
 
-            <?php
-            for ($i = $since; $i <= $till; $i++): ?>
-                <?php
-                if ($i === $this->p): ?>
-                    <button class="BtnSecondaryMonoXs"><?= $i + 1 ?></button>
-                <?php
-                else: ?>
-                    <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $i]) ?>" class="BtnOutlineMonoXs"><?= $i + 1 ?></a>
-                <?php
-                endif; ?>
-            <?php
-            endfor; ?>
-
-            <?php
-            if ($till < $this->pCount - 2): ?>
-                <button class="BtnIconOutlineNoneXs table__pagination-btns-mobile-next">
-                    ...
-                </button>
-            <?php
-            endif; ?>
-
-            <?php
-            $i = $this->pCount - 1; ?>
-            <?php
-            if ($i === $this->p): ?>
-                <button class="BtnSecondaryMonoXs"><?= $i + 1 ?></button>
-            <?php
-            else: ?>
-                <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $i]) ?>" class="BtnOutlineMonoXs"><?= $i + 1 ?></a>
-            <?php
-            endif; ?>
-        <?php
-        else: ?>
-            <?php
-            for ($i = 0; $i < $this->pCount; $i++): ?>
-                <?php
-                if ($i === $this->p): ?>
-                    <button class="BtnSecondaryMonoXs"><?= $i + 1 ?></button>
-                <?php
-                else: ?>
-                    <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $i]) ?>" class="BtnOutlineMonoXs"><?= $i + 1 ?></a>
-                <?php
-                endif; ?>
-            <?php
-            endfor; ?>
-        <?php
-        endif; ?>
-        <?php
-        if ($this->p < $this->pCount - 1) : ?>
-            <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $this->p + 1]) ?>"
-               class="BtnIconOutlineMonoXs table__pagination-btns-mobile-next">
-                <svg viewBox="0 0 24 24">
-                    <use xlink:href="<?= asset('img/icons/svg-defs.svg') ?>#chevron-mini"></use>
-                </svg>
-            </a>
-        <?php
-        endif; ?>
-
-    </div>
-    <div class="table__pagination-btns-mobile">
-        <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $this->p - 1]) ?>"
-           class="BtnIconOutlineMonoXs table__pagination-btns-mobile-prev">
-            <svg viewBox="0 0 24 24">
-                <use xlink:href="<?= asset('img/icons/svg-defs.svg') ?>#chevron-mini"></use>
-            </svg>
-        </a>
-        <span class="table__pagination-btns-mobile-text"><?= $this->p + 1 ?></span>
-        <a href="<?= \Simflex\Core\Admin\Page::get()->getPath() ?>?<?= $req->buildQuery(['p' => $this->p + 1]) ?>"
-           class="BtnIconOutlineMonoXs table__pagination-btns-mobile-next">
-            <svg viewBox="0 0 24 24">
-                <use xlink:href="<?= asset('img/icons/svg-defs.svg') ?>#chevron-mini"></use>
-            </svg>
-        </a>
-    </div>
+$request = \Simflex\Core\System\Container::getRequest();
+$from = $this->p * $this->pOn + 1;
+$to = min($this->count, $this->p * $this->pOn + $this->pOn);
+// {page} — подставит компонент; в buildQuery плейсхолдер экранировался бы
+$urlPattern = Page::get()->getPath() . '?' . str_replace('PAGE_NUMBER', '{page}', $request->buildQuery(['p' => 'PAGE_NUMBER']));
+?>
+<div class="table-footer">
+    <p class="table-footer__info">Показано <?= $from ?>–<?= $to ?> из <?= $this->count ?></p>
+    <?php if ($this->pCount > 1): ?>
+    <?= PaginationLayout::drawPagination(
+        $this->p + 1,
+        $this->pCount,
+        $urlPattern,
+        theme: PaginationTheme::from(Page::get()->getTheme()),
+        className: 'table-footer__pagination',
+        urlPageOffset: -1,
+    ) ?>
+    <?php endif; ?>
 </div>

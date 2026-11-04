@@ -50,83 +50,105 @@
 
     /*----------STYLES-----------*/
     &-primary {
-        background: var(--color1-dark);
-        color: var(--gray-white);
+        background: var(--color-main-color1-dark);
+        color: var(--color-main-gray-white);
     }
 
     &-primary-light {
-        background: var(--color1-light);
-        color: var(--gray-dark);
+        background: var(--color-main-color1-light);
+        color: var(--color-main-gray-dark);
     }
 
     &-secondary {
-        background: var(--color1-lighter);
-        color: var(--gray-dark);
+        background: var(--color-main-color1-lighter);
+        color: var(--color-main-gray-dark);
     }
 
     &-accent {
-        background: var(--color2-dark);
-        color: var(--gray-white);
+        background: var(--color-main-color2-dark);
+        color: var(--color-main-gray-white);
     }
 
     &-accent-light {
-        background: var(--color2-main);
-        color: var(--gray-white);
+        background: var(--color-main-color2-main);
+        color: var(--color-main-gray-white);
     }
 
     &-error {
-        background: var(--error-dark);
-        color: var(--gray-white);
+        background: var(--color-states-error-dark);
+        color: var(--color-main-gray-white);
     }
 
     &-alert {
-        background: var(--alert-light);
-        color: var(--gray-dark);
+        background: var(--color-states-alert-light);
+        color: var(--color-main-gray-dark);
     }
 
     &-success {
-        background: var(--success-light);
-        color: var(--gray-dark);
+        background: var(--color-states-success-light);
+        color: var(--color-main-gray-dark);
     }
 
     &-gray {
-        background: var(--gray-lighter);
-        color: var(--gray-dark);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-gray-dark);
     }
 
     &-dark {
-        background: var(--gray-dark);
-        color: var(--gray-white);
+        background: var(--color-main-gray-dark);
+        color: var(--color-main-gray-white);
     }
 
     &-white {
-        background: var(--gray-white);
-        color: var(--color1-dark);
+        background: var(--color-main-gray-white);
+        color: var(--color-main-color1-dark);
     }
 
     &-gradient {
-        background: var(--gradient1-main);
-        color: var(--gray-white);
+        background: var(--color-main-gradient1-main);
+        color: var(--color-main-gray-white);
     }
 
     &-gradient-light {
-        background: var(--gradient1-light);
-        color: var(--gray-black);
+        background: var(--color-main-gradient1-light);
+        color: var(--color-main-gray-black);
     }
 
+    /* badges/product: товарные метки (design-ui-badges.md, раздел 3), тёмной темы нет */
     &-sale {
-        background: var(--error-light);
-        color: var(--error-dark);
+        background: var(--color-states-error-light);
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-new {
-        background: var(--alert-light);
-        color: var(--gray-dark);
+        background: var(--color-states-success-light);
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-no-stock {
-        background: var(--gray-medium);
-        color: var(--gray-white);
+        background: var(--color-main-gray-medium);
+        color: var(--color-text-icon-gray-darker);
+    }
+
+    &-hit {
+        background: var(--color-main-gradient1-main);
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &-info {
+        background: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &-preorder {
+        background: var(--color-main-color1-lighter);
+        color: var(--color-text-icon-color1-dark);
+    }
+
+    &-video,
+    &-3d {
+        background: var(--color-main-gray-white);
+        color: var(--color-text-icon-color1-dark);
     }
 
     /*----------SIZES-----------*/

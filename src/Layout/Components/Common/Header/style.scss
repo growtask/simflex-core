@@ -5,8 +5,8 @@
 .header {
     position: relative;
     z-index: 100;
-    background: var(--gray-white);
-    color: var(--gray-darker);
+    background: var(--color-main-gray-white);
+    color: var(--color-main-gray-darker);
 
     &__container {
         width: 100%;

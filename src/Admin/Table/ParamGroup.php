@@ -11,12 +11,14 @@ readonly class ParamGroup
     /**
      * @param FieldDefinition[] $fields
      * @param string $pos Колонка формы: left|right
+     * @param string $tab Вкладка формы (как FieldDefinition::$tab)
      */
     public function __construct(
         public string $name,
         public string $label,
         public array $fields = [],
         public string $pos = 'left',
+        public string $tab = '',
     ) {
     }
 }

@@ -15,6 +15,11 @@ use Simflex\Core\DB\AQ;
  */
 class FieldRelation extends Field
 {
+    public function isWide(): bool
+    {
+        return true;
+    }
+
     public function __construct($row)
     {
         parent::__construct($row);
@@ -27,18 +32,13 @@ class FieldRelation extends Field
         $id = $this->getRecordId();
         $rows = $id ? $this->getRelated($id) : [];
 
-        $items = [];
-        foreach ($rows as $relatedId => $label) {
-            $items[] = [$relatedId, htmlspecialchars((string)$label)];
-        }
-
         return $this->render('tags', [
-            'readonly' => true,
-            'ajax' => true,
-            'addNew' => false,
             'name' => $this->name,
-            'value' => implode(',', array_keys($rows)),
-            'items' => $items,
+            'selected' => array_map('strval', $rows),
+            'options' => [],
+            // записи раздела ищет Table::searchTags()
+            'searchUrl' => '?action=searchTags&name=' . rawurlencode($this->name),
+            'allowNew' => false,
         ]);
     }
 

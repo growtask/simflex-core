@@ -14,6 +14,17 @@ class Session
         }
     }
 
+    /**
+     * Новый идентификатор сессии после успешного входа или выхода.
+     */
+    public static function regenerateId(): bool
+    {
+        static::ensureStarted();
+        $regenerated = session_regenerate_id(true);
+        session_write_close();
+        return $regenerated;
+    }
+
     public static function get(string $key): mixed
     {
         if (!static::$init) {

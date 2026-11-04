@@ -25,7 +25,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--gray-light);
+        background-color: var(--color-main-gray-light);
         border-radius: 999px;
         @include transition((background-color));
     }
@@ -46,25 +46,25 @@
 
     /* Hover states */
     &__input:not(:checked):hover + .toggle__background {
-        background-color: var(--gray-medium);
+        background-color: var(--color-main-gray-medium);
     }
 
     &__input:checked:hover + .toggle__background {
-        background-color: var(--color1-light);
+        background-color: var(--color-main-color1-light);
     }
 
     /* Active states */
     &__input:not(:checked):active + .toggle__background {
-        background-color: var(--gray-dark);
+        background-color: var(--color-main-gray-dark);
     }
 
     &__input:checked:active + .toggle__background {
-        background-color: var(--color1-dark);
+        background-color: var(--color-main-color1-dark);
     }
 
     &__thumb {
         position: absolute;
-        background-color: var(--gray-white);
+        background-color: var(--color-main-gray-white);
         border-radius: 50%;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -76,15 +76,14 @@
 
     /* Checkmark styles */
     &__check {
-        stroke-width: 3;
-        stroke: var(--color1-main);
-        stroke-dasharray: 20;
-        stroke-dashoffset: 20;
-        @include transition((stroke, stroke-dashoffset));
+        fill: currentColor;
+        color: var(--color-main-color1-main);
+        opacity: 0;
+        @include transition((opacity));
     }
 
     &__input:checked + .toggle__background {
-        background-color: var(--color1-main);
+        background-color: var(--color-main-color1-main);
     }
 
     &__input:checked + .toggle__background .toggle__thumb {
@@ -92,8 +91,47 @@
     }
 
     &__input:checked + .toggle__background .toggle__check {
-        stroke-dashoffset: 0;
-        stroke: var(--color1-main);
+        opacity: 1;
+    }
+
+    &__input:focus-visible + .toggle__background {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    // disabled: включённый и выключенный одного цвета, значение видно по положению бегунка и галочке
+    &_disabled {
+        cursor: not-allowed;
+
+        .toggle__input {
+            cursor: not-allowed;
+        }
+
+        .toggle__input + .toggle__background,
+        .toggle__input:hover + .toggle__background,
+        .toggle__input:active + .toggle__background {
+            background-color: var(--color-states-disabled-medium);
+        }
+
+        .toggle__check {
+            color: var(--color-states-disabled-medium);
+        }
+
+        .toggle__text {
+            color: var(--color-text-icon-gray-medium);
+        }
+
+        &.toggle-theme_dark {
+            .toggle__input + .toggle__background,
+            .toggle__input:hover + .toggle__background,
+            .toggle__input:active + .toggle__background {
+                background-color: var(--color-states-disabled-dark);
+            }
+
+            .toggle__check {
+                color: var(--color-states-disabled-dark);
+            }
+        }
     }
 
     /*----------SIZES-----------*/
@@ -161,13 +199,7 @@
     /*----------THEME-----------*/
     &-theme_dark {
         .toggle__text {
-            color: var(--gray-dark);
-        }
-    }
-
-    &-theme_dark {
-        .toggle__text {
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
         }
     }
 }

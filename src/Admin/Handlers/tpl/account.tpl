@@ -1,101 +1,76 @@
-<div class="content">
-<form class="content__inner" action="" method="post">
-    <div class="content__head">
-        <div class="content__head-bg"></div>
-        <div class="content__head-wrap">
-            <div class="content__head-left">
-                <h4 class="content__title">Данные пользователя</h4>
-                <button class="content__head-toggle BtnIconPrimarySm" type="button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M10.7071 5.29289C11.0976 5.68342 11.0976 6.31658 10.7071 6.70711L6.41421 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H6.41421L10.7071 17.2929C11.0976 17.6834 11.0976 18.3166 10.7071 18.7071C10.3166 19.0976 9.68342 19.0976 9.29289 18.7071L3.29289 12.7071C2.90237 12.3166 2.90237 11.6834 3.29289 11.2929L9.29289 5.29289C9.68342 4.90237 10.3166 4.90237 10.7071 5.29289Z"
-                              fill="white" />
-                    </svg>
-                </button>
-            </div>
-            <div class="content__head-right">
-                <div class="content__head-btns content__head-btns--hidden-desktop">
-                    <button type="submit" class="content__btn-save BtnPrimarySm BtnIconLeft">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12L10 17L19 8"
-                                  stroke="#ffffff"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round" />
-                        </svg>
-                        Сохранить
+<?php
+
+/**
+ * Профиль текущего пользователя (Handlers\Account): роль и логин, имя, email, новый пароль; выход
+ * @var array{role_name: string, login: string, name: string, email: string} $data
+ */
+
+use Simflex\Core\Admin\Page;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputLabelPos;
+use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
+
+$theme = Page::get()->getTheme();
+$input = fn(string $label, string $name, string $value, array $attributes = [], TextInputKind $kind = TextInputKind::Text)
+    => '<div class="form-input">' . TextInput::drawInput(
+        placeholder: $label,
+        labelText: $label,
+        labelPos: TextInputLabelPos::Standard,
+        theme: TextInputTheme::from($theme),
+        id: 'account-' . $name,
+        attributes: $attributes + ($name !== '' ? ['name' => $name] : []),
+        kind: $kind,
+        value: $value,
+        reset: false,
+    ) . '</div>';
+$save = Button::drawButton(
+    text: 'Сохранить',
+    size: ButtonSize::Small,
+    theme: ButtonTheme::from($theme),
+    attributes: ['type' => 'submit'],
+    iconLeft: 'check',
+);
+?>
+<form class="edit-form edit-form-theme_<?= $theme ?>" action="" method="post" data-sf="edit-form">
+    <?= Page::get()->drawPageHead('Данные пользователя', $save) ?>
+    <div class="edit-layout">
+        <div class="edit-main">
+            <section class="form-section form-section_open" data-sf-form-section>
+                <h2 class="form-section__title">
+                    <button type="button" class="form-section__head" aria-expanded="true" aria-controls="account-main">
+                        <span class="form-section__name">Учётная запись</span>
+                        <?= renderIcon('chevron-m-down', 'form-section__chevron') ?>
                     </button>
+                </h2>
+                <div class="form-section__body" id="account-main">
+                    <div class="form-section__grid">
+                        <?= $input('Роль', '', (string)$data['role_name'], ['disabled' => 'disabled']) ?>
+                        <?= $input('Логин', '', (string)$data['login'], ['disabled' => 'disabled']) ?>
+                        <?= $input('Имя', 'name', (string)$data['name']) ?>
+                        <?= $input('E-mail', 'email', (string)$data['email'], kind: TextInputKind::Email) ?>
+                        <?= $input('Новый пароль', 'password', '', [
+                            'autocomplete' => 'new-password',
+                            'placeholder' => 'Оставьте пустым, если не требуется изменить',
+                        ], TextInputKind::Password) ?>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
-    <div class="content__body" data-simplebar>
-        <?= \Simflex\Core\Extensions\Alert\Alert::getHTML() ?>
-        <label class="data-point">
-            Роль
-            <div class="form-control form-control--sm">
-                <input value="<?= htmlspecialchars((string)$data['role_name']) ?>"
-                       disabled
-                       placeholder="Роль"
-                       type="text"
-                       class="form-control__input">
-            </div>
-        </label>
-        <label class="data-point">
-            Логин
-            <div class="form-control form-control--sm">
-                <input value="<?= htmlspecialchars((string)$data['login']) ?>"
-                       disabled
-                       placeholder="Логин"
-                       type="text"
-                       class="form-control__input">
-            </div>
-        </label>
-        <label class="data-point">
-            Имя
-            <div class="form-control form-control--sm">
-                <input name="name"
-                       value="<?= htmlspecialchars((string)$data['name']) ?>"
-                       placeholder="Имя"
-                       type="text"
-                       class="form-control__input">
-            </div>
-        </label>
-        <label class="data-point">
-            E-mail
-            <div class="form-control form-control--sm">
-                <input name="email"
-                       value="<?= htmlspecialchars((string)$data['email']) ?>"
-                       placeholder="E-mail"
-                       type="email"
-                       class="form-control__input">
-            </div>
-        </label>
-        <label class="data-point">
-            Пароль
-            <div class="form-control form-control--pass form-control--sm">
-                <input name="password"
-                       value=""
-                       placeholder="Оставьте пустым, если не требуется изменить"
-                       type="password"
-                       class="form-control__input">
-                <a href="#" class="form-control-show-pass"></a>
-            </div>
-        </label>
-    </div>
-
-    <div class="content__btns">
-        <button type="submit" class="content__btn-save BtnPrimarySm BtnIconLeft">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12L10 17L19 8"
-                      stroke="#ffffff"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round" />
-            </svg>
-            Сохранить
-        </button>
+    <div class="edit-bar edit-bar-theme_<?= $theme ?>" role="toolbar" aria-label="Сохранение">
+        <?= $save ?>
+        <?= Button::drawButton(
+            text: 'Выйти из админки',
+            link: Page::url('logout'),
+            style: ButtonStyle::Outline,
+            size: ButtonSize::Small,
+            theme: ButtonTheme::from($theme),
+            iconLeft: 'log-out',
+        ) ?>
     </div>
 </form>
-</div>

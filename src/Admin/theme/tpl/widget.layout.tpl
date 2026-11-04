@@ -1,22 +1,17 @@
-<div class="widget">
-    <div class="portlet">
-        <div class="portlet-title">
-            <div class="caption">
-                <i class="icon-bar-chart"></i><?php echo $this->data['name'] ?>
-            </div>
-            <?= $this->actions() ?>
-            <!--            <div class="actions">
-                            <div data-toggle="buttons" class="btn-group">
-                                <label class="btn btn-default btn-sm active">
-                                    <input type="radio" class="toggle" name="options">New </label>
-                                <label class="btn btn-default btn-sm">
-                                    <input type="radio" class="toggle" name="options">Returning </label>
-                            </div>
-                        </div>-->
-        </div>
-        <div class="portlet-body">
-            <?php echo $content ?>
-        </div>
+<?php
+
+/**
+ * Карточка виджета главной админки: название, действия виджета, содержимое
+ * @var \Simflex\Core\Admin\WidgetBase $this
+ * @var string $content
+ */
+
+?>
+<section class="widget-card" data-widget-id="<?= (int)$this->id ?>">
+    <div class="widget-card__head">
+        <h2 class="widget-card__title"><?= htmlspecialchars((string)$this->data['name']) ?></h2>
+        <div class="widget-card__actions"><?= $this->actions() ?></div>
     </div>
-    <input type="hidden" class="widget-id" value="<?php echo $this->id ?>" />
-</div>
+    <div class="widget-card__body"><?= $content ?></div>
+    <input type="hidden" class="widget-id" value="<?= (int)$this->id ?>">
+</section>

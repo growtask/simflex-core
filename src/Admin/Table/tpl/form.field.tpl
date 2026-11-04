@@ -1,13 +1,16 @@
 <?php
 
-if (!isset($isGroup)) {
-    $isGroup = false;
-}
+/**
+ * Поле формы (form-input) для форм, которые собираются без Table/tpl/form.tpl (параметры модуля и т. п.):
+ * название, поле, подсказка
+ * @var \Simflex\Core\Admin\Fields\Field $field
+ */
+
 ?>
-<div class="data-point">
-    <div class="data-point__title">
-        <span class="data-point__text"><?= $field->label ?></span>
-        <span class="data-point__help"><?= $field->help ?></span>
-    </div>
-    <?= $field->input($field->value); ?>
+<div class="form-input<?= $field->isWide() ? ' form-input_wide' : '' ?>" data-field="<?= htmlspecialchars($field->name) ?>">
+    <div class="form-input__label"><?= $field->label ?></div>
+    <div class="form-input__control"><?= $field->input($field->value) ?></div>
+    <?php if ($field->help !== ''): ?>
+        <div class="form-input__help"><?= $field->help ?></div>
+    <?php endif; ?>
 </div>

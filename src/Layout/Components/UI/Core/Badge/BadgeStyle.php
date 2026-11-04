@@ -20,4 +20,9 @@ enum BadgeStyle: string
     case Sale = 'sale';
     case New = 'new';
     case NoStock = 'no-stock';
+    case Hit = 'hit';
+    case Info = 'info';
+    case Preorder = 'preorder';
+    case Video = 'video';
+    case ThreeD = '3d';
 }

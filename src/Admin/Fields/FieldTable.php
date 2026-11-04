@@ -4,6 +4,11 @@ namespace Simflex\Core\Admin\Fields;
 
 class FieldTable extends Field
 {
+    public function isWide(): bool
+    {
+        return true;
+    }
+
     /**
      * Строковое поле
      */
@@ -121,9 +126,6 @@ class FieldTable extends Field
             $value = json_encode($v);
         }
 
-        // генерируем id для js
-        $jsId = (string)crc32($this->inputName());
-
-        return $this->render('table', compact('value', 'jsId'));
+        return $this->render('table', ['value' => $value, 'isVirtual' => false, 'total' => 0, 'attributes' => []]);
     }
 }

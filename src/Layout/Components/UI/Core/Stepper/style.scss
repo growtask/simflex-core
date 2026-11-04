@@ -1,0 +1,266 @@
+/* Степпер Stepper/main, Stepper/quantity (design-ui-stepper.md) */
+.stepper-field {
+    display: inline-flex;
+    flex-direction: column;
+    @include spacing(gap, 4px);
+
+    &__error {
+        color: var(--color-states-error-dark);
+        @include t4;
+    }
+
+    &:has(.stepper_width_fill) {
+        display: flex;
+        width: 100%;
+    }
+}
+
+.stepper {
+    --stepper-height: #{vw(48px)};
+    --stepper-width: #{vw(118px)};
+    --stepper-field: #{vw(64px)};
+    --stepper-button: #{vw(36px)};
+    --stepper-radius: var(--radius-ui-medium);
+    --stepper-bg: var(--color-main-gray-lighter);
+
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    height: var(--stepper-height);
+    color: var(--color-text-icon-gray-darker);
+
+    $sizes: (
+        xs: (height: 32px, width: 66px, field: 48px, button: 20px),
+        s: (height: 40px, width: 82px, field: 56px, button: 24px),
+        m: (height: 48px, width: 118px, field: 64px, button: 36px),
+        l: (height: 56px, width: 142px, field: 72px, button: 40px),
+    );
+    @each $name, $size in $sizes {
+        &_size_#{$name} {
+            @each $var in (height, width, field, button) {
+                --stepper-#{$var}: #{vw(map-get($size, $var))};
+            }
+
+            @include HD {
+                @each $var in (height, width, field, button) {
+                    --stepper-#{$var}: #{vwh(map-get($size, $var))};
+                }
+            }
+            @include Tablet {
+                @each $var in (height, width, field, button) {
+                    --stepper-#{$var}: #{vwt(map-get($size, $var))};
+                }
+            }
+            @include Mobile {
+                @each $var in (height, width, field, button) {
+                    --stepper-#{$var}: #{vwm(map-get($size, $var))};
+                }
+            }
+        }
+    }
+
+    &_size_xs {
+        --stepper-radius: var(--radius-ui-small);
+    }
+
+    &_size_xs &__input {
+        @include t4;
+    }
+
+    &_size_s &__input {
+        @include t3;
+    }
+
+    &_size_l &__input {
+        @include t1;
+    }
+
+    &__input {
+        flex: 1;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        @include t2;
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+
+    &__button {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: var(--stepper-button);
+        padding: 0;
+        cursor: pointer;
+        border: 0;
+        background: var(--stepper-bg);
+        color: var(--color-text-icon-gray-darker);
+        border-radius: var(--stepper-radius);
+        @include transition((background, color));
+
+        &:hover:not(:disabled) {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        &:active:not(:disabled) {
+            background: var(--color-main-color1-light);
+            color: var(--color-text-icon-color1-darker);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            background: var(--color-states-disabled-light);
+            color: var(--color-states-disabled-medium);
+        }
+
+        &:focus-visible {
+            position: relative;
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    &__icon {
+        fill: currentColor;
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+
+        &_small {
+            @include spacing(width, 16px);
+            @include spacing(height, 16px);
+        }
+    }
+
+    // default: минус, число и плюс на одной плашке
+    &_style_default {
+        width: var(--stepper-width);
+        background: var(--stepper-bg);
+        border-radius: var(--stepper-radius);
+    }
+
+    // input: три плитки — минус, поле, плюс — через 8 px
+    &_style_input {
+        @include spacing(gap, 8px);
+
+        .stepper__button {
+            width: var(--stepper-height);
+        }
+
+        .stepper__input {
+            flex: 0 0 var(--stepper-field);
+            background: var(--stepper-bg);
+            border-radius: var(--stepper-radius);
+
+            &:focus-visible {
+                background: var(--color-main-gray-white);
+                box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+            }
+        }
+    }
+
+    &_width_fill {
+        width: 100%;
+
+        .stepper__input {
+            flex: 1;
+        }
+    }
+
+    &_error .stepper__input {
+        box-shadow: inset 0 0 0 2px var(--color-states-error-dark);
+    }
+
+    // outline: обводка 2 px без заливки, у кнопок плашка на hover и press
+    &_fill_outline {
+        --stepper-bg: transparent;
+
+        &.stepper_style_default,
+        .stepper__input {
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
+        }
+
+        .stepper__button:disabled {
+            background: transparent;
+        }
+    }
+
+    &_loading &__input {
+        visibility: hidden;
+    }
+
+    &__loader {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        color: var(--color-text-icon-color1-main);
+
+        .loader-icon {
+            @include spacing(width, 24px);
+            @include spacing(height, 24px);
+        }
+    }
+
+    &-theme_dark {
+        --stepper-bg: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-white);
+
+        .stepper__button {
+            color: var(--color-text-icon-gray-white);
+
+            &:hover:not(:disabled) {
+                background: var(--color-main-gray-medium);
+                color: var(--color-text-icon-gray-white);
+            }
+
+            &:active:not(:disabled) {
+                background: var(--color-main-gray-darker);
+                color: var(--color-text-icon-gray-white);
+            }
+
+            &:disabled {
+                background: var(--color-states-disabled-dark);
+            }
+        }
+
+        &.stepper_fill_outline {
+            --stepper-bg: transparent;
+
+            &.stepper_style_default,
+            .stepper__input {
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+            }
+
+            .stepper__button:disabled {
+                background: transparent;
+            }
+        }
+
+        .stepper__input:focus-visible {
+            background: var(--color-main-gray-black);
+        }
+    }
+
+    &-theme_dark + .stepper-field__error {
+        color: var(--color-states-error-medium);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__button {
+            transition: none;
+        }
+    }
+}

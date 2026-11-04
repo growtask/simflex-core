@@ -1,18 +1,30 @@
-<div class="form-control__tags" data-readonly="<?= $readonly ? 'true' : 'false' ?>"<?= $ajax ? ' data-ajax="true"' : '' ?>>
-    <input class="form-control__tags-value" value="<?= $value ?>" type="hidden" name="<?= $name ?>">
-    <ul class="form-control__tags-list">
-        <input type="text" class="form-control__tags-input">
-    </ul>
-    <div class="form-control__tags-popup list1">
-        <div class="list1__wrapper">
-            <ul class="list1__items">
-                <?php if ($addNew): ?>
-                <li class="list1__item list1__item--add-new" data-value="" style="display: none"><strong>Добавить <span></span></strong></li>
-                <?php endif ?>
-                <?php foreach ($items as [$itemValue, $itemLabel]): ?>
-                <li data-value="<?= $itemValue ?>" class="list1__item"><?= $itemLabel ?></li>
-                <?php endforeach ?>
-            </ul>
-        </div>
-    </div>
-</div>
+<?php
+
+/**
+ * Поле тегов формы (Inputs/tags, компонент TagsInput): FieldTags (свои значения и уже использованные в таблице),
+ * FieldMultiKey (записи другой таблицы), FieldRelation (поиск записей раздела, действие searchTags)
+ * @var \Simflex\Core\Admin\Fields\Field $this
+ * @var string $name
+ * @var array<int|string, string> $selected Значение => подпись
+ * @var array<int|string, string> $options Подсказки: значение => подпись
+ * @var string $searchUrl Поиск на сервере, пусто — по подсказкам
+ * @var bool $allowNew Можно добавить свой текст
+ */
+
+use Simflex\Core\Admin\Page;
+use Simflex\Core\Layout\Components\UI\Core\TagsInput\Layout as TagsInput;
+use Simflex\Core\Layout\Components\UI\Core\TagsInput\TagsInputTheme;
+
+?>
+<?= TagsInput::drawTagsInput(
+    name: $name,
+    selected: $selected,
+    options: $options,
+    searchUrl: $searchUrl,
+    allowNew: $allowNew,
+    placeholder: $searchUrl !== '' ? 'Начните вводить название' : ($allowNew ? 'Введите тег' : 'Выберите'),
+    label: strip_tags((string)$this->label),
+    theme: TagsInputTheme::from(Page::get()->getTheme()),
+    disabled: $this->readonly,
+    className: 'form-input__tags',
+) ?>

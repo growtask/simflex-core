@@ -54,14 +54,14 @@
 }
 
 .accent-color {
-    color: var(--color1-main);
+    color: var(--color-main-color1-main);
 }
 
 .underline {
     text-decoration-line: underline;
     text-decoration-style: dashed;
     text-underline-offset: vw(4px);
-    color: var(--color1-dark);
+    color: var(--color-main-color1-dark);
     @include transition((color));
 
     @include HD {
@@ -76,12 +76,12 @@
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
-            color: var(--color1-main);
+            color: var(--color-main-color1-main);
         }
     }
 
     &:active {
-        color: var(--color1-darker);
+        color: var(--color-main-color1-darker);
     }
 }
 

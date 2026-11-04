@@ -1,0 +1,40 @@
+/*
+ * Классы стилей текста дизайн-системы (design-tokens.md, раздел 6): heading/h1 → .heading-h1,
+ * text/t2 → .text-t2, ui/m-light → .ui-m-light, uniq/hero → .uniq-hero. Размеры — миксины _typography.scss,
+ * мобильные заголовки (heading/mobile/*) включаются в них на планшете и телефоне.
+ */
+.heading-h1 { @include h1; }
+.heading-h1-light { @include h1-l; }
+.heading-h2 { @include h2; }
+.heading-h2-light { @include h2-l; }
+.heading-h3 { @include h3; }
+.heading-h4 { @include h4; }
+.heading-h5 { @include h5; }
+.heading-h6 { @include h6; }
+
+.text-t1 { @include t1; }
+.text-t2 { @include t2; }
+.text-t3 { @include t3; }
+.text-t4 { @include t4; }
+.text-t4-lh { @include t4-lh; }
+.text-t5 { @include t5; }
+.text-t5-lh { @include t5-lh; }
+
+.ui-xl { @include ui-xl; }
+.ui-xl-light { @include ui-xl-light; }
+.ui-xl-strike { @include ui-xl-strike; }
+.ui-l { @include ui-l; }
+.ui-l-light { @include ui-l-light; }
+.ui-l-strike { @include ui-l-strike; }
+.ui-m { @include ui-m; }
+.ui-m-light { @include ui-m-light; }
+.ui-m-strike { @include ui-m-strike; }
+.ui-s { @include ui-s; }
+.ui-s-light { @include ui-s-light; }
+.ui-s-strike { @include ui-s-strike; }
+.ui-xs { @include ui-xs; }
+.ui-xs-light { @include ui-xs-light; }
+.ui-xs-strike { @include ui-xs-strike; }
+
+.uniq-hero { @include hero; }
+.uniq-code { @include code; }

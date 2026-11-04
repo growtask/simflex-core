@@ -29,15 +29,15 @@
 
     /* Фокус с клавиатуры: кольцо 2 px цвета бренда, зазор 2 px */
     &:focus-visible {
-        outline: 2px solid var(--color-main-color1-main, var(--color1-main));
+        outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
         outline-offset: 2px;
     }
 
     &__badge {
         @include spacing(height, 16px);
         @include spacing(padding-inline, 4px);
-        color: var(--gray-white);
-        background: var(--error-dark);
+        color: var(--color-main-gray-white);
+        background: var(--color-states-error-dark);
         @include t4;
         @include border-r(12px);
     }
@@ -46,31 +46,31 @@
     /* filled и soft: названия стилей Figma, оформление как у primary и secondary */
     &-primary,
     &-filled {
-        background: var(--gray-lighter);
-        color: var(--gray-darker);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color1-main);
+                color: var(--color-main-color1-main);
             }
         }
 
         &:active {
-            background: var(--color1-lighter);
-            color: var(--color1-dark);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-dark);
         }
 
         &.active {
             cursor: default;
-            background: var(--color1-lighter);
-            color: var(--gray-black);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-gray-black);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-main-gray-medium);
+            color: var(--color-main-gray-white);
             border-color: transparent;
         }
     }
@@ -78,66 +78,79 @@
     &-secondary,
     &-soft {
         background: transparent;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-lighter);
-                color: var(--color1-main);
+                background: var(--color-main-gray-lighter);
+                color: var(--color-main-color1-main);
             }
         }
 
         &:active {
-            background: var(--color1-lighter);
-            color: var(--color1-dark);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-dark);
         }
 
         &.active {
             cursor: default;
             background: transparent;
-            color: var(--gray-darker);
+            color: var(--color-main-gray-darker);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-main-gray-medium);
+            color: var(--color-main-gray-white);
             border-color: transparent;
+        }
+    }
+
+    // soft отличается от secondary нажатием и активным состоянием (design-ui-tabs.md)
+    &-soft {
+        &:active {
+            background: var(--color-main-color1-light);
+            color: var(--color-main-gray-darker);
+        }
+
+        &.active {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-gray-darker);
         }
     }
 
     &-outline {
         background: transparent;
-        border-color: var(--color1-light);
-        color: var(--gray-dark);
+        border-color: var(--color-main-color1-light);
+        color: var(--color-main-gray-dark);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                background: var(--gray-lighter);
-                border-color: var(--color1-light);
-                color: var(--gray-dark);
+                background: var(--color-main-gray-lighter);
+                border-color: var(--color-main-color1-light);
+                color: var(--color-main-gray-dark);
             }
         }
 
         &:active {
             background: transparent;
-            border-color: var(--color1-main);
-            color: var(--gray-black);
+            border-color: var(--color-main-color1-main);
+            color: var(--color-main-gray-black);
         }
 
         &.active {
             cursor: default;
             background: transparent;
             border-color: transparent;
-            color: var(--gray-darker);
+            color: var(--color-main-gray-darker);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
-            background: var(--gray-medium);
-            color: var(--gray-white);
+            background: var(--color-main-gray-medium);
+            color: var(--color-main-gray-white);
             border-color: transparent;
         }
     }
@@ -146,32 +159,32 @@
         padding-inline: 0 !important;
         border-radius: 0 !important;
         background: transparent;
-        border-bottom-color: var(--color1-lighter);
-        color: var(--gray-darker);
+        border-bottom-color: var(--color-main-color1-lighter);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                border-bottom-color: var(--color1-light);
+                border-bottom-color: var(--color-main-color1-light);
             }
         }
 
         &:active {
-            border-bottom-color: var(--color1-main);
+            border-bottom-color: var(--color-main-color1-main);
         }
 
         &.active {
             cursor: default;
             background: transparent;
-            color: var(--color1-main);
-            border-bottom-color: var(--color1-main);
+            color: var(--color-main-color1-main);
+            border-bottom-color: var(--color-main-color1-main);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
             background: transparent;
-            color: var(--gray-medium);
-            border-bottom-color: var(--gray-medium);
+            color: var(--color-main-gray-medium);
+            border-bottom-color: var(--color-main-gray-medium);
         }
     }
 
@@ -179,29 +192,29 @@
         padding-inline: 0 !important;
         border-radius: 0 !important;
         background: transparent;
-        color: var(--gray-darker);
+        color: var(--color-main-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color1-main);
+                color: var(--color-main-color1-main);
             }
         }
 
         &:active {
-            color: var(--color1-darker);
+            color: var(--color-main-color1-darker);
         }
 
         &.active {
             cursor: default;
             background: transparent;
-            color: var(--gray-black);
+            color: var(--color-main-gray-black);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
             background: transparent;
-            color: var(--gray-medium);
+            color: var(--color-main-gray-medium);
         }
     }
 
@@ -254,33 +267,33 @@
     &-theme_dark {
         &.tab-primary,
         &.tab-filled {
-            background: var(--gray-dark);
-            color: var(--gray-lighter);
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color1-light);
+                    color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                color: var(--color1-main);
-                border-color: var(--gray-dark);
+                background: var(--color-main-gray-darker);
+                color: var(--color-main-color1-main);
+                border-color: var(--color-main-gray-dark);
             }
 
             &.active {
                 cursor: default;
-                background: var(--gray-darker);
-                border-color: var(--gray-dark);
-                color: var(--gray-lighter);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-dark);
+                color: var(--color-main-gray-lighter);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-white);
+                background: var(--color-main-gray-medium);
+                color: var(--color-main-gray-white);
                 border-color: transparent;
             }
         }
@@ -288,64 +301,72 @@
         &.tab-secondary,
         &.tab-soft {
             background: transparent;
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    background: var(--gray-dark);
-                    color: var(--color1-light);
+                    background: var(--color-main-gray-dark);
+                    color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                border-color: var(--gray-dark);
-                color: var(--color1-main);
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-dark);
+                color: var(--color-main-color1-main);
             }
 
             &.active {
                 cursor: default;
-                background: var(--gray-dark);
-                color: var(--gray-lighter);
+                background: var(--color-main-gray-dark);
+                color: var(--color-main-gray-lighter);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-white);
+                background: var(--color-main-gray-medium);
+                color: var(--color-main-gray-white);
                 border-color: transparent;
+            }
+        }
+
+        &.tab-soft {
+            &.active {
+                background: var(--color-main-gray-darker);
+                border-color: var(--color-main-gray-dark);
+                color: var(--color-main-gray-white);
             }
         }
 
         &.tab-outline {
             background: transparent;
-            border-color: var(--gray-dark);
-            color: var(--gray-lighter);
+            border-color: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    border-color: var(--gray-medium);
+                    border-color: var(--color-main-gray-medium);
                 }
             }
 
             &:active {
-                background: var(--gray-dark);
-                border-color: var(--gray-medium);
+                background: var(--color-main-gray-dark);
+                border-color: var(--color-main-gray-medium);
             }
 
             &.active {
                 cursor: default;
                 background: transparent;
-                border-color: var(--color1-main);
-                color: var(--gray-lighter);
+                border-color: var(--color-main-color1-main);
+                color: var(--color-main-gray-lighter);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
-                background: var(--gray-medium);
-                color: var(--gray-white);
+                background: var(--color-main-gray-medium);
+                color: var(--color-main-gray-white);
                 border-color: transparent;
             }
         }
@@ -354,31 +375,31 @@
             padding-inline: 0 !important;
             border-radius: 0 !important;
             background: transparent;
-            color: var(--gray-lighter);
+            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    border-bottom-color: var(--gray-medium);
+                    border-bottom-color: var(--color-main-gray-medium);
                 }
             }
 
             &:active {
-                border-bottom-color: var(--gray-dark);
+                border-bottom-color: var(--color-main-gray-dark);
             }
 
             &.active {
                 cursor: default;
                 background: transparent;
-                color: var(--gray-white);
-                border-bottom-color: var(--color1-main);
+                color: var(--color-main-gray-white);
+                border-bottom-color: var(--color-main-color1-main);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
                 background: transparent;
-                color: var(--gray-medium);
-                border-bottom-color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
+                border-bottom-color: var(--color-main-gray-medium);
             }
         }
 
@@ -386,29 +407,29 @@
             padding-inline: 0 !important;
             border-radius: 0 !important;
             background: transparent;
-            color: var(--gray-light);
+            color: var(--color-main-gray-light);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color1-light);
+                    color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                color: var(--color1-main);
+                color: var(--color-main-color1-main);
             }
 
             &.active {
                 cursor: default;
                 background: transparent;
-                color: var(--gray-white);
+                color: var(--color-main-gray-white);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
                 background: transparent;
-                color: var(--gray-medium);
+                color: var(--color-main-gray-medium);
             }
         }
     }

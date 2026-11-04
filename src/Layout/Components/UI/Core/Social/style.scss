@@ -18,15 +18,15 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color1-main);
+        outline: 2px solid var(--color-main-color1-main);
         outline-offset: 2px;
     }
 
     /*----------STYLES-----------*/
     /* Серая плашка: цветной знак, по наведению и нажатию знак монохромный и синий */
     &-default {
-        background: var(--gray-lighter);
-        color: var(--color1-main);
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-color1-main);
 
         .social__icon_mono {
             display: none;
@@ -45,8 +45,8 @@
         }
 
         &:active {
-            background: var(--color1-lighter);
-            color: var(--color1-dark);
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-dark);
 
             .social__icon_color {
                 display: none;
@@ -60,8 +60,8 @@
 
     /* Заливка цветом сети, знак белый; hover и press — через яркость, пока у сетей нет светлой и тёмной версий */
     &-brand {
-        color: var(--gray-white);
-        background: var(--social-bg, var(--color1-main));
+        color: var(--color-main-gray-white);
+        background: var(--social-bg, var(--color-main-color1-main));
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
@@ -75,17 +75,17 @@
     }
 
     /*----------NETWORKS-----------*/
-    &-network_vkontakte { --social-bg: var(--socials-vk); }
-    &-network_telegram { --social-bg: var(--socials-tg); }
-    &-network_whatsapp { --social-bg: var(--socials-wt); }
-    &-network_yandex { --social-bg: var(--socials-ya); }
-    &-network_instagram { --social-bg: var(--socials-in); }
-    &-network_google { --social-bg: var(--social-google-main, var(--color1-main)); }
-    &-network_youtube { --social-bg: var(--social-youtube-main, var(--error-dark)); }
-    &-network_figma { --social-bg: var(--social-figma-main, var(--color1-main)); }
-    &-network_rutube { --social-bg: var(--social-rutube-main, var(--gray-black)); }
-    &-network_yandex-zen { --social-bg: var(--social-zen-main, var(--gray-black)); }
-    &-network_max { --social-bg: var(--social-max-main, var(--color1-main)); }
+    &-network_vkontakte { --social-bg: var(--color-social-vk-main); }
+    &-network_telegram { --social-bg: var(--color-social-telegram-main); }
+    &-network_whatsapp { --social-bg: var(--color-social-whatsapp-main); }
+    &-network_yandex { --social-bg: var(--color-social-yandex-main); }
+    &-network_instagram { --social-bg: var(--color-social-instagram-main); }
+    &-network_google { --social-bg: var(--social-google-main, var(--color-main-color1-main)); }
+    &-network_youtube { --social-bg: var(--social-youtube-main, var(--color-states-error-dark)); }
+    &-network_figma { --social-bg: var(--social-figma-main, var(--color-main-color1-main)); }
+    &-network_rutube { --social-bg: var(--social-rutube-main, var(--color-main-gray-black)); }
+    &-network_yandex-zen { --social-bg: var(--social-zen-main, var(--color-main-gray-black)); }
+    &-network_max { --social-bg: var(--social-max-main, var(--color-main-color1-main)); }
 
     /*----------SIZES-----------*/
     &-size_xs {
@@ -120,8 +120,8 @@
     /* В тёмной теме серый стиль монохромный, цвета текста */
     &-theme_dark {
         &.social-default {
-            background: var(--gray-dark);
-            color: var(--gray-lighter);
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
 
             .social__icon_color {
                 display: none;
@@ -133,13 +133,13 @@
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color1-light);
+                    color: var(--color-main-color1-light);
                 }
             }
 
             &:active {
-                background: var(--gray-darker);
-                color: var(--color1-main);
+                background: var(--color-main-gray-darker);
+                color: var(--color-main-color1-main);
             }
         }
     }

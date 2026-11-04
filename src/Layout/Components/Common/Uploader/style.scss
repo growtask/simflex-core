@@ -1,0 +1,199 @@
+/*
+ * Загрузка файла (Uploader/drop, Uploader/button, Uploader/action, Uploader/file, Uploader/image;
+ * design-base-uploader.md): пустой — зона с пунктирной рамкой, иконкой, заголовком, ограничениями и кнопками;
+ * с файлом — строка: превью 56, имя и вес, прогресс, «Заменить», «Удалить»
+ */
+.uploader {
+    --uploader-bg: var(--color-main-gray-white);
+    --uploader-zone: var(--color-main-color1-lighter);
+    --uploader-line: var(--color-main-color1-light);
+    --uploader-text: var(--color-text-icon-gray-darker);
+    --uploader-muted: var(--color-text-icon-gray-medium);
+
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    color: var(--uploader-text);
+    @include spacing(gap, 8px);
+
+    &-theme_dark {
+        --uploader-bg: var(--color-main-gray-darker);
+        --uploader-zone: var(--color-main-gray-dark);
+        --uploader-line: var(--color-main-gray-medium);
+        --uploader-text: var(--color-text-icon-gray-white);
+        --uploader-muted: var(--color-text-icon-gray-light);
+    }
+
+    &__drop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: 1px dashed var(--uploader-line);
+        background: var(--uploader-zone);
+        border-radius: var(--radius-ui-large);
+        @include spacing(padding, 20px);
+        @include spacing(gap, 8px);
+        @include transition((border-color, background-color));
+    }
+
+    &_drag &__drop {
+        border-color: var(--color-main-color1-main);
+        border-style: solid;
+    }
+
+    &_filled &__drop {
+        display: none;
+    }
+
+    &__drop-icon {
+        color: var(--color-text-icon-color1-main);
+        @include icon(32px);
+    }
+
+    &__drop-title {
+        margin: 0;
+        @include ui-s;
+    }
+
+    &__hint {
+        margin: 0;
+        color: var(--uploader-muted);
+        @include t4;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        @include spacing(gap, 8px);
+        @include spacing(margin-top, 4px);
+    }
+
+    &__file {
+        display: none;
+        align-items: center;
+        border: 1px solid var(--color-main-gray-lighter);
+        background: var(--uploader-bg);
+        border-radius: var(--radius-ui-large);
+        @include spacing(padding, 8px);
+        @include spacing(gap, 12px);
+    }
+
+    &-theme_dark &__file {
+        border-color: var(--color-main-gray-dark);
+    }
+
+    &_filled &__file {
+        display: flex;
+    }
+
+    &_drag#{&}_filled &__file {
+        border-color: var(--color-main-color1-main);
+    }
+
+    &__preview {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+        background: var(--uploader-zone);
+        color: var(--color-text-icon-color1-main);
+        border-radius: var(--radius-ui-small);
+        @include spacing(width, 56px);
+        @include spacing(height, 56px);
+    }
+
+    &__image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+
+        &:not([src]),
+        &[src=''] {
+            display: none;
+        }
+    }
+
+    &__file-icon {
+        @include icon(24px);
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+        @include spacing(gap, 4px);
+    }
+
+    &__name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: inherit;
+        text-decoration: none;
+        @include ui-s;
+
+        &:hover {
+            color: var(--color-text-icon-color1-main);
+        }
+    }
+
+    &__meta {
+        color: var(--uploader-muted);
+        @include t4;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    &__progress {
+        display: block;
+        overflow: hidden;
+        background: var(--uploader-zone);
+        border-radius: var(--radius-ui-xsmall);
+        @include spacing(height, 4px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__progress-bar {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--color-main-color1-main);
+        @include transition(width);
+    }
+
+    &__actions {
+        display: flex;
+        flex-shrink: 0;
+        @include spacing(gap, 4px);
+    }
+
+    &_loading &__actions {
+        visibility: hidden;
+    }
+
+    &__error {
+        margin: 0;
+        color: var(--color-states-error-dark);
+        @include t4;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    &__input {
+        display: none;
+    }
+}

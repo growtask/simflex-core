@@ -104,6 +104,7 @@ class TextInput {
         if (this.resetButton) {
             this.resetButton.style.display = hasValue ? 'block' : 'none';
             this.resetButton.setAttribute('aria-hidden', (!hasValue).toString());
+            this.resetButton.tabIndex = hasValue ? 0 : -1;
         }
 
         if (this.counter) {
@@ -156,4 +157,21 @@ class TextInput {
 
 document.querySelectorAll('.text-input').forEach(element => {
     new TextInput(element);
+});
+
+// Пароль: кнопка-глаз показывает и прячет введённый пароль
+document.addEventListener('click', (event) => {
+    const toggle = event.target.closest?.('[data-sf-password-toggle]');
+    const input = toggle?.closest('.text-input')?.querySelector('.text-input__field');
+    if (!input) {
+        return;
+    }
+    const isShown = input.type === 'password';
+    input.type = isShown ? 'text' : 'password';
+    toggle.setAttribute('aria-pressed', String(isShown));
+    toggle.setAttribute('aria-label', isShown ? 'Скрыть пароль' : 'Показать пароль');
+    toggle.querySelector('use')?.setAttribute(
+        'href',
+        toggle.querySelector('use').getAttribute('href').replace(/#icon-eye(-off)?$/, isShown ? '#icon-eye-off' : '#icon-eye')
+    );
 });

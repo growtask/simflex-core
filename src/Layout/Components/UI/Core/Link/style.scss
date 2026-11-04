@@ -5,7 +5,7 @@
     width: fit-content;
     cursor: pointer;
     text-decoration: none;
-    color: var(--color1-dark);
+    color: var(--color-main-color1-dark);
     @include transition((color));
     @include spacing(gap, 4px);
 
@@ -21,7 +21,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color1-main);
+        outline: 2px solid var(--color-main-color1-main);
         outline-offset: 2px;
         border-radius: var(--radius-ui-xsmall);
     }
@@ -29,12 +29,12 @@
     /*----------STATES-----------*/
     @media (hover: hover) and (pointer: fine) {
         &:hover {
-            color: var(--color1-main);
+            color: var(--color-main-color1-main);
         }
     }
 
     &:active {
-        color: var(--color1-darker);
+        color: var(--color-main-color1-darker);
     }
 
     /*----------STYLES-----------*/
@@ -76,16 +76,16 @@
 
     /*----------THEME-----------*/
     &-theme_dark {
-        color: var(--color1-light);
+        color: var(--color-main-color1-light);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color1-lighter);
+                color: var(--color-main-color1-lighter);
             }
         }
 
         &:active {
-            color: var(--color1-main);
+            color: var(--color-main-color1-main);
         }
     }
 }

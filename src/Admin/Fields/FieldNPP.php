@@ -36,7 +36,19 @@ class FieldNPP extends Field
             }
         }
 
-        return parent::input($value);
+        // порядок в форме — степпер (Stepper/main, поле input)
+        return \Simflex\Core\Layout\Components\UI\Core\Stepper\Layout::drawStepper(
+            $this->inputName(),
+            (int)$value,
+            label: strip_tags((string)$this->label),
+            size: \Simflex\Core\Layout\Components\UI\Core\Stepper\StepperSize::Small,
+            style: \Simflex\Core\Layout\Components\UI\Core\Stepper\StepperStyle::Input,
+            theme: \Simflex\Core\Layout\Components\UI\Core\Stepper\StepperTheme::from(
+                \Simflex\Core\Admin\Page::get()->getTheme()
+            ),
+            disabled: $this->readonly,
+            id: 'field-' . $this->name,
+        );
     }
 
     public function getPOST(bool $simple = false, string|int|null $group = null): mixed

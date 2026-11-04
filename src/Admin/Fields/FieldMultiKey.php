@@ -19,6 +19,11 @@ use Simflex\Core\DB\AQ;
  */
 class FieldMultiKey extends Field
 {
+    public function isWide(): bool
+    {
+        return true;
+    }
+
     /** @var array<int, string>|null подписи связей записей показываемого списка: id записи => «Имя, Имя» */
     protected ?array $listLabels = null;
 
@@ -47,18 +52,14 @@ class FieldMultiKey extends Field
             $selected = $id ? $this->getSelectedIds($id) : [];
         }
 
-        $items = [];
-        foreach ($this->getValues() as $valueId => $label) {
-            $items[] = [$valueId, htmlspecialchars($label)];
-        }
-
+        $values = $this->getValues();
         return $this->render('tags', [
-            'readonly' => true,
-            'ajax' => false,
-            'addNew' => false,
             'name' => $this->name,
-            'value' => implode(',', $selected),
-            'items' => $items,
+            // выбранные — в порядке выбора, с подписями записей
+            'selected' => array_intersect_key($values, array_flip($selected)),
+            'options' => $values,
+            'searchUrl' => '',
+            'allowNew' => false,
         ]);
     }
 
@@ -90,12 +91,17 @@ class FieldMultiKey extends Field
         return $this->cell($this->listLabels[(int)$row[$this->tablePk]] ?? '');
     }
 
+    public function getFilterLabel(string $value): string
+    {
+        return (string)($this->getValues([(int)$value])[(int)$value] ?? $value);
+    }
+
     public function filter($value): string
     {
         $value = (string)$value;
         $label = $value !== '' ? ($this->getValues([(int)$value])[(int)$value] ?? '') : '—';
 
-        return $this->dropdown([
+        return $this->filterDropdown([
             'name' => 'filter[' . $this->name . ']',
             'value' => $value,
             'action' => 'searchMultiKey',
