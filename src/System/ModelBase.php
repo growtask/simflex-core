@@ -756,7 +756,7 @@ abstract class ModelBase implements ArrayAccess, JsonSerializable
 
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->data[$offset]);
+        return $this->offsetGet($offset) !== null;
     }
 
     public function offsetUnset(mixed $offset): void
@@ -791,9 +791,7 @@ abstract class ModelBase implements ArrayAccess, JsonSerializable
 
             if (method_exists($this, $method = 'offsetGet' . $offset)) {
                 $this->data[$offset] = $this->$method();
-            }
-
-            if (method_exists($this, $method = 'offsetGet' . Str::toCamel($offset, false))) {
+            } elseif (method_exists($this, $method = 'offsetGet' . Str::toCamel($offset, false))) {
                 $this->data[$offset] = $this->$method();
             }
         }
