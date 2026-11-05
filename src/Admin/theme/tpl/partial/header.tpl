@@ -11,16 +11,12 @@ use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
-$isDark = $theme === Page::THEME_DARK;
 $user = Container::getUser();
 $userName = (string)($user?->name ?: $user?->login);
 ?>
@@ -38,15 +34,7 @@ $userName = (string)($user?->name ?: $user?->login);
             'data-sf-menu-open' => '',
         ],
     ) ?>
-    <?= Logo::drawLogo(
-        className: 'topbar__logo',
-        href: Page::url(''),
-        name: 'Simflex CMS',
-        label: 'Simflex CMS — главная админки',
-        src: asset('img/brand/logo' . ($isDark ? '-dark' : '') . '.svg'),
-        type: LogoType::Static,
-        theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
-    ) ?>
+    <?= $page->drawLogo('topbar__logo', Page::url(''), isHomeLink: true) ?>
     <a class="topbar__account" href="<?= Page::url('account') ?>" aria-label="Профиль: <?= htmlspecialchars($userName) ?>">
         <?= Placeholder::drawAvatar($userName, size: AvatarSize::Small, theme: PlaceholderTheme::from($theme)) ?>
     </a>

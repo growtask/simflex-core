@@ -10,22 +10,11 @@ use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
 
 $theme = $page->getTheme();
-$isDark = $theme === Page::THEME_DARK;
 // компоненты рисуются до head: их стили собирает $page->getMeta()
-$card = Logo::drawLogo(
-    className: 'auth__logo',
-    href: '/',
-    name: 'Simflex CMS',
-    label: 'Simflex CMS',
-    src: asset('img/brand/logo' . ($isDark ? '-dark' : '') . '.svg'),
-    type: LogoType::Static,
-    theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
-) . '<div class="auth-card auth-card-theme_' . $theme . '">'
+$card = $page->drawLogo('auth__logo', '/')
+    . '<div class="auth-card auth-card-theme_' . $theme . '">'
     . '<h1 class="auth-card__title">Недостаточно прав для входа в панель управления</h1>'
     . '<p class="auth-card__text">Войдите под учётной записью с доступом к админке.</p>'
     . '<div class="auth-card__buttons">'

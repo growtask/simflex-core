@@ -106,6 +106,13 @@ abstract class ConfigBase
     public string $adminPath = '/admin';
 
     /**
+     * @var array Лого админки (шапка, меню, вход): name — название (alt и aria-label), src и srcDark — путь
+     *            к статике сайта для светлой и тёмной темы (asset() относительно public/assets/<тема>/).
+     *            Пустой src — лого Simflex CMS ядра
+     */
+    public array $adminLogo = ['name' => 'Simflex CMS', 'src' => '', 'srcDark' => ''];
+
+    /**
      * @var bool Писать лог еще и в файл в $logPath (по умолчанию лог идет только в stdout)
      */
     public bool $logToFile = false;

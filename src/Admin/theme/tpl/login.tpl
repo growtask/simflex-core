@@ -14,29 +14,18 @@ use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
 use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Core\Checkbox\CheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Core\Checkbox\Layout as Checkbox;
-use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
 use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
 use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
 use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
-$isDark = $theme === Page::THEME_DARK;
 $messages = Alert::drawAdminMessages($theme);
 $errorAttributes = $messages['notices'] !== '' ? ['aria-invalid' => 'true'] : [];
 $action = Page::url('login') . '?r=' . urlencode($back);
 // компоненты рисуются до head: их стили собирает $page->getMeta()
-$card = Logo::drawLogo(
-    className: 'auth__logo',
-    href: '/',
-    name: 'Simflex CMS',
-    label: 'Simflex CMS',
-    src: asset('img/brand/logo' . ($isDark ? '-dark' : '') . '.svg'),
-    type: LogoType::Static,
-    theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
-) . '<form class="auth-card auth-card-theme_' . $theme . '" method="post" action="'
+$card = $page->drawLogo('auth__logo', '/')
+    . '<form class="auth-card auth-card-theme_' . $theme . '" method="post" action="'
     . htmlspecialchars($action) . '">'
     . '<h1 class="auth-card__title">Вход в панель управления</h1>'
     . $messages['notices']

@@ -8,6 +8,9 @@ use Simflex\Core\Admin\Handlers\Group;
 use Simflex\Core\Http\Assets;
 use Simflex\Core\Http\View;
 use Simflex\Core\Layout\LayoutManager;
+use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as LogoLayout;
+use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
+use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
 use Simflex\Core\System\Container;
 use Simflex\Core\Http\Html\HtmlRequest;
 use Simflex\Core\Http\Html\HtmlResponse;
@@ -447,6 +450,32 @@ class Page
         $theme = Container::getRequest()?->cookie(static::THEME_COOKIE);
 
         return $theme === static::THEME_DARK ? static::THEME_DARK : static::THEME_LIGHT;
+    }
+
+    /**
+     * Лого админки из настройки ConfigBase::$adminLogo в текущей теме
+     * @param string $className Класс блока лого в месте вывода (topbar__logo, menu__logo, auth__logo)
+     * @param string $href Ссылка лого
+     * @param bool $isHomeLink true — ссылка на главную админки (подпись «… — главная админки»)
+     */
+    public function drawLogo(string $className, string $href, bool $isHomeLink = false): string
+    {
+        $isDark = $this->getTheme() === static::THEME_DARK;
+        $logo = Container::getConfig()->adminLogo + ['name' => 'Simflex CMS', 'src' => '', 'srcDark' => ''];
+        $siteSrc = $isDark && $logo['srcDark'] !== '' ? $logo['srcDark'] : $logo['src'];
+        $src = $siteSrc !== ''
+            ? asset($siteSrc, siteOnly: true)
+            : asset('img/brand/logo' . ($isDark ? '-dark' : '') . '.svg');
+
+        return LogoLayout::drawLogo(
+            className: $className,
+            href: $href,
+            name: $logo['name'],
+            label: $logo['name'] . ($isHomeLink ? ' — главная админки' : ''),
+            src: $src,
+            type: LogoType::Static,
+            theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
+        );
     }
 
     /**
