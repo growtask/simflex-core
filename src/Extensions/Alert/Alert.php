@@ -174,13 +174,18 @@ class Alert
 
     /**
      * Сообщения админки для макета: успех - тосты (стопка тостов), ошибка, предупреждение, информация и текст -
-     * уведомления Notice с крестиком. Выведенные сообщения удаляются. Текст сообщений выводится без разметки
+     * уведомления Notice с крестиком. Выведенные сообщения удаляются. Текст сообщений выводится без разметки.
+     * Если ответ — редирект (заголовок Location), сообщения не выводятся и остаются для следующей страницы:
+     * браузер не показывает тело редиректа
      * @param string $theme Тема админки (Admin\Page::getTheme())
      * @return array{toasts: string, notices: string}
      */
     public static function drawAdminMessages(string $theme): array
     {
         self::init();
+        if (static::isRedirecting()) {
+            return ['toasts' => '', 'notices' => ''];
+        }
         $toasts = $notices = '';
         foreach (static::SECTIONS as $section) {
             foreach (self::$s[''][$section] ?? [] as $message) {
@@ -206,6 +211,19 @@ class Alert
     protected static function save(): void
     {
         Session::set(static::getSessionKey(), self::$s);
+    }
+
+    /**
+     * Ответ уже помечен как редирект: задан заголовок Location
+     */
+    protected static function isRedirecting(): bool
+    {
+        foreach (headers_list() as $header) {
+            if (stripos($header, 'location:') === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected static function isAdmin(): bool
