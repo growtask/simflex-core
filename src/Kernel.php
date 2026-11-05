@@ -286,6 +286,10 @@ class Kernel
     {
         date_default_timezone_set($this->cfg->timezone);
         ini_set('default_charset', 'UTF-8');
+        // Вне режима разработчика ошибки PHP не выводятся в страницу (пути, устаревший код библиотек),
+        // а пишутся в журнал PHP; консоль включает вывод в initPhpCli()
+        ini_set('display_errors', $this->cfg->devMode ? '1' : '0');
+        ini_set('log_errors', '1');
     }
 
     protected function initPhpCli(): void
