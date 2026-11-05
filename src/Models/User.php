@@ -15,7 +15,7 @@ use Simflex\Core\System\Privilege;
  * @property bool active
  * @property string login
  * @property string password
- * @property string email
+ * @property ?string email
  * @property string name
  * @property string code
  */

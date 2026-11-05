@@ -21,15 +21,17 @@ class Account extends Handler
         }
 
         if ($this->request->post('email') !== null && $this->request->post('name') !== null) {
-            $set = ['email' => (string)$this->request->post('email'), 'name' => (string)$this->request->post('name')];
-            if (!empty($this->request->post('password'))) {
-                $set['password'] = md5((string)$this->request->post('password'));
-            }
-            $success = UserModel::bulkUpdate($set, ['user_id' => $user->getId()]);
-            if ($success) {
-                Alert::success('Данные успешно обновлены', Page::get()->getPath());
+            $path = Page::get()->getPath();
+            [$isSaved, $message] = $this->save(
+                (int)$user->getId(),
+                (string)$this->request->post('email'),
+                (string)$this->request->post('name'),
+                (string)$this->request->post('password'),
+            );
+            if ($isSaved) {
+                Alert::success($message, $path);
             } else {
-                Alert::error('Данные не обновлены', Page::get()->getPath());
+                Alert::error($message, $path);
             }
         }
 
@@ -40,5 +42,32 @@ class Account extends Handler
             'email' => $user->email,
         ];
         return $this->render(__DIR__ . '/tpl/account.tpl', ['data' => $data]);
+    }
+
+    /**
+     * Сохраняет профиль. Пустой e-mail хранится как NULL (у нескольких пользователей он может быть не задан);
+     * e-mail другого пользователя и ошибка БД не роняют страницу, а возвращаются сообщением.
+     *
+     * @return array{bool, string} Успех и сообщение для пользователя
+     */
+    protected function save(int $userId, string $email, string $name, string $password): array
+    {
+        $email = trim($email);
+        $owner = $email !== '' ? UserModel::findOne(['email' => $email]) : null;
+        if ($owner && (int)$owner->getId() !== $userId) {
+            return [false, 'Этот e-mail уже используется'];
+        }
+        $set = ['email' => $email === '' ? null : $email, 'name' => $name];
+        if ($password !== '') {
+            $set['password'] = md5($password);
+        }
+        try {
+            $isSaved = UserModel::bulkUpdate($set, ['user_id' => $userId]);
+        } catch (\PDOException $exception) {
+            // пользователю — общее сообщение, причина — в журнал PHP
+            error_log('Account: профиль ' . $userId . ' не сохранён: ' . $exception->getMessage());
+            $isSaved = false;
+        }
+        return $isSaved ? [true, 'Данные успешно обновлены'] : [false, 'Данные не обновлены'];
     }
 }

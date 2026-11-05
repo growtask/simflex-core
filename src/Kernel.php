@@ -274,12 +274,40 @@ class Kernel
             return;
         }
 
-        set_exception_handler(function (\Throwable $ex) {
+        set_exception_handler($this->handleException(...));
+    }
+
+    /**
+     * Необработанное исключение вне режима разработчика: запись в журнал PHP (всегда, даже при выключенном
+     * enableLogging), в журнал Log и ответ 500 без деталей. Без этого при выключенном логировании исключение
+     * исчезало, а ответом был пустой экран со статусом 200.
+     */
+    public function handleException(\Throwable $ex): void
+    {
+        error_log(sprintf(
+            "Необработанное исключение %s: %s в %s:%d\nStack trace:\n%s",
+            $ex::class,
+            $ex->getMessage(),
+            $ex->getFile(),
+            $ex->getLine(),
+            $ex->getTraceAsString(),
+        ));
+        try {
             Log::emergency("Exception: {ex}\n\nStack trace: {st}", [
                 'ex' => $ex->getMessage(),
                 'st' => $ex->getTraceAsString(),
             ]);
-        });
+        } catch (\Throwable) {
+            // сбой журнала не должен скрыть ответ об ошибке
+        }
+        if (!headers_sent()) {
+            http_response_code(500);
+            header('Content-Type: text/html; charset=UTF-8');
+        }
+        if (PHP_SAPI !== 'cli') {
+            echo '<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><title>Ошибка</title></head>'
+                . '<body><h1>Внутренняя ошибка сервера</h1></body></html>';
+        }
     }
 
     protected function initPhp(): void

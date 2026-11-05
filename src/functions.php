@@ -8,11 +8,17 @@ use Composer\InstalledVersions;
 use Simflex\Core\System\Buffer;
 
 /**
- * Значение переменной окружения
+ * Значение переменной окружения: из .env (Dotenv кладёт в $_ENV) или из окружения процесса. Переменную, заданную
+ * окружением (например, environment в docker compose), Dotenv не перезаписывает и в $_ENV не кладёт, а при
+ * variables_order без E (php.ini-production) её нет в $_ENV, поэтому она читается через getenv()
  */
 function env(string $name, mixed $defaultValue = null): mixed
 {
-    return array_key_exists($name, $_ENV) ? $_ENV[$name] : $defaultValue;
+    if (array_key_exists($name, $_ENV)) {
+        return $_ENV[$name];
+    }
+    $value = getenv($name);
+    return $value === false ? $defaultValue : $value;
 }
 
 /**
