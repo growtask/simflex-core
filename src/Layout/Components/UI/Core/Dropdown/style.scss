@@ -150,6 +150,14 @@
             left: auto;
             right: 0;
         }
+
+        // поверх предка с overflow (script.js): координаты экрана задаёт скрипт
+        &_fixed {
+            position: fixed;
+            right: auto;
+            bottom: auto;
+            min-width: 0;
+        }
     }
 
     &_view_menu &__panel {

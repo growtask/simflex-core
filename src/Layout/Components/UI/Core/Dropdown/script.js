@@ -14,16 +14,46 @@
 
     const isOpen = (root) => !getPanel(root).hidden;
 
+    // ближайший предок, который обрезает содержимое (прокрутка таблицы и т. п.)
+    const getClipParent = (root) => {
+        for (let node = root.parentElement; node && node !== document.body; node = node.parentElement) {
+            const style = getComputedStyle(node);
+            if (style.overflowX !== 'visible' || style.overflowY !== 'visible') {
+                return node;
+            }
+        }
+        return null;
+    };
+
+    const unfix = (panel) => {
+        panel.classList.remove('dropdown__panel_fixed');
+        panel.style.removeProperty('top');
+        panel.style.removeProperty('left');
+        panel.style.removeProperty('width');
+    };
+
     const place = (root) => {
         const panel = getPanel(root);
+        unfix(panel);
         panel.classList.remove('dropdown__panel_position_top');
         if (root.dataset.sfDropdownPosition === 'top') {
             panel.classList.add('dropdown__panel_position_top');
-            return;
+        } else {
+            const rect = panel.getBoundingClientRect();
+            if (rect.bottom > window.innerHeight && root.getBoundingClientRect().top > rect.height) {
+                panel.classList.add('dropdown__panel_position_top');
+            }
         }
+        // панель вылезает за предка с overflow: показывается поверх (fixed) на том же месте экрана
+        const clip = getClipParent(root)?.getBoundingClientRect();
         const rect = panel.getBoundingClientRect();
-        if (rect.bottom > window.innerHeight && root.getBoundingClientRect().top > rect.height) {
-            panel.classList.add('dropdown__panel_position_top');
+        if (clip && (rect.top < clip.top || rect.bottom > clip.bottom || rect.left < clip.left
+            || rect.right > clip.right)) {
+            panel.classList.add('dropdown__panel_fixed');
+            panel.style.top = `${rect.top}px`;
+            panel.style.left = `${rect.left}px`;
+            // ширина как до переключения: min-width 100% у fixed считался бы от окна
+            panel.style.width = `${rect.width}px`;
         }
     };
 
@@ -32,6 +62,7 @@
             return;
         }
         getPanel(root).hidden = true;
+        unfix(getPanel(root));
         getTrigger(root)?.setAttribute('aria-expanded', 'false');
         root.classList.remove('dropdown_open');
         if (focusTrigger) {
@@ -52,7 +83,9 @@
         place(root);
         const search = root.querySelector('[data-sf-dropdown-search]');
         const options = getOptions(root);
-        (search ?? options.find((option) => option.classList.contains('active')) ?? options[0])?.focus();
+        // без прокрутки: прокрутка закрыла бы панель поверх (fixed)
+        (search ?? options.find((option) => option.classList.contains('active')) ?? options[0])
+            ?.focus({preventScroll: true});
     };
 
     const select = (root, option) => {
@@ -121,6 +154,15 @@
             close(root, true);
         }
     });
+
+    // панель поверх (fixed) не едет вместе со страницей: при прокрутке вне панели меню закрывается
+    document.addEventListener('scroll', (event) => {
+        document.querySelectorAll(`${ROOT}.dropdown_open .dropdown__panel_fixed`).forEach((panel) => {
+            if (!panel.contains(event.target)) {
+                close(panel.closest(ROOT));
+            }
+        });
+    }, true);
 
     document.addEventListener('keydown', (event) => {
         const root = event.target.closest?.(ROOT);
