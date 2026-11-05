@@ -285,6 +285,27 @@ class DB
     }
 
     /**
+     * Временно убирает перечисленные режимы SQL только у текущего соединения.
+     * После успеха или исключения восстанавливает исходный sql_mode.
+     *
+     * @template T
+     * @param list<string> $modes Режимы MySQL, например NO_ZERO_DATE
+     * @param callable(): T $callback
+     * @return T
+     */
+    public static function withoutSqlModes(array $modes, callable $callback): mixed
+    {
+        $previous = (string)static::result('SELECT @@SESSION.sql_mode AS mode', 'mode');
+        $current = implode(',', array_diff(explode(',', $previous), array_map('strtoupper', $modes)));
+        static::query('SET SESSION sql_mode = ?', [$current]);
+        try {
+            return $callback();
+        } finally {
+            static::query('SET SESSION sql_mode = ?', [$previous]);
+        }
+    }
+
+    /**
      * Выполняет $fn в транзакции: фиксирует её, если $fn завершилась, и откатывает при исключении (исключение
      * пробрасывается дальше).
      *
