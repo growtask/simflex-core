@@ -6,7 +6,7 @@
  * @var \Simflex\Core\Admin\Table\Table $this
  * @var list<array> $rows
  * @var \Simflex\Core\Admin\Plugins\Pagination\Pagination $pagination
- * @var int $saveId Запись, сохранённая перед возвратом в список
+ * @var int $highlightId Запись, к которой прокручивается и подсвечивается список (?show_id=, ?save_id=)
  * @var string $treeName Колонка с отступом уровня дерева, пусто — список не дерево
  * @var list<array{name: string, label: string, value: string, reset: string}> $filters Выбранные фильтры
  * @var string $search Строка поиска
@@ -194,7 +194,7 @@ echo Page::get()->drawPageHead(
             <tbody class="table__body">
             <?php foreach ($rows as $i => $row): ?>
                 <?php $id = $row[$this->pk->name]; ?>
-                <tr class="tr table__body-row<?= (int)$id === $saveId ? ' tr_saved' : '' ?>"
+                <tr class="tr table__body-row<?= (int)$id === $highlightId ? ' tr_saved' : '' ?>"
                     data-id="<?= htmlspecialchars((string)$id) ?>">
                     <td class="td td_select table-data-select">
                         <?= Checkbox::drawCheckbox(

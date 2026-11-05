@@ -775,8 +775,17 @@ abstract class Table extends Handler
             }
         }
 
-        $pagination = new Pagination((int)($this->request->get('p', 0)), $this->isHierarchy ? 200 : static::$perPage, $cnt);
         $query->orderBy($this->getListOrder());
+        // запись, к которой ведёт ссылка (?show_id=) или которая только что сохранена (?save_id=): без ?p= список
+        // открывается на её странице, шаблон прокручивает к ней и подсвечивает
+        $highlightId = (int)($this->request->get('save_id') ?: $this->request->get('show_id'));
+        $page = (int)$this->request->get('p', 0);
+        if ($highlightId && $this->request->get('p') === null && !$this->isHierarchy) {
+            $ids = array_map('intval', (clone $query)->select($this->table . '.' . $this->pk->name)->fetchColumn());
+            $index = array_search($highlightId, $ids, true);
+            $page = $index === false ? 0 : intdiv($index, static::$perPage);
+        }
+        $pagination = new Pagination($page, $this->isHierarchy ? 200 : static::$perPage, $cnt);
         if (!$this->isHierarchy) {
             $query->limit($pagination->limit());
         }
@@ -803,7 +812,6 @@ abstract class Table extends Handler
             $rows = $listRows;
         }
 
-        $saveId = (int)$this->request->get('save_id');
         $treeName = $this->isHierarchy ? $tree_name : '';
         $filters = $this->getAppliedFilters();
         $search = (string)($this->getState()['q'] ?? '');
@@ -811,7 +819,7 @@ abstract class Table extends Handler
         return $this->render(__DIR__ . '/tpl/show.tpl', [
             'rows' => $rows,
             'pagination' => $pagination,
-            'saveId' => $saveId,
+            'highlightId' => $highlightId,
             'treeName' => $treeName,
             'filters' => $filters,
             'search' => $search,
