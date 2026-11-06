@@ -70,13 +70,22 @@ class FieldEnum extends FieldString
         return (string)($this->fetchValues()[$value] ?? parent::getFilterLabel($value));
     }
 
+    public function getFilterOptions(): array
+    {
+        $options = [];
+        foreach ($this->fetchValues() as $value => $label) {
+            $options[(string)$value] = strip_tags((string)$label);
+        }
+        return $options;
+    }
+
     public function filter($value): string
     {
         if ($this->filter) {
             return $this->filterDropdown([
                 'name' => 'filter[' . $this->name . ']',
                 'value' => $value,
-                'items' => $this->dropdownItems(true),
+                'items' => $this->getFilterItems(),
             ]);
         }
         return '';

@@ -38,23 +38,25 @@ abstract class FieldExtensionSelect extends Field
         return (string)($this->options()[$value] ?? $value);
     }
 
+    public function getFilterOptions(): array
+    {
+        $options = [];
+        foreach ($this->options() as $value => $label) {
+            $options[(string)$value] = strip_tags((string)$label);
+        }
+        return $options;
+    }
+
     public function filter($value): string
     {
         if (!$this->filter) {
             return '';
         }
 
-        $options = $this->options();
-        $items = [['', $this->label]];
-        foreach ($options as $optionValue => $name) {
-            $items[] = [$optionValue, $name];
-        }
-
         return $this->filterDropdown([
             'name' => 'filter[' . $this->name . ']',
             'value' => (string)$value,
-            'current' => $options[$value] ?? $this->label,
-            'items' => $items,
+            'items' => $this->getFilterItems(),
         ]);
     }
 

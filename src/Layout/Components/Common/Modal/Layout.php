@@ -31,6 +31,7 @@ class Layout extends LayoutBase
      * @param string $className Дополнительные CSS-классы корня
      * @param array<string,mixed> $attributes HTML-атрибуты корня
      * @param bool $alert Окно требует ответа (подтверждение удаления и т. п.): role="alertdialog"
+     * @param string $headAction HTML действия в шапке справа от заголовка (ссылка «Сбросить» и т. п.)
      */
     public static function drawModal(
         string $id,
@@ -45,6 +46,7 @@ class Layout extends LayoutBase
         string $className = '',
         array $attributes = [],
         bool $alert = false,
+        string $headAction = '',
     ): string {
         $closeButton = Button::drawButton(
             className: 'modal__close',
@@ -66,7 +68,8 @@ class Layout extends LayoutBase
                 'className',
                 'attributes',
                 'closeButton',
-                'alert'
+                'alert',
+                'headAction'
             ) + [
                 'size' => $size->value,
                 'theme' => $theme->value,

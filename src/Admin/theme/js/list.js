@@ -1,24 +1,121 @@
 /**
  * Список раздела (Table/tpl/show.tpl): выбор строк и «выбрать все», состояние панели действий по числу выбранных,
  * массовые действия (редактирование, копирование, удаление с подтверждением), удаление строки, сведения о записи,
- * переключатели, статусы и порядок в ячейках (сохраняются сразу), фильтры, поиск и теги фильтров
+ * переключатели, статусы и порядок в ячейках (сохраняются сразу), меню фильтров колонок, окно фильтров, поиск
+ * и теги фильтров
  */
 import {confirm, register, request, toast} from './admin.js';
 
 const path = () => window.location.pathname;
 
 /**
- * Адрес списка с фильтрами: значения полей [data-sf-filter] внутри root (фильтры колонок, окно фильтров, поиск)
+ * Адрес списка с фильтрами: значения полей [data-sf-filter] внутри root (меню фильтра колонки, окно фильтров,
+ * поиск) и списков фильтров (Dropdown .filter-select); у переключателей radio — выбранный
  */
 const filtersUrl = (root) => {
     const params = new URLSearchParams();
-    root.querySelectorAll('[data-sf-filter], .th-filter input[type="hidden"]').forEach((input) => {
-        if (input.name) {
-            params.set(input.name, input.value);
+    root.querySelectorAll('[data-sf-filter], .filter-select input[type="hidden"]').forEach((input) => {
+        if (!input.name || (input.type === 'radio' && !input.checked)) {
+            return;
         }
+        params.set(input.name, input.value);
     });
     params.set('p', '0');
     return `${path()}?${params}`;
+};
+
+// фильтр числа (FieldInt): вводятся только цифры — остальное убирается при вводе и вставке, курсор остаётся на месте
+document.addEventListener('input', (event) => {
+    const input = event.target;
+    if (!input.matches?.('[data-sf-digits]') || /^\d*$/.test(input.value)) {
+        return;
+    }
+    const caret = input.selectionStart ?? input.value.length;
+    const digitsBeforeCaret = input.value.slice(0, caret).replace(/\D/g, '').length;
+    input.value = input.value.replace(/\D/g, '');
+    input.setSelectionRange(digitsBeforeCaret, digitsBeforeCaret);
+});
+
+/** Зазор между кнопкой фильтра колонки и меню, отступ меню от края окна */
+const MENU_GAP = 12;
+
+/**
+ * Меню фильтров колонок (th-filter): открыто одно; кнопка открывает и закрывает, Esc и клик вне — закрывают,
+ * прокрутка вне меню — закрывает (меню поверх таблицы стоит на месте экрана). «Применить» и Enter в поле —
+ * список с фильтром колонки
+ */
+const initColumnFilters = (head) => {
+    let opened = null;
+
+    const close = (isFocusButton = false) => {
+        if (!opened) {
+            return;
+        }
+        const button = opened.querySelector('[data-sf-th-filter-toggle]');
+        opened.querySelector('.th-filter__menu').hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+        if (isFocusButton) {
+            button.focus();
+        }
+        opened = null;
+    };
+
+    // у кнопки по левому краю; у правого края окна — внутрь; если снизу нет места — над кнопкой
+    const place = (filter) => {
+        const menu = filter.querySelector('.th-filter__menu');
+        const rect = filter.querySelector('[data-sf-th-filter-toggle]').getBoundingClientRect();
+        const left = Math.max(MENU_GAP, Math.min(rect.left, window.innerWidth - menu.offsetWidth - MENU_GAP));
+        let top = rect.bottom + MENU_GAP;
+        if (top + menu.offsetHeight > window.innerHeight && rect.top - MENU_GAP - menu.offsetHeight > 0) {
+            top = rect.top - MENU_GAP - menu.offsetHeight;
+        }
+        menu.style.left = `${left}px`;
+        menu.style.top = `${top}px`;
+    };
+
+    const open = (filter) => {
+        close();
+        const menu = filter.querySelector('.th-filter__menu');
+        menu.hidden = false;
+        filter.querySelector('[data-sf-th-filter-toggle]').setAttribute('aria-expanded', 'true');
+        opened = filter;
+        place(filter);
+        (menu.querySelector('input:checked, input:not([type="hidden"]), button') ?? menu).focus();
+    };
+
+    head.addEventListener('click', (event) => {
+        const toggle = event.target.closest('[data-sf-th-filter-toggle]');
+        if (toggle) {
+            const filter = toggle.closest('[data-sf-th-filter]');
+            filter === opened ? close() : open(filter);
+            return;
+        }
+        const apply = event.target.closest('[data-sf-th-filter-apply]');
+        if (apply) {
+            window.location.href = filtersUrl(apply.closest('.th-filter__menu'));
+        }
+    });
+    head.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && opened) {
+            event.preventDefault();
+            close(true);
+        } else if (event.key === 'Enter' && event.target.matches('.th-filter__menu [data-sf-filter]')) {
+            event.preventDefault();
+            window.location.href = filtersUrl(event.target.closest('.th-filter__menu'));
+        }
+    });
+    document.addEventListener('click', (event) => {
+        // панель списка внутри меню (Dropdown с поиском) может быть вынесена поверх: клик по ней — внутри меню
+        if (opened && !opened.contains(event.target) && !event.target.closest('.dropdown__panel')) {
+            close();
+        }
+    });
+    document.addEventListener('scroll', (event) => {
+        if (opened && !opened.contains(event.target)) {
+            close();
+        }
+    }, true);
+    window.addEventListener('resize', () => close());
 };
 
 register('list', (list) => {
@@ -169,24 +266,27 @@ register('list', (list) => {
         }
     });
 
-    // фильтры колонок и поиск: Enter в поле или выбор в списке — список с новыми фильтрами
+    // фильтры колонок: меню в шапке
     const head = list.querySelector('thead');
-    const toolbar = list.querySelector('.table-toolbar');
-    [head, toolbar].forEach((area) => {
-        area?.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' && event.target.matches('[data-sf-filter]')) {
-                event.preventDefault();
-                window.location.href = filtersUrl(list);
-            }
-        });
-        area?.addEventListener('change', (event) => {
-            if (event.target.matches('.th-filter input[type="hidden"]')) {
-                window.location.href = filtersUrl(list);
-            }
-        });
+    if (head) {
+        initColumnFilters(head);
+    }
+
+    // поиск над таблицей: Enter — список с найденным, очистка заданного поиска — список без него
+    const search = list.querySelector('[data-sf-search]');
+    search?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            window.location.href = filtersUrl(list.querySelector('.table-toolbar'));
+        }
+    });
+    search?.closest('.text-input')?.querySelector('.text-input__reset')?.addEventListener('click', () => {
+        if (search.defaultValue !== '') {
+            window.location.href = `${path()}?q=&p=0`;
+        }
     });
 
-    // окно фильтров (планшет и телефон)
+    // окно фильтров
     document.querySelector('[data-sf-filters-apply]')?.addEventListener('click', () => {
         window.location.href = filtersUrl(document.querySelector('[data-sf-filters-modal]'));
     });

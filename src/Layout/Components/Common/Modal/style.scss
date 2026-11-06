@@ -97,6 +97,17 @@
         @include h4;
     }
 
+    &__head-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 12px);
+    }
+
+    &__head-action {
+        flex-shrink: 0;
+    }
+
     &__text {
         margin: 0;
         color: var(--color-text-icon-gray-dark);

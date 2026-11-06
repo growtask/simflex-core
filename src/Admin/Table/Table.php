@@ -675,13 +675,22 @@ abstract class Table extends Handler
             $this->setState($state);
         }
 
-        // поиск: подстрока в любой текстовой колонке с фильтром (поле поиска над таблицей)
+        // поиск: подстрока в текстовых колонках с фильтром (поле поиска над таблицей), «где искать» — одна из них
         $search = $this->request->request('q');
         if ($search !== null) {
             $state['q'] = trim((string)$search);
             $this->setState($state);
         }
+        $scope = $this->request->request('qf');
+        if ($scope !== null) {
+            $state['qf'] = (string)$scope;
+            $this->setState($state);
+        }
         $searchColumns = $this->getSearchFields();
+        $scope = $this->getSearchScope();
+        if ($scope !== '') {
+            $searchColumns = [$scope => $searchColumns[$scope]];
+        }
         if (($state['q'] ?? '') !== '' && $searchColumns) {
             $conditions = [];
             foreach ($searchColumns as $field) {
@@ -701,6 +710,11 @@ abstract class Table extends Handler
             $bind = 'filter_' . $field->name;
             if ($filter === 'null') {
                 $query->andWhere([$column => null]);
+                continue;
+            }
+
+            // число (текстовый фильтр FieldInt): не цифры — фильтра нет
+            if ($field instanceof FieldInt && !$field->fk && !ctype_digit((string)$filter)) {
                 continue;
             }
 
@@ -735,6 +749,31 @@ abstract class Table extends Handler
             $this->fields,
             fn(Field $field) => $field->isVisible && $field->filter && $field instanceof FieldString
         );
+    }
+
+    /**
+     * «Где искать»: колонка поиска над таблицей, выбранная в списке; '' — во всех колонках getSearchFields()
+     */
+    public function getSearchScope(): string
+    {
+        $scope = (string)($this->getState()['qf'] ?? '');
+        return isset($this->getSearchFields()[$scope]) ? $scope : '';
+    }
+
+    /**
+     * Сброс колонки списка (кнопка «Сбросить» в шапке колонки): её фильтр и сортировка по ней
+     */
+    protected function columnReset(): never
+    {
+        $column = (string)$this->request->get('column', '');
+        $state = $this->getState();
+        unset($state['filter'][$column]);
+        if (($state['order_by'] ?? '') === $column) {
+            unset($state['order_by'], $state['order_desc']);
+        }
+        $this->setState($state);
+        header('location: ' . Page::get()->getPath());
+        exit;
     }
 
     /**
@@ -903,7 +942,29 @@ abstract class Table extends Handler
     protected function filterField(Field $field): string
     {
         // значение из запроса или выбранное раньше (хранится в сессии)
-        return $field->filter($this->request->request('filter')[$field->name] ?? $this->getFilterValue($field->name));
+        return $field->filter($this->getFieldFilterValue($field));
+    }
+
+    /**
+     * Значение фильтра колонки: из запроса или выбранное раньше (хранится в сессии)
+     */
+    protected function getFieldFilterValue(Field $field): string
+    {
+        return (string)($this->request->request('filter')[$field->name] ?? $this->getFilterValue($field->name));
+    }
+
+    /**
+     * Фильтр колонки в шапке списка (th-filter): кнопка с бейджем и меню — значения переключателями radio
+     * (Field::getFilterOptions()) или сам фильтр поля (поиск по тексту, поиск записи)
+     */
+    protected function thFilter(Field $field): string
+    {
+        return $this->render(__DIR__ . '/tpl/show.filter.tpl', [
+            'field' => $field,
+            'value' => $this->getFieldFilterValue($field),
+            'control' => $field->getFilterOptions() === null ? $this->filterField($field) : '',
+            'theme' => Page::get()->getTheme(),
+        ]);
     }
 
     public function addField(Field $field): void

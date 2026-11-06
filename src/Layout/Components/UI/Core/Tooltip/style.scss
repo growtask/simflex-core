@@ -145,6 +145,14 @@
         }
     }
 
+    // поверх предка с overflow (script.js): координаты экрана, без сдвига по стороне
+    &.tooltip_fixed {
+        position: fixed;
+        right: auto;
+        bottom: auto;
+        transform: none;
+    }
+
     @media (prefers-reduced-motion: reduce) {
         transition: none;
     }

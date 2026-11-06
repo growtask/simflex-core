@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Текстовый фильтр в шапке колонки списка: Enter отправляет форму фильтров (theme/js/list.js)
+ * Текстовый фильтр колонки (меню фильтра в шапке, окно фильтров): Enter применяет фильтр (theme/js/list.js)
  * @var string $name
  * @var string $placeholder
  * @var string $value
+ * @var bool $isDigits Только цифры (FieldInt): цифровая клавиатура, остальное не вводится
  */
 
 use Simflex\Core\Admin\Page;
@@ -14,12 +15,13 @@ use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
 
 ?>
 <?= TextInput::drawInput(
-    className: 'th-filter',
-    placeholder: $placeholder !== '' ? $placeholder : 'Фильтр',
+    className: 'filter-search',
+    placeholder: $placeholder !== '' ? $placeholder : 'Поиск',
     size: TextInputSize::Small,
     theme: TextInputTheme::from(Page::get()->getTheme()),
-    icon: 'filter',
+    icon: 'search',
     id: uniqid('filter-' . $name . '-'),
-    attributes: ['name' => 'filter[' . $name . ']', 'data-sf-filter' => '', 'autocomplete' => 'off'],
+    attributes: ['name' => 'filter[' . $name . ']', 'data-sf-filter' => '', 'autocomplete' => 'off']
+        + ($isDigits ? ['inputmode' => 'numeric', 'pattern' => '[0-9]*', 'data-sf-digits' => ''] : []),
     value: (string)$value,
 ) ?>

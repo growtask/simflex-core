@@ -182,8 +182,14 @@ class FieldInt extends Field
                 'search' => true,
                 'items' => $sel ? [[$sel['id'], $sel['name']]] : [],
             ]);
-        } else {
-            return parent::filter($value);
         }
+
+        // число: в поле фильтра вводятся только цифры (theme/js/list.js)
+        return $this->render('filter', [
+            'name' => $this->name,
+            'placeholder' => $this->width === 0.0 ? $this->label : '',
+            'value' => $value,
+            'isDigits' => true,
+        ]);
     }
 }

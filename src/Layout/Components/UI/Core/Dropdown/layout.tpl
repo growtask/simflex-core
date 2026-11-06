@@ -101,7 +101,10 @@ $id = $data['id'];
                     style: TabStyle::Soft,
                     size: $tabSize,
                     theme: $tabTheme,
-                    attributes: ['role' => 'menuitem', 'tabindex' => '-1'] + ($item['attributes'] ?? []),
+                    attributes: ['role' => 'menuitem', 'tabindex' => '-1']
+                        + (!empty($item['active']) ? ['aria-current' => 'true'] : [])
+                        + ($item['attributes'] ?? []),
+                    active: $item['active'] ?? false,
                     disabled: $item['disabled'] ?? false,
                 ) ?>
             <?php endforeach; ?>

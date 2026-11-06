@@ -65,7 +65,8 @@ class Layout extends LayoutBase
     /**
      * @param string $trigger HTML кнопки, открывающей меню (Button, ButtonIcon)
      * @param list<array{text: string, link?: string, icon?: string, attributes?: array<string,string>,
-     *        disabled?: bool}> $items Пункты: ссылка или кнопка (обработчик — по attributes, например data-action)
+     *        disabled?: bool, active?: bool}> $items Пункты: ссылка или кнопка (обработчик — по attributes, например
+     *        data-action); active — выбранный пункт (меню выбора: «где искать» и т. п.)
      * @param DropdownAlign $align Left — пункты по левому краю (длинные тексты), Center — по центру
      * @param string $side Край кнопки, по которому выровнена панель: left или right
      */

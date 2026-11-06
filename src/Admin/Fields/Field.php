@@ -355,9 +355,34 @@ class Field
                 'name' => $this->name,
                 'placeholder' => $inExtra ? $this->label : '',
                 'value' => $value,
+                'isDigits' => false,
             ]);
         }
         return '';
+    }
+
+    /**
+     * Значения фильтра колонки, из которых выбирается одно (значение => подпись): меню фильтра в шапке списка
+     * показывает их переключателями radio. null — фильтр без готового списка (поиск по тексту, поиск записи на
+     * сервере), в меню выводится сам фильтр filter()
+     * @return array<string, string>|null
+     */
+    public function getFilterOptions(): ?array
+    {
+        return null;
+    }
+
+    /**
+     * Значения getFilterOptions() пунктами Dropdown: [значение, подпись]
+     * @return list<array{0: string, 1: string}>
+     */
+    protected function getFilterItems(): array
+    {
+        $items = [];
+        foreach ($this->getFilterOptions() ?? [] as $value => $label) {
+            $items[] = [(string)$value, $label];
+        }
+        return $items;
     }
 
     /**
@@ -369,7 +394,7 @@ class Field
     }
 
     /**
-     * Фильтр-список в шапке колонки (Dropdown из Layout): выбор отправляет форму фильтров списка (theme/js/list.js)
+     * Фильтр-список (Dropdown из Layout) в меню фильтра колонки и окне фильтров списка (theme/js/list.js)
      * @param array{name: string, value: mixed, items: list<array{0: mixed, 1: string}>, action?: string,
      *        search?: bool} $vars
      */
@@ -386,7 +411,7 @@ class Field
             'search' => $vars['search'] ?? false,
             'current' => $value !== '' ? $this->getFilterLabel($value) : '',
             'placeholder' => 'Все',
-            'className' => 'th-filter',
+            'className' => 'filter-select',
             'ariaLabel' => 'Фильтр: ' . strip_tags($this->label),
         ]);
     }

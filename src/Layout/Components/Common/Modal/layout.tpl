@@ -39,7 +39,14 @@ if ($data['closeOnOverlay']) {
         <div class="modal__content">
         <?php if ($hasTitle || $hasText): ?>
             <div class="modal__head">
-                <?php if ($hasTitle): ?>
+                <?php if ($hasTitle && $data['headAction'] !== ''): ?>
+                    <div class="modal__head-row">
+                        <h2 class="modal__title" id="<?= htmlspecialchars($titleId) ?>">
+                            <?= htmlspecialchars($data['title']) ?>
+                        </h2>
+                        <div class="modal__head-action"><?= $data['headAction'] ?></div>
+                    </div>
+                <?php elseif ($hasTitle): ?>
                     <h2 class="modal__title" id="<?= htmlspecialchars($titleId) ?>"><?= htmlspecialchars($data['title']) ?></h2>
                 <?php endif; ?>
                 <?php if ($hasText): ?>

@@ -20,6 +20,12 @@ class Textarea {
     }
 }
 
-document.querySelectorAll('.textarea').forEach(element => {
-    new Textarea(element);
-});
+// скрипт может подключаться в <head> без defer (админка): поля ищутся, когда разметка готова
+const initTextareas = () => {
+    document.querySelectorAll('.textarea').forEach(element => {
+        if (!element.sfTextarea) {
+            element.sfTextarea = new Textarea(element);
+        }
+    });
+};
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', initTextareas) : initTextareas();

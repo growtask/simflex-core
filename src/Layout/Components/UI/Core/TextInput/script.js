@@ -155,9 +155,15 @@ class TextInput {
     }
 }
 
-document.querySelectorAll('.text-input').forEach(element => {
-    new TextInput(element);
-});
+// скрипт может подключаться в <head> без defer (админка): поля ищутся, когда разметка готова
+const initTextInputs = () => {
+    document.querySelectorAll('.text-input').forEach(element => {
+        if (!element.sfTextInput) {
+            element.sfTextInput = new TextInput(element);
+        }
+    });
+};
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', initTextInputs) : initTextInputs();
 
 // Пароль: кнопка-глаз показывает и прячет введённый пароль
 document.addEventListener('click', (event) => {

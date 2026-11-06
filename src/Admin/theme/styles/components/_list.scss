@@ -32,37 +32,216 @@
     }
 }
 
-/* Поиск и кнопка окна фильтров над таблицей */
+/* Над таблицей (table-toolbar): «где искать», поиск, кнопка окна фильтров с бейджем числа заданных */
 .table-toolbar {
     display: flex;
-    align-items: flex-start;
-    @include spacing(gap, 12px);
+    align-items: center;
+    @include spacing(gap, 8px);
 
     &__search {
         flex: 1;
-        min-width: 0;
+        @include spacing(min-width, 160px);
     }
 
-    // окно фильтров нужно там, где нет шапки таблицы
     &__filters {
-        display: none;
+        position: relative;
+        flex-shrink: 0;
+    }
 
-        @include Tablet {
-            display: inline-flex;
+    &__filters-count {
+        position: absolute;
+        pointer-events: none;
+        @include spacing(top, -6px);
+        @include spacing(right, -4px);
+    }
+
+    // на телефоне поиск и фильтры в строке, «где искать» — под ними на всю ширину
+    @include Mobile {
+        flex-wrap: wrap;
+        gap: vwm(8px);
+
+        &__search {
+            order: -1;
+        }
+
+        .table-scope {
+            order: 1;
+            flex-basis: 100%;
         }
     }
 }
 
-/* Применённые фильтры тегами */
+/* «Где искать» (table-scope): таб outline с шевроном и меню колонок поиска */
+.table-scope {
+    flex-shrink: 0;
+
+    // рамка gray/light, как у table-scope в макете (у Tabs/main outline — color1/light)
+    &__trigger {
+        white-space: nowrap;
+        border-color: var(--color-main-gray-light);
+    }
+
+    @include Mobile {
+        &__trigger {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    .dropdown__panel {
+        @include spacing(min-width, 220px);
+    }
+}
+
+/* Заданные фильтры тегами (th-tags): на десктопе в строку и крестик «сбросить всё» справа, на телефоне
+   «Фильтры:» сверху и «Убрать всё» последним тегом */
 .th-tags {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     @include spacing(gap, 8px);
+    @include spacing(padding-inline, 12px);
 
     &__title {
+        flex-shrink: 0;
         color: var(--color-text-icon-gray-medium);
-        @include ui-xs;
+        @include ui-s;
+    }
+
+    &__list {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        min-width: 0;
+        @include spacing(gap, 8px);
+
+        .tag {
+            @include ui-xs;
+        }
+    }
+
+    &__clear-tag {
+        display: none;
+    }
+
+    @include Mobile {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-inline: 0;
+        gap: vwm(8px);
+
+        &__list {
+            width: 100%;
+        }
+
+        &__clear {
+            display: none;
+        }
+
+        &__clear-tag {
+            display: inline-flex;
+            align-items: center;
+            color: var(--color-text-icon-color1-main);
+            text-decoration: none;
+            border-radius: var(--radius-ui-small);
+            background: var(--color-main-gray-lighter);
+            padding: vwm(4px) vwm(8px);
+            @include ui-xs;
+        }
+    }
+}
+
+/* Фильтр колонки (th-filter): кнопка 24 с бейджем и меню 240 на 12 ниже кнопки, по её левому краю. Меню
+   поверх таблицы (fixed: прокрутка таблицы его не обрезает), место на экране задаёт list.js — у правого края
+   окна сдвигается внутрь, если снизу нет места — открывается вверх */
+.th-filter {
+    position: relative;
+    display: inline-flex;
+    font-weight: 400;
+
+    &__button[aria-expanded="true"],
+    &_set &__button {
+        color: var(--color-text-icon-color1-main);
+    }
+
+    &__count {
+        position: absolute;
+        pointer-events: none;
+        @include spacing(top, -6px);
+        @include spacing(left, 12px);
+    }
+
+    &__menu {
+        position: fixed;
+        z-index: z('dropdown');
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        background: var(--color-main-gray-white);
+        border-radius: var(--radius-ui-large);
+        box-shadow: var(--shadow-gray-m);
+        @include spacing(width, 240px);
+        @include spacing(padding, 12px);
+        @include spacing(gap, 8px);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    // значения: не больше 5 строк (24 и зазоры 8), дальше — прокрутка
+    &__options {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        @include spacing(gap, 8px);
+        @include spacing(max-height, 152px);
+        @include scrollbar(classic, s);
+    }
+
+    [data-theme="dark"] &__options {
+        @include scrollbar(classic, s, dark);
+    }
+
+    // пункт на всю ширину меню, подпись text/t3 не длиннее 2 строк (дальше — многоточие)
+    &__option {
+        width: 100%;
+        min-width: 0;
+
+        .radio-option__label {
+            align-items: flex-start;
+        }
+
+        .radio-option__text {
+            flex: 1;
+            min-width: 0;
+            display: -webkit-box;
+            overflow: hidden;
+            overflow-wrap: anywhere;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            @include t3;
+            // одна строка (19,5) — по центру кружка 24
+            @include spacing(padding-top, 2px);
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 8px);
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    [data-theme="dark"] &__menu {
+        background: var(--color-main-gray-darker);
+        box-shadow: none;
     }
 }
 
@@ -109,9 +288,31 @@
         @include ui-s;
     }
 
-    &__filter {
-        @include spacing(margin-top, 8px);
-        @include spacing(min-width, 120px);
+    // название, сортировка и фильтр не сжимаются и расширяют узкую колонку (ID 54 px), а не наезжают на соседнюю
+    &__head {
+        min-width: max-content;
+
+        > * {
+            flex-shrink: 0;
+        }
+    }
+
+    // название с подсказкой help: подсказка при наведении и фокусе
+    &__label_help {
+        cursor: help;
+        border-radius: var(--radius-ui-xsmall);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    // шеврон сортировки без сортировки и крестик сброса — gray/medium (th-actions): gray/light у Switches/sort-button
+    // на фоне шапки почти не виден
+    &__sort:not(.active),
+    &__reset {
+        color: var(--color-text-icon-gray-medium);
     }
 
     &_controls {
@@ -398,20 +599,47 @@
     }
 }
 
-/* Окно фильтров и сведения о записи */
+/* Окно фильтров (modal-filters): подпись над полем, у заданного — синяя точка перед подписью, «Сбросить»
+   в шапке, «Применить фильтры» на всю ширину */
 .modal-filters {
     display: flex;
     flex-direction: column;
-    @include spacing(gap, 12px);
+    @include spacing(gap, 16px);
 
     &__field {
         display: flex;
         flex-direction: column;
-        @include spacing(gap, 4px);
+        @include spacing(gap, 8px);
     }
 
     &__label {
-        @include ui-s;
+        display: inline-flex;
+        align-items: center;
+        color: var(--color-text-icon-gray-medium);
+        @include t4;
+        @include spacing(gap, 6px);
+    }
+
+    &__field_set &__label::before {
+        content: '';
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: var(--color-main-color1-main);
+        @include spacing(width, 6px);
+        @include spacing(height, 6px);
+    }
+
+    // список и поле на всю ширину окна
+    .dropdown,
+    .text-input {
+        width: 100%;
+    }
+}
+
+.modal-filters-window .modal__footer {
+    .modal-filters__apply {
+        flex: 1;
+        justify-content: center;
     }
 }
 
