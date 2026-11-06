@@ -29,6 +29,8 @@ class Page
 {
     /** Cookie с темой админки: light или dark (пишет переключатель темы в меню) */
     public const THEME_COOKIE = 'sf_admin_theme';
+    /** Свёрнутость меню на десктопе: «0» — меню раскрыто, иначе (и без cookie) свёрнуто */
+    public const MENU_COLLAPSED_COOKIE = 'sf_admin_menu_collapsed';
     public const THEME_LIGHT = 'light';
     public const THEME_DARK = 'dark';
 
@@ -439,6 +441,15 @@ class Page
     public function isPageHeadDrawn(): bool
     {
         return $this->pageHeadDrawn;
+    }
+
+    /**
+     * Меню свёрнуто до иконок (72 px): по умолчанию да, раскрытое запоминается в cookie MENU_COLLAPSED_COOKIE
+     * (theme/js/menu.js). Сервер сразу выводит меню в нужном виде, без перестройки после загрузки
+     */
+    public function isMenuCollapsed(): bool
+    {
+        return Container::getRequest()?->cookie(static::MENU_COLLAPSED_COOKIE) !== '0';
     }
 
     /**

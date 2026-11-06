@@ -24,7 +24,8 @@ $body = \Simflex\Core\Http\View::render(__DIR__ . '/body.tpl', ['page' => $page,
 ?>
 
 <!DOCTYPE html>
-<html lang="ru" data-theme="<?= $page->getTheme() ?>">
+<html lang="ru" data-theme="<?= $page->getTheme() ?>"
+      <?= $page->isMenuCollapsed() ? 'class="sf-menu-collapsed"' : '' ?>>
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>

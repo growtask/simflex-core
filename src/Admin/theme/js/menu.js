@@ -1,10 +1,15 @@
 /**
  * Меню админки (theme/tpl/partial/sidebar.tpl): сворачивание до 72 px, раскрытие групп, поиск по пунктам,
- * шторка на планшете и телефоне. Свёрнутость меню и раскрытые группы хранятся в localStorage
+ * шторка на планшете и телефоне. Свёрнутость меню — в cookie (сервер сразу выводит меню свёрнутым или раскрытым,
+ * Admin\Page::isMenuCollapsed(), по умолчанию свёрнуто), раскрытые группы — в localStorage
  */
 import {register} from './admin.js';
 
-const COLLAPSED_KEY = 'sf-admin-menu-collapsed';
+const COLLAPSED_COOKIE = 'sf_admin_menu_collapsed';
+const YEAR = 60 * 60 * 24 * 365;
+const saveCollapsed = (isCollapsed) => {
+    document.cookie = `${COLLAPSED_COOKIE}=${isCollapsed ? 1 : 0}; path=/; max-age=${YEAR}; samesite=lax`;
+};
 const GROUPS_KEY = 'sf-admin-menu-groups';
 const MOBILE = window.matchMedia('(width <= 811px)');
 
@@ -55,14 +60,15 @@ register('menu', (menu) => {
         collapse?.setAttribute('aria-expanded', String(!isCollapsed));
         collapse?.setAttribute('aria-label', isCollapsed ? 'Развернуть меню' : 'Свернуть меню');
     };
-    setCollapsed(!MOBILE.matches && storage.get(COLLAPSED_KEY, false));
+    // на планшете и телефоне меню — шторка, всегда раскрытая
+    setCollapsed(!MOBILE.matches && menu.classList.contains('menu_collapsed'));
     // без анимации при загрузке
     requestAnimationFrame(() => menu.classList.add('menu_ready'));
 
     collapse?.addEventListener('click', () => {
         const isCollapsed = !menu.classList.contains('menu_collapsed');
         setCollapsed(isCollapsed);
-        storage.set(COLLAPSED_KEY, isCollapsed);
+        saveCollapsed(isCollapsed);
     });
 
     menu.addEventListener('click', (event) => {
@@ -74,7 +80,7 @@ register('menu', (menu) => {
         // в свёрнутом меню нажатие на иконку группы разворачивает меню и открывает группу
         if (menu.classList.contains('menu_collapsed')) {
             setCollapsed(false);
-            storage.set(COLLAPSED_KEY, false);
+            saveCollapsed(false);
             setGroupOpen(group, true);
         } else {
             setGroupOpen(group, !group.classList.contains('menu-group_open'));
@@ -145,6 +151,7 @@ register('menu', (menu) => {
     });
     MOBILE.addEventListener('change', () => {
         setDrawer(false);
-        setCollapsed(!MOBILE.matches && storage.get(COLLAPSED_KEY, false));
+        // на планшете и телефоне меню — шторка, всегда раскрытая
+    setCollapsed(!MOBILE.matches && menu.classList.contains('menu_collapsed'));
     });
 });

@@ -219,6 +219,7 @@
     }
 
     /*----------SIZES-----------*/
+    // текст по design-ui-tabs.md: xs и s — ui/s, m и l — ui/m
     &-size_l {
         @include spacing(height, 56px);
         @include spacing(padding-inline, 16px);
@@ -226,7 +227,7 @@
         @include border-r(12px);
 
         .tab__text {
-            @include t2-b;
+            @include ui-m;
         }
     }
 
@@ -237,7 +238,7 @@
         @include border-r(12px);
 
         .tab__text {
-            @include t2-b;
+            @include ui-m;
         }
     }
 
@@ -248,7 +249,7 @@
         @include border-r(12px);
 
         .tab__text {
-            @include t3-b;
+            @include ui-s;
         }
     }
 
@@ -259,7 +260,7 @@
         @include border-r(8px);
 
         .tab__text {
-            @include t3-b;
+            @include ui-s;
         }
     }
 

@@ -3,7 +3,8 @@
 /**
  * Боковое меню админки (компонент макета menu): логотип, сворачивание до 72 px (на планшете и телефоне — шторка
  * 320 px, кнопка закрытия), поиск по пунктам, группы с прокруткой, внизу menu-actions (поддержка, тема), аккаунт
- * и версия. Свёрнутость и раскрытые группы — в localStorage (theme/js/menu.js)
+ * и версия. По умолчанию свёрнуто (Page::isMenuCollapsed(), cookie), раскрытые группы — в localStorage
+ * (theme/js/menu.js)
  * @var \Simflex\Core\Admin\Page $page
  */
 
@@ -29,6 +30,7 @@ $buttonTheme = ButtonTheme::from($theme);
 $tooltipTheme = TooltipTheme::from($theme);
 $user = Container::getUser();
 $userName = (string)($user?->name ?: $user?->login);
+$isCollapsed = $page->isMenuCollapsed();
 $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawTooltip(
     Button::drawButton(
         className: 'menu-actions__button',
@@ -44,7 +46,8 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
     className: 'menu-actions__item',
 );
 ?>
-<aside class="menu menu-theme_<?= $theme ?>" id="sf-menu" data-sf="menu" aria-label="Меню админки">
+<aside class="menu menu-theme_<?= $theme ?><?= $isCollapsed ? ' menu_collapsed' : '' ?>" id="sf-menu" data-sf="menu"
+       aria-label="Меню админки">
     <div class="menu__head">
         <?= $page->drawLogo('menu__logo', Page::url(''), isHomeLink: true) ?>
         <?= Button::drawButton(
@@ -53,7 +56,11 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
             style: ButtonStyle::Secondary,
             size: ButtonSize::Small,
             theme: $buttonTheme,
-            attributes: ['aria-label' => 'Свернуть меню', 'aria-expanded' => 'true', 'data-sf-menu-collapse' => ''],
+            attributes: [
+                'aria-label' => $isCollapsed ? 'Развернуть меню' : 'Свернуть меню',
+                'aria-expanded' => $isCollapsed ? 'false' : 'true',
+                'data-sf-menu-collapse' => '',
+            ],
         ) ?>
         <?= Button::drawButton(
             className: 'menu__close',
@@ -86,6 +93,7 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
                 ['data-sf-theme-toggle' => $isDark ? Page::THEME_LIGHT : Page::THEME_DARK]
             ) ?>
         </div>
+        <hr class="menu__divider">
         <a class="menu-account" href="<?= Page::url('account') ?>">
             <?= Placeholder::drawAvatar(
                 $userName,
