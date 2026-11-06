@@ -394,6 +394,25 @@ class Field
     }
 
     /**
+     * Фильтр «период» (FieldDate, FieldDateTime): «От» и «До» с календарём, значение — DateRange
+     */
+    protected function filterDateRange(mixed $value): string
+    {
+        if (!$this->filter) {
+            return '';
+        }
+        [$from, $to] = DateRange::parse((string)$value);
+
+        return $this->render('filter-date', [
+            'name' => $this->name,
+            'label' => strip_tags($this->label),
+            'value' => $from !== null || $to !== null ? $from . DateRange::SEPARATOR . $to : '',
+            'from' => DateRange::toLocal($from),
+            'to' => DateRange::toLocal($to),
+        ]);
+    }
+
+    /**
      * Фильтр-список (Dropdown из Layout) в меню фильтра колонки и окне фильтров списка (theme/js/list.js)
      * @param array{name: string, value: mixed, items: list<array{0: mixed, 1: string}>, action?: string,
      *        search?: bool} $vars

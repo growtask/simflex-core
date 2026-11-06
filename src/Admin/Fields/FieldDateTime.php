@@ -43,4 +43,14 @@ class FieldDateTime extends Field
         $value = $row[$this->name] ? \Simflex\Core\Helpers\Time::normal($row[$this->name]) : '';
         return $this->cell(str_replace(' ', '<br/>', $value));
     }
+
+    public function filter($value): string
+    {
+        return $this->filterDateRange($value);
+    }
+
+    public function getFilterLabel(string $value): string
+    {
+        return DateRange::getLabel($value);
+    }
 }

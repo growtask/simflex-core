@@ -4,6 +4,8 @@ namespace Simflex\Core\Admin\Table;
 
 use Simflex\Core\Admin\Fields\FieldMultiKey;
 use Simflex\Core\Admin\Fields\FieldAlias;
+use Simflex\Core\Admin\Fields\DateRange;
+use Simflex\Core\Admin\Fields\FieldDate;
 use Simflex\Core\Admin\Fields\FieldDateTime;
 use Simflex\Core\Admin\Fields\FieldFile;
 use Simflex\Core\Admin\Fields\FieldImage;
@@ -28,7 +30,6 @@ use Simflex\Core\Media\Image;
 use Simflex\Core\System\ModelBase;
 use Simflex\Core\System\Privilege;
 use Simflex\Core\Helpers\Tree;
-use Simflex\Core\Helpers\Time;
 use Simflex\Core\System\Session;
 use Simflex\Core\System\Settings;
 
@@ -719,8 +720,16 @@ abstract class Table extends Handler
             }
 
             $this->isHierarchy = false;
-            if ($field instanceof FieldDateTime) {
-                $query->andWhere($this->wrapColumn($column) . " LIKE :$bind")->bind([$bind => Time::mysql($filter) . '%']);
+            if ($field instanceof FieldDate || $field instanceof FieldDateTime) {
+                // период: от и до включительно (у даты со временем — до конца дня «до»)
+                [$from, $to] = DateRange::parse((string)$filter);
+                if ($from !== null) {
+                    $query->andWhere($this->wrapColumn($column) . " >= :{$bind}_from")->bind([$bind . '_from' => $from]);
+                }
+                if ($to !== null) {
+                    $query->andWhere($this->wrapColumn($column) . " < :{$bind}_to")
+                        ->bind([$bind . '_to' => date('Y-m-d', (int)strtotime($to . ' +1 day'))]);
+                }
             } elseif ($field instanceof FieldMultiKey) {
                 $relations = DB::wrapName($field->params['table_relations']);
                 $query->andWhere(

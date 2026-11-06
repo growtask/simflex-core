@@ -46,4 +46,14 @@ class FieldDate extends Field
     {
         return $this->cell($row[$this->name] ? Time::userFull($row[$this->name]) : '');
     }
+
+    public function filter($value): string
+    {
+        return $this->filterDateRange($value);
+    }
+
+    public function getFilterLabel(string $value): string
+    {
+        return DateRange::getLabel($value);
+    }
 }

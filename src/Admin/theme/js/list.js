@@ -36,6 +36,24 @@ document.addEventListener('input', (event) => {
     input.setSelectionRange(digitsBeforeCaret, digitsBeforeCaret);
 });
 
+// фильтр «период» у дат: «От» и «До» (ДД.ММ.ГГГГ) собираются в значение фильтра ГГГГ-ММ-ДД|ГГГГ-ММ-ДД
+const toIsoDate = (text) => {
+    const match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(text.trim());
+    return match ? `${match[3]}-${match[2]}-${match[1]}` : '';
+};
+const syncDateRange = (target) => {
+    const box = target.closest?.('[data-sf-date-range-box]');
+    if (!box) {
+        return;
+    }
+    const [from, to] = ['from', 'to']
+        .map((side) => toIsoDate(box.querySelector(`[data-sf-date-range="${side}"]`).value));
+    box.querySelector('[data-sf-date-range-value]').value = from || to ? `${from}|${to}` : '';
+};
+// дата из календаря приходит в поле событиями input и change
+document.addEventListener('input', (event) => syncDateRange(event.target));
+document.addEventListener('change', (event) => syncDateRange(event.target));
+
 /** Зазор между кнопкой фильтра колонки и меню, отступ меню от края окна */
 const MENU_GAP = 12;
 
@@ -99,14 +117,18 @@ const initColumnFilters = (head) => {
         if (event.key === 'Escape' && opened) {
             event.preventDefault();
             close(true);
-        } else if (event.key === 'Enter' && event.target.matches('.th-filter__menu [data-sf-filter]')) {
+        } else if (event.key === 'Enter'
+            && event.target.matches('.th-filter__menu [data-sf-filter], .th-filter__menu [data-sf-date-range]')) {
             event.preventDefault();
+            syncDateRange(event.target);
             window.location.href = filtersUrl(event.target.closest('.th-filter__menu'));
         }
     });
     document.addEventListener('click', (event) => {
-        // панель списка внутри меню (Dropdown с поиском) может быть вынесена поверх: клик по ней — внутри меню
-        if (opened && !opened.contains(event.target) && !event.target.closest('.dropdown__panel')) {
+        // путь события — на момент нажатия: календарь перерисовывает дни, и нажатый день выпадает из DOM раньше
+        // этой проверки; панель списка (Dropdown с поиском) может быть вынесена поверх — клик по ней тоже внутри
+        const path = event.composedPath();
+        if (opened && !path.includes(opened) && !path.some((node) => node.classList?.contains('dropdown__panel'))) {
             close();
         }
     });
