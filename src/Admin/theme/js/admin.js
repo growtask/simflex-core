@@ -2,7 +2,8 @@
  * Общий модуль админки (без jQuery, без сборки).
  *
  * - request() — запрос к серверу: fetch с CSRF-токеном (заголовок X-CSRF-Token из <meta name="csrf-token">),
- *   заголовком X-Requested-With (ajax-запрос админки) и разбором JSON-ответа;
+ *   заголовком X-Requested-With (ajax-запрос админки) и разбором JSON-ответа; ошибка сервера (ответ не 2xx) —
+ *   исключение с текстом из конверта JSON API (error.message), status, code, errors и response;
  * - register(name, init) — модуль компонента объявляет инициализацию элементов с data-sf="<name>": init(element)
  *   вызывается один раз для каждого элемента, в том числе добавленного на страницу позже (ajax, окна);
  * - window.sfAdmin — то же для обычных скриптов: request, register, init, toast(), confirm().
@@ -31,6 +32,9 @@ export function getCsrfToken() {
  * @param {{method?: string, data?: FormData|Object|null, headers?: Object}} options data — тело POST: FormData или
  *        объект (отправляется как форма)
  * @returns {Promise<any>} JSON, если сервер ответил JSON, иначе текст
+ * @throws {Error} Ответ не 2xx: message — error.message конверта JSON API (иначе «<статус> <текст статуса>»),
+ *         status — HTTP-статус, code — error.code, errors — error.errors (ошибки полей: поле => текст),
+ *         response — разобранное тело ответа; у ответа не JSON — только message и status
  */
 export async function request(url, {method = 'GET', data = null, headers = {}} = {}) {
     let body = null;
@@ -46,12 +50,21 @@ export async function request(url, {method = 'GET', data = null, headers = {}} =
         credentials: 'same-origin',
         headers: {'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-Token': getCsrfToken(), ...headers},
     });
+    const isJson = (response.headers.get('Content-Type') ?? '').includes('application/json');
     if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
+        const fallbackMessage = `${response.status} ${response.statusText}`;
+        const parsed = isJson ? await response.json().catch(() => null) : null;
+        const error = new Error(parsed?.error?.message || fallbackMessage);
+        error.status = response.status;
+        if (parsed) {
+            error.code = parsed.error?.code ?? 0;
+            error.errors = parsed.error?.errors ?? {};
+            error.response = parsed;
+        }
+        throw error;
     }
 
-    const type = response.headers.get('Content-Type') ?? '';
-    return type.includes('application/json') ? response.json() : response.text();
+    return isJson ? response.json() : response.text();
 }
 
 /**

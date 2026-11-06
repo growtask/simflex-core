@@ -108,7 +108,7 @@
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             credentials: 'same-origin',
         });
-        const items = response.ok ? await response.json() : [];
+        const items = response.ok ? ((await response.json()).items ?? []) : [];
         list.replaceChildren(...items.map((item) => {
             const option = fromTemplate(root, 'option');
             option.dataset.value = String(item.id);

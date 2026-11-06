@@ -66,34 +66,49 @@ class ControllerBase extends ComponentBase
         return null;
     }
 
-    protected function content(): string
+    /**
+     * Аргументы метода действия: переменные пути, затем параметры запроса (по имени параметра метода)
+     *
+     * @param array<string, string> $vars Переменные пути
+     * @return array<int, mixed>
+     */
+    protected function resolveArguments(\ReflectionMethod $method, array $vars): array
     {
-        $maybeAction = $this->resolve();
-        if (!$maybeAction) {
-            return $this->fallback();
-        }
-
-        $vars = $maybeAction->getVars();
         $request = $this->request->request();
 
-        // получаем метод
-        $class = new ReflectionClass($this);
-        $method = $class->getMethod($maybeAction->methodName);
-
-        // подбираем аргументы
-        $varPos = [];
+        $arguments = [];
         foreach ($method->getParameters() as $param) {
             if (isset($vars[$param->name])) {
-                $varPos[] = $vars[$param->name];
+                $arguments[] = $vars[$param->name];
                 continue;
             }
 
             if (isset($request[$param->name])) {
-                $varPos[] = $request[$param->name];
+                $arguments[] = $request[$param->name];
             }
         }
 
-        // вызываем метод, действия возвращают HTML
-        return (string)$method->invoke($this, ...$varPos);
+        return $arguments;
+    }
+
+    /**
+     * Вызывает метод подобранного действия
+     */
+    protected function invokeAction(ActionMatcher $matcher): mixed
+    {
+        $method = new ReflectionClass($this)->getMethod($matcher->methodName);
+
+        return $method->invoke($this, ...$this->resolveArguments($method, $matcher->getVars()));
+    }
+
+    protected function content(): string
+    {
+        $matcher = $this->resolve();
+        if (!$matcher) {
+            return $this->fallback();
+        }
+
+        // действия возвращают HTML
+        return (string)$this->invokeAction($matcher);
     }
 }

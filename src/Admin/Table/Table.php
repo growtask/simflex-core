@@ -17,6 +17,8 @@ use Simflex\Core\Admin\Fields\Helper;
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Admin\Handler;
 use Simflex\Core\Extensions\Alert\Alert;
+use Simflex\Core\Http\Api\ApiException;
+use Simflex\Core\Http\Api\JsonEnvelopeResponse;
 use Simflex\Core\Admin\Plugins\Pagination\Pagination;
 use Simflex\Core\System\Container;
 use Simflex\Core\DB\DB;
@@ -228,33 +230,60 @@ abstract class Table extends Handler
         return static::getModel()::findAdv()->asArray();
     }
 
-    protected function deleteField(): string
+    /**
+     * Ajax: очищает поле записи и удаляет его файл, ответ — конверт JSON API
+     */
+    protected function deleteField(): never
     {
-        $fieldName = (string)$this->request->get('field_name');
-        $keyName = $this->pk->name;
-        $keyValue = (int)$this->request->request($keyName);
-        $where = [$keyName => $keyValue];
-        if (!isset($this->fields[$fieldName])) {
-            // поле из параметров
-            $data = $this->getQuery()->select('params')->where($where)->fetchOne();
-            if (!$data) {
-                return json_encode(['success' => false]);
+        $this->sendJson(function (): array {
+            $fieldName = (string)$this->request->get('field_name');
+            $keyName = $this->pk->name;
+            $keyValue = (int)$this->request->request($keyName);
+            $where = [$keyName => $keyValue];
+            if (!isset($this->fields[$fieldName])) {
+                // поле из параметров
+                $data = $this->getQuery()->select('params')->where($where)->fetchOne();
+                if (!$data) {
+                    throw ApiException::notFound('Запись не найдена');
+                }
+
+                $data = unserialize($data['params']) ?: [];
+                $data[$fieldName] = '';
+                $data = serialize($data);
+
+                static::getModel()::bulkUpdate(['params' => $data], $where);
+                return ['d' => $data, 't' => $this->table, 'k' => $keyName, 'v' => $keyValue];
+            }
+            $field = $this->fields[$fieldName];
+            $row = $this->getQuery()->select(DB::wrapName($field->name))->where($where)->fetchOne();
+            $success = $field->delete($row[$field->name] ?? '');
+            if ($success) {
+                $success = static::getModel()::bulkUpdate([$field->name => ''], $where);
+            }
+            if (!$success) {
+                throw new ApiException('Не удалось удалить файл', 500);
             }
 
-            $data = unserialize($data['params']) ?: [];
-            $data[$fieldName] = '';
-            $data = serialize($data);
+            return [];
+        });
+    }
 
-            static::getModel()::bulkUpdate(['params' => $data], $where);
-            return json_encode(['success' => true, 'd' => $data, 't' => $this->table, 'k' => $keyName, 'v' => $keyValue]);
+    /**
+     * Отправляет ответ действия конвертом JSON API и завершает запрос: действие возвращает данные, исключение
+     * (ApiException - со своим статусом, прочие - 500) становится ошибкой конверта
+     *
+     * @param \Closure(): mixed $action
+     */
+    protected function sendJson(\Closure $action): never
+    {
+        $response = new JsonEnvelopeResponse();
+        try {
+            $response->setData($action());
+        } catch (\Throwable $e) {
+            $response->setError($e);
         }
-        $field = $this->fields[$fieldName];
-        $row = $this->getQuery()->select(DB::wrapName($field->name))->where($where)->fetchOne();
-        $success = $field->delete($row[$field->name] ?? '');
-        if ($success) {
-            $success = static::getModel()::bulkUpdate([$field->name => ''], $where);
-        }
-        return json_encode(['success' => !!$success]);
+
+        $response->send();
     }
 
     /**
@@ -368,25 +397,33 @@ abstract class Table extends Handler
         return $dir . $name;
     }
 
+    /**
+     * Ajax: поиск записей раздела для поля FieldRelation, ответ - items: [{id, name}]
+     */
     public function searchTags(): never
     {
-        /** @var Field $field */
-        $field = $this->fields[$this->request->request('name')];
+        $this->sendJson(function (): array {
+            /** @var Field|null $field */
+            $field = $this->fields[$this->request->request('name')] ?? null;
+            if (!$field) {
+                throw ApiException::notFound('Поле не найдено');
+            }
 
-        $name = $field->params['name'];
-        $rows = $this->getQuery()
-            ->select([DB::wrapName($this->pk->name), DB::wrapName($name)])
-            ->where(DB::wrapName($name) . ' LIKE :text')
-            ->bind(['text' => '%' . $this->request->request('text') . '%'])
-            ->limit(50)
-            ->all();
+            $name = $field->params['name'];
+            $rows = $this->getQuery()
+                ->select([DB::wrapName($this->pk->name), DB::wrapName($name)])
+                ->where(DB::wrapName($name) . ' LIKE :text')
+                ->bind(['text' => '%' . $this->request->request('text') . '%'])
+                ->limit(50)
+                ->all();
 
-        $out = [];
-        foreach ($rows as $r) {
-            $out[] = ['id' => $r[$this->pk->name], 'name' => $r[$name]];
-        }
+            $items = [];
+            foreach ($rows as $row) {
+                $items[] = ['id' => $row[$this->pk->name], 'name' => $row[$name]];
+            }
 
-        exit(json_encode($out, JSON_UNESCAPED_UNICODE));
+            return ['items' => $items];
+        });
     }
 
     /**
@@ -427,10 +464,10 @@ abstract class Table extends Handler
     protected function beforeChangeENUM(Field $field, $row, $newValue): mixed
     {
         if (!$this->canEdit) {
-            Alert::error('В этом разделе запрещено редактировать записи', Page::get()->getPath());
+            throw ApiException::forbidden('В этом разделе запрещено редактировать записи');
         }
         if ($field->readonly) {
-            Alert::error("Поле <b>{$field->label}</b> только для чтения!", Page::get()->getPath());
+            throw ApiException::forbidden("Поле «{$field->label}» только для чтения");
         }
         return $newValue;
     }
@@ -439,53 +476,65 @@ abstract class Table extends Handler
     {
     }
 
+    /**
+     * Ajax: меняет значение поля-статуса (FieldEnum); при $withRedirect отвечает конвертом JSON API и завершает запрос
+     */
     protected function changeENUM(bool $withRedirect = true): void
     {
-        $fieldName = $this->request->request('field');
-        $newValue = $this->request->request('newstatus');
-        $field = $this->fields[$fieldName] ?? null;
-        if (!$field) {
-            Alert::error('Некорректный запрос. Поле не найдено.', Page::get()->getPath());
-        }
+        $change = function (): array {
+            $fieldName = $this->request->request('field');
+            $newValue = $this->request->request('newstatus');
+            $field = $this->fields[$fieldName] ?? null;
+            if (!$field) {
+                throw ApiException::notFound('Поле не найдено');
+            }
 
-        $where = [$this->pk->name => (int)$this->request->request($this->pk->name)];
-        $row = $this->getQuery()->where($where)->fetchOne();
+            $where = [$this->pk->name => (int)$this->request->request($this->pk->name)];
+            $row = $this->getQuery()->where($where)->fetchOne();
 
-        $newValue = $this->beforeChangeENUM($field, $row, $newValue);
+            $newValue = $this->beforeChangeENUM($field, $row, $newValue);
 
-        $success = static::getModel()::bulkUpdate([$field->name => $newValue ?: null], $where);
+            $success = static::getModel()::bulkUpdate([$field->name => $newValue ?: null], $where);
 
-        $this->afterChangeENUM($field, $row, $newValue, $success);
+            $this->afterChangeENUM($field, $row, $newValue, $success);
+
+            return [];
+        };
 
         if ($withRedirect) {
-            exit(json_encode(['success' => true]));
+            $this->sendJson($change);
         }
+        $change();
     }
 
+    /**
+     * Ajax: меняет значение поля порядка (FieldNPP): val - новое, иначе сдвиг на 1 (up - вверх); ответ - конверт
+     */
     protected function changeNPP(): never
     {
-        $field = (string)$this->request->request('field');
-        if (!isset($this->fields[$field])) {
-            Alert::error('Некорректный запрос. Поле не найдено.', Page::get()->getPath());
-        }
+        $this->sendJson(function (): array {
+            $field = (string)$this->request->request('field');
+            if (!isset($this->fields[$field])) {
+                throw ApiException::notFound('Поле не найдено');
+            }
 
-        $fieldDB = static::getFieldRow($field);
-        $fieldParams = $fieldDB['params'] ?? [];
-        if (@$fieldParams['main']['readonly']) {
-            Alert::error("Поле <b>{$fieldDB['label']}</b> только для чтения!", Page::get()->getPath());
-        }
+            $fieldDB = static::getFieldRow($field);
+            $fieldParams = $fieldDB['params'] ?? [];
+            if (@$fieldParams['main']['readonly']) {
+                throw ApiException::forbidden("Поле «{$fieldDB['label']}» только для чтения");
+            }
 
-        $where = [$this->pk->name => (int)$this->request->request($this->pk->name)];
-        if ($this->request->get('val') !== null) {
-            $value = (int)$this->request->get('val');
-        } else {
-            $value = (int)$this->getQuery()->select(DB::wrapName($field))->where($where)->fetchScalar();
-            $value += $this->request->get('up') !== null ? -1 : 1;
-        }
-        static::getModel()::bulkUpdate([$field => $value], $where);
+            $where = [$this->pk->name => (int)$this->request->request($this->pk->name)];
+            if ($this->request->get('val') !== null) {
+                $value = (int)$this->request->get('val');
+            } else {
+                $value = (int)$this->getQuery()->select(DB::wrapName($field))->where($where)->fetchScalar();
+                $value += $this->request->get('up') !== null ? -1 : 1;
+            }
+            static::getModel()::bulkUpdate([$field => $value], $where);
 
-        header('location: ' . Page::get()->getPath());
-        exit;
+            return [];
+        });
     }
 
     /**
@@ -1206,45 +1255,50 @@ abstract class Table extends Handler
     }
 
     /**
-     * Ajax: поиск записей для выпадающего списка внешнего ключа (FieldInt с is_fk), JSON [{id, name}]
+     * Ajax: поиск записей для выпадающего списка внешнего ключа (FieldInt с is_fk), ответ - items: [{id, name}]
      */
-    public function searchInt(): array
+    public function searchInt(): never
     {
-        $text = trim((string)($this->request->request('text', '')));
-        $name = str_replace(['filter[', ']'], '', (string)($this->request->request('name', '')));
-        $field = $this->fields[$name] ?? null;
-        if (!($field instanceof FieldInt) || empty($field->params['is_fk'])) {
-            return [];
-        }
+        $this->sendJson(function (): array {
+            $text = trim((string)($this->request->request('text', '')));
+            $name = str_replace(['filter[', ']'], '', (string)($this->request->request('name', '')));
+            $field = $this->fields[$name] ?? null;
+            if (!($field instanceof FieldInt) || empty($field->params['is_fk'])) {
+                return ['items' => []];
+            }
 
-        $label = DB::wrapName($field->params['fk_label']);
-        $out = (new AQ())->asArray()->from($field->params['fk_table'])
-            ->select([DB::wrapName($field->params['fk_key']) . ' AS id', "$label AS name"])
-            ->where("$label LIKE :text")
-            ->bind(['text' => '%' . $text . '%'])
-            ->limit(50)
-            ->all();
+            $label = DB::wrapName($field->params['fk_label']);
+            $items = (new AQ())->asArray()->from($field->params['fk_table'])
+                ->select([DB::wrapName($field->params['fk_key']) . ' AS id', "$label AS name"])
+                ->where("$label LIKE :text")
+                ->bind(['text' => '%' . $text . '%'])
+                ->limit(50)
+                ->all();
 
-        exit(json_encode($out, JSON_UNESCAPED_UNICODE));
+            return ['items' => $items];
+        });
     }
 
     /**
-     * Ajax: поиск записей для фильтра по полю FieldMultiKey, JSON [{id, name}]
+     * Ajax: поиск записей для фильтра по полю FieldMultiKey, ответ - items: [{id, name}]
      */
-    public function searchMultiKey(): array
+    public function searchMultiKey(): never
     {
-        $name = str_replace(['filter[', ']'], '', (string)($this->request->request('name', '')));
-        $field = $this->fields[$name] ?? null;
-        if (!($field instanceof FieldMultiKey)) {
-            return [];
-        }
+        $this->sendJson(function (): array {
+            $name = str_replace(['filter[', ']'], '', (string)($this->request->request('name', '')));
+            $field = $this->fields[$name] ?? null;
+            if (!($field instanceof FieldMultiKey)) {
+                return ['items' => []];
+            }
 
-        $out = [];
-        foreach ($field->getValues(search: (string)($this->request->request('text', '')), limit: 50) as $id => $label) {
-            $out[] = ['id' => $id, 'name' => $label];
-        }
+            $items = [];
+            $search = (string)$this->request->request('text', '');
+            foreach ($field->getValues(search: $search, limit: 50) as $id => $label) {
+                $items[] = ['id' => $id, 'name' => $label];
+            }
 
-        exit(json_encode($out, JSON_UNESCAPED_UNICODE));
+            return ['items' => $items];
+        });
     }
 
     public function copy(): never
@@ -1274,15 +1328,19 @@ abstract class Table extends Handler
     }
 
     /**
-     * Ajax-действие: проверяет отправленную форму, возвращает JSON {valid, errors}
+     * Ajax-действие: проверяет отправленную форму. Ответ - конверт JSON API: valid и, если форма не прошла
+     * проверку, errors (поле => тексты через <br />)
      */
-    public function validate(): string
+    public function validate(): never
     {
-        $json = ['valid' => $this->isValid() ? 1 : 0];
-        foreach ($this->errors as $field => $errors) {
-            $json['errors'][$field] = join('<br />', $errors);
-        }
-        return json_encode($json);
+        $this->sendJson(function (): array {
+            $json = ['valid' => $this->isValid()];
+            foreach ($this->errors as $field => $errors) {
+                $json['errors'][$field] = join('<br />', $errors);
+            }
+
+            return $json;
+        });
     }
 
     public function isValid(): bool

@@ -7,28 +7,15 @@ class ErrorCodes
     /** @var int Дефолтная ошибка приложения */
     public const APP_INTERNAL_ERROR = 1000;
 
-    /** @var int Метод не найден */
-    public const APP_METHOD_NOT_FOUND = 1001;
-
-    /** @var int Неподдерживаемый тип ответа */
-    public const APP_UNSUPPORTED_RESPONSE_TYPE = 1002;
-
-    /** @var int Неподдерживаемый ответ */
-    public const APP_UNSUPPORTED_RESPONSE = 1003;
-
     /** @var int Не авторизован */
     public const APP_UNAUTHORIZED = 1004;
 
     public const BASIC_ERROR_MESSAGES = [
-        self::APP_INTERNAL_ERROR => 'An internal server error has occurred. Try again later',
-        self::APP_METHOD_NOT_FOUND => 'Requested method was not found',
-        self::APP_UNSUPPORTED_RESPONSE => 'Unsupported response: {content}',
-        self::APP_UNSUPPORTED_RESPONSE_TYPE => 'Unsupported response type: {class}',
+        self::APP_INTERNAL_ERROR => 'Внутренняя ошибка, повторите позже',
         self::APP_UNAUTHORIZED => 'Unauthorized',
     ];
 
     public const BASIC_ERROR_HTTP_CODES = [
-        self::APP_METHOD_NOT_FOUND => 404,
         self::APP_UNAUTHORIZED => 403,
     ];
 

@@ -23,7 +23,7 @@ const loadParams = async (form, module) => {
     const itemId = form.querySelector('#info-key-value')?.value ?? '0';
     const query = new URLSearchParams({action: 'module_param', module, item_id: itemId});
     const response = await window.sfAdmin.request(`${location.pathname}?${query}`);
-    const positions = typeof response === 'string' ? JSON.parse(response) : response;
+    const positions = response;
     const left = form.querySelector('.ajax-params-left');
     const right = form.querySelector('.ajax-params');
     if (right) {

@@ -2,103 +2,61 @@
 
 namespace Simflex\Core\Http\Api;
 
-use Simflex\Core\System\Errors\Error;
-use Simflex\Core\System\Errors\ErrorCodes;
 use Simflex\Core\Http\Response;
 
+/**
+ * Ответ JSON без предустановленной структуры: тело - ровно то, что передано в setData()
+ * (массив, список, скаляр, null, JsonSerializable или объект с toArray()).
+ * Ответ со структурой error и данными - JsonEnvelopeResponse
+ */
 class JsonResponse extends Response
 {
-    protected int $errorCode = 0;
-    protected string $errorMessage = '';
-    protected array $data = [];
+    protected mixed $data = null;
 
     public function __construct()
     {
         parent::__construct();
-        $this->setContentType('application/json');
+        $this->setContentType('application/json; charset=utf-8');
     }
 
     /**
-     * @param mixed $mixed Скаляр, ассоциативный массив или Throwable
-     * @throws \Simflex\Core\System\Errors\Error
+     * @param mixed $data Массив, скаляр, null, JsonSerializable или объект с toArray()
+     * @throws \InvalidArgumentException Если тип данных не поддерживается
      */
-    public function setData(mixed $mixed): static
+    public function setData(mixed $data): static
     {
-        if (is_scalar($mixed)) {
-            $this->set('result', $mixed);
-            return $this;
-        }
-
-        if (is_array($mixed)) {
-            $this->data = $mixed;
-            return $this;
-        }
-
-        if (is_object($mixed)) {
-            if ($mixed instanceof \Throwable) {
-                $this->setError($mixed);
-                return $this;
+        if (is_object($data) && !$data instanceof \JsonSerializable) {
+            if (!method_exists($data, 'toArray')) {
+                throw new \InvalidArgumentException('Неподдерживаемый тип данных ответа: ' . $data::class);
             }
-
-            if (method_exists($mixed, 'toArray')) {
-                $this->data = $mixed->toArray();
-                return $this;
-            }
-
-            throw Error::byCode(ErrorCodes::APP_UNSUPPORTED_RESPONSE_TYPE, null, ['class' => get_class($mixed)]);
+            $data = $data->toArray();
+        } elseif (is_resource($data)) {
+            throw new \InvalidArgumentException('Неподдерживаемый тип данных ответа: resource');
         }
 
-        throw Error::byCode(
-            ErrorCodes::APP_UNSUPPORTED_RESPONSE,
-            null,
-            ['content' => substr(var_export($mixed, true), 0, 200)]
-        );
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Тело ответа
+     */
+    public function getBody(): string
+    {
+        return $this->makeBody();
     }
 
     protected function makeBody(): string
     {
-        return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE);
+        return json_encode($this->data, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
-     * Устанавливает значение в data по ключу
-     *
-     * @param int|string $key Ключ
-     * @param mixed $value Значение
+     * Выводит ответ и завершает работу
      */
-    public function set(int|string $key, mixed $value): static
+    public function send(): never
     {
-        $this->data[$key] = $value;
-        return $this;
-    }
-
-    /**
-     * Устанавливает ошибку из Throwable
-     *
-     * @param \Throwable $err Исключение, из которого берется ошибка
-     */
-    public function setError(\Throwable $err, bool $overwriteStatusCode = true): static
-    {
-        // переопределяем код статуса, если другой еще не задан
-        if ($this->statusCode === 200 && $overwriteStatusCode) {
-            $this->statusCode = ErrorCodes::getHttpStatusCode(intval($err->getCode())) ?? 500;
-        }
-
-        $this->errorCode = intval($err->getCode());
-        $this->errorMessage = $err->getMessage();
-        return $this;
-    }
-
-    /**
-     * Возвращает массив с текущей ошибкой и данными
-     */
-    public function toArray(): array
-    {
-        return [
-                'error' => [
-                    'code' => $this->errorCode,
-                    'message' => $this->errorMessage,
-                ],
-            ] + $this->data;
+        $this->output();
+        exit;
     }
 }

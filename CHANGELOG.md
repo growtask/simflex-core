@@ -6,6 +6,45 @@
 
 ## [4.0.0] — не выпущена
 
+- JSON API ядра. **Несовместимо:**
+  - `Http\Api\JsonResponse` больше не добавляет конверт: тело ответа — ровно данные из `setData()` (массив, список,
+    скаляр, `null`, `JsonSerializable`, объект с `toArray()`; иное — `\InvalidArgumentException`),
+    `Content-Type: application/json; charset=utf-8`, `getBody()`, `send(): never`. Методы `set()`, `setError()`,
+    `toArray()` убраны. Кому нужен прежний формат `{"error": {...}, ...данные}` — `Http\Api\JsonEnvelopeResponse`
+    (замените класс; `set()`, `setData()`, `setError()` сохранены, но `setError()` теперь без второго параметра).
+  - Новый `Http\Api\JsonEnvelopeResponse`: `{"error": {"code", "message"}, ...данные}`; ассоциативный массив —
+    ключи рядом с `error`, список — `items`, скаляр и `null` — `result`; ключ `error` в данных — исключение.
+    `setError(\Throwable)`: `ApiException` — статус, код, текст (и `error.errors`) из исключения; прочие исключения —
+    статус 500, код `ErrorCodes::APP_INTERNAL_ERROR`, общий текст, исключение пишется в журнал. Статус, заданный
+    `setStatusCode()`, не меняется. `setErrorMessage()` — ошибка без исключения.
+  - Новый `Http\Api\ApiException` (сообщение для клиента, HTTP-статус, код, ошибки полей) с фабриками `badRequest()`,
+    `unauthorized()`, `forbidden()`, `notFound()`, `unprocessable()`.
+  - `Csrf::isTrustedMutation()` / `Csrf::checkMutation()` — проверка изменяющего запроса JSON API: метод не GET,
+    HEAD, OPTIONS и тело JSON или верный токен, иначе `ApiException` 403. `Request::isJson()` учитывает `charset`.
+  - Новый `Http\Api\ApiController extends ControllerBase`: действия `#[Action]` возвращают данные, контроллер
+    отдаёт `JsonEnvelopeResponse`; параметры действия — из пути, тела JSON и GET/POST с приведением типов
+    (ошибка — 400); исключения — JSON-ошибка; действие не найдено — 404 «Метод API не найден». Адрес — обычный
+    маршрут `provider/routes.php`. Изменяющий запрос (не GET, HEAD, OPTIONS) принимается только с телом JSON или
+    с CSRF-токеном, иначе 403 (`checkForgery()` → `Csrf::checkMutation()`). `JsonRequest`: `isJson()` учитывает `charset`, `createJson()` для тестов.
+  - `ControllerBase`: подбор аргументов действия вынесен в `resolveArguments()` и `invokeAction()`.
+  - Удалены `Http\Api\Base`, `Http\Api\Json` (вызов `action<Имя>()` по пути; нигде не подключались — перепишите
+    на `ApiController`), `Location::Api`, группа сервисов `api` (уберите её из `provider/services.php` сайта),
+    коды `ErrorCodes::APP_METHOD_NOT_FOUND`, `APP_UNSUPPORTED_RESPONSE`, `APP_UNSUPPORTED_RESPONSE_TYPE`.
+    Текст `APP_INTERNAL_ERROR` — «Внутренняя ошибка, повторите позже».
+  - `admin.js` `request()`: ответ не 2xx с JSON бросает `Error` с `message` из `error.message` конверта и свойствами
+    `status`, `code`, `errors`, `response` (раньше — `Error('<статус> <текст>')`); успешный ответ без изменений.
+    Код, читавший текст статуса из `message`, должен использовать `error.status`.
+
+- Ajax-действия админки и компоненты вёрстки переведены на конверт JSON API. **Несовместимо:** `Table::searchInt()`,
+  `searchMultiKey()`, `searchTags()` отвечают `{"error": …, "items": [{id, name}]}` (раньше — голый массив);
+  `deleteField()`, `changeENUM()`, `changeNPP()` (раньше — перенаправление на список), `validate()` (теперь
+  `valid` — булево) и `Privilege::switch` отвечают конвертом, ошибка — HTTP-статус и `error.message` вместо
+  `success: false` / `ok: false` (`Alert::error()` в `beforeChangeENUM()` заменён на `ApiException`; наследникам
+  с такой проверкой — бросать `ApiException`). `ModuleItem::module_param` — `{"error": …, "left": …, "right": …}`.
+  Новый `Table::sendJson(\Closure)`. `searchInt()`, `searchMultiKey()`, `validate()`, `moduleParam()` — `never`.
+  JS: `Dropdown`, `TagsInput` читают `items`; `table-editor.js`, `list.js`, `moduleitem.js` — под конверт;
+  `Common/Form/Callback/script.js` отправляет форму телом JSON и разбирает конверт (`error.errors` — ошибки полей).
+
 - Зависимость `maximebf/debugbar` (заброшен) заменена на `php-debugbar/php-debugbar`
 
 - Фильтр даты в списке — период: у `FieldDate` и `FieldDateTime` в меню фильтра колонки и в окне фильтров поля

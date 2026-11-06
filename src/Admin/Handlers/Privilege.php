@@ -3,6 +3,8 @@
 namespace Simflex\Core\Admin\Handlers;
 
 use Simflex\Core\Admin\Handler;
+use Simflex\Core\Http\Api\ApiException;
+use Simflex\Core\Http\Api\JsonEnvelopeResponse;
 use Simflex\Core\System\Privilege as PrivilegeRegistry;
 use Simflex\Core\System\Settings as SiteSettings;
 
@@ -38,16 +40,19 @@ class Privilege extends Handler
     }
 
     /**
-     * Задаёт активность привилегии: POST name, active (1/0). Возвращает JSON с активностью после изменения
+     * Задаёт активность привилегии: POST name, active (1/0). Ответ - конверт JSON API: active - активность
+     * после изменения; непринятое изменение - ошибка 400
      */
-    protected function switchActive(): string
+    protected function switchActive(): never
     {
+        $response = new JsonEnvelopeResponse();
         $name = (string)($this->request->post('name', ''));
-        $ok = $this->request->isPost() && PrivilegeRegistry::setActive($name, !empty($this->request->post('active')));
-        if (!$ok) {
-            http_response_code(400);
+        if ($this->request->isPost() && PrivilegeRegistry::setActive($name, !empty($this->request->post('active')))) {
+            $response->setData(['active' => PrivilegeRegistry::isActive($name)]);
+        } else {
+            $response->setError(ApiException::badRequest('Не удалось изменить привилегию'));
         }
 
-        return (string)json_encode(['ok' => $ok, 'active' => PrivilegeRegistry::isActive($name)]);
+        $response->send();
     }
 }

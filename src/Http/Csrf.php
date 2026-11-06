@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simflex\Core\Http;
 
 use DomainException;
+use Simflex\Core\Http\Api\ApiException;
 use Simflex\Core\System\Session;
 
 /**
@@ -50,6 +51,32 @@ final class Csrf
     {
         if (!self::isValid($request)) {
             throw new DomainException('Запрос отклонён: обновите страницу и повторите действие');
+        }
+    }
+
+    /**
+     * Изменяющий запрос не подделан: метод не GET, HEAD, OPTIONS и тело JSON (с чужого сайта браузер не отправит
+     * его без CORS preflight) или верный токен (обычная форма с сессией)
+     */
+    public static function isTrustedMutation(Request $request): bool
+    {
+        if (in_array(strtoupper($request->getRequestMethod()), ['GET', 'HEAD', 'OPTIONS'], true)) {
+            return false;
+        }
+
+        return $request->isJson() || self::isValid($request);
+    }
+
+    /**
+     * Проверка изменяющего запроса для JSON API (см. isTrustedMutation()); ApiController вызывает её сам,
+     * обычный компонент - до изменения данных
+     *
+     * @throws ApiException 403, если запрос не прошёл проверку
+     */
+    public static function checkMutation(Request $request): void
+    {
+        if (!self::isTrustedMutation($request)) {
+            throw ApiException::forbidden('Запрос отклонён: обновите страницу и повторите действие');
         }
     }
 }

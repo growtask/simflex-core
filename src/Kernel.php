@@ -241,7 +241,7 @@ class Kernel
         $location = Container::getLocation();
         if ($location === Location::Admin) {
             Container::set('page', new AdminPage());
-        } elseif ($location === Location::Site || $location === Location::Api) {
+        } elseif ($location === Location::Site) {
             Container::set('page', new Page());
         }
 
@@ -337,7 +337,6 @@ class Kernel
 
         $groups = match (Container::getLocation()) {
             Location::Admin, Location::Site => ['web'],
-            Location::Api => ['api'],
             Location::Cli => ['cli'],
         };
         if ($this->cfg->devMode) {

@@ -200,13 +200,13 @@
         }
     });
 
-    // поиск на сервере: ответ [{id, name}] заменяет варианты списка
+    // поиск на сервере: items ответа ([{id, name}]) заменяют варианты списка
     const searchRemote = async (root, query) => {
         const response = await fetch(`${root.dataset.sfDropdownUrl}&text=${encodeURIComponent(query)}`, {
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             credentials: 'same-origin',
         });
-        const items = response.ok ? await response.json() : [];
+        const items = response.ok ? ((await response.json()).items ?? []) : [];
         const list = root.querySelector('.dropdown__list');
         const template = root.querySelector('template[data-sf-dropdown-option]');
         const value = root.querySelector('input[type="hidden"]').value;

@@ -147,11 +147,13 @@ class Request implements \Simflex\Core\System\DI\Service
     }
 
     /**
-     * Проверяет, что тело запроса - JSON
+     * Проверяет, что тело запроса - JSON (Content-Type application/json, в том числе с charset)
      */
     public function isJson(): bool
     {
-        return $this->header('Content-Type') === 'application/json';
+        $type = (string)($this->header('Content-Type') ?? $this->server('CONTENT_TYPE', ''));
+
+        return stripos($type, 'application/json') !== false;
     }
 
     /**

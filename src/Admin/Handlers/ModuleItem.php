@@ -124,7 +124,18 @@ class ModuleItem extends Table
         $this->actionHandlers['module_param'] = ['method' => 'moduleParam'];
     }
 
-    protected function moduleParam(): string
+    /**
+     * Ajax: HTML параметров выбранного модуля, ответ - конверт JSON API: left и right (HTML колонок формы)
+     */
+    protected function moduleParam(): never
+    {
+        $this->sendJson(fn() => $this->getModuleParamPositions());
+    }
+
+    /**
+     * @return array{left: string, right: string}
+     */
+    protected function getModuleParamPositions(): array
     {
         $moduleClass = (string)$this->request->get('module');
         $itemId = (int)$this->request->get('item_id');
@@ -181,7 +192,7 @@ class ModuleItem extends Table
             }
         }
 
-        return json_encode($positions);
+        return $positions;
     }
 
     protected function getPostedParams(): array

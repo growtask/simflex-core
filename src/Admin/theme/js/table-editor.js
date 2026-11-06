@@ -185,7 +185,7 @@ register('table-editor', (root) => {
         if (dropdown && control.dataset.sfTableSearch) {
             // вариант ищется на сервере: выбранный — по id связанной записи (__rm_id), подпись — значение ячейки
             const relatedId = row?.__rm_id ?? '';
-            const items = relatedId !== '' ? await request(`${control.dataset.sfTableSearch}&id=${relatedId}`) : [];
+            const items = relatedId !== '' ? (await request(`${control.dataset.sfTableSearch}&id=${relatedId}`)).items ?? [] : [];
             setDropdown(dropdown, items[0]?.id ?? '', items[0]?.name ?? (row ? value : null));
         } else if (dropdown) {
             setDropdown(dropdown, value);
@@ -224,10 +224,11 @@ register('table-editor', (root) => {
                 formData.append('id', editing);
                 params.id = editing;
             }
-            const response = await request(actionUrl(editing === null ? 'vtAdd' : 'vtEdit', params),
-                {method: 'POST', data: formData});
-            if (response?.success === false) {
-                toast('Не удалось сохранить строку', {type: 'error'});
+            try {
+                await request(actionUrl(editing === null ? 'vtAdd' : 'vtEdit', params),
+                    {method: 'POST', data: formData});
+            } catch (error) {
+                toast(error.message || 'Не удалось сохранить строку', {type: 'error'});
                 return;
             }
             window.SimflexModal.close(modal.id);
@@ -255,9 +256,10 @@ register('table-editor', (root) => {
             return;
         }
         if (isVirtual) {
-            const response = await request(actionUrl('vtDelete', {id: key}));
-            if (response?.success === false) {
-                toast('Не удалось удалить строку', {type: 'error'});
+            try {
+                await request(actionUrl('vtDelete', {id: key}));
+            } catch (error) {
+                toast(error.message || 'Не удалось удалить строку', {type: 'error'});
             }
             await load(page);
             return;

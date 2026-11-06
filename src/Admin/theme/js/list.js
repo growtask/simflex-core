@@ -283,8 +283,8 @@ register('list', (list) => {
             } else if (event.target.matches('[data-sf-npp]')) {
                 await request(`${event.target.dataset.sfNpp}&val=${encodeURIComponent(event.target.value)}`);
             }
-        } catch {
-            toast('Не удалось сохранить изменение', {type: 'error'});
+        } catch (error) {
+            toast(error.message || 'Не удалось сохранить изменение', {type: 'error'});
         }
     });
 

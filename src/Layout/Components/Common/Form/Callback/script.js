@@ -1,6 +1,7 @@
 /**
  * Форма «Связаться с нами»: клиентская проверка, отправка (fetch, JSON), результат на месте формы.
- * Ответ сервера: {success: bool, errors: {поле: текст}, message: текст}.
+ * Ответ сервера - конверт JSON API: успех - HTTP 200 и error.code 0, ошибки полей - 422 и error.errors
+ * ({поле: текст}), прочая ошибка - error.message.
  */
 (() => {
     const MESSAGES = {
@@ -170,16 +171,22 @@
             try {
                 const response = await fetch(this.form.getAttribute('action'), {
                     method: 'POST',
-                    body: new FormData(this.form),
-                    headers: {'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json'},
+                    body: JSON.stringify(Object.fromEntries(new FormData(this.form))),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    },
                     credentials: 'same-origin',
                 });
+                // ответ - конверт JSON API: {error: {code, message, errors}}
                 const data = await response.json();
                 this.setSending(false);
-                if (data && data.success) {
+                const errors = data?.error?.errors ?? {};
+                if (response.ok && !data?.error?.code) {
                     this.showResult('success');
-                } else if (data && data.errors && Object.keys(data.errors).length) {
-                    this.showErrors(data.errors);
+                } else if (Object.keys(errors).length) {
+                    this.showErrors(errors);
                 } else {
                     this.showResult('error');
                 }
