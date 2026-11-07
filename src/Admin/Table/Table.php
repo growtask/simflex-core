@@ -628,9 +628,12 @@ abstract class Table extends Handler
     protected function getListOrder(): string
     {
         $column = $this->getSortColumn();
-        $order = [$column . ($this->isSortDesc() ? ' DESC' : '')];
+        // колонка таблицы — с именем таблицы (запрос с JOIN: одноимённые колонки), вычисляемое поле — псевдоним
+        $field = $this->fields[$column] ?? null;
+        $qualified = $field instanceof FieldVirtual ? $column : $this->table . '.' . $column;
+        $order = [$qualified . ($this->isSortDesc() ? ' DESC' : '')];
         if ($this->pk->name !== $column) {
-            $order[] = $this->pk->name;
+            $order[] = $this->table . '.' . $this->pk->name;
         }
 
         return implode(', ', $order);
