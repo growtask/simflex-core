@@ -124,7 +124,7 @@ abstract class Response implements \Simflex\Core\System\DI\Service
         echo $this->makeBody();
     }
 
-    protected function outputHeaders(): void
+    public function outputHeaders(): void
     {
         http_response_code($this->statusCode);
 

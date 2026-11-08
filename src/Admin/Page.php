@@ -243,11 +243,11 @@ class Page
     {
         $row = AdminWidget::findAdv()->asArray()->where(['active' => 1, 'widget_id' => $widgetId])->fetchOne();
         if (!is_array($row) || !is_subclass_of((string)$row['class'], WidgetBase::class)) {
-            http_response_code(404);
+            Container::getResponse()->setStatusCode(404);
             return '';
         }
         if ($row['privilege'] && !Container::getUser()?->ican($row['privilege'])) {
-            http_response_code(403);
+            Container::getResponse()->setStatusCode(403);
             return '';
         }
 
@@ -331,8 +331,12 @@ class Page
     {
         $page = $this;
         $user = Container::getUser();
-        if ($user && !$user->ican(Privilege::ADMIN)) {
-            http_response_code(403);
+        $isDenied = $user && !$user->ican(Privilege::ADMIN);
+        if ($isDenied) {
+            Container::getResponse()->setStatusCode(403);
+        }
+        Container::getResponse()->outputHeaders();
+        if ($isDenied) {
             include __DIR__ . '/theme/tpl/denied.tpl';
         } elseif ($user) {
             if ($this->ajax) {
