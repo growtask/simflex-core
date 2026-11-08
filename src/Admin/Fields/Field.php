@@ -313,7 +313,8 @@ class Field
     public function show($row): string
     {
         $value = $this->value ?: $row[$this->name . ($this->fk ? '_label' : '')];
-        $value = strip_tags((string)$value, ['br', 'strong', 'b', 'em', 'i', 'span']);
+        // значение поля — текст записи: экранируется целиком. Разметка в ячейке — только из showCell() раздела
+        $value = htmlspecialchars((string)$value);
 
         if ($this->name === 'name') {
             return $this->render('link', [
@@ -333,8 +334,7 @@ class Field
      */
     public function showDetail($row): ?string
     {
-        $value = strip_tags((string)$row[$this->name . ($this->fk ? '_label' : '')], ['br', 'strong', 'b', 'em', 'i']);
-        return $value;
+        return htmlspecialchars((string)$row[$this->name . ($this->fk ? '_label' : '')]);
     }
 
     public function delete($value): bool

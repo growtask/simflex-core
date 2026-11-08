@@ -31,6 +31,17 @@
         @include spacing(gap, 12px, 12px, 8px, 8px);
     }
 
+    // слоты расширений; на планшете и телефоне они в topbar
+    &__slots {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 12px, 12px, 8px, 8px);
+
+        @include Tablet {
+            display: none;
+        }
+    }
+
     // телефон: вместо крошек «Назад»
     @include Mobile {
         &__breadcrumbs {

@@ -8,6 +8,7 @@
  * @var string $action HTML главной кнопки
  * @var list<array{name: string, link?: string}> $crumbs Путь страницы (для «Назад»)
  * @var string $crumbsHtml HTML хлебных крошек
+ * @var string $slotsHtml HTML слотов расширений (HeadSlot), пустой — обёртка не выводится
  */
 
 use Simflex\Core\Admin\Page;
@@ -37,6 +38,9 @@ $backLink = $parent['link'] ?? Page::url('');
     <div class="page-head__row">
         <h1 class="page-head__title"><?= htmlspecialchars($title) ?></h1>
         <div class="page-head__actions">
+            <?php if ($slotsHtml !== '') : ?>
+                <div class="page-head__slots"><?= $slotsHtml ?></div>
+            <?php endif ?>
             <?= Button::drawButton(
                 className: 'page-head__site',
                 text: 'На сайт',

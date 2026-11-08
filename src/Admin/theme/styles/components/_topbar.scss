@@ -37,6 +37,20 @@
         }
     }
 
+    // слоты расширений (HeadSlot): между логотипом и аватаром
+    &__slots {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
+        gap: vwt(8px);
+
+        @include Mobile {
+            gap: vwm(8px);
+        }
+    }
+
     &__account {
         display: flex;
         border-radius: 50%;

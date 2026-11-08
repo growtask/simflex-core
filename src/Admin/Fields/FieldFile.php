@@ -25,9 +25,11 @@ class FieldFile extends Field
     {
         if ($row[$this->name]) {
             return $this->render('link', [
-                'href' => '/uf/files/' . $this->params['path'] . '/' . $row[$this->name],
+                'href' => htmlspecialchars(
+                    '/uf/files/' . $this->params['path'] . '/' . rawurlencode((string)$row[$this->name])
+                ),
                 'class' => '',
-                'label' => $row[$this->name],
+                'label' => htmlspecialchars((string)$row[$this->name]),
                 'blank' => false,
             ]);
             return '';
@@ -76,7 +78,12 @@ class FieldFile extends Field
     public function check(): array
     {
         $errors = [];
-        if ($this->required && empty($this->getRequest()->request($this->name . '_old')) && !is_uploaded_file((string)($this->getRequest()->file($this->name)['tmp_name'] ?? ''))) {
+        $uploadedPath = (string)($this->getRequest()->file($this->name)['tmp_name'] ?? '');
+        if (
+            $this->required
+            && empty($this->getRequest()->request($this->name . '_old'))
+            && !is_uploaded_file($uploadedPath)
+        ) {
             $errors[] = 'Обязательно для заполнения';
         }
         return $errors;

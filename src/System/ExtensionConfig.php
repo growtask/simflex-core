@@ -2,6 +2,7 @@
 
 namespace Simflex\Core\System;
 
+use Simflex\Core\Admin\HeadSlot;
 use Simflex\Core\Admin\Handler;
 use Simflex\Core\Admin\MenuItem;
 use Simflex\Core\Cron\CronJob;
@@ -33,6 +34,9 @@ abstract class ExtensionConfig
 
     /** @var list<class-string<Handler>> разделы админки, как в Admin/handlers.php сайта */
     protected array $adminHandlers = [];
+
+    /** @var list<class-string<HeadSlot>> слоты верхней части админки (page-head и topbar) */
+    protected array $adminHeadSlots = [];
 
     /** @var list<self>|null загруженные расширения сайта */
     private static ?array $all = null;
@@ -79,6 +83,14 @@ abstract class ExtensionConfig
     public function getAdminHandlers(): array
     {
         return $this->adminHandlers;
+    }
+
+    /**
+     * @return list<class-string<HeadSlot>>
+     */
+    public function getAdminHeadSlots(): array
+    {
+        return $this->adminHeadSlots;
     }
 
     /**

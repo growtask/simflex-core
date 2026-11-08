@@ -88,7 +88,7 @@ class FieldMultiKey extends Field
     {
         $this->listLabels ??= $this->getListLabels();
 
-        return $this->cell($this->listLabels[(int)$row[$this->tablePk]] ?? '');
+        return $this->cell(htmlspecialchars((string)($this->listLabels[(int)$row[$this->tablePk]] ?? '')));
     }
 
     public function getFilterLabel(string $value): string

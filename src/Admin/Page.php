@@ -12,6 +12,7 @@ use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as LogoLayout;
 use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
 use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
 use Simflex\Core\System\Container;
+use Simflex\Core\System\ExtensionConfig;
 use Simflex\Core\Http\Html\HtmlRequest;
 use Simflex\Core\Http\Html\HtmlResponse;
 use Simflex\Core\System\Privilege;
@@ -50,6 +51,8 @@ class Page
     protected string $content = '';
     /** @var bool Раздел вывел свой page-head (drawPageHead()): макет не выводит заголовок по умолчанию */
     protected bool $pageHeadDrawn = false;
+    /** @var string|null HTML слотов шапки расширений, собранный за запрос (page-head и topbar) */
+    protected ?string $headSlotsHtml = null;
     /** @var array<string, list<string>> позиция => HTML модулей */
     protected array $positions = [];
     /** @var array<string, string> */
@@ -435,7 +438,29 @@ class Page
             'action' => $action,
             'crumbs' => $crumbs ?? $this->getCrumbs(),
             'crumbsHtml' => $crumbsHtml,
+            'slotsHtml' => $this->drawHeadSlots(),
         ]);
+    }
+
+    /**
+     * HTML слотов верхней части админки всех расширений (ExtensionConfig::$adminHeadSlots) в порядке загрузки;
+     * собирается один раз за запрос: слоты выводятся и в page-head, и в topbar. Исключение слота не перехватывается
+     */
+    public function drawHeadSlots(): string
+    {
+        if ($this->headSlotsHtml === null) {
+            $html = '';
+            foreach (ExtensionConfig::getAll() as $config) {
+                foreach ($config->getAdminHeadSlots() as $class) {
+                    /** @var HeadSlot $slot */
+                    $slot = new $class();
+                    $html .= $slot->draw();
+                }
+            }
+            $this->headSlotsHtml = $html;
+        }
+
+        return $this->headSlotsHtml;
     }
 
     public function isPageHeadDrawn(): bool

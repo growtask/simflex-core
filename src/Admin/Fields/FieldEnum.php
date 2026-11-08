@@ -95,7 +95,7 @@ class FieldEnum extends FieldString
     {
         $value = $row[$this->name];
         $values = $this->fetchValues();
-        return @$values[$value];
+        return htmlspecialchars((string)@$values[$value]);
     }
 
     public function show($row): string

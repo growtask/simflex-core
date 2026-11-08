@@ -35,6 +35,9 @@ $userName = (string)($user?->name ?: $user?->login);
         ],
     ) ?>
     <?= $page->drawLogo('topbar__logo', Page::url(''), isHomeLink: true) ?>
+    <?php if (($slotsHtml = $page->drawHeadSlots()) !== '') : ?>
+        <div class="topbar__slots"><?= $slotsHtml ?></div>
+    <?php endif ?>
     <a class="topbar__account" href="<?= Page::url('account') ?>" aria-label="Профиль: <?= htmlspecialchars($userName) ?>">
         <?= Placeholder::drawAvatar($userName, size: AvatarSize::Small, theme: PlaceholderTheme::from($theme)) ?>
     </a>
