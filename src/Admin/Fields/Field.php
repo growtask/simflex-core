@@ -30,6 +30,7 @@ class Field
     public bool $required = false;
     public string $editor = '';
     public bool $filter = false;
+    public bool $isSortable = true;
 
     /* ВВОД */
     public array $styleCol = [];
@@ -70,6 +71,7 @@ class Field
 
         $params = isset($row['params']['main']) ? $row['params']['main'] : [];
         $this->params = $params;
+        $this->isSortable = (bool)($params['is_sortable'] ?? true);
 
         $this->setWidth(@$params['width']);
 

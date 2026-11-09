@@ -646,7 +646,7 @@ abstract class Table extends Handler
     protected function changeSorting(): void
     {
         $column = (string)($this->request->request('o', ''));
-        if (!isset($this->fields[$column])) {
+        if (!isset($this->fields[$column]) || !$this->fields[$column]->isSortable) {
             return;
         }
 
@@ -668,13 +668,18 @@ abstract class Table extends Handler
     public function getSortColumn(): string
     {
         $column = (string)($this->getState()['order_by'] ?? '');
-        return isset($this->fields[$column]) ? $column : (static::$defaultOrderBy ?? $this->pk->name);
+        if (($this->fields[$column] ?? null)?->isSortable) {
+            return $column;
+        }
+        $defaultColumn = static::$defaultOrderBy ?? $this->pk->name;
+        return isset($this->fields[$defaultColumn]) && !$this->fields[$defaultColumn]->isSortable
+            ? $this->pk->name : $defaultColumn;
     }
 
     public function isSortDesc(): bool
     {
         $state = $this->getState();
-        return isset($this->fields[(string)($state['order_by'] ?? '')])
+        return ($this->fields[(string)($state['order_by'] ?? '')] ?? null)?->isSortable
             ? (bool)($state['order_desc'] ?? false)
             : static::$defaultOrderDesc;
     }

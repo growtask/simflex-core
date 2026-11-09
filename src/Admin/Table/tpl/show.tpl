@@ -236,7 +236,8 @@ echo Page::get()->drawPageHead(
                         : ($this->isSortDesc() ? SortDirection::Descending : SortDirection::Ascending);
                     ?>
                     <th class="<?= $columnClasses($field, 'th') ?>" scope="col"
-                        aria-sort="<?= $direction->value ?>"<?= $columnStyle($field) ?>>
+                        <?php if ($field->isSortable): ?>aria-sort="<?= $direction->value ?>"<?php endif; ?>
+                        <?= $columnStyle($field) ?>>
                         <div class="th__head">
                             <?php $label = htmlspecialchars(strip_tags($field->label)); ?>
                             <?php if ($field->help !== ''): ?>
@@ -257,6 +258,7 @@ echo Page::get()->drawPageHead(
                             // колонке (вверх — по возрастанию, вниз — по убыванию); клик — следующее направление
                             $isAscending = $direction === SortDirection::Ascending;
                             ?>
+                            <?php if ($field->isSortable): ?>
                             <?= SortButton::drawSortButton(
                                 up: $isAscending,
                                 label: strip_tags($field->label) . ': сортировать по '
@@ -267,10 +269,12 @@ echo Page::get()->drawPageHead(
                                 theme: SortButtonTheme::from($theme),
                                 className: 'th__sort',
                             ) ?>
+                            <?php endif; ?>
                             <?php if ($field->filter): ?>
                                 <?= $this->thFilter($field) ?>
                             <?php endif; ?>
-                            <?php if ($field->name === $sortedColumn || isset($filterValues[$field->name])): ?>
+                            <?php if (($field->isSortable && $field->name === $sortedColumn)
+                                || isset($filterValues[$field->name])): ?>
                                 <?= ButtonIcon::drawButtonIcon(
                                     icon: 'close',
                                     label: 'Сбросить сортировку и фильтр колонки «' . strip_tags($field->label) . '»',
