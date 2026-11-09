@@ -15,7 +15,7 @@ readonly class FieldDefinition
      *        (одна такая колонка в таблице). 0 — не в списке, только в форме
      * @param bool $e2n Пустое значение сохраняется как NULL
      * @param bool $filter Фильтр по полю над списком
-     * @param bool $isSortable Разрешена сортировка списка по колонке
+     * @param ?bool $isSortable Сортировка колонки; null — по умолчанию типа поля (виртуальные — без сортировки)
      * @param bool $isFk, $fkTable, $fkKey, $fkLabel, $fkIsPid Внешний ключ: таблица, её ключ, колонка, показываемая
      *        вместо ключа, родитель в той же таблице. Проще через пресеты ForeignKeyField, ParentField
      * @param string $tab Вкладка формы: поля без вкладки — на первой («Основное»); вкладки видны, если их больше одной
@@ -58,7 +58,7 @@ readonly class FieldDefinition
         public bool $editorMini = false,
         public bool $editorFull = false,
         public array $params = [],
-        public bool $isSortable = true,
+        public ?bool $isSortable = null,
     ) {
     }
 

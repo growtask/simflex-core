@@ -31,6 +31,7 @@ class FieldVirtualTable extends Field
     {
         parent::__construct($row);
         $this->isVirtual = true;
+        $this->isSortable = (bool)($this->params['is_sortable'] ?? false);
     }
 
     public function input($value): string

@@ -8,6 +8,7 @@ class FieldVirtual extends Field
     {
         parent::__construct($row);
         $this->isVirtual = true;
+        $this->isSortable = (bool)($this->params['is_sortable'] ?? false);
     }
 
     /**
