@@ -86,7 +86,9 @@ class Page
         $this->contentOnly = true;
         $moduleId = (int)$request->request('sf_module_id', 0);
         if ($moduleId > 0) {
-            echo $this->getModuleById($moduleId);
+            $content = $this->getModuleById($moduleId);
+            Container::getResponse()->outputHeaders();
+            echo $content;
             exit;
         }
     }
@@ -114,6 +116,7 @@ class Page
      */
     public function execute(): void
     {
+        Container::getResponse()->outputHeaders();
         if ($this->contentOnly) {
             echo $this->getContent();
             return;

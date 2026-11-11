@@ -21,6 +21,8 @@ use Simflex\Core\System\Privilege;
  */
 class User extends ModelBase
 {
+    public const PRIVILEGE_CACHE_PREFIX = 'user-privilege-';
+
     protected static string $table = 'user';
     protected static string $primaryKeyName = 'user_id';
 
@@ -47,7 +49,7 @@ class User extends ModelBase
      */
     public function getPrivileges(): array
     {
-        return Buffer::getOrSet('user-privilege-' . $this->id, function () {
+        return Buffer::getOrSet(self::PRIVILEGE_CACHE_PREFIX . $this->id, function () {
             $names = UserRolePrivilege::findAdv()
                 ->select('privilege')
                 ->where(['role_id' => $this->role_id ? (int)$this->role_id : null])

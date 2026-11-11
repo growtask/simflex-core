@@ -8,7 +8,8 @@ use Attribute;
 class Help
 {
     public function __construct(
-        public string $help = 'No help provided'
+        public string $help = 'No help provided',
+        public ?string $name = null
     ) {
     }
 }

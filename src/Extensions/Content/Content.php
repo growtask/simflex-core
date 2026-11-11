@@ -238,7 +238,7 @@ class Content extends ComponentBase
             $html = $this->render(static::findTemplateFile(ContentTemplates::file($content->template)), get_defined_vars());
         } else {
             if ($link === '/404') {
-                http_response_code(404);
+                Container::getResponse()->setStatusCode(404);
             } else {
                 Profiler::traceEnd($this, __FUNCTION__);
                 header('Location: /404');

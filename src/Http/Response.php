@@ -81,6 +81,12 @@ abstract class Response implements \Simflex\Core\System\DI\Service
         return $this;
     }
 
+    /** Код ответа, который будет отправлен вместе с заголовками. */
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
     /**
      * Устанавливает тип содержимого
      * @param string $contentType Тип содержимого

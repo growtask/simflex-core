@@ -190,7 +190,7 @@ class Cli
             $argList = [];
             $lastIdx = 0;
             foreach ($this->method->getParameters() as $param) {
-                $lowerName = strtolower($param->getName());
+                $lowerName = strtolower($this->getParameterName($param));
 
                 try {
                     $default = $param->getDefaultValue();
@@ -323,6 +323,12 @@ class Cli
         }
     }
 
+    /** Имя опции CLI может отличаться от имени параметра PHP. */
+    protected function getParameterName(ReflectionParameter $param): string
+    {
+        return $this->getAttribute($param, Help::class)?->name ?? $param->getName();
+    }
+
     /**
      * Форматирует имя параметра
      * @param ReflectionParameter $param Параметр
@@ -345,7 +351,7 @@ class Cli
             $out .= $idx . '/';
         }
 
-        $out .= $param->getName();
+        $out .= '--' . $this->getParameterName($param);
         if (isset($default)) {
             $out .= '=' . $default . ']';
         }
