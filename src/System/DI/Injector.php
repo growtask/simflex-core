@@ -51,10 +51,15 @@ class Injector
     /**
      * Подбирает зависимости для функции
      *
+     * Аргументы возвращаются по именам параметров (для `...$args` при вызове). Параметр со значением
+     * по умолчанию, который нельзя подставить (без типа, встроенный тип, класс не сервис или сервиса
+     * нет в контейнере), пропускается — при вызове действует его значение по умолчанию.
+     *
      * @param ReflectionFunctionAbstract $fn Функция
      * @param mixed ...$params Дополнительные параметры
-     * @return array Найденные зависимости
-     * @throws DIException Если у параметра нет типа, тип встроенный или обнаружена циклическая зависимость
+     * @return array<string, mixed> Найденные зависимости по именам параметров
+     * @throws DIException Если параметр без значения по умолчанию нельзя подставить
+     *                     или обнаружена циклическая зависимость
      * @throws ReflectionException
      */
     public static function resolve(ReflectionFunctionAbstract $fn, ...$params): array
@@ -64,18 +69,19 @@ class Injector
         $added = [];
         $args = [];
 
-        // получаем параметры
         foreach ($fn->getParameters() as $parameter) {
-            // для параметров без типа не работает
-            if (!$parameter->hasType()) {
-                throw new DIException("Parameter {$parameter->getName()} in {$target} has no type");
-            }
-
+            $name = $parameter->getName();
+            $isOptional = $parameter->isDefaultValueAvailable();
             $type = $parameter->getType();
 
-            // встроенные типы не подбираем
-            if ($type->isBuiltin()) {
-                throw new DIException("Parameter {$parameter->getName()} in {$target} is a built-in type");
+            // для параметров без типа или со встроенным/составным типом подбирать нечего
+            if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+                if ($isOptional) {
+                    continue;
+                }
+                throw new DIException(!$type
+                    ? "Parameter {$name} in {$target} has no type"
+                    : "Parameter {$name} in {$target} is a built-in type");
             }
 
             $className = $type->getName();
@@ -88,7 +94,7 @@ class Injector
             // проверяем, есть ли нужный класс среди параметров
             foreach ($params as $p) {
                 if ($p instanceof $className) {
-                    $args[] = $p;
+                    $args[$name] = $p;
                     $added[] = $className;
                     continue 2;
                 }
@@ -97,17 +103,23 @@ class Injector
             // ищем класс в контейнере
             $classRef = new \ReflectionClass($className);
             if (!$classRef->implementsInterface(\Simflex\Core\System\DI\Service::class)) {
+                if ($isOptional) {
+                    continue;
+                }
                 throw new DIException("Class {$className} does not implement Service interface");
             }
 
             /** @noinspection PhpUndefinedMethodInspection */
             $serviceName = $className::getServiceName();
             if (!Container::get($serviceName)) {
+                if ($isOptional) {
+                    continue;
+                }
                 throw new DIException("Service {$serviceName} not found in container");
             }
 
             $added[] = $className;
-            $args[] = Container::get($serviceName);
+            $args[$name] = Container::get($serviceName);
         }
 
         return $args;

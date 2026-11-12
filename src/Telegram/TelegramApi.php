@@ -61,9 +61,10 @@ class TelegramApi implements Service
      * Отправляет сообщение в чат
      * @param string $chatId ID чата
      * @param string $message Сообщение (в формате Markdown)
+     * @param int|null $threadId ID темы форума (message_thread_id), null — без темы
      * @return bool true, если отправлено успешно
      */
-    public function send(string $chatId, string $message): bool
+    public function send(string $chatId, string $message, ?int $threadId = null): bool
     {
         $cfg = Container::getConfig();
 
@@ -75,7 +76,7 @@ class TelegramApi implements Service
             'chat_id' => $chatId,
             'parse_mode' => 'MarkdownV2',
             'text' => $message,
-        ]);
+        ] + ($threadId !== null ? ['message_thread_id' => $threadId] : []));
 
         $ret = json_decode($ch->getResponse() ?? '', true) ?? [];
         return $ret['ok'] ?? false;
