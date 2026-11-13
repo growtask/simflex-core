@@ -86,6 +86,22 @@ class StdLogger extends AbstractLogger
         if ($level === LogLevel::DEBUG && !Container::getConfig()->devMode) {
             return;
         }
-        file_put_contents('php://stdout', date('H:i:s') . ' [' . $this->colorLevel($level) . '] ' . $this->interpolate($message, $context) . "\n");
+        $stream = fopen('php://stdout', 'w');
+        if ($stream === false) {
+            return;
+        }
+        $levelText = $this->isColored($stream) ? $this->colorLevel($level) : (string)$level;
+        fwrite($stream, date('H:i:s') . ' [' . $levelText . '] ' . $this->interpolate($message, $context) . "\n");
+        fclose($stream);
+    }
+
+    /**
+     * Цвет уровня — только в терминале: в журнале контейнера и файлах коды ANSI остаются мусором (#033[31m)
+     *
+     * @param resource $stream
+     */
+    protected function isColored($stream): bool
+    {
+        return stream_isatty($stream);
     }
 }

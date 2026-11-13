@@ -13,7 +13,8 @@ use Simflex\Core\Logger\Log;
  *
  * Системный планировщик запускает ./sf cron/run раз в минуту; строку для crontab печатает cron/crontab,
  * добавляет в crontab текущего пользователя cron/install (запуск на хосте, где работает сайт). В Docker
- * cron/run раз в минуту запускает сервис cron из docker-compose.yml шаблона сайта
+ * системного cron нет: сервис cron из docker-compose.yml шаблона сайта выполняет cron/worker — он сам
+ * раз в минуту запускает cron/run
  */
 class ConsoleCron extends ConsoleBase
 {
@@ -28,6 +29,42 @@ class ConsoleCron extends ConsoleBase
         } catch (\Throwable $e) {
             Log::critical('Cron error: {error}', ['error' => $e->getMessage()]);
         }
+    }
+
+    #[Command('Run cron/run at the start of every minute until stopped (cron service in Docker)')]
+    public function worker(): void
+    {
+        $isStopped = false;
+        // в контейнере процесс — PID 1: без обработчика SIGTERM docker stop ждёт таймаут и убивает его.
+        // Образ php:apache останавливается SIGWINCH — сервису cron задаётся stop_signal: SIGTERM
+        if (function_exists('pcntl_async_signals')) {
+            pcntl_async_signals(true);
+            foreach ([SIGTERM, SIGINT] as $signal) {
+                pcntl_signal($signal, function () use (&$isStopped) {
+                    $isStopped = true;
+                });
+            }
+        }
+        $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(Container::getPaths()->getRoot('sf'))
+            . ' cron/run';
+        while (!$isStopped) {
+            // sleep() прерывается сигналом: остановка не ждёт конца минуты
+            sleep(static::getSecondsToNextMinute(time()));
+            if ($isStopped) {
+                break;
+            }
+            // отдельный процесс на каждую минуту: новый код сайта после выкладки, свежее подключение к БД,
+            // память не копится. Запуск, который длился дольше минуты, пропускает пройденные минуты
+            passthru($command);
+        }
+    }
+
+    /**
+     * Сколько секунд ждать до начала следующей минуты: 1–60
+     */
+    public static function getSecondsToNextMinute(int $timestamp): int
+    {
+        return 60 - $timestamp % 60;
     }
 
     #[Command('Print the crontab line of this site')]
