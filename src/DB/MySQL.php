@@ -35,6 +35,9 @@ class MySQL implements Adapter
         }
 
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Часовой пояс сессии — как у PHP (TIMEZONE сайта), а не системный пояс сервера MySQL:
+        // NOW(), CURRENT_TIMESTAMP и колонки TIMESTAMP совпадают со временем из date()
+        $this->db->exec("SET time_zone = '" . date('P') . "'");
         return true;
     }
 
