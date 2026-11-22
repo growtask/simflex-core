@@ -366,6 +366,19 @@ class Table extends ElementBase
             $firstCmd = false;
         }
 
+        // новые ограничения и индексы; существующие не загружаются из БД, поэтому в oldElements их нет
+        foreach ($this->elements as $element) {
+            if ($element instanceof Column || in_array($element, $this->oldElements, true)) {
+                continue;
+            }
+            if (!$firstCmd) {
+                $sql .= ', ';
+            }
+
+            $sql .= 'ADD ' . $element->toString();
+            $firstCmd = false;
+        }
+
         return $sql;
     }
 
