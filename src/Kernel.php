@@ -155,7 +155,12 @@ class Kernel
      */
     public function executeFileManager(): void
     {
-        $mgr = new \Simflex\FileManager\Manager(Container::getPaths()->getPublic('uf'), $this->canUseFileManager(...));
+        // изменяющие действия - только с CSRF-токеном сессии (meta csrf-token админки, заголовок X-CSRF-Token)
+        $mgr = new \Simflex\FileManager\Manager(
+            Container::getPaths()->getPublic('uf'),
+            $this->canUseFileManager(...),
+            fn(): bool => \Simflex\Core\Http\Csrf::isValid(Container::getRequest() ?? new \Simflex\Core\Http\Request()),
+        );
 
         $mgr->handleRequest();
     }
