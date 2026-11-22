@@ -6,6 +6,10 @@
 
 ## [4.0.0] — не выпущена
 
+- Админка показывает иконку сайта — те же файлы темы, что выводит сайт: `meta/favicon/favicon.ico`
+  и `meta/favicon/icon.svg` в `public/assets/<тема>/` (`Page::SITE_FAVICONS`); без них — иконка Simflex CMS.
+  Шаблоны админки выводят её через `Page::drawFavicon()`; в своих переопределённых шаблонах админки замените
+  `<link rel="shortcut icon" …favicon-admin.ico>` на `<?= $page->drawFavicon() ?>`.
 - `StdLogger` выделяет уровень цветом ANSI только в терминале (`stream_isatty`): в журнале контейнера
   (`docker logs`, syslog) и при перенаправлении вывода в файл строки без управляющих кодов.
 - Команда `./sf cron/worker` — планировщик для Docker: в начале каждой минуты запускает `./sf cron/run`

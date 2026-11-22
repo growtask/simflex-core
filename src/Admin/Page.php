@@ -34,6 +34,14 @@ class Page
     public const MENU_COLLAPSED_COOKIE = 'sf_admin_menu_collapsed';
     public const THEME_LIGHT = 'light';
     public const THEME_DARK = 'dark';
+    /**
+     * Иконка сайта в статике темы (public/assets/<тема>/) и атрибуты её тега: админка показывает ту же иконку,
+     * что и сайт; ICO — для браузеров без SVG-иконок
+     */
+    public const SITE_FAVICONS = [
+        'meta/favicon/favicon.ico' => 'sizes="any"',
+        'meta/favicon/icon.svg' => 'type="image/svg+xml"',
+    ];
 
     /** Ajax-запрос: в ответе только содержимое раздела, без макета админки */
     protected bool $ajax = false;
@@ -516,6 +524,25 @@ class Page
             type: LogoType::Static,
             theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
         );
+    }
+
+    /**
+     * Теги иконки вкладки для head шаблонов админки: иконка сайта (SITE_FAVICONS в статике темы сайта,
+     * те же файлы, что выводит тема), без неё — иконка Simflex CMS ядра
+     */
+    public function drawFavicon(): string
+    {
+        $theme = Container::getConfig()->theme;
+        $html = '';
+        foreach (static::SITE_FAVICONS as $path => $attributes) {
+            if (is_file(Container::getPaths()->getPublic('assets/' . $theme . '/' . $path))) {
+                $html .= '<link rel="icon" href="' . asset($path, siteOnly: true) . '" ' . $attributes . '>';
+            }
+        }
+
+        return $html !== ''
+            ? $html
+            : '<link rel="icon" href="' . asset('img/favicon-admin.ico') . '" type="image/x-icon">';
     }
 
     /**
