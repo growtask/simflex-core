@@ -3,6 +3,7 @@
 namespace Simflex\Core\System;
 
 use Simflex\Core\Admin\HeadSlot;
+use Simflex\Core\Admin\NoticeSource;
 use Simflex\Core\Admin\Handler;
 use Simflex\Core\Admin\MenuItem;
 use Simflex\Core\Cron\CronJob;
@@ -37,6 +38,9 @@ abstract class ExtensionConfig
 
     /** @var list<class-string<HeadSlot>> слоты верхней части админки (page-head и topbar) */
     protected array $adminHeadSlots = [];
+
+    /** @var list<class-string<NoticeSource>> источники уведомлений админки (под заголовком страницы) */
+    protected array $adminNoticeSources = [];
 
     /** @var list<self>|null загруженные расширения сайта */
     private static ?array $all = null;
@@ -91,6 +95,14 @@ abstract class ExtensionConfig
     public function getAdminHeadSlots(): array
     {
         return $this->adminHeadSlots;
+    }
+
+    /**
+     * @return list<class-string<NoticeSource>>
+     */
+    public function getAdminNoticeSources(): array
+    {
+        return $this->adminNoticeSources;
     }
 
     /**

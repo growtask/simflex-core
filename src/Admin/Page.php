@@ -11,8 +11,15 @@ use Simflex\Core\Layout\LayoutManager;
 use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as LogoLayout;
 use Simflex\Core\Layout\Components\UI\Core\Logo\LogoTheme;
 use Simflex\Core\Layout\Components\UI\Core\Logo\LogoType;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Core\Notice\Layout as NoticeLayout;
+use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeTheme;
 use Simflex\Core\System\Container;
 use Simflex\Core\System\ExtensionConfig;
+use Simflex\Core\Http\Csrf;
 use Simflex\Core\Http\Html\HtmlRequest;
 use Simflex\Core\Http\Html\HtmlResponse;
 use Simflex\Core\System\Privilege;
@@ -32,6 +39,8 @@ class Page
     public const THEME_COOKIE = 'sf_admin_theme';
     /** Свёрнутость меню на десктопе: «0» — меню раскрыто, иначе (и без cookie) свёрнуто */
     public const MENU_COLLAPSED_COOKIE = 'sf_admin_menu_collapsed';
+    /** Первый сегмент пути запроса скрытия уведомления (POST `<админка>/notice-dismiss`, поле `key`) */
+    public const NOTICE_DISMISS_PATH = 'notice-dismiss';
     public const THEME_LIGHT = 'light';
     public const THEME_DARK = 'dark';
     /**
@@ -61,6 +70,8 @@ class Page
     protected bool $pageHeadDrawn = false;
     /** @var string|null HTML слотов шапки расширений, собранный за запрос (page-head и topbar) */
     protected ?string $headSlotsHtml = null;
+    /** @var bool Уведомления админки (Notices) уже выведены под заголовком страницы */
+    protected bool $noticesDrawn = false;
     /** @var array<string, list<string>> позиция => HTML модулей */
     protected array $positions = [];
     /** @var array<string, string> */
@@ -181,8 +192,29 @@ class Page
             return;
         }
 
+        if ($this->getUri(0) === self::NOTICE_DISMISS_PATH) {
+            $this->dismissNotice();
+            return;
+        }
+
         $this->initMenu();
         $this->initContent();
+    }
+
+    /**
+     * Скрытие уведомления для текущей сессии (Notices::dismiss()): ответ без содержимого. Запрос - только POST
+     * с CSRF-токеном
+     */
+    protected function dismissNotice(): void
+    {
+        $this->ajax = true;
+        $request = Container::getRequest();
+        $response = Container::getResponse();
+        if (!Csrf::isValid($request)) {
+            $response->setStatusCode(403);
+            return;
+        }
+        $response->setStatusCode(Notices::dismiss((string)$request->post('key', '')) ? 204 : 404);
     }
 
     /**
@@ -451,7 +483,46 @@ class Page
             'crumbs' => $crumbs ?? $this->getCrumbs(),
             'crumbsHtml' => $crumbsHtml,
             'slotsHtml' => $this->drawHeadSlots(),
-        ]);
+        ]) . $this->drawNotices();
+    }
+
+    /**
+     * Уведомления админки всех расширений (ExtensionConfig::$adminNoticeSources), кроме скрытых пользователем:
+     * блок под заголовком страницы. Выводится один раз за запрос (вместе с первым заголовком страницы,
+     * drawPageHead()), в ajax-ответе и без уведомлений - пустая строка. Крестик скрывает уведомление до конца
+     * сессии (Notices::dismiss())
+     */
+    public function drawNotices(): string
+    {
+        if ($this->noticesDrawn || $this->ajax) {
+            return '';
+        }
+        $this->noticesDrawn = true;
+        $theme = $this->getTheme();
+        $html = '';
+        foreach (Notices::getVisible() as $notice) {
+            $buttons = $notice->linkUrl === '' ? '' : Button::drawButton(
+                text: $notice->linkText !== '' ? $notice->linkText : $notice->linkUrl,
+                link: $notice->linkUrl,
+                style: ButtonStyle::Monochrome,
+                size: ButtonSize::Small,
+                theme: ButtonTheme::from($theme),
+            );
+            $html .= NoticeLayout::drawNotice(
+                $notice->title,
+                $notice->text,
+                $notice->level->getStyle(),
+                NoticeTheme::from($theme),
+                close: true,
+                buttons: $buttons,
+                attributes: [
+                    'data-sf-notice-key' => $notice->key,
+                    'data-sf-notice-dismiss' => static::url(self::NOTICE_DISMISS_PATH),
+                ],
+            );
+        }
+
+        return $html === '' ? '' : '<div class="admin-notices">' . $html . '</div>';
     }
 
     /**

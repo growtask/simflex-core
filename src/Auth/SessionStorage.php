@@ -2,6 +2,7 @@
 
 namespace Simflex\Core\Auth;
 
+use Simflex\Core\Admin\Notices;
 use Simflex\Core\Http\Csrf;
 use Simflex\Core\System\Container;
 use Simflex\Core\System\Location;
@@ -24,5 +25,7 @@ class SessionStorage
     {
         Session::set(static::getKey(), $userId);
         Csrf::regenerate();
+        // вход и выход начинают сессию заново: скрытые уведомления админки снова видны
+        Session::set(Notices::SESSION_KEY, null);
     }
 }
