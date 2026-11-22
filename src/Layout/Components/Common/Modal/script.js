@@ -2,7 +2,8 @@
  * Модальные окна: открытие по data-modal="<id>", ловушка фокуса, Esc, закрытие по подложке и кнопке,
  * блокировка прокрутки страницы, inert для фона, возврат фокуса на кнопку, открывшую окно.
  * Окна открываются стопкой: окно поверх открытого (подтверждение поверх формы) закрывается и возвращает
- * предыдущее; Esc и подложка закрывают верхнее.
+ * предыдущее; Esc и подложка закрывают верхнее. Открытое последним всегда выше (z-index по глубине стопки);
+ * Esc, отменённый внутри окна (preventDefault: закрыт список, меню), окно не закрывает.
  * Публичный API: window.SimflexModal.open(id, opener?), close(id?), isOpen(id?).
  * События на корне окна: modal:open, modal:close.
  */
@@ -13,6 +14,8 @@
 
     const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const CLOSE_DELAY = 250;
+    // z-index окна без стопки (.modal в style.scss); каждое следующее окно стопки - на единицу выше
+    const BASE_Z_INDEX = 1000;
 
     let active = null;
     let opener = null;
@@ -62,6 +65,8 @@
 
         opener = trigger || document.activeElement;
         active = modal;
+        // открытое последним — выше остальных, где бы ни стояло в разметке (подтверждение поверх менеджера файлов)
+        modal.style.zIndex = String(BASE_Z_INDEX + stack.length);
         // окно поверх другого: нижнее окно сделало его недоступным вместе с остальной страницей
         modal.removeAttribute('inert');
         modal.hidden = false;
@@ -98,6 +103,7 @@
         const finish = () => {
             if (active !== modal) {
                 modal.hidden = true;
+                modal.style.removeProperty('z-index');
             }
         };
         if (prefersReducedMotion()) {
@@ -133,12 +139,17 @@
         }
     });
 
-    document.addEventListener('keydown', event => {
+    // на window: обработчики содержимого окна (на элементах и document) успевают первыми отменить Esc
+    window.addEventListener('keydown', event => {
         if (!active) {
             return;
         }
 
         if (event.key === 'Escape') {
+            // Esc уже обработан внутри окна (закрыт список, меню) - окно остаётся
+            if (event.defaultPrevented) {
+                return;
+            }
             event.preventDefault();
             close();
             return;
