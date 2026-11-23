@@ -35,7 +35,7 @@ $body = \Simflex\Core\Http\View::render(__DIR__ . '/body.tpl', ['page' => $page,
     <meta name="csrf-token" content="<?= htmlspecialchars($csrfToken) ?>"/>
 
     <link rel="stylesheet" href="<?= asset('fonts/inter.css') ?>"/>
-    <link rel="shortcut icon" href="<?= asset('img/favicon-admin.ico') ?>" type="image/x-icon">
+    <?= $page->drawFavicon() ?>
 
     <title>
         <?php
