@@ -86,6 +86,12 @@ abstract class ConfigBase
     public string $fileManagerPrivilege = Privilege::ADMIN;
 
     /**
+     * @var string[] Таблицы, в которых файловый менеджер не ищет ссылки на файл перед удалением и переименованием
+     *      (FileUsage): журналы и служебные. Сайт дополняет своими (журналы, кэши, очереди)
+     */
+    public array $fileUsageIgnoreTables = ['log', 'cron_log', 'migration', 'user_auth'];
+
+    /**
      * @var string Тема по умолчанию
      */
     public string $theme = 'default';

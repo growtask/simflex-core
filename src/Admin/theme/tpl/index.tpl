@@ -15,9 +15,11 @@ $page->coreJsModule('/theme/js/table-editor.js');
 
 // CSRF-токен — до любого вывода: при первом обращении он пишется в сессию (session_start() после заголовков нельзя)
 $csrfToken = \Simflex\Core\Http\Csrf::token();
-// файловый менеджер (пакет simflex/file-manager): окно в body, скрипт-модуль, стили — со стилями админки
-$fmAssets = \Simflex\Core\Http\Assets::publish(Container::getPaths()->getRoot('vendor/simflex/file-manager/src/assets'));
-$page->jsModule($fmAssets . '/js/file-manager.js');
+// файловый менеджер (пакет simflex/file-manager): окна и стили — в body (шаблон пакета), скрипт-модуль с версией
+// по времени изменения: обновлённый пакет не берётся из кэша браузера
+$fmSource = Container::getPaths()->getRoot('vendor/simflex/file-manager/src/assets');
+$fmAssets = \Simflex\Core\Http\Assets::publish($fmSource);
+$page->jsModule($fmAssets . '/js/file-manager.js?v=' . (int)@filemtime($fmSource . '/js/file-manager.js'));
 // body рисуется раньше head: стили компонентов Layout, выведенных в body, собираются в $page->getMeta()
 $body = \Simflex\Core\Http\View::render(__DIR__ . '/body.tpl', ['page' => $page, 'fmAssets' => $fmAssets]);
 

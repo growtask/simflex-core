@@ -161,6 +161,11 @@ class Kernel
             $this->canUseFileManager(...),
             fn(): bool => \Simflex\Core\Http\Csrf::isValid(Container::getRequest() ?? new \Simflex\Core\Http\Request()),
         );
+        // где стоит ссылка на файл: предупреждение перед удалением и переименованием (пакет с usage)
+        if (method_exists($mgr, 'setUsageFinder')) {
+            $usage = new \Simflex\Core\System\FileUsage(Container::getConfig()->fileUsageIgnoreTables);
+            $mgr->setUsageFinder($usage->find(...), '/uf');
+        }
 
         $mgr->handleRequest();
     }
