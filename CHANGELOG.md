@@ -6,6 +6,28 @@
 
 ## [4.0.0] — не выпущена
 
+- Визуальный редактор полей админки — блочный редактор texted (пакет `simflex/texted`, новая зависимость ядра)
+  вместо TinyMCE. Поля `FieldText` с `editorFull` / `editorMini` открываются редактором с набором блоков
+  `full` / `mini` (поле `readonly` — набор `readonly`, только просмотр); результат — HTML в обёртке
+  `<div class="ted-content">`. Изображения, видео, аудио и файлы выбираются в файловом менеджере админки
+  («Из библиотеки», `window.fileManager`), тема редактора следует за темой админки, черновик хранится в браузере
+  по таблице, записи и полю. «Сохранить» и Ctrl+S редактора сохраняют форму как «Применить».
+  Редактор колонки `editor` поля-таблицы и редактор в параметрах модуля — тоже texted.
+  Старые тексты TinyMCE открываются в редакторе блоками.
+  **Несовместимо:**
+  - HTML полей с редактором при сохранении очищается на сервере по набору поля (`FieldText::getPOST()`,
+    `Editor::clean()`, белый список texted): удаляются скрипты, обработчики событий, `style`, теги и атрибуты
+    вне белого списка, блоки вне набора `mini` становятся текстом. Текст, который сайт хранил с такой разметкой,
+    после первого сохранения в админке её потеряет.
+  - TinyMCE удалён из ядра (`src/Admin/Plugins/Editor/tinymce`, плагин `fm`, `window.tinymce`).
+    `Editor::tinymce()` удалён: поле подключает редактор само (`Editor::addScript()` в `FieldText::loadUI()`,
+    textarea с `data-sf="text-editor"`); `Editor::getConfig()` возвращает настройки сервера texted (`TedConfig`),
+    настройки поля для браузера — `Editor::getInitOptions()`. Свой код, который вызывал `tinymce.init()`
+    или `tinymce.get()`, переведите на `Ted.init({target})` / `Ted.get(textarea)` либо на `initTextEditor()`
+    и `destroyTextEditors()` модуля `Admin/Plugins/Editor/text-editor.js`.
+  - На сайте блоки texted оформляются стилями `vendor/simflex/texted/dist/ted.css`, поведение (вкладки,
+    содержание, аудиоплеер) — `content.js` пакета; их подключает тема сайта.
+
 - Уведомления админки: расширение объявляет источник в `ExtensionConfig::$adminNoticeSources` (класс
   `Simflex\Core\Admin\NoticeSource`, метод `getNotices()` возвращает `Simflex\Core\Admin\Notice` с ключом, уровнем
   `NoticeLevel` info/warning/error, заголовком, текстом и необязательной кнопкой-ссылкой). Уведомления выводятся

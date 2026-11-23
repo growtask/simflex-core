@@ -4,6 +4,10 @@ namespace Simflex\Core\Admin\Fields;
 
 use Simflex\Core\Admin\Plugins\Editor\Editor;
 
+/**
+ * Многострочный текст; с параметром editor_full или editor_mini — визуальный редактор (texted, набор блоков
+ * full или mini), HTML которого при сохранении очищает сервер
+ */
 class FieldText extends Field
 {
     public function isWide(): bool
@@ -25,23 +29,62 @@ class FieldText extends Field
 
     public function loadUI(bool $onForm = false): string
     {
-        $html = '';
-        if ($onForm) {
-            if ($this->readonly) {
-                $html .= Editor::tinymce('readonly', 'sf-editor-readonly');
-            }
-            if ('mini' === $this->editor) {
-                $html .= Editor::tinymce('mini', 'sf-editor-mini');
-            }
-            if ('full' === $this->editor) {
-                $html .= Editor::tinymce('full', 'sf-editor-full');
-            }
+        if ($onForm && $this->editor !== '') {
+            Editor::addScript();
         }
-        return $html;
+        return '';
     }
 
     public function input($value): string
     {
-        return $this->render('textarea', ['value' => $value, 'editor' => $this->editor] + $this->inputVars());
+        return $this->render('textarea', [
+            'value' => $value,
+            'editor' => $this->editor,
+            'editorOptions' => $this->editor !== '' ? $this->getEditorOptions() : [],
+        ] + $this->inputVars());
+    }
+
+    /**
+     * С визуальным редактором значение очищается по набору блоков поля: в базу не попадает HTML,
+     * который редактор не мог создать (скрипты, обработчики событий, чужие адреса)
+     */
+    public function getPOST(bool $simple = false, string|int|null $group = null): mixed
+    {
+        $value = parent::getPOST($simple, $group);
+        if ($this->editor !== '' && is_string($value) && $value !== '') {
+            return Editor::clean($value, $this->getEditorPreset());
+        }
+        return $value;
+    }
+
+    /**
+     * Набор блоков редактора: Editor::PRESET_FULL, PRESET_MINI или PRESET_READONLY (поле только для чтения)
+     */
+    public function getEditorPreset(): string
+    {
+        if ($this->readonly) {
+            return Editor::PRESET_READONLY;
+        }
+        return $this->editor === 'mini' ? Editor::PRESET_MINI : Editor::PRESET_FULL;
+    }
+
+    /**
+     * Настройки редактора поля: набор, право на правку, черновик по таблице, записи и полю
+     *
+     * @return array<string, mixed>
+     */
+    protected function getEditorOptions(): array
+    {
+        $recordId = $this->tablePk !== '' ? $this->getRecordId() : 0;
+        $autosaveKey = $recordId && $this->table !== ''
+            ? 'sf-' . $this->table . '-' . $recordId . '-' . $this->inputName()
+            : '';
+
+        $options = Editor::getInitOptions($this->getEditorPreset(), !$this->readonly, $autosaveKey);
+        if ($this->placeholder !== '') {
+            $options['placeholder'] = $this->placeholder;
+        }
+
+        return $options;
     }
 }

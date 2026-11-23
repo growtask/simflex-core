@@ -37,7 +37,8 @@
     "curl/curl": "^2.0",
     "scssphp/scssphp": "^1.11",
     "tubalmartin/cssmin": "^4.1",
-    "vlucas/phpdotenv": "^5.4"
+    "vlucas/phpdotenv": "^5.4",
+    "simflex/texted": "dev-master"
   },
   "require-dev": {},
   "suggest": {},

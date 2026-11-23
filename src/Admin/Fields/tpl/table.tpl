@@ -148,7 +148,10 @@ foreach ($columns as $column) {
 }
 if ($hasEditor) {
     Editor::addScript();
-    $attributes['data-sf-table-editor-config'] = json_encode(Editor::getConfig(), JSON_UNESCAPED_UNICODE);
+    $attributes['data-sf-table-editor-config'] = json_encode(
+        Editor::getInitOptions(Editor::PRESET_FULL),
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+    );
 }
 $attributes['data-sf-table-modal'] = $modalId;
 $rootAttributes = '';

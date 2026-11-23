@@ -9,6 +9,7 @@
  * Окно при открытии переносится в body, поэтому его элементы ищутся через окно, а не через корень таблицы.
  */
 import {confirm, register, request, toast} from './admin.js';
+import {destroyTextEditors, initTextEditor, syncTextEditors} from '../../Plugins/Editor/text-editor.js';
 
 const NO_EDIT = '__NO_EDIT__';
 
@@ -210,7 +211,7 @@ register('table-editor', (root) => {
     };
 
     const getValues = () => {
-        window.tinymce?.triggerSave();
+        syncTextEditors(modal);
         return Object.fromEntries(editableColumns.map((column) => [column.n, getControl(column).value]));
     };
 
@@ -317,16 +318,11 @@ register('table-editor', (root) => {
         }
     });
 
-    // редактор запускается в открытом окне (окно переносится в body, перенос iframe сбрасывает редактор)
+    // редактор запускается в открытом окне со значением строки и удаляется при закрытии
     modal.addEventListener('modal:open', () => {
-        modal.querySelectorAll('[data-sf-table-editor]').forEach((textarea, index) => {
-            textarea.id ||= `${modal.id}-editor-${index}`;
-            window.tinymce?.init({...editorConfig, target: textarea, height: 320});
-        });
+        modal.querySelectorAll('[data-sf-table-editor]').forEach((textarea) => initTextEditor(textarea, editorConfig ?? {}));
     });
-    modal.addEventListener('modal:close', () => {
-        modal.querySelectorAll('[data-sf-table-editor]').forEach((textarea) => window.tinymce?.get(textarea.id)?.remove());
-    });
+    modal.addEventListener('modal:close', () => destroyTextEditors(modal));
 
     render();
 });
