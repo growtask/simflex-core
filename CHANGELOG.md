@@ -37,12 +37,17 @@
     после первого сохранения в админке её потеряет.
   - TinyMCE удалён из ядра (`src/Admin/Plugins/Editor/tinymce`, плагин `fm`, `window.tinymce`).
     `Editor::tinymce()` удалён: поле подключает редактор само (`Editor::addScript()` в `FieldText::loadUI()`,
-    textarea с `data-sf="text-editor"`); `Editor::getConfig()` возвращает настройки сервера texted (`TedConfig`),
+    textarea с `data-sf="text-editor"`); `Editor::getConfig()` возвращает настройки сервера texted
+    (`Simflex\Texted\Config`),
     настройки поля для браузера — `Editor::getInitOptions()`. Свой код, который вызывал `tinymce.init()`
     или `tinymce.get()`, переведите на `Ted.init({target})` / `Ted.get(textarea)` либо на `initTextEditor()`
     и `destroyTextEditors()` модуля `Admin/Plugins/Editor/text-editor.js`.
   - На сайте блоки texted оформляются стилями `vendor/simflex/texted/dist/ted.css`, поведение (вкладки,
     содержание, аудиоплеер) — `content.js` пакета; их подключает тема сайта.
+- Выбор файла в редакторе texted (`text-editor.js` → `pickFile`): файловый менеджер показывает к выбору только
+  файлы вида блока (`accept` по расширениям: в «Изображение» не выбрать PDF), закрытие окна без выбора
+  (крестик, Esc) редактор получает через `onCancel`. С прежним пакетом `simflex/file-manager` (без `onCancel`
+  и `accept`) выбор работает как раньше.
 
 - Уведомления админки: расширение объявляет источник в `ExtensionConfig::$adminNoticeSources` (класс
   `Simflex\Core\Admin\NoticeSource`, метод `getNotices()` возвращает `Simflex\Core\Admin\Notice` с ключом, уровнем

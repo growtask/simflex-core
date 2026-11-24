@@ -15,11 +15,12 @@ const FILE_MANAGER_ID = 'sf-file-manager';
 
 /**
  * Выбор файлов в файловом менеджере для блоков медиа: [{url, alt, name}] по «Готово», null — окно закрыли
- * без выбора. Файлы не того вида (pdf в «Изображение») редактор отбрасывает сам
- * @param {{multiple?: boolean}} options
+ * без выбора. Менеджер показывает к выбору только файлы вида блока (extensions редактора → accept);
+ * файлы не того вида редактор и так отбрасывает сам
+ * @param {{multiple?: boolean, extensions?: string[]|null}} options
  * @returns {Promise<Array<{url: string, alt: string, name: string}>|null>}
  */
-export function pickFile({multiple = false} = {}) {
+export function pickFile({multiple = false, extensions = null} = {}) {
     return new Promise((resolve) => {
         if (!window.fileManager) {
             resolve(null);
@@ -32,16 +33,23 @@ export function pickFile({multiple = false} = {}) {
                 resolve(files);
             }
         };
-        // менеджер закрывает окно до вызова onSelect: отмену засчитываем, если выбор не пришёл следом
-        document.getElementById(FILE_MANAGER_ID)?.addEventListener(
-            'modal:close',
-            () => setTimeout(() => finish(null)),
-            {once: true},
-        );
-        window.fileManager.open({
+        // ответ — ровно один: onSelect по «Готово» или onCancel при закрытии без выбора
+        const opened = window.fileManager.open({
             multiple,
+            select: true,
+            accept: extensions?.length ? extensions : undefined,
             onSelect: (files) => finish(files.map((file) => ({url: file.url, alt: '', name: file.name}))),
+            onCancel: () => finish(null),
         });
+        if (!(opened instanceof Promise)) {
+            // прежний менеджер (без onCancel и Promise) закрывает окно до вызова onSelect:
+            // отмену засчитываем, если выбор не пришёл следом
+            document.getElementById(FILE_MANAGER_ID)?.addEventListener(
+                'modal:close',
+                () => setTimeout(() => finish(null)),
+                {once: true},
+            );
+        }
     });
 }
 

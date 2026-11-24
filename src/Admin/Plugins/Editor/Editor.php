@@ -5,7 +5,7 @@ namespace Simflex\Core\Admin\Plugins\Editor;
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Http\Assets;
 use Simflex\Core\System\Container;
-use TedConfig;
+use Simflex\Texted\Config;
 
 /**
  * Визуальный редактор полей админки — texted (пакет simflex/texted): textarea превращается в блочный редактор,
@@ -28,7 +28,7 @@ class Editor
     public const FILES_DIR = 'uf';
     public const FILES_URL = '/uf';
 
-    protected static ?TedConfig $config = null;
+    protected static ?Config $config = null;
 
     /**
      * Подключает стили и скрипт редактора к странице. Форма, в которую поле с редактором приходит ajax-ответом
@@ -54,9 +54,9 @@ class Editor
     /**
      * Настройки texted на сервере: папка файлов public/uf и адрес /uf, остальное — по умолчанию пакета
      */
-    public static function getConfig(): TedConfig
+    public static function getConfig(): Config
     {
-        return static::$config ??= TedConfig::fromArray([
+        return static::$config ??= Config::fromArray([
             'files' => [
                 'dir' => Container::getPaths()->getPublic(static::FILES_DIR),
                 'url' => static::FILES_URL,
@@ -74,7 +74,7 @@ class Editor
      */
     public static function getInitOptions(string $preset, bool $canEdit = true, string $autosaveKey = ''): array
     {
-        $options = ['server' => static::getConfig()->client($preset, $canEdit)];
+        $options = ['server' => static::getConfig()->getClient($preset, $canEdit)];
         if ($autosaveKey !== '') {
             $options['autosave'] = $autosaveKey;
         }
