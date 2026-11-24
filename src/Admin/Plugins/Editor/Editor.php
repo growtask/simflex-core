@@ -3,87 +3,93 @@
 namespace Simflex\Core\Admin\Plugins\Editor;
 
 use Simflex\Core\Admin\Page;
+use Simflex\Core\Http\Assets;
+use Simflex\Core\System\Container;
+use TedConfig;
 
 /**
- * Визуальный редактор TinyMCE в форме админки: скин и стили содержимого по теме админки (светлая — oxide и
- * default, тёмная — oxide-dark и dark), шрифт и цвета содержимого — значения токенов дизайн-системы
+ * Визуальный редактор полей админки — texted (пакет simflex/texted): textarea превращается в блочный редактор,
+ * HTML поля перед сохранением очищает сервер по набору блоков поля. Файлы и медиа выбираются в файловом
+ * менеджере админки (window.fileManager), тема интерфейса следует за темой админки.
+ *
+ * Скрипт админки — text-editor.js рядом с этим файлом: компонент data-sf="text-editor" запускает редактор
+ * на textarea с настройками из data-sf-text-editor (getInitOptions()).
  */
 class Editor
 {
-    public static array $inited = [];
+    /** Набор блоков «все блоки» (FieldDefinition::$editorFull) */
+    public const PRESET_FULL = 'full';
+    /** Набор блоков «текст, списки, ссылки» (FieldDefinition::$editorMini) */
+    public const PRESET_MINI = 'mini';
+    /** Только просмотр (поле readonly) */
+    public const PRESET_READONLY = 'readonly';
+
+    /** Папка файлов сайта в public/ и её адрес — та же, что у файлового менеджера */
+    public const FILES_DIR = 'uf';
+    public const FILES_URL = '/uf';
+
+    protected static ?TedConfig $config = null;
 
     /**
-     * Подключает скрипт TinyMCE к странице. Форма, в которую редактор приходит ajax-ответом (параметры модуля),
-     * подключает его заранее: скрипты, добавленные в ответе, страница не загружает
+     * Подключает стили и скрипт редактора к странице. Форма, в которую поле с редактором приходит ajax-ответом
+     * (параметры модуля), подключает его заранее: скрипты, добавленные в ответе, страница не загружает
      */
     public static function addScript(): void
     {
-        $tinyMcePath = Page::webVendorPath() . '/Plugins/Editor/tinymce/tinymce.min.js';
-        Page::get()->js($tinyMcePath . '" referrerpolicy="origin', 10);
+        $page = Page::get();
+        $packageUrl = Assets::publish(static::getPackagePath());
+        $page->css($packageUrl . '/dist/ted.css');
+        $page->js($packageUrl . '/dist/ted.js', 10);
+        $page->coreJsModule('/Plugins/Editor/text-editor.js');
     }
 
     /**
-     * Настройки TinyMCE без selector: скин и стили содержимого по теме админки. Их же берёт редактор, который
-     * запускается скриптом (строка поля-таблицы в окне, theme/js/table-editor.js)
+     * Каталог пакета simflex/texted (dist, fonts, tiles — статика редактора, php — сервер)
+     */
+    public static function getPackagePath(): string
+    {
+        return Container::getPaths()->getRoot('vendor/simflex/texted');
+    }
+
+    /**
+     * Настройки texted на сервере: папка файлов public/uf и адрес /uf, остальное — по умолчанию пакета
+     */
+    public static function getConfig(): TedConfig
+    {
+        return static::$config ??= TedConfig::fromArray([
+            'files' => [
+                'dir' => Container::getPaths()->getPublic(static::FILES_DIR),
+                'url' => static::FILES_URL,
+            ],
+        ]);
+    }
+
+    /**
+     * Настройки Ted.init для поля (JSON в data-sf-text-editor): настройки сервера для браузера (адрес папки
+     * файлов, лимиты, набор, право на правку) и ключ черновика
      *
+     * @param string $preset Набор блоков поля: self::PRESET_*
+     * @param string $autosaveKey Ключ черновика в браузере (своя запись — свой ключ), пусто — без черновика
      * @return array<string, mixed>
      */
-    public static function getConfig(): array
+    public static function getInitOptions(string $preset, bool $canEdit = true, string $autosaveKey = ''): array
     {
-        $isDark = Page::get()->getTheme() === Page::THEME_DARK;
-        // токены дизайн-системы: text-icon/gray/darker (white), main/gray/darker (black), color1/main
-        $contentStyle = $isDark
-            ? 'body { font: 400 16px/1.5 Inter, system-ui, sans-serif; color: #FFFFFF; background: #0D0D0D; }'
-            . ' a { color: #63A1F7; }'
-            : 'body { font: 400 16px/1.5 Inter, system-ui, sans-serif; color: #262626; background: #FFFFFF; }'
-            . ' a { color: #1975F7; }';
+        $options = ['server' => static::getConfig()->client($preset, $canEdit)];
+        if ($autosaveKey !== '') {
+            $options['autosave'] = $autosaveKey;
+        }
 
-        return [
-            'language' => 'ru',
-            'skin' => $isDark ? 'oxide-dark' : 'oxide',
-            'content_css' => $isDark ? 'dark' : 'default',
-            'content_style' => $contentStyle,
-            // адреса картинок и ссылок — от корня сайта (/uf/...), а не относительно страницы админки
-            'relative_urls' => false,
-            'remove_script_host' => true,
-            'branding' => false,
-            'promotion' => false,
-            'plugins' => 'fm lists table link emoticons code media',
-            'menu' => [
-                'file' => ['items' => ''],
-                'view' => ['items' => ''],
-                'insert' => ['title' => 'Insert', 'items' => 'hr fm media'],
-                'format' => ['items' => ''],
-            ],
-            'toolbar' => 'undo redo | blocks | bold italic strikethrough | numlist bullist table link emoticons fm | code',
-        ];
+        return $options;
     }
 
     /**
-     * Регистрирует скрипт TinyMCE и возвращает HTML инициализации редактора (один раз на тип редактора)
+     * HTML поля, очищенный по набору блоков: запрещённые теги, атрибуты и адреса убираются, блоки вне набора
+     * становятся текстом. Браузеру не доверяем — вызывается при сохранении
+     *
+     * @param string $preset Набор блоков поля: self::PRESET_*
      */
-    public static function tinymce(string $type, string $css_class = ''): string
+    public static function clean(string $html, string $preset): string
     {
-        static::addScript();
-
-        if (!empty(self::$inited[$type])) {
-            return '';
-        }
-        self::$inited[$type] = true;
-        $config = json_encode(
-            ['selector' => '.' . $css_class] + static::getConfig(),
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
-        );
-
-        return <<<HTML
-<script>
-tinymce.init($config);
-</script>
-<style>
-.tox-promotion {
-    display: none !important;
-}
-</style>
-HTML;
+        return static::getConfig()->clean($html, $preset);
     }
 }

@@ -368,19 +368,15 @@
     }
 }
 
-/* Визуальный редактор (TinyMCE) — карточка редактора form-section-editor */
+/* Визуальный редактор (texted, Plugins/Editor) — карточка редактора; textarea видна, пока скрипт не запустил редактор */
 .form-editor {
-    overflow: hidden;
+    /* слои редактора (липкая панель, окна) — внутри карточки: выпадающие поля формы раскрываются поверх него */
+    isolation: isolate;
     border: 1px solid var(--color-main-gray-light);
     border-radius: var(--radius-ui-large);
 
     .edit-form-theme_dark & {
         border-color: var(--color-main-gray-dark);
-    }
-
-    .tox-tinymce {
-        border: 0 !important;
-        border-radius: 0 !important;
     }
 
     &__textarea {

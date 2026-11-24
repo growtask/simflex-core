@@ -1,15 +1,17 @@
 /**
  * Модули сайта (Handlers\ModuleItem): при выборе модуля в форме его параметры загружаются с сервера
  * (?action=module_param) — группы left в основную колонку, right в правую панель (без панели — в основную).
- * Скрипты в ответе (инициализация редактора) выполняются, компоненты data-sf инициализирует admin.js
+ * Скрипты в ответе выполняются, компоненты data-sf (в том числе редактор text-editor) инициализирует admin.js
  */
+import {destroyTextEditors} from '../../Plugins/Editor/text-editor.js';
+
 const FORM = '.edit-form';
 const SELECT = 'input[name="module"]';
 
 /** Вставляет HTML и выполняет его скрипты (innerHTML их не запускает) */
 const setHtml = (container, html) => {
     // редакторы прежнего модуля
-    container.querySelectorAll('textarea[id]').forEach((textarea) => window.tinymce?.get(textarea.id)?.remove());
+    destroyTextEditors(container);
     container.innerHTML = html;
     container.querySelectorAll('script').forEach((old) => {
         const script = document.createElement('script');
