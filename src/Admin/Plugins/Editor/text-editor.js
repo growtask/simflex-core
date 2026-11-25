@@ -5,11 +5,12 @@
  * Компонент data-sf="text-editor": textarea поля превращается в редактор с настройками из data-sf-text-editor
  * (набор блоков, право на правку, адрес папки файлов — Editor::getInitOptions()). Редактор сам пишет HTML обратно
  * в textarea, форма отправляется как обычно; «Сохранить» и Ctrl+S редактора — как «Применить» формы.
- * Изображения, видео, аудио и файлы выбираются в файловом менеджере админки (window.fileManager).
+ * Изображения, видео, аудио и файлы загружаются с компьютера (Editor::respondToUpload()) или выбираются
+ * в файловом менеджере админки (window.fileManager) — ссылка «Из библиотеки» в зоне загрузки.
  * Поле-таблица (theme/js/table-editor.js) и параметры модуля (Table/js/moduleitem.js) запускают и удаляют
  * редакторы через initTextEditor(), syncTextEditors() и destroyTextEditors().
  */
-import {register} from '../../theme/js/admin.js';
+import {getCsrfToken, register} from '../../theme/js/admin.js';
 
 const FILE_MANAGER_ID = 'sf-file-manager';
 
@@ -54,6 +55,27 @@ export function pickFile({multiple = false, extensions = null} = {}) {
 }
 
 /**
+ * Откуда берутся файлы блоков медиа. С адресом загрузки (Editor::getInitOptions() → uploadUrl) — загрузка
+ * с компьютера на сервер с CSRF-токеном страницы, а при файловом менеджере на странице ещё и ссылка «Из библиотеки»
+ * в зоне загрузки. Без адреса (только просмотр) — только файловый менеджер
+ * @param {string|undefined} uploadUrl
+ * @returns {object} mediaSource, upload, pickFile для Ted.init
+ */
+function getMediaOptions(uploadUrl) {
+    // менеджер на странице — по его окну: модуль file-manager.js может выполниться позже этого модуля
+    const library = window.fileManager || document.getElementById(FILE_MANAGER_ID) ? {pickFile} : {};
+    if (!uploadUrl) {
+        return {mediaSource: 'manager', pickFile};
+    }
+
+    return {
+        mediaSource: 'direct',
+        upload: window.Ted.createUpload(uploadUrl, {headers: {'X-CSRF-Token': getCsrfToken()}}),
+        ...library,
+    };
+}
+
+/**
  * Запускает редактор на textarea
  * @param {HTMLTextAreaElement} textarea
  * @param {object} options Настройки Ted.init (Editor::getInitOptions() и свои)
@@ -63,13 +85,14 @@ export function initTextEditor(textarea, options = {}) {
     if (!window.Ted) {
         return null;
     }
+    const {uploadUrl, ...rest} = options;
+    const media = getMediaOptions(uploadUrl);
     const [editor] = window.Ted.init({
         theme: 'auto',
         // в админке нет режима просмотра: в панели редактора «Сохранить»
         previewMode: false,
-        mediaSource: 'manager',
-        pickFile,
-        ...options,
+        ...media,
+        ...rest,
         target: textarea,
     });
 

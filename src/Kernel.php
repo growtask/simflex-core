@@ -4,6 +4,7 @@ namespace Simflex\Core;
 
 use Dotenv\Dotenv;
 use Simflex\Core\Admin\Page as AdminPage;
+use Simflex\Core\Admin\Plugins\Editor\Editor;
 use Simflex\Core\Auth\Auth\BasicAuthMiddleware;
 use Simflex\Core\Auth\Auth\Chain;
 use Simflex\Core\Auth\Auth\CookieMiddleware;
@@ -69,6 +70,9 @@ class Kernel
         $this->init(Location::Admin);
         if ($path === AdminPage::url('fm')) {
             $this->executeFileManager();
+        } elseif ($path === Editor::getUploadUrl()) {
+            // загрузка файлов визуального редактора (texted): вход в админку и CSRF проверяет Editor
+            Editor::respondToUpload();
         } else {
             $this->execute(false);
         }

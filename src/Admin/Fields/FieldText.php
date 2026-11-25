@@ -80,7 +80,9 @@ class FieldText extends Field
             ? 'sf-' . $this->table . '-' . $recordId . '-' . $this->inputName()
             : '';
 
-        $options = Editor::getInitOptions($this->getEditorPreset(), !$this->readonly, $autosaveKey);
+        // файлы записи — в своей папке: public/uf/images/<таблица>/<запись>/ (новая запись — /<таблица>/)
+        $mediaPath = $this->table !== '' ? '/' . $this->table . ($recordId ? '/' . $recordId : '') : '/';
+        $options = Editor::getInitOptions($this->getEditorPreset(), !$this->readonly, $autosaveKey, $mediaPath);
         if ($this->placeholder !== '') {
             $options['placeholder'] = $this->placeholder;
         }
