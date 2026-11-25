@@ -2,13 +2,15 @@
 
 namespace Simflex\Core\System;
 
+use Simflex\Core\DB\AQ;
 use Simflex\Core\DB\DB;
+use Simflex\Core\DB\Schema;
 
 /**
  * Где на сайте стоит ссылка на файл: поиск адреса во всех текстовых колонках таблиц базы (CHAR, VARCHAR, TEXT,
- * JSON). Файловый менеджер показывает это в подтверждении удаления и переименования, чтобы страницы не ломались
- * молча. Ищется подстрока адреса (/uf/images/a.png - и в полном адресе с доменом, и в HTML или JSON значения),
- * для папки - адрес с / в конце (всё, что внутри). Таблицы журналов и служебные - не просматриваются
+ * JSON). Файловый менеджер показывает это в подтверждении удаления, переименования и перемещения, чтобы страницы
+ * не ломались молча. Ищется подстрока адреса (/uf/images/a.png - и в полном адресе с доменом, и в HTML или JSON
+ * значения), для папки - адрес с / в конце (всё, что внутри). Таблицы журналов и служебные не просматриваются
  * (ConfigBase::$fileUsageIgnoreTables)
  */
 class FileUsage
@@ -29,49 +31,34 @@ class FileUsage
     public function find(string $url): array
     {
         $needles = array_values(array_unique([$url, static::encodePath($url)]));
-        $out = [];
-        foreach ($this->textColumns() as $table => $columns) {
+        $counts = [];
+        foreach ($this->getTextColumns() as $table => $columns) {
             $conditions = [];
-            $params = [];
+            $binds = [];
             foreach ($columns as $column) {
                 foreach ($needles as $needle) {
-                    $conditions[] = DB::wrapName($column) . " LIKE ? ESCAPE '!'";
-                    $params[] = '%' . static::escapeLike($needle) . '%';
+                    $bind = 'needle' . count($binds);
+                    $conditions[] = DB::wrapName($column) . " LIKE :$bind ESCAPE '!'";
+                    $binds[$bind] = '%' . static::escapeLike($needle) . '%';
                 }
             }
-            $count = (int)DB::result(
-                'SELECT COUNT(*) AS cnt FROM ' . DB::wrapName($table) . ' WHERE ' . implode(' OR ', $conditions),
-                'cnt',
-                $params
-            );
+            $count = (int)(new AQ())->from($table)->select('COUNT(*)')->where(implode(' OR ', $conditions))
+                ->bind($binds)->fetchScalar();
             if ($count > 0) {
-                $out[$table] = $count;
+                $counts[$table] = $count;
             }
         }
 
-        return $out;
+        return $counts;
     }
 
     /**
-     * Текстовые колонки таблиц базы сайта
+     * Текстовые колонки таблиц, в которых ищется адрес
      * @return array<string, string[]> таблица => колонки
      */
-    protected function textColumns(): array
+    protected function getTextColumns(): array
     {
-        $rows = DB::assoc(
-            "SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS
-            WHERE TABLE_SCHEMA = DATABASE()
-                AND DATA_TYPE IN ('char', 'varchar', 'tinytext', 'text', 'mediumtext', 'longtext', 'json')
-            ORDER BY TABLE_NAME, ORDINAL_POSITION"
-        ) ?: [];
-        $out = [];
-        foreach ($rows as $row) {
-            if (!in_array($row['TABLE_NAME'], $this->ignoreTables, true)) {
-                $out[$row['TABLE_NAME']][] = $row['COLUMN_NAME'];
-            }
-        }
-
-        return $out;
+        return array_diff_key(Schema::getTextColumns(), array_flip($this->ignoreTables));
     }
 
     /** Подстрока для LIKE с ESCAPE '!': % и _ (часто в именах файлов) - как обычные символы */

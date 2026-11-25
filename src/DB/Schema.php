@@ -92,6 +92,28 @@ class Schema
         return isset($this->tables[$name]);
     }
 
+    /**
+     * Текстовые колонки (CHAR, VARCHAR, TEXT, JSON) всех таблиц базы сайта, без загрузки схемы таблиц
+     * (System\FileUsage ищет в них адреса файлов)
+     *
+     * @return array<string, string[]> таблица => колонки в порядке таблицы
+     */
+    public static function getTextColumns(): array
+    {
+        $rows = DB::assoc(
+            "SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+                AND DATA_TYPE IN ('char', 'varchar', 'tinytext', 'text', 'mediumtext', 'longtext', 'json')
+            ORDER BY TABLE_NAME, ORDINAL_POSITION"
+        ) ?: [];
+        $columns = [];
+        foreach ($rows as $row) {
+            $columns[$row['TABLE_NAME']][] = $row['COLUMN_NAME'];
+        }
+
+        return $columns;
+    }
+
     // ------------ ИЗМЕНЕНИЕ ------------ //
 
     /**
