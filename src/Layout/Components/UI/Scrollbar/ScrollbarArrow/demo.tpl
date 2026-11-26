@@ -5,15 +5,15 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarSize;
-use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarTheme;
+use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarMainSize;
+use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarMainTheme;
 use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarArrow\Layout as ScrollbarArrow;
 use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarArrow\ScrollbarArrowStyle;
 
-$scrollbarTheme = ScrollbarTheme::from($theme);
+$scrollbarTheme = ScrollbarMainTheme::from($theme);
 
 ?>
-<?php foreach (ScrollbarSize::cases() as $size): ?>
+<?php foreach (ScrollbarMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
         <?php foreach (ScrollbarArrowStyle::cases() as $style): ?>

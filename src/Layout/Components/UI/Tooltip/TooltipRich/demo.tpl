@@ -5,41 +5,41 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipSide;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainSide;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipRich\Layout as TooltipRich;
 
-$tooltipTheme = TooltipTheme::from($theme);
-$buttonTheme = ButtonTheme::from($theme);
+$tooltipTheme = TooltipMainTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
 
 ?>
-<?php foreach (TooltipPosition::cases() as $position): ?>
+<?php foreach (TooltipMainPosition::cases() as $position): ?>
     <div class="ui-showcase__row ui-showcase__row_tooltips">
-        <?php foreach (TooltipSide::cases() as $side): ?>
-            <?= TooltipRich::drawRich(
-                Button::drawButton(
+        <?php foreach (TooltipMainSide::cases() as $side): ?>
+            <?= TooltipRich::drawTooltipRich(
+                Button::drawButtonMain(
                     text: $position->name . ', ' . $side->name,
-                    style: ButtonStyle::Secondary,
-                    size: ButtonSize::Small,
+                    style: ButtonMainStyle::Secondary,
+                    size: ButtonMainSize::Small,
                     theme: $buttonTheme,
                 ),
                 title: 'Заголовок',
                 text: 'Короткое пояснение, которое переносится на несколько строк',
                 actionText: 'Подробнее',
                 actionLink: '#rich',
-                icon: $side === TooltipSide::Center ? 'notify-info' : '',
+                icon: $side === TooltipMainSide::Center ? 'notify-info' : '',
                 position: $position,
                 side: $side,
                 theme: $tooltipTheme,
             ) ?>
         <?php endforeach; ?>
-        <?= TooltipRich::drawRich(
-            Button::drawButton(text: 'Без действия', style: ButtonStyle::Secondary, size: ButtonSize::Small, theme: $buttonTheme),
+        <?= TooltipRich::drawTooltipRich(
+            Button::drawButtonMain(text: 'Без действия', style: ButtonMainStyle::Secondary, size: ButtonMainSize::Small, theme: $buttonTheme),
             title: 'Только заголовок и текст',
             text: 'Действие необязательно',
             position: $position,

@@ -10,16 +10,16 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout as Stepper;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainTheme;
 
 ?>
-<?= Stepper::drawStepper(
+<?= Stepper::drawStepperMain(
     'npp_' . $pkValue,
     (int)$value,
     label: strip_tags($this->label),
-    size: StepperSize::ExtraSmall,
-    theme: StepperTheme::from(Page::get()->getTheme()),
+    size: StepperMainSize::ExtraSmall,
+    theme: StepperMainTheme::from(Page::get()->getTheme()),
     id: 'npp-' . $name . '-' . $pkValue,
     className: 'td-npp',
     attributes: [

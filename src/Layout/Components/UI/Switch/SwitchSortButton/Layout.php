@@ -6,7 +6,7 @@ use Simflex\Core\Layout\LayoutBase;
 
 /**
  * Сортировка (Figma Switches/sort-button): кнопка направления (стрелка вверх или вниз), в том числе активная.
- * Заголовок столбца из двух кнопок — SwitchSort; SortDirection — значение aria-sort для th таблицы
+ * Заголовок столбца из двух кнопок — SwitchSort; SwitchSortDirection — значение aria-sort для th таблицы
  */
 class Layout extends LayoutBase
 {
@@ -16,18 +16,18 @@ class Layout extends LayoutBase
      * @param string $label Доступное имя кнопки
      * @param array<string,string> $attributes Атрибуты кнопки
      */
-    public static function drawSortButton(
+    public static function drawSwitchSortButton(
         bool            $up,
         string          $label,
         string          $link = '',
         bool            $active = false,
-        SortButtonStyle $style = SortButtonStyle::Solid,
-        SortButtonSize  $size = SortButtonSize::Small,
-        SortButtonTheme $theme = SortButtonTheme::Light,
+        SwitchSortButtonStyle $style = SwitchSortButtonStyle::Solid,
+        SwitchSortButtonSize  $size = SwitchSortButtonSize::Small,
+        SwitchSortButtonTheme $theme = SwitchSortButtonTheme::Light,
         string          $className = '',
         array           $attributes = [],
     ): string {
-        $icon = $style === SortButtonStyle::Solid
+        $icon = $style === SwitchSortButtonStyle::Solid
             ? ($up ? 'triangle-up' : 'triangle-down')
             : ($up ? 'chevron-s-up' : 'chevron-s-down');
 

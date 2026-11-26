@@ -5,18 +5,18 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperFill;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainFill;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainTheme;
 use Simflex\Core\Layout\Components\UI\Stepper\StepperQuantity\Layout as StepperQuantity;
 
-$stepperTheme = StepperTheme::from($theme);
+$stepperTheme = StepperMainTheme::from($theme);
 
 ?>
-<?php foreach (StepperSize::cases() as $size): ?>
+<?php foreach (StepperMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (StepperFill::cases() as $fill): ?>
+        <?php foreach (StepperMainFill::cases() as $fill): ?>
             <?= StepperQuantity::drawStepperQuantity(value: 1, fill: $fill, size: $size, theme: $stepperTheme) ?>
             <?= StepperQuantity::drawStepperQuantity(value: 5, stock: 5, fill: $fill, size: $size, theme: $stepperTheme) ?>
         <?php endforeach; ?>

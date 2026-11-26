@@ -5,10 +5,10 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputCalendar\Layout as InputCalendar;
 
-$inputTheme = TextInputTheme::from($theme);
+$inputTheme = InputMainTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row">

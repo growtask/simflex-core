@@ -6,20 +6,20 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputDate\Layout as InputDate;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
-$inputTheme = TextInputTheme::from($theme);
+$inputTheme = InputMainTheme::from($theme);
 
 ?>
-<?php foreach (TextInputStyle::cases() as $style): ?>
+<?php foreach (InputMainStyle::cases() as $style): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $style->name ?></h3>
-    <?php foreach ([TextInputSize::Large, TextInputSize::Medium, TextInputSize::Small] as $size): ?>
+    <?php foreach ([InputMainSize::Large, InputMainSize::Medium, InputMainSize::Small] as $size): ?>
         <div class="ui-showcase__row">
             <span class="ui-showcase__field"><?= InputDate::drawInputDate( style: $style, size: $size, theme: $inputTheme) ?></span>
-            <span class="ui-showcase__field"><?= InputDate::drawInputDate( labelText: 'Подпись', labelPos: TextInputLabelPos::Standard, value: '24.11.2026', style: $style, size: $size, theme: $inputTheme) ?></span>
+            <span class="ui-showcase__field"><?= InputDate::drawInputDate( labelText: 'Подпись', labelPos: InputMainLabelPos::Standard, value: '24.11.2026', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputDate::drawInputDate( value: '24.11.2026', error: 'Ошибка ввода', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputDate::drawInputDate( value: '24.11.2026', success: true, style: $style, size: $size, theme: $inputTheme) ?></span>
         </div>

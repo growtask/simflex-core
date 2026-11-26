@@ -6,12 +6,12 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputCountry\Layout as InputCountry;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 
 ?>
 <div class="ui-showcase__row">
-    <?= InputCountry::drawInputCountry(PhoneCountry::Ru, theme: $theme) ?>
-    <?= InputCountry::drawInputCountry(PhoneCountry::Kz, theme: $theme) ?>
-    <?= InputCountry::drawInputCountry(PhoneCountry::Ru, open: true, theme: $theme) ?>
-    <?= InputCountry::drawInputCountry(PhoneCountry::Ru, disabled: true, theme: $theme) ?>
+    <?= InputCountry::drawInputCountry(InputPhoneCountry::Ru, theme: $theme) ?>
+    <?= InputCountry::drawInputCountry(InputPhoneCountry::Kz, theme: $theme) ?>
+    <?= InputCountry::drawInputCountry(InputPhoneCountry::Ru, open: true, theme: $theme) ?>
+    <?= InputCountry::drawInputCountry(InputPhoneCountry::Ru, disabled: true, theme: $theme) ?>
 </div>

@@ -3,27 +3,27 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\UI\Link\LinkMain\Layout as Link;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkTheme;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxStyle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxStyle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
 
-$link = Link::drawLink(
+$link = Link::drawLinkMain(
     className: 'consent__link',
     text: htmlspecialchars($data['linkText']),
     href: $data['policyUrl'],
-    size: LinkSize::Medium,
-    theme: LinkTheme::from($data['theme']),
+    size: LinkMainSize::Medium,
+    theme: LinkMainTheme::from($data['theme']),
 );
 ?>
-<?= Checkbox::drawCheckbox(
+<?= Checkbox::drawSwitchCheckbox(
     className: trim("consent consent-theme_{$data['theme']} {$data['className']}"),
     text: htmlspecialchars($data['text']) . ' ' . $link,
-    style: CheckboxStyle::Solid,
-    size: CheckboxSize::Small,
-    theme: CheckboxTheme::from($data['theme']),
+    style: SwitchCheckboxStyle::Solid,
+    size: SwitchCheckboxSize::Small,
+    theme: SwitchCheckboxTheme::from($data['theme']),
     attributes: $data['attributes'],
     error: $data['error'],
 ) ?>

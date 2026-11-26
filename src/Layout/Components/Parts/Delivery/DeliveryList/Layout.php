@@ -2,9 +2,9 @@
 
 namespace Simflex\Core\Layout\Components\Parts\Delivery\DeliveryList;
 
-use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryService;
+use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryLogoService;
 use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\Layout as DeliveryLogo;
-use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryStyle;
+use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryLogoStyle;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -14,19 +14,19 @@ use Simflex\Core\Layout\LayoutBase;
 class Layout extends LayoutBase
 {
     /**
-     * @param list<DeliveryService> $services Какие знаки показать и в каком порядке; пусто - все
+     * @param list<DeliveryLogoService> $services Какие знаки показать и в каком порядке; пусто - все
      * @param string $label Название списка для скринридера
      * @param array<string,mixed> $attributes Атрибуты списка
      */
     public static function drawDeliveryList(
         array $services = [],
-        DeliveryStyle $style = DeliveryStyle::Color,
+        DeliveryLogoStyle $style = DeliveryLogoStyle::Color,
         string $label = 'Способы доставки',
         string $className = '',
         array $attributes = []
     ): string {
         $items = [];
-        foreach ($services ?: DeliveryService::cases() as $service) {
+        foreach ($services ?: DeliveryLogoService::cases() as $service) {
             $logo = DeliveryLogo::drawDeliveryLogo($service, $style);
             if ($logo !== '') {
                 $items[] = $logo;

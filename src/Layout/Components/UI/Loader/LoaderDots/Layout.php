@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderDots;
 
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderStyle;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -17,8 +17,8 @@ class Layout extends LayoutBase
      */
     public static function drawLoaderDots(
         LoaderDotsSize $size = LoaderDotsSize::Medium,
-        LoaderStyle    $style = LoaderStyle::Primary,
-        LoaderTheme    $theme = LoaderTheme::Light,
+        LoaderMainStyle    $style = LoaderMainStyle::Primary,
+        LoaderMainTheme    $theme = LoaderMainTheme::Light,
         bool           $animation = true,
         string         $label = 'Загрузка',
         string         $className = '',

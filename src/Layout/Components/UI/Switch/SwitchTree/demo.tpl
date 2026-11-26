@@ -6,10 +6,10 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\Layout as Tree;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\TreeSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\TreeTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\SwitchTreeSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\SwitchTreeTheme;
 
-$treeTheme = TreeTheme::from($theme);
+$treeTheme = SwitchTreeTheme::from($theme);
 $items = [
     ['label' => 'Категория', 'count' => 12],
     [
@@ -35,9 +35,9 @@ $items = [
 ];
 
 ?>
-<?php foreach (TreeSize::cases() as $size): ?>
+<?php foreach (SwitchTreeSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__field">
-        <?= Tree::drawTree($items, $size, $treeTheme) ?>
+        <?= Tree::drawSwitchTree($items, $size, $treeTheme) ?>
     </div>
 <?php endforeach; ?>

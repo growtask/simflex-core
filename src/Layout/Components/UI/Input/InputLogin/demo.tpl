@@ -6,12 +6,12 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputLogin\Layout as LoginInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
-$inputTheme = TextInputTheme::from($theme);
+$inputTheme = InputMainTheme::from($theme);
 
 $nextId = static function () use ($theme): string {
     static $n = [];
@@ -21,29 +21,29 @@ $nextId = static function () use ($theme): string {
 };
 
 ?>
-<?php foreach (TextInputSize::cases() as $size): ?>
+<?php foreach (InputMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (TextInputStyle::cases() as $style): ?>
-            <?= LoginInput::drawLoginInput(id: $nextId(), style: $style, size: $size, theme: $inputTheme) ?>
-            <?= LoginInput::drawLoginInput(id: $nextId(), value: 'Иван', style: $style, size: $size, theme: $inputTheme) ?>
+        <?php foreach (InputMainStyle::cases() as $style): ?>
+            <?= LoginInput::drawInputLogin(id: $nextId(), style: $style, size: $size, theme: $inputTheme) ?>
+            <?= LoginInput::drawInputLogin(id: $nextId(), value: 'Иван', style: $style, size: $size, theme: $inputTheme) ?>
         <?php endforeach; ?>
     </div>
 <?php endforeach; ?>
 
 <h3 class="ui-showcase__subtitle ui-m">Подпись и состояния</h3>
 <div class="ui-showcase__row">
-    <?= LoginInput::drawLoginInput(
+    <?= LoginInput::drawInputLogin(
         id: $nextId(),
         labelText: 'Подпись',
-        labelPos: TextInputLabelPos::Standard,
+        labelPos: InputMainLabelPos::Standard,
         theme: $inputTheme,
     ) ?>
-    <?= LoginInput::drawLoginInput(
+    <?= LoginInput::drawInputLogin(
         id: $nextId(),
         labelText: 'Подпись внутри',
-        labelPos: TextInputLabelPos::Inside,
+        labelPos: InputMainLabelPos::Inside,
         theme: $inputTheme,
     ) ?>
-    <?= LoginInput::drawLoginInput(id: $nextId(), value: 'Иван', theme: $inputTheme, attributes: ['disabled' => 'disabled']) ?>
+    <?= LoginInput::drawInputLogin(id: $nextId(), value: 'Иван', theme: $inputTheme, attributes: ['disabled' => 'disabled']) ?>
 </div>

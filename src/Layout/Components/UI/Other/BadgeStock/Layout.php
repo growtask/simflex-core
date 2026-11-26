@@ -6,7 +6,7 @@ use Simflex\Core\Layout\LayoutBase;
 
 class Layout extends LayoutBase
 {
-    public static function drawBadge(
+    public static function drawBadgeStock(
         string          $className = '',
         string          $text = '',
         BadgeStockStyle $style = BadgeStockStyle::Many,

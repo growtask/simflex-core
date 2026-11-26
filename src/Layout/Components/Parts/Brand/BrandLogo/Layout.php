@@ -18,7 +18,7 @@ class Layout extends LayoutBase
      * @param array<string,mixed> $attributes Атрибуты ссылки
      */
     public static function drawBrandLogo(
-        LogoTheme $theme = LogoTheme::Light,
+        BrandLogoTheme $theme = BrandLogoTheme::Light,
         string    $href = '/',
         string    $name = '',
         string    $label = '',
@@ -26,7 +26,7 @@ class Layout extends LayoutBase
         string    $className = '',
         array     $attributes = []
     ): string {
-        $dark = $theme === LogoTheme::Dark ? '-dark' : '';
+        $dark = $theme === BrandLogoTheme::Dark ? '-dark' : '';
         $brandSrc = $src !== '' ? $src : asset('images/brand/logo' . $dark . '.svg');
 
         return static::draw([

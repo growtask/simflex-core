@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\UI\Input\InputEye;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -19,14 +19,14 @@ class Layout extends LayoutBase
     public static function drawInputEye(
         bool            $active = false,
         bool            $disabled = false,
-        ButtonIconTheme $theme = ButtonIconTheme::Light,
+        ButtonIconSmallTheme $theme = ButtonIconSmallTheme::Light,
         string          $className = '',
     ): string {
-        return ButtonIcon::drawButtonIcon(
+        return ButtonIcon::drawButtonIconSmall(
             icon: 'eye',
             label: $active ? 'Скрыть пароль' : 'Показать пароль',
             className: trim('text-input__password-toggle ' . $className),
-            style: ButtonIconStyle::Flat,
+            style: ButtonIconSmallStyle::Flat,
             theme: $theme,
             attributes: ['aria-pressed' => $active ? 'true' : 'false', 'title' => ''],
             disabled: $disabled,

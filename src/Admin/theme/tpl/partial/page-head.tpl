@@ -12,9 +12,9 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $theme = $page->getTheme();
@@ -25,13 +25,13 @@ $backLink = $parent['link'] ?? Page::url('');
 <div class="page-head page-head-theme_<?= $theme ?>">
     <div class="page-head__crumbs">
         <?= $crumbsHtml ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'page-head__back',
             text: 'Назад',
             link: $backLink,
-            style: ButtonStyle::Flat,
-            size: ButtonSize::Small,
-            theme: ButtonTheme::from($theme),
+            style: ButtonMainStyle::Flat,
+            size: ButtonMainSize::Small,
+            theme: ButtonMainTheme::from($theme),
             iconLeft: 'arrow-left',
         ) ?>
     </div>
@@ -41,13 +41,13 @@ $backLink = $parent['link'] ?? Page::url('');
             <?php if ($slotsHtml !== '') : ?>
                 <div class="page-head__slots"><?= $slotsHtml ?></div>
             <?php endif ?>
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 className: 'page-head__site',
                 text: 'На сайт',
                 link: '/',
-                style: ButtonStyle::Secondary,
-                size: ButtonSize::Small,
-                theme: ButtonTheme::from($theme),
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Small,
+                theme: ButtonMainTheme::from($theme),
                 attributes: ['target' => '_blank', 'rel' => 'noopener'],
                 iconLeft: 'globe',
             ) ?>

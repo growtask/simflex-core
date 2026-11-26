@@ -17,8 +17,8 @@ class Layout extends LayoutBase
      * @param bool $inline Не закрывать страницу, а выводить в рамке в потоке (витрина)
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawAgeGate(
-        AgeGateTheme $theme = AgeGateTheme::Light,
+    public static function drawSystemAgeGate(
+        SystemAgeGateTheme $theme = SystemAgeGateTheme::Light,
         string       $title = 'Вам есть 18 лет?',
         string       $text = 'Часть контента только для взрослых.',
         string       $confirmText = 'Да, есть',

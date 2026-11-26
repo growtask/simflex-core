@@ -5,21 +5,21 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonIconPos;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonState;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainIconPos;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainState;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
-$buttonTheme = ButtonTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
 
 ?>
-<?php foreach (ButtonSize::cases() as $size): ?>
+<?php foreach (ButtonMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (ButtonStyle::cases() as $style): ?>
-            <?= Button::drawButton(
+        <?php foreach (ButtonMainStyle::cases() as $style): ?>
+            <?= Button::drawButtonMain(
                 text: $style->name,
                 icon: 'plus',
                 style: $style,
@@ -27,12 +27,12 @@ $buttonTheme = ButtonTheme::from($theme);
                 theme: $buttonTheme,
             ) ?>
         <?php endforeach; ?>
-        <?= Button::drawButton(text: 'disabled', size: $size, theme: $buttonTheme, disabled: true) ?>
+        <?= Button::drawButtonMain(text: 'disabled', size: $size, theme: $buttonTheme, disabled: true) ?>
     </div>
     <div class="ui-showcase__row">
         <?php /* кнопка только с иконкой (Figma icon=center): иконка без текста */ ?>
-        <?php foreach (ButtonStyle::cases() as $style): ?>
-            <?= Button::drawButton(
+        <?php foreach (ButtonMainStyle::cases() as $style): ?>
+            <?= Button::drawButtonMain(
                 iconLeft: 'plus',
                 style: $style,
                 size: $size,
@@ -40,13 +40,13 @@ $buttonTheme = ButtonTheme::from($theme);
                 attributes: ['aria-label' => $style->name],
             ) ?>
         <?php endforeach; ?>
-        <?= Button::drawButton(iconLeft: 'plus', size: $size, theme: $buttonTheme, disabled: true, attributes: ['aria-label' => 'disabled']) ?>
-        <?= Button::drawButton(iconLeft: 'plus', load: true, size: $size, theme: $buttonTheme, attributes: ['aria-label' => 'Загрузка']) ?>
+        <?= Button::drawButtonMain(iconLeft: 'plus', size: $size, theme: $buttonTheme, disabled: true, attributes: ['aria-label' => 'disabled']) ?>
+        <?= Button::drawButtonMain(iconLeft: 'plus', load: true, size: $size, theme: $buttonTheme, attributes: ['aria-label' => 'Загрузка']) ?>
     </div>
     <div class="ui-showcase__row">
-        <?php foreach (ButtonIconPos::cases() as $iconPos): ?>
-            <?php foreach (ButtonStyle::cases() as $style): ?>
-                <?= Button::drawButton(
+        <?php foreach (ButtonMainIconPos::cases() as $iconPos): ?>
+            <?php foreach (ButtonMainStyle::cases() as $style): ?>
+                <?= Button::drawButtonMain(
                     text: 'Иконка ' . $iconPos->name,
                     icon: 'arrow-right',
                     iconPos: $iconPos,
@@ -56,13 +56,13 @@ $buttonTheme = ButtonTheme::from($theme);
                 ) ?>
             <?php endforeach; ?>
         <?php endforeach; ?>
-        <?= Button::drawButton(text: 'Загрузка', load: true, size: $size, theme: $buttonTheme) ?>
-        <?php foreach (ButtonState::cases() as $state): ?>
-            <?php if ($state === ButtonState::Default) { continue; } ?>
-            <?= Button::drawButton(text: $state->name, state: $state, size: $size, theme: $buttonTheme) ?>
-            <?= Button::drawButton(text: $state->name, icon: 'plus', state: $state, size: $size, theme: $buttonTheme) ?>
-            <?= Button::drawButton(iconLeft: 'plus', state: $state, size: $size, theme: $buttonTheme, attributes: ['aria-label' => $state->name]) ?>
+        <?= Button::drawButtonMain(text: 'Загрузка', load: true, size: $size, theme: $buttonTheme) ?>
+        <?php foreach (ButtonMainState::cases() as $state): ?>
+            <?php if ($state === ButtonMainState::Default) { continue; } ?>
+            <?= Button::drawButtonMain(text: $state->name, state: $state, size: $size, theme: $buttonTheme) ?>
+            <?= Button::drawButtonMain(text: $state->name, icon: 'plus', state: $state, size: $size, theme: $buttonTheme) ?>
+            <?= Button::drawButtonMain(iconLeft: 'plus', state: $state, size: $size, theme: $buttonTheme, attributes: ['aria-label' => $state->name]) ?>
         <?php endforeach; ?>
-        <?= Button::drawButton(text: 'Ссылка', link: '#link', size: $size, theme: $buttonTheme) ?>
+        <?= Button::drawButtonMain(text: 'Ссылка', link: '#link', size: $size, theme: $buttonTheme) ?>
     </div>
 <?php endforeach; ?>

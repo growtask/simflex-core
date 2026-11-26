@@ -17,8 +17,8 @@ class Layout extends LayoutBase
      * @param bool $inline Боковые отступы по рамке, а не по экрану (витрина, блок внутри страницы)
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawBrowserSupport(
-        BrowserSupportTheme $theme = BrowserSupportTheme::Light,
+    public static function drawSystemBrowserSupport(
+        SystemBrowserSupportTheme $theme = SystemBrowserSupportTheme::Light,
         string              $text = 'Браузер устарел, часть функций может не работать.',
         string              $buttonText = 'Обновить браузер',
         string              $buttonLink = '',

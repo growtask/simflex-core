@@ -7,8 +7,8 @@
  * @var \Simflex\Core\Admin\Page $page
  */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 use Simflex\Core\System\Container;
 
@@ -19,11 +19,11 @@ $formUrl = 'https://growtask.ru/remoteform.php?tpl=help&ws=https://'
          aria-modal="false" aria-labelledby="sf-support-title" data-sf="support" hidden>
     <div class="support-bar__head">
         <h2 class="support-bar__title" id="sf-support-title">Поддержка</h2>
-        <?= ButtonIcon::drawButtonIcon(
+        <?= ButtonIcon::drawButtonIconSmall(
             icon: 'close',
             label: 'Закрыть',
-            style: ButtonIconStyle::Secondary,
-            theme: ButtonIconTheme::from($page->getTheme()),
+            style: ButtonIconSmallStyle::Secondary,
+            theme: ButtonIconSmallTheme::from($page->getTheme()),
             attributes: ['data-sf-support-close' => ''],
         ) ?>
     </div>

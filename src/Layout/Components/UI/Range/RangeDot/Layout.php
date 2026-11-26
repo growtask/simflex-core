@@ -3,7 +3,7 @@
 namespace Simflex\Core\Layout\Components\UI\Range\RangeDot;
 
 use Simflex\Core\Layout\Components\UI\Range\RangeMain\Layout as RangeMain;
-use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeTheme;
+use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -20,7 +20,7 @@ class Layout extends LayoutBase
         int        $value = 50,
         bool       $tooltip = true,
         bool       $disabled = false,
-        RangeTheme $theme = RangeTheme::Light,
+        RangeMainTheme $theme = RangeMainTheme::Light,
         string     $className = '',
     ): string {
         RangeMain::initAssets();

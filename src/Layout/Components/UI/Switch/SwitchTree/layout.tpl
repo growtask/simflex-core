@@ -2,11 +2,11 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\Layout as Tree;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\TreeSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\TreeTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\SwitchTreeSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\SwitchTreeTheme;
 
-$size = TreeSize::from($data['size']);
-$theme = TreeTheme::from($data['theme']);
+$size = SwitchTreeSize::from($data['size']);
+$theme = SwitchTreeTheme::from($data['theme']);
 $classes = ['tree', "tree-size_{$data['size']}", "tree-theme_{$data['theme']}", $data['className']];
 $counter = 0;
 
@@ -28,7 +28,7 @@ $render = static function (array $nodes, bool $root) use (&$render, $data, $size
                     <?php else: ?>
                         <span class="tree-item__toggle tree-item__toggle_empty" aria-hidden="true"></span>
                     <?php endif; ?>
-                    <span class="tree-item__control"><?= Tree::drawControl($node, $data['name'], $size, $theme) ?></span>
+                    <span class="tree-item__control"><?= Tree::drawSwitchTreeControl($node, $data['name'], $size, $theme) ?></span>
                     <?php if ($node['count'] !== ''): ?>
                         <span class="tree-item__count"><?= htmlspecialchars($node['count']) ?></span>
                     <?php endif; ?>

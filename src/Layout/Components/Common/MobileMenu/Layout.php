@@ -22,7 +22,7 @@ class Layout extends LayoutBase
      * @param string $logoHref Адрес главной страницы
      * @param string $phone Телефон
      * @param string $email Почта
-     * @param array<string,string> $socials Соцсети: значение SocialNetwork => адрес
+     * @param array<string,string> $socials Соцсети: значение ButtonSocialSmallNetwork => адрес
      * @param string $buttonText Текст кнопки; пусто - кнопки нет
      * @param string $buttonModal Значение data-modal кнопки
      * @param string $geo Слот под выбор города (пакет GeoIP): выводится над пунктами меню

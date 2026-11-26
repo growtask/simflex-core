@@ -6,9 +6,9 @@
  */
 
 use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeBy\Layout as BrandMadeBy;
-use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeBy\MadeByTheme;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeBy\BrandMadeByTheme;
 
-$madeTheme = MadeByTheme::from($theme);
+$madeTheme = BrandMadeByTheme::from($theme);
 
 ?>
 <h3 class="ui-showcase__subtitle ui-m">Powered by</h3>

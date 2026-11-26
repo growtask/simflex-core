@@ -22,6 +22,17 @@
   «Сайт сделан в студии» и «Powered by» вместо «Создано» и «На базе». Стили админки: `.logo__image` → `.brand-logo__image`.
 - Исправлено: аватар `PlaceholderAvatar` приведён к Figma (placeholders/avatar): радиус `ui-xlarge` вместо круга (у `l` и `xl` скруглённый
   квадрат), фон `gray/lighter`, инициалы `gray/dark` размером 12, 15, 18, 24, 32 px, иконка `gray/medium`.
+- **Несовместимое изменение:** имена enum и draw-методов компонентов `Layout/Components/Parts` и `UI` приведены к имени
+  директории компонента: enum — `<ИмяДиректории><Суффикс>`, метод — `draw<ИмяДиректории>[Вид]`
+  (группа в имя не добавляется: `UI/Other/Separator` остался `Separator`). Файлы enum переименованы вместе с классами.
+  Примеры: `ButtonSize` → `ButtonMainSize`, `drawButton()` → `drawButtonMain()`, `TextInputTheme` → `InputMainTheme`,
+  `drawInput()` → `drawInputMain()`, `CookieState` → `SystemCookieState`, `drawCookie()` → `drawSystemCookie()`,
+  `AvatarSize` → `PlaceholderAvatarSize`, `drawAvatar()` → `drawPlaceholderAvatar()`, `drawNoImage()` →
+  `drawPlaceholderAvatarNoImage()`, `ImgMissing` → `PlaceholderImgMissing`, `drawBadge()` в `UI/Other/BadgeStock` →
+  `drawBadgeStock()` (`UI/Badge` не менялся), `drawStack()` → `drawFeedbackToastStack()`, `drawControl()` →
+  `drawSwitchTreeControl()`, `drawSelect()`/`drawMenu()` → `drawDropdownMainSelect()`/`drawDropdownMainMenu()`.
+  Переход: в `use` и вызовах замените старые имена на новые по правилу выше (например, `use ...\ButtonMain\ButtonSize` →
+  `use ...\ButtonMain\ButtonMainSize`); значения case и css-классы не менялись.
 - **Несовместимое изменение:** компонент `UI/Other/Placeholder` (аватар и «нет картинки») перенесён в
   `Parts/Placeholder/PlaceholderAvatar`, namespace `Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar`;
   `PlaceholderTheme` переименован в `AvatarTheme`. Методы `drawAvatar()` и `drawNoImage()` и css-классы не менялись.

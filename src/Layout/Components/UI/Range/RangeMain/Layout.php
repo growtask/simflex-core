@@ -3,8 +3,8 @@
 namespace Simflex\Core\Layout\Components\UI\Range\RangeMain;
 
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -26,15 +26,15 @@ class Layout extends LayoutBase
      * @param bool $labels Показывать подписи минимума и максимума под треком
      * @param string $label Доступное имя ползунка
      */
-    public static function drawRange(
+    public static function drawRangeMain(
         float      $min = 0,
         float      $max = 100,
         ?float     $value = null,
         ?float     $valueTo = null,
         float      $step = 1,
-        RangeType  $type = RangeType::Range,
-        RangeWidth $width = RangeWidth::Hug,
-        RangeTheme $theme = RangeTheme::Light,
+        RangeMainType  $type = RangeMainType::Range,
+        RangeMainWidth $width = RangeMainWidth::Hug,
+        RangeMainTheme $theme = RangeMainTheme::Light,
         string     $name = '',
         bool       $inputs = true,
         bool       $marks = false,
@@ -46,7 +46,7 @@ class Layout extends LayoutBase
         $max = max($min, $max);
         $step = $step > 0 ? $step : 1;
         $clamp = static fn(float $v): float => min($max, max($min, $v));
-        $isRange = $type === RangeType::Range;
+        $isRange = $type === RangeMainType::Range;
         $from = $isRange ? $clamp($value ?? $min) : $min;
         $to = $isRange ? $clamp($valueTo ?? $max) : $clamp($value ?? $max);
         if ($isRange && $from > $to) {
@@ -67,10 +67,10 @@ class Layout extends LayoutBase
                 $attributes['disabled'] = 'disabled';
             }
             $fields[$key] = $inputs
-                ? TextInput::drawInput(
+                ? TextInput::drawInputMain(
                     placeholder: 'Значение',
-                    size: TextInputSize::Small,
-                    theme: TextInputTheme::from($theme->value),
+                    size: InputMainSize::Small,
+                    theme: InputMainTheme::from($theme->value),
                     reset: false,
                     attributes: $attributes,
                     value: $format($current),

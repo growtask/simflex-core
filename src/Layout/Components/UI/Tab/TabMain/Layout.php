@@ -11,16 +11,16 @@ use Simflex\Core\Layout\LayoutBase;
  */
 class Layout extends LayoutBase
 {
-    public static function drawTab(
+    public static function drawTabMain(
         string     $className = '',
         string     $text = '',
         string     $link = '',
         string     $iconLeft = '',
         string     $iconRight = '',
         string     $badge = '',
-        TabStyle   $style = TabStyle::Primary,
-        TabSize    $size = TabSize::Medium,
-        TabTheme   $theme = TabTheme::Light,
+        TabMainStyle   $style = TabMainStyle::Primary,
+        TabMainSize    $size = TabMainSize::Medium,
+        TabMainTheme   $theme = TabMainTheme::Light,
         array      $attributes = [],
         bool       $active = false,
         bool       $disabled = false

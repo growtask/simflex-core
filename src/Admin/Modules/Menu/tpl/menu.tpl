@@ -9,22 +9,22 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
 
-$tabTheme = TabTheme::from($theme);
-$tooltipTheme = TooltipTheme::from($theme);
-$drawItem = fn(array $item, bool $isCurrent) => Tab::drawTab(
+$tabTheme = TabMainTheme::from($theme);
+$tooltipTheme = TooltipMainTheme::from($theme);
+$drawItem = fn(array $item, bool $isCurrent) => Tab::drawTabMain(
     className: 'menu-item',
     text: htmlspecialchars($item['name']),
     link: $item['link'],
     iconLeft: $item['icon'],
-    style: $isCurrent ? TabStyle::Soft : TabStyle::Flat,
-    size: TabSize::Small,
+    style: $isCurrent ? TabMainStyle::Soft : TabMainStyle::Flat,
+    size: TabMainSize::Small,
     theme: $tabTheme,
     attributes: ['data-sf-menu-item' => mb_strtolower($item['name'])],
     active: $isCurrent,
@@ -39,10 +39,10 @@ $groupIndex = 0;
         <?php $children = array_filter($menu[$id] ?? [], fn(array $child) => !$child['hidden']); ?>
         <?php if (!$children): ?>
             <li class="menu__leaf">
-                <?= Tooltip::drawTooltip(
+                <?= Tooltip::drawTooltipMain(
                     $drawItem($item, $id === $currentId),
                     $item['name'],
-                    position: TooltipPosition::Left,
+                    position: TooltipMainPosition::Left,
                     theme: $tooltipTheme,
                     className: 'menu__tooltip',
                 ) ?>
@@ -61,10 +61,10 @@ $groupIndex = 0;
         ?>
         <li class="menu-group<?= $isCurrent ? ' menu-group_current menu-group_open' : '' ?>"
             data-sf-menu-group="<?= htmlspecialchars($id) ?>">
-            <?= Tooltip::drawTooltip(
+            <?= Tooltip::drawTooltipMain(
                 $head,
                 $item['name'],
-                position: TooltipPosition::Left,
+                position: TooltipMainPosition::Left,
                 theme: $tooltipTheme,
                 className: 'menu__tooltip',
             ) ?>

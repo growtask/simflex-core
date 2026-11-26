@@ -2,9 +2,9 @@
 
 namespace Simflex\Core\Layout\Components\Common\Form\Result;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Marker\Layout as Marker;
 use Simflex\Core\Layout\Components\UI\Marker\MarkerSize;
@@ -45,12 +45,12 @@ class Layout extends LayoutBase
             style: $style === ResultStyle::Success ? MarkerStyle::Success : MarkerStyle::Error,
             theme: $dark ? MarkerTheme::Dark : MarkerTheme::Light,
         ) : '';
-        $buttonHtml = $buttonText !== '' ? Button::drawButton(
+        $buttonHtml = $buttonText !== '' ? Button::drawButtonMain(
             className: 'result__button',
             text: htmlspecialchars($buttonText),
-            style: ButtonStyle::Primary,
-            size: ButtonSize::Medium,
-            theme: $dark ? ButtonTheme::Dark : ButtonTheme::Light,
+            style: ButtonMainStyle::Primary,
+            size: ButtonMainSize::Medium,
+            theme: $dark ? ButtonMainTheme::Dark : ButtonMainTheme::Light,
             attributes: ['type' => 'button'] + $buttonAttributes,
         ) : '';
 

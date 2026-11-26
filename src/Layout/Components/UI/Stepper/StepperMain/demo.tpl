@@ -6,21 +6,21 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout as Stepper;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperFill;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperStyle;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperWidth;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainFill;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainStyle;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainTheme;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainWidth;
 
-$stepperTheme = StepperTheme::from($theme);
+$stepperTheme = StepperMainTheme::from($theme);
 
 ?>
-<?php foreach (StepperSize::cases() as $size): ?>
+<?php foreach (StepperMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (StepperStyle::cases() as $style): ?>
-            <?php foreach (StepperFill::cases() as $fill): ?>
-                <?= Stepper::drawStepper(
+        <?php foreach (StepperMainStyle::cases() as $style): ?>
+            <?php foreach (StepperMainFill::cases() as $fill): ?>
+                <?= Stepper::drawStepperMain(
                     'ui_stepper_' . $theme . '_' . $size->name . '_' . $style->name . '_' . $fill->name,
                     1,
                     min: 1,
@@ -37,23 +37,23 @@ $stepperTheme = StepperTheme::from($theme);
 
 <h3 class="ui-showcase__subtitle ui-m">Ширина и состояния</h3>
 <div class="ui-showcase__row">
-    <?php foreach (StepperWidth::cases() as $width): ?>
-        <?= Stepper::drawStepper(
+    <?php foreach (StepperMainWidth::cases() as $width): ?>
+        <?= Stepper::drawStepperMain(
             'ui_stepper_width_' . $width->name . '_' . $theme,
             2,
             width: $width,
             theme: $stepperTheme,
         ) ?>
     <?php endforeach; ?>
-    <?= Stepper::drawStepper(
+    <?= Stepper::drawStepperMain(
         'ui_stepper_error_' . $theme,
         5,
         max: 5,
-        style: StepperStyle::Input,
-        fill: StepperFill::Outline,
+        style: StepperMainStyle::Input,
+        fill: StepperMainFill::Outline,
         theme: $stepperTheme,
         error: 'Осталось только 5',
     ) ?>
-    <?= Stepper::drawStepper('ui_stepper_loading_' . $theme, 3, theme: $stepperTheme, loading: true) ?>
-    <?= Stepper::drawStepper('ui_stepper_disabled_' . $theme, 3, theme: $stepperTheme, disabled: true) ?>
+    <?= Stepper::drawStepperMain('ui_stepper_loading_' . $theme, 3, theme: $stepperTheme, loading: true) ?>
+    <?= Stepper::drawStepperMain('ui_stepper_disabled_' . $theme, 3, theme: $stepperTheme, disabled: true) ?>
 </div>

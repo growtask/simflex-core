@@ -21,41 +21,41 @@ use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
 use Simflex\Core\Layout\Components\Common\Modal\ModalSize;
 use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
 use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainTheme;
 use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as Dropdown;
 use Simflex\Core\Layout\Components\UI\Link\LinkMain\Layout as Link;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkTheme;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\Layout as SortButton;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonStyle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonTheme;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SortDirection;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonStyle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SwitchSortDirection;
 use Simflex\Core\Layout\Components\UI\Tag\Layout as Tag;
 use Simflex\Core\Layout\Components\UI\Tag\TagSize;
 use Simflex\Core\Layout\Components\UI\Tag\TagStyle;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tag\TagTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipSide;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainSide;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
 
-$buttonTheme = ButtonTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
 $fields = array_filter($this->fields, fn(Field $field) => $field->isVisible);
 // главная колонка растягивается (минимум 280 px): поле с width 1, колонка дерева или первая текстовая
 $mainName = $treeName;
@@ -100,10 +100,10 @@ $columnClasses = fn(Field $field, string $base) => implode(' ', array_filter([
 
 echo Page::get()->drawPageHead(
     $this->title,
-    $this->canAdd ? Button::drawButton(
+    $this->canAdd ? Button::drawButtonMain(
         text: 'Добавить',
         link: '?action=form',
-        size: ButtonSize::Small,
+        size: ButtonMainSize::Small,
         theme: $buttonTheme,
         iconLeft: 'plus',
     ) : '',
@@ -130,29 +130,29 @@ echo Page::get()->drawPageHead(
                     ];
                 }
                 ?>
-                <?= Dropdown::drawMenu(
-                    Tab::drawTab(
+                <?= Dropdown::drawDropdownMainMenu(
+                    Tab::drawTabMain(
                         className: 'table-scope__trigger',
                         text: htmlspecialchars($searchScope === '' ? 'Везде'
                             : strip_tags($searchFields[$searchScope]->label)),
                         iconRight: 'chevron-s-down',
-                        style: TabStyle::Outline,
-                        theme: TabTheme::from($theme),
+                        style: TabMainStyle::Outline,
+                        theme: TabMainTheme::from($theme),
                         attributes: ['type' => 'button', 'title' => 'Где искать'],
                     ),
                     $scopeItems,
-                    theme: DropdownTheme::from($theme),
+                    theme: DropdownMainTheme::from($theme),
                     side: 'left',
                     label: 'Где искать',
                     className: 'table-scope',
                 ) ?>
             <?php endif; ?>
             <?php if ($hasSearch): ?>
-                <?= TextInput::drawInput(
+                <?= TextInput::drawInputMain(
                     className: 'table-toolbar__search',
                     placeholder: 'Поиск',
-                    size: TextInputSize::Medium,
-                    theme: TextInputTheme::from($theme),
+                    size: InputMainSize::Medium,
+                    theme: InputMainTheme::from($theme),
                     icon: 'search',
                     id: 'sf-list-search',
                     attributes: [
@@ -167,10 +167,10 @@ echo Page::get()->drawPageHead(
             <?php endif; ?>
             <?php if ($this->isFilter): ?>
                 <span class="table-toolbar__filters">
-                    <?= Button::drawButton(
+                    <?= Button::drawButtonMain(
                         className: 'table-toolbar__filters-button',
-                        style: ButtonStyle::Secondary,
-                        size: ButtonSize::Medium,
+                        style: ButtonMainStyle::Secondary,
+                        size: ButtonMainSize::Medium,
                         theme: $buttonTheme,
                         attributes: [
                             'data-modal' => 'sf-modal-filters',
@@ -209,11 +209,11 @@ echo Page::get()->drawPageHead(
                 <?php endforeach; ?>
                 <a class="th-tags__clear-tag" href="?action=filterReset">Убрать всё</a>
             </div>
-            <?= ButtonIcon::drawButtonIcon(
+            <?= ButtonIcon::drawButtonIconSmall(
                 icon: 'close',
                 label: 'Сбросить все фильтры',
                 className: 'th-tags__clear',
-                theme: ButtonIconTheme::from($theme),
+                theme: ButtonIconSmallTheme::from($theme),
                 link: '?action=filterReset',
             ) ?>
         </div>
@@ -224,16 +224,16 @@ echo Page::get()->drawPageHead(
             <thead>
             <tr class="thr">
                 <th class="th th_select" scope="col">
-                    <?= Checkbox::drawCheckbox(
+                    <?= Checkbox::drawSwitchCheckbox(
                         className: 'th__check',
-                        theme: CheckboxTheme::from($theme),
+                        theme: SwitchCheckboxTheme::from($theme),
                         attributes: ['data-sf-select-all' => '', 'aria-label' => 'Выбрать все записи'],
                     ) ?>
                 </th>
                 <?php foreach ($fields as $field): ?>
                     <?php
-                    $direction = $field->name !== $sortColumn ? SortDirection::None
-                        : ($this->isSortDesc() ? SortDirection::Descending : SortDirection::Ascending);
+                    $direction = $field->name !== $sortColumn ? SwitchSortDirection::None
+                        : ($this->isSortDesc() ? SwitchSortDirection::Descending : SwitchSortDirection::Ascending);
                     ?>
                     <th class="<?= $columnClasses($field, 'th') ?>" scope="col"
                         <?php if ($field->isSortable): ?>aria-sort="<?= $direction->value ?>"<?php endif; ?>
@@ -242,12 +242,12 @@ echo Page::get()->drawPageHead(
                             <?php $label = htmlspecialchars(strip_tags($field->label)); ?>
                             <?php if ($field->help !== ''): ?>
                                 <?php // подсказка — при наведении на название и фокусе на нём ?>
-                                <?= Tooltip::drawTooltip(
+                                <?= Tooltip::drawTooltipMain(
                                     '<span class="th__label th__label_help" tabindex="0">' . $label . '</span>',
                                     strip_tags($field->help),
-                                    TooltipPosition::Top,
-                                    TooltipSide::Left,
-                                    theme: TooltipTheme::from($theme),
+                                    TooltipMainPosition::Top,
+                                    TooltipMainSide::Left,
+                                    theme: TooltipMainTheme::from($theme),
                                     className: 'th__help',
                                 ) ?>
                             <?php else: ?>
@@ -256,17 +256,17 @@ echo Page::get()->drawPageHead(
                             <?php
                             // сортировка (th-actions): один шеврон — серый без сортировки, акцентный по этой
                             // колонке (вверх — по возрастанию, вниз — по убыванию); клик — следующее направление
-                            $isAscending = $direction === SortDirection::Ascending;
+                            $isAscending = $direction === SwitchSortDirection::Ascending;
                             ?>
                             <?php if ($field->isSortable): ?>
-                            <?= SortButton::drawSortButton(
+                            <?= SortButton::drawSwitchSortButton(
                                 up: $isAscending,
                                 label: strip_tags($field->label) . ': сортировать по '
                                     . ($isAscending ? 'убыванию' : 'возрастанию'),
                                 link: '?o=' . rawurlencode($field->name) . '&d=' . ($isAscending ? '1' : '0'),
-                                active: $direction !== SortDirection::None,
-                                style: SortButtonStyle::Line,
-                                theme: SortButtonTheme::from($theme),
+                                active: $direction !== SwitchSortDirection::None,
+                                style: SwitchSortButtonStyle::Line,
+                                theme: SwitchSortButtonTheme::from($theme),
                                 className: 'th__sort',
                             ) ?>
                             <?php endif; ?>
@@ -275,11 +275,11 @@ echo Page::get()->drawPageHead(
                             <?php endif; ?>
                             <?php if (($field->isSortable && $field->name === $sortedColumn)
                                 || isset($filterValues[$field->name])): ?>
-                                <?= ButtonIcon::drawButtonIcon(
+                                <?= ButtonIcon::drawButtonIconSmall(
                                     icon: 'close',
                                     label: 'Сбросить сортировку и фильтр колонки «' . strip_tags($field->label) . '»',
                                     className: 'th__reset',
-                                    theme: ButtonIconTheme::from($theme),
+                                    theme: ButtonIconSmallTheme::from($theme),
                                     link: '?' . http_build_query(['action' => 'columnReset', 'column' => $field->name]),
                                 ) ?>
                             <?php endif; ?>
@@ -297,9 +297,9 @@ echo Page::get()->drawPageHead(
                 <tr class="tr table__body-row<?= (int)$id === $highlightId ? ' tr_saved' : '' ?>"
                     data-id="<?= htmlspecialchars((string)$id) ?>">
                     <td class="td td_select table-data-select">
-                        <?= Checkbox::drawCheckbox(
+                        <?= Checkbox::drawSwitchCheckbox(
                             className: 'td__check',
-                            theme: CheckboxTheme::from($theme),
+                            theme: SwitchCheckboxTheme::from($theme),
                             attributes: [
                                 'name' => 'row[]',
                                 'value' => (string)$id,
@@ -335,18 +335,18 @@ echo Page::get()->drawPageHead(
                     <?= $isFiltered ? 'Измените условия поиска или сбросьте фильтры.' : 'Добавьте первую запись раздела.' ?>
                 </p>
                 <?php if ($isFiltered): ?>
-                    <?= Button::drawButton(
+                    <?= Button::drawButtonMain(
                         text: 'Сбросить фильтры',
                         link: '?action=filterReset',
-                        style: ButtonStyle::Secondary,
-                        size: ButtonSize::Small,
+                        style: ButtonMainStyle::Secondary,
+                        size: ButtonMainSize::Small,
                         theme: $buttonTheme,
                     ) ?>
                 <?php elseif ($this->canAdd): ?>
-                    <?= Button::drawButton(
+                    <?= Button::drawButtonMain(
                         text: 'Добавить',
                         link: '?action=form',
-                        size: ButtonSize::Small,
+                        size: ButtonMainSize::Small,
                         theme: $buttonTheme,
                         iconLeft: 'plus',
                     ) ?>
@@ -386,22 +386,22 @@ echo Page::get()->drawPageHead(
         id: 'sf-modal-filters',
         title: 'Фильтры',
         content: '<div class="modal-filters" data-sf-filters-modal>' . $modalFilters . '</div>',
-        footer: Button::drawButton(
+        footer: Button::drawButtonMain(
             className: 'modal-filters__apply',
             text: 'Применить фильтры',
-            size: ButtonSize::Medium,
+            size: ButtonMainSize::Medium,
             theme: $buttonTheme,
             attributes: ['data-sf-filters-apply' => ''],
         ),
         size: ModalSize::Small,
         theme: ModalTheme::from($theme),
         className: 'modal-filters-window',
-        headAction: Link::drawLink(
+        headAction: Link::drawLinkMain(
             className: 'modal-filters__reset',
             text: 'Сбросить',
             href: '?action=filterReset',
-            size: LinkSize::Small,
-            theme: LinkTheme::from($theme),
+            size: LinkMainSize::Small,
+            theme: LinkMainTheme::from($theme),
         ),
     ) ?>
 <?php endif; ?>

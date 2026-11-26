@@ -3,10 +3,10 @@
 namespace Simflex\Core\Layout\Components\UI\Stepper\StepperQuantity;
 
 use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout as StepperMain;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperFill;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperStyle;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainFill;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainStyle;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -22,17 +22,17 @@ class Layout extends LayoutBase
         string       $name = 'quantity',
         int          $value = 1,
         ?int         $stock = null,
-        StepperSize  $size = StepperSize::Small,
-        StepperStyle $style = StepperStyle::Default,
-        StepperFill  $fill = StepperFill::Filled,
-        StepperTheme $theme = StepperTheme::Light,
+        StepperMainSize  $size = StepperMainSize::Small,
+        StepperMainStyle $style = StepperMainStyle::Default,
+        StepperMainFill  $fill = StepperMainFill::Filled,
+        StepperMainTheme $theme = StepperMainTheme::Light,
         bool         $disabled = false,
         string       $label = 'Количество',
         string       $className = '',
     ): string {
         $value = max(1, $stock !== null ? min($stock, $value) : $value);
 
-        return StepperMain::drawStepper(
+        return StepperMain::drawStepperMain(
             name: $name,
             value: $value,
             min: 1,

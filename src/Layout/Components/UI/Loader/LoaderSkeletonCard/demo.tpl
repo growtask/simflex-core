@@ -5,13 +5,13 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonTheme;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeletonCard\Layout as SkeletonCard;
 
-$skeletonTheme = SkeletonTheme::from($theme);
+$skeletonTheme = LoaderSkeletonTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row">
-    <?= SkeletonCard::drawSkeletonCard($skeletonTheme) ?>
-    <?= SkeletonCard::drawSkeletonCard($skeletonTheme, animation: false) ?>
+    <?= SkeletonCard::drawLoaderSkeletonCard($skeletonTheme) ?>
+    <?= SkeletonCard::drawLoaderSkeletonCard($skeletonTheme, animation: false) ?>
 </div>

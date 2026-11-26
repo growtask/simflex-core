@@ -4,10 +4,10 @@ namespace Simflex\Core\Extensions\Alert;
 
 use Simflex\Core\Http\Assets;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeStyle;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeTheme;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\Layout as Toast;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\ToastStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\FeedbackToastStyle;
 use Simflex\Core\Http\PageAssets;
 use Simflex\Core\Http\View;
 use Simflex\Core\System\Container;
@@ -191,15 +191,15 @@ class Alert
             foreach (self::$s[''][$section] ?? [] as $message) {
                 $text = trim(html_entity_decode(strip_tags((string)$message)));
                 if ($section === 'success') {
-                    $toasts .= Toast::drawToast($text, ToastStyle::Success, icon: true, timer: true);
+                    $toasts .= Toast::drawFeedbackToast($text, FeedbackToastStyle::Success, icon: true, timer: true);
                     continue;
                 }
                 [$style, $title] = match ($section) {
-                    'error' => [NoticeStyle::Error, 'Ошибка'],
-                    'warning' => [NoticeStyle::Alert, 'Внимание'],
-                    default => [NoticeStyle::Info, 'Информация'],
+                    'error' => [FeedbackNoticeStyle::Error, 'Ошибка'],
+                    'warning' => [FeedbackNoticeStyle::Alert, 'Внимание'],
+                    default => [FeedbackNoticeStyle::Info, 'Информация'],
                 };
-                $notices .= Notice::drawNotice($title, $text, $style, NoticeTheme::from($theme), close: true);
+                $notices .= Notice::drawFeedbackNotice($title, $text, $style, FeedbackNoticeTheme::from($theme), close: true);
             }
             self::$s[''][$section] = [];
         }

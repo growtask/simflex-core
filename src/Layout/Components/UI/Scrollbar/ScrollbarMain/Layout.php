@@ -18,13 +18,13 @@ class Layout extends LayoutBase
      * @param bool $arrows Стрелки на концах полосы
      * @param string $label Доступное имя прокручиваемой области
      */
-    public static function drawScrollbar(
+    public static function drawScrollbarMain(
         string             $content,
-        ScrollbarStyle     $style = ScrollbarStyle::Classic,
-        ScrollbarDirection $direction = ScrollbarDirection::Vertical,
-        ScrollbarSize      $size = ScrollbarSize::Medium,
+        ScrollbarMainStyle     $style = ScrollbarMainStyle::Classic,
+        ScrollbarMainDirection $direction = ScrollbarMainDirection::Vertical,
+        ScrollbarMainSize      $size = ScrollbarMainSize::Medium,
         bool               $arrows = false,
-        ScrollbarTheme     $theme = ScrollbarTheme::Light,
+        ScrollbarMainTheme     $theme = ScrollbarMainTheme::Light,
         string             $height = '',
         string             $label = '',
         string             $className = '',

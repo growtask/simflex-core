@@ -6,9 +6,9 @@
  */
 
 use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogo;
-use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\LogoTheme;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\BrandLogoTheme;
 
-$logoTheme = LogoTheme::from($theme);
+$logoTheme = BrandLogoTheme::from($theme);
 
 ?>
 <h3 class="ui-showcase__subtitle ui-m">Знак по умолчанию</h3>

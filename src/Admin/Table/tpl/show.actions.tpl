@@ -8,17 +8,17 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
-$theme = ButtonTheme::from(Page::get()->getTheme());
-$action = fn(string $id, string $text, string $icon, string $action, array $attributes = []) => Button::drawButton(
+$theme = ButtonMainTheme::from(Page::get()->getTheme());
+$action = fn(string $id, string $text, string $icon, string $action, array $attributes = []) => Button::drawButtonMain(
     className: 'table-bar__button',
     text: $text,
-    style: ButtonStyle::Secondary,
-    size: ButtonSize::Small,
+    style: ButtonMainStyle::Secondary,
+    size: ButtonMainSize::Small,
     theme: $theme,
     attributes: $attributes + ['id' => $id, 'data-sf-list-action' => $action],
     iconLeft: $icon,
@@ -26,11 +26,11 @@ $action = fn(string $id, string $text, string $icon, string $action, array $attr
 );
 ?>
 <?php if ($this->canAdd): ?>
-    <?= Button::drawButton(
+    <?= Button::drawButtonMain(
         className: 'table-bar__button table-bar__add',
         text: 'Добавить',
         link: '?action=form',
-        size: ButtonSize::Small,
+        size: ButtonMainSize::Small,
         theme: $theme,
         iconLeft: 'plus',
     ) ?>

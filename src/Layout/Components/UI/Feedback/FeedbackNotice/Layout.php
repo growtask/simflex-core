@@ -18,11 +18,11 @@ class Layout extends LayoutBase
      * @param string $buttons HTML ряда кнопок (Buttons/alt monochrome и flat, размер s)
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawNotice(
+    public static function drawFeedbackNotice(
         string      $title,
         string      $text = '',
-        NoticeStyle $style = NoticeStyle::Info,
-        NoticeTheme $theme = NoticeTheme::Light,
+        FeedbackNoticeStyle $style = FeedbackNoticeStyle::Info,
+        FeedbackNoticeTheme $theme = FeedbackNoticeTheme::Light,
         bool        $icon = true,
         bool        $close = false,
         string      $buttons = '',

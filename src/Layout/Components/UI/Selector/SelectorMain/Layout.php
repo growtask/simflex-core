@@ -19,11 +19,11 @@ class Layout extends LayoutBase
      * @param bool $fill Сегменты поровну на всю ширину (width=fill в Figma); иначе по содержимому (hug)
      * @param string $label Доступное имя группы
      */
-    public static function drawSelector(
+    public static function drawSelectorMain(
         array         $items,
-        SelectorStyle $style = SelectorStyle::Filled,
-        SelectorSize  $size = SelectorSize::Medium,
-        SelectorTheme $theme = SelectorTheme::Light,
+        SelectorMainStyle $style = SelectorMainStyle::Filled,
+        SelectorMainSize  $size = SelectorMainSize::Medium,
+        SelectorMainTheme $theme = SelectorMainTheme::Light,
         bool          $fill = false,
         string        $name = '',
         string        $label = '',

@@ -14,17 +14,17 @@ class Layout extends LayoutBase
      * @param string $name Имя: текстовая альтернатива аватара и источник инициалов
      * @param string $image Адрес картинки; пусто — инициалы или силуэт
      */
-    public static function drawAvatar(
+    public static function drawPlaceholderAvatar(
         string           $name,
         string           $image = '',
-        AvatarSize       $size = AvatarSize::Medium,
-        AvatarStyle      $style = AvatarStyle::Initials,
-        AvatarTheme $theme = AvatarTheme::Light,
+        PlaceholderAvatarSize       $size = PlaceholderAvatarSize::Medium,
+        PlaceholderAvatarStyle      $style = PlaceholderAvatarStyle::Initials,
+        PlaceholderAvatarTheme $theme = PlaceholderAvatarTheme::Light,
         string           $className = '',
     ): string {
         $initials = static::getInitials($name);
         if ($initials === '') {
-            $style = AvatarStyle::Silhouette;
+            $style = PlaceholderAvatarStyle::Silhouette;
         }
 
         return static::draw(['view' => 'avatar'] + compact('name', 'image', 'initials', 'className') + [
@@ -38,9 +38,9 @@ class Layout extends LayoutBase
      * Заглушка «нет картинки»: иконка image на подложке, размер задаёт родитель
      * @param string $label Текстовая альтернатива
      */
-    public static function drawNoImage(
+    public static function drawPlaceholderAvatarNoImage(
         string           $label = 'Нет изображения',
-        AvatarTheme $theme = AvatarTheme::Light,
+        PlaceholderAvatarTheme $theme = PlaceholderAvatarTheme::Light,
         string           $className = '',
     ): string {
         return static::draw(['view' => 'no-image'] + compact('label', 'className') + ['theme' => $theme->value]);

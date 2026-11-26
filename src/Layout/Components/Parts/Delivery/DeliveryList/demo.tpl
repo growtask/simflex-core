@@ -5,11 +5,11 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryService;
-use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryStyle;
+use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryLogoService;
+use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryLogo\DeliveryLogoStyle;
 use Simflex\Core\Layout\Components\Parts\Delivery\DeliveryList\Layout as DeliveryList;
 
-$style = $theme === 'dark' ? DeliveryStyle::MonochromeDark : DeliveryStyle::Monochrome;
+$style = $theme === 'dark' ? DeliveryLogoStyle::MonochromeDark : DeliveryLogoStyle::Monochrome;
 
 ?>
 <h3 class="ui-showcase__subtitle ui-m">Все</h3>
@@ -19,5 +19,5 @@ $style = $theme === 'dark' ? DeliveryStyle::MonochromeDark : DeliveryStyle::Mono
 
 <h3 class="ui-showcase__subtitle ui-m">Выбранные, одноцветные</h3>
 <div class="ui-showcase__row">
-    <?= DeliveryList::drawDeliveryList([DeliveryService::FivePost, DeliveryService::Ozon, DeliveryService::Cdek], $style) ?>
+    <?= DeliveryList::drawDeliveryList([DeliveryLogoService::FivePost, DeliveryLogoService::Ozon, DeliveryLogoService::Cdek], $style) ?>
 </div>

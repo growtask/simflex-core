@@ -5,11 +5,11 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\Payment\PaymentLogo\PaymentSystem;
-use Simflex\Core\Layout\Components\Parts\Payment\PaymentLogo\PaymentStyle;
+use Simflex\Core\Layout\Components\Parts\Payment\PaymentLogo\PaymentLogoSystem;
+use Simflex\Core\Layout\Components\Parts\Payment\PaymentLogo\PaymentLogoStyle;
 use Simflex\Core\Layout\Components\Parts\Payment\PaymentList\Layout as PaymentList;
 
-$style = $theme === 'dark' ? PaymentStyle::MonochromeDark : PaymentStyle::Monochrome;
+$style = $theme === 'dark' ? PaymentLogoStyle::MonochromeDark : PaymentLogoStyle::Monochrome;
 
 ?>
 <h3 class="ui-showcase__subtitle ui-m">Все</h3>
@@ -19,5 +19,5 @@ $style = $theme === 'dark' ? PaymentStyle::MonochromeDark : PaymentStyle::Monoch
 
 <h3 class="ui-showcase__subtitle ui-m">Выбранные, одноцветные</h3>
 <div class="ui-showcase__row">
-    <?= PaymentList::drawPaymentList([PaymentSystem::GooglePay, PaymentSystem::Mastercard, PaymentSystem::Maestro], $style) ?>
+    <?= PaymentList::drawPaymentList([PaymentLogoSystem::GooglePay, PaymentLogoSystem::Mastercard, PaymentLogoSystem::Maestro], $style) ?>
 </div>

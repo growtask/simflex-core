@@ -6,20 +6,20 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallTheme;
 
-$socialTheme = SocialTheme::from($theme);
+$socialTheme = ButtonSocialSmallTheme::from($theme);
 
 ?>
-<?php foreach (SocialSize::cases() as $size): ?>
-    <?php foreach (SocialStyle::cases() as $style): ?>
+<?php foreach (ButtonSocialSmallSize::cases() as $size): ?>
+    <?php foreach (ButtonSocialSmallStyle::cases() as $style): ?>
         <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?>, <?= $style->name ?></h3>
         <div class="ui-showcase__row">
-            <?php foreach (SocialNetwork::cases() as $network): ?>
-                <?= Social::drawSocial(
+            <?php foreach (ButtonSocialSmallNetwork::cases() as $network): ?>
+                <?= Social::drawButtonSocialSmall(
                     network: $network,
                     href: '#' . $network->value,
                     style: $style,

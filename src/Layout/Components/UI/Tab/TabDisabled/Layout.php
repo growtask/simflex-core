@@ -3,9 +3,9 @@
 namespace Simflex\Core\Layout\Components\UI\Tab\TabDisabled;
 
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as TabMain;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -20,12 +20,12 @@ class Layout extends LayoutBase
         string   $iconLeft = '',
         string   $iconRight = '',
         string   $badge = '',
-        TabStyle $style = TabStyle::Primary,
-        TabSize  $size = TabSize::Medium,
-        TabTheme $theme = TabTheme::Light,
+        TabMainStyle $style = TabMainStyle::Primary,
+        TabMainSize  $size = TabMainSize::Medium,
+        TabMainTheme $theme = TabMainTheme::Light,
         string   $className = '',
     ): string {
-        return TabMain::drawTab(
+        return TabMain::drawTabMain(
             className: $className,
             text: $text,
             link: $link,

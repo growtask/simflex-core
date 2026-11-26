@@ -7,21 +7,21 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Range\RangeMain\Layout as Range;
-use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeTheme;
-use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeType;
-use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeWidth;
+use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeMainTheme;
+use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeMainType;
+use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeMainWidth;
 
-$rangeTheme = RangeTheme::from($theme);
+$rangeTheme = RangeMainTheme::from($theme);
 
 ?>
-<?php foreach (RangeType::cases() as $type): ?>
+<?php foreach (RangeMainType::cases() as $type): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $type->name ?></h3>
-    <?php foreach (RangeWidth::cases() as $width): ?>
+    <?php foreach (RangeMainWidth::cases() as $width): ?>
         <div class="ui-showcase__row">
-            <?= Range::drawRange(0, 100000, 20000, 80000, 1000, $type, $width, $rangeTheme) ?>
-            <?= Range::drawRange(0, 100000, null, null, 1000, $type, $width, $rangeTheme, marks: true, labels: true) ?>
-            <?= Range::drawRange(0, 100000, 40000, 100000, 1000, $type, $width, $rangeTheme, disabled: true) ?>
-            <?= Range::drawRange(0, 100000, 40000, 100000, 1000, $type, $width, $rangeTheme, inputs: false) ?>
+            <?= Range::drawRangeMain(0, 100000, 20000, 80000, 1000, $type, $width, $rangeTheme) ?>
+            <?= Range::drawRangeMain(0, 100000, null, null, 1000, $type, $width, $rangeTheme, marks: true, labels: true) ?>
+            <?= Range::drawRangeMain(0, 100000, 40000, 100000, 1000, $type, $width, $rangeTheme, disabled: true) ?>
+            <?= Range::drawRangeMain(0, 100000, 40000, 100000, 1000, $type, $width, $rangeTheme, inputs: false) ?>
         </div>
     <?php endforeach; ?>
 <?php endforeach; ?>

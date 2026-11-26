@@ -2,14 +2,14 @@
 
 namespace Simflex\Core\Layout\Components\UI\Dropdown\DropdownInput;
 
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainSize;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainTheme;
 use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as DropdownMain;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
  * Поле, раскрывающее выпадающую панель (набор Figma Dropdown/input): выбор из списка вместо ввода текста.
- * Поле-селект DropdownMain::drawSelect(); разметка, стили и скрипт общие с DropdownMain
+ * Поле-селект DropdownMain::drawDropdownMainSelect(); разметка, стили и скрипт общие с DropdownMain
  */
 class Layout extends LayoutBase
 {
@@ -22,14 +22,14 @@ class Layout extends LayoutBase
         array           $options,
         string|int|null $value = null,
         string          $placeholder = 'Выберите',
-        DropdownSize    $size = DropdownSize::Medium,
-        DropdownTheme   $theme = DropdownTheme::Light,
+        DropdownMainSize    $size = DropdownMainSize::Medium,
+        DropdownMainTheme   $theme = DropdownMainTheme::Light,
         bool            $search = false,
         bool            $disabled = false,
         string          $className = '',
         array           $attributes = [],
     ): string {
-        return DropdownMain::drawSelect(
+        return DropdownMain::drawDropdownMainSelect(
             name: $name,
             options: $options,
             value: $value,

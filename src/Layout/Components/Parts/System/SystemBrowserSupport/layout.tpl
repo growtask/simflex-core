@@ -2,9 +2,9 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $classes = ['browser-support', "browser-support-theme_{$data['theme']}", $data['inline'] ? 'browser-support_inline' : '', $data['className']];
@@ -17,13 +17,13 @@ if ($data['check']) {
     <?= renderIcon('triangle-alert', 'browser-support__icon') ?>
     <p class="browser-support__text"><?= htmlspecialchars($data['text']) ?></p>
     <?php if ($data['buttonText'] !== '' && $data['buttonLink'] !== ''): ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'browser-support__action',
             text: htmlspecialchars($data['buttonText']),
             link: $data['buttonLink'],
-            style: ButtonStyle::Gray,
-            size: ButtonSize::Small,
-            theme: ButtonTheme::from($data['theme']),
+            style: ButtonMainStyle::Gray,
+            size: ButtonMainSize::Small,
+            theme: ButtonMainTheme::from($data['theme']),
         ) ?>
     <?php endif; ?>
 </div>

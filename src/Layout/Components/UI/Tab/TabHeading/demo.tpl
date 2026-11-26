@@ -5,12 +5,12 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tab\TabHeading\Layout as TabHeading;
 use Simflex\Core\Layout\Components\UI\Tab\TabHeading\TabHeadingSize;
 use Simflex\Core\Layout\Components\UI\Tab\TabHeading\TabHeadingStyle;
 
-$tabTheme = TabTheme::from($theme);
+$tabTheme = TabMainTheme::from($theme);
 
 ?>
 <?php foreach (TabHeadingSize::cases() as $size): ?>

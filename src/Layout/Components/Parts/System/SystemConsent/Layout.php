@@ -15,11 +15,11 @@ class Layout extends LayoutBase
      * @param bool $error Ошибка: согласие не поставлено
      * @param array<string,string> $attributes Атрибуты input (по умолчанию name="consent", required)
      */
-    public static function drawConsent(
+    public static function drawSystemConsent(
         string       $text = 'Я принимаю',
         string       $linkText = 'политику обработки персональных данных',
         string       $policyUrl = '/policy',
-        ConsentTheme $theme = ConsentTheme::Light,
+        SystemConsentTheme $theme = SystemConsentTheme::Light,
         bool         $error = false,
         string       $className = '',
         array        $attributes = []

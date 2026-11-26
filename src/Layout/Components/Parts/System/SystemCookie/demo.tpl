@@ -6,24 +6,24 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\System\SystemCookie\CookiePosition;
-use Simflex\Core\Layout\Components\Parts\System\SystemCookie\CookieState;
-use Simflex\Core\Layout\Components\Parts\System\SystemCookie\CookieTheme;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\SystemCookiePosition;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\SystemCookieState;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\SystemCookieTheme;
 use Simflex\Core\Layout\Components\Parts\System\SystemCookie\Layout as Cookie;
 
-$cookieTheme = CookieTheme::from($theme);
+$cookieTheme = SystemCookieTheme::from($theme);
 
 ?>
-<?php foreach (CookieState::cases() as $state): ?>
+<?php foreach (SystemCookieState::cases() as $state): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $state->name ?></h3>
     <div class="ui-showcase__row">
-        <?= Cookie::drawCookie(state: $state, theme: $cookieTheme, inline: true) ?>
+        <?= Cookie::drawSystemCookie(state: $state, theme: $cookieTheme, inline: true) ?>
     </div>
 <?php endforeach; ?>
 
-<?php foreach (CookiePosition::cases() as $position): ?>
+<?php foreach (SystemCookiePosition::cases() as $position): ?>
     <h3 class="ui-showcase__subtitle ui-m">Позиция <?= $position->name ?>, без ссылки на политику</h3>
     <div class="ui-showcase__row">
-        <?= Cookie::drawCookie(theme: $cookieTheme, position: $position, policyUrl: '', inline: true) ?>
+        <?= Cookie::drawSystemCookie(theme: $cookieTheme, position: $position, policyUrl: '', inline: true) ?>
     </div>
 <?php endforeach; ?>

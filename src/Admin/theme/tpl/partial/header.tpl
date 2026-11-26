@@ -7,13 +7,13 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarSize;
 use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
@@ -21,12 +21,12 @@ $user = Container::getUser();
 $userName = (string)($user?->name ?: $user?->login);
 ?>
 <header class="topbar topbar-theme_<?= $theme ?>">
-    <?= Button::drawButton(
+    <?= Button::drawButtonMain(
         className: 'topbar__burger',
         icon: 'menu',
-        style: ButtonStyle::Secondary,
-        size: ButtonSize::Small,
-        theme: ButtonTheme::from($theme),
+        style: ButtonMainStyle::Secondary,
+        size: ButtonMainSize::Small,
+        theme: ButtonMainTheme::from($theme),
         attributes: [
             'aria-label' => 'Открыть меню',
             'aria-controls' => 'sf-menu',
@@ -39,6 +39,6 @@ $userName = (string)($user?->name ?: $user?->login);
         <div class="topbar__slots"><?= $slotsHtml ?></div>
     <?php endif ?>
     <a class="topbar__account" href="<?= Page::url('account') ?>" aria-label="Профиль: <?= htmlspecialchars($userName) ?>">
-        <?= Placeholder::drawAvatar($userName, size: AvatarSize::Small, theme: AvatarTheme::from($theme)) ?>
+        <?= Placeholder::drawPlaceholderAvatar($userName, size: PlaceholderAvatarSize::Small, theme: PlaceholderAvatarTheme::from($theme)) ?>
     </a>
 </header>

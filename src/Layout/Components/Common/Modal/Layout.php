@@ -2,9 +2,9 @@
 
 namespace Simflex\Core\Layout\Components\Common\Modal;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -48,11 +48,11 @@ class Layout extends LayoutBase
         bool $alert = false,
         string $headAction = '',
     ): string {
-        $closeButton = Button::drawButton(
+        $closeButton = Button::drawButtonMain(
             className: 'modal__close',
-            style: ButtonStyle::Gray,
-            size: ButtonSize::Medium,
-            theme: $theme === ModalTheme::Dark ? ButtonTheme::Dark : ButtonTheme::Light,
+            style: ButtonMainStyle::Gray,
+            size: ButtonMainSize::Medium,
+            theme: $theme === ModalTheme::Dark ? ButtonMainTheme::Dark : ButtonMainTheme::Light,
             iconLeft: 'close',
             attributes: ['type' => 'button', 'aria-label' => $closeLabel, 'data-modal-close' => ''],
         );

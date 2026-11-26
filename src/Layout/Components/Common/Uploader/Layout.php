@@ -2,12 +2,12 @@
 
 namespace Simflex\Core\Layout\Components\Common\Uploader;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -62,37 +62,37 @@ class Layout extends LayoutBase
         array         $attributes = [],
     ): string {
         $id = $id !== '' ? $id : 'sf-uploader-' . ++self::$counter;
-        $buttonTheme = ButtonTheme::from($theme->value);
-        $iconTheme = ButtonIconTheme::from($theme->value);
-        $pick = Button::drawButton(
+        $buttonTheme = ButtonMainTheme::from($theme->value);
+        $iconTheme = ButtonIconSmallTheme::from($theme->value);
+        $pick = Button::drawButtonMain(
             text: 'Выбрать файл',
-            size: ButtonSize::Small,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['data-sf-uploader-pick' => ''],
             iconLeft: 'upload',
             disabled: $disabled,
         );
-        $fromLibrary = $library ? Button::drawButton(
+        $fromLibrary = $library ? Button::drawButtonMain(
             text: 'Из библиотеки',
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['data-sf-uploader-library' => ''],
             iconLeft: 'folder',
             disabled: $disabled,
         ) : '';
-        $replace = ButtonIcon::drawButtonIcon(
+        $replace = ButtonIcon::drawButtonIconSmall(
             icon: 'refresh-1',
             label: 'Заменить',
-            style: ButtonIconStyle::Secondary,
+            style: ButtonIconSmallStyle::Secondary,
             theme: $iconTheme,
             attributes: ['data-sf-uploader-pick' => ''],
             disabled: $disabled,
         );
-        $remove = ButtonIcon::drawButtonIcon(
+        $remove = ButtonIcon::drawButtonIconSmall(
             icon: 'trash',
             label: 'Удалить',
-            style: ButtonIconStyle::Secondary,
+            style: ButtonIconSmallStyle::Secondary,
             theme: $iconTheme,
             attributes: ['data-sf-uploader-remove' => ''],
             disabled: $disabled,

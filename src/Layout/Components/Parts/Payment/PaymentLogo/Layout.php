@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Layout\Components\Parts\Payment\PaymentLogo;
 
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\ImgMissing;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\PlaceholderImgMissing;
 use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\Layout as PlaceholderImg;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -13,14 +13,14 @@ use Simflex\Core\Layout\LayoutBase;
 class Layout extends LayoutBase
 {
     /**
-     * @param string $label Название для скринридера; пусто - название из PaymentSystem::label()
+     * @param string $label Название для скринридера; пусто - название из PaymentLogoSystem::label()
      * @param string $href Адрес: с ним вместо span выводится ссылка a
      * @param string $src Адрес картинки знака (SVG); пусто - знак по умолчанию из images/payment, картинка проверяется на наличие, без файла ничего не выводится
      * @param array<string,mixed> $attributes Атрибуты корневого элемента
      */
     public static function drawPaymentLogo(
-        PaymentSystem $system,
-        PaymentStyle $style = PaymentStyle::Color,
+        PaymentLogoSystem $system,
+        PaymentLogoStyle $style = PaymentLogoStyle::Color,
         string $label = '',
         string $href = '',
         string $src = '',
@@ -30,7 +30,7 @@ class Layout extends LayoutBase
         $image = PlaceholderImg::drawPlaceholderImg(
             src: $src !== '' ? $src : asset('images/payment/' . $system->value . $style->suffix() . '.svg'),
             alt: $label !== '' ? $label : $system->label(),
-            missing: ImgMissing::Hide,
+            missing: PlaceholderImgMissing::Hide,
             imgClass: 'payment-logo__image'
         );
         // Нет файла знака - ничего не выводим

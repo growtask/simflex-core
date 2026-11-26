@@ -17,8 +17,8 @@ class Layout extends LayoutBase
      * @param bool $inline Не закрывать страницу, а выводить в рамке в потоке (витрина)
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawPreloader(
-        PreloaderTheme $theme = PreloaderTheme::Light,
+    public static function drawSystemPreloader(
+        SystemPreloaderTheme $theme = SystemPreloaderTheme::Light,
         string         $logoHtml = '',
         string         $label = 'Загрузка',
         int            $minDuration = 0,

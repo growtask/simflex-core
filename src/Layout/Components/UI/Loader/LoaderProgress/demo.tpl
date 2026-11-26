@@ -6,29 +6,29 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\Layout as Progress;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressStyle;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressTheme;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressType;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressType;
 
-$progressTheme = ProgressTheme::from($theme);
+$progressTheme = LoaderProgressTheme::from($theme);
 
 ?>
-<?php foreach (ProgressStyle::cases() as $style): ?>
+<?php foreach (LoaderProgressStyle::cases() as $style): ?>
     <h3 class="ui-showcase__subtitle ui-m">Полоса: <?= $style->name ?></h3>
-    <?php foreach (ProgressSize::cases() as $size): ?>
+    <?php foreach (LoaderProgressSize::cases() as $size): ?>
         <div class="ui-showcase__row">
             <?php foreach ([0, 25, 50, 75, 100] as $value): ?>
                 <span class="ui-showcase__field">
-                    <?= Progress::drawProgress($value, ProgressType::Determinate, $size, $style, $progressTheme) ?>
+                    <?= Progress::drawLoaderProgress($value, LoaderProgressType::Determinate, $size, $style, $progressTheme) ?>
                 </span>
             <?php endforeach; ?>
             <span class="ui-showcase__field">
-                <?= Progress::drawProgress(type: ProgressType::Indeterminate, size: $size, style: $style, theme: $progressTheme) ?>
+                <?= Progress::drawLoaderProgress(type: LoaderProgressType::Indeterminate, size: $size, style: $style, theme: $progressTheme) ?>
             </span>
             <span class="ui-showcase__field">
-                <?= Progress::drawProgress(
-                    type: ProgressType::Indeterminate,
+                <?= Progress::drawLoaderProgress(
+                    type: LoaderProgressType::Indeterminate,
                     size: $size,
                     style: $style,
                     theme: $progressTheme,

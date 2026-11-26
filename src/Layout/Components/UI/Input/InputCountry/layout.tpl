@@ -1,9 +1,9 @@
 <?php
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 
-/** @var PhoneCountry $country */
+/** @var InputPhoneCountry $country */
 $country = $data['country'];
 ?>
 <div class="phone-input phone-input-theme_<?= htmlspecialchars($data['theme']) ?> phone-input_size_m <?= htmlspecialchars($data['className']) ?>"
@@ -16,7 +16,7 @@ $country = $data['country'];
         </button>
         <?php if ($data['open']): ?>
             <div class="phone-input__panel" role="listbox" aria-label="Страна">
-                <?php foreach (PhoneCountry::cases() as $item): ?>
+                <?php foreach (InputPhoneCountry::cases() as $item): ?>
                     <button type="button" class="phone-input__option" role="option" tabindex="-1"
                             aria-selected="<?= $item === $country ? 'true' : 'false' ?>">
                         <span class="phone-flag phone-flag_<?= $item->value ?>"></span>

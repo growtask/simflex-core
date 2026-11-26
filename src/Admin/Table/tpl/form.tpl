@@ -19,30 +19,30 @@
 use Simflex\Core\Admin\Fields\Field;
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Helpers\Str;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeStyle;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeTheme;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 
 $theme = Page::get()->getTheme();
-$buttonTheme = ButtonTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
 $isGroup = $isGroup ?? false;
 
 /** Поле формы (form-input): название, поле, подсказка, ошибка; при групповом редактировании — «Изменять это поле» */
-$drawInput = function (Field $field, string $input) use ($isGroup, $theme): string {
+$drawInputMain = function (Field $field, string $input) use ($isGroup, $theme): string {
     $isWide = $field->isWide();
     $errors = $this->errors[$field->label] ?? [];
     $classes = 'form-input' . ($isWide ? ' form-input_wide' : '') . ($errors ? ' form-input_error' : '')
@@ -50,11 +50,11 @@ $drawInput = function (Field $field, string $input) use ($isGroup, $theme): stri
     $html = '<div class="' . $classes . '" data-field="' . htmlspecialchars($field->name) . '"'
         . ($errors ? ' data-sf-error' : '') . '>';
     if ($isGroup) {
-        $html .= Checkbox::drawCheckbox(
+        $html .= Checkbox::drawSwitchCheckbox(
             className: 'form-input__bulk',
             text: 'Изменять это поле',
-            size: CheckboxSize::Small,
-            theme: CheckboxTheme::from($theme),
+            size: SwitchCheckboxSize::Small,
+            theme: SwitchCheckboxTheme::from($theme),
             attributes: ['name' => 'set[' . $field->name . ']', 'data-sf-bulk' => ''],
         );
     }
@@ -89,7 +89,7 @@ foreach ($this->fields as $field) {
         $column,
         $group !== '' ? $group : ($column === 'main' ? 'Основное' : 'Параметры'),
         (string)($field->params['tab'] ?? ''),
-        $drawInput($field, $this->formFieldInput($field, $row))
+        $drawInputMain($field, $this->formFieldInput($field, $row))
     );
 }
 
@@ -103,14 +103,14 @@ foreach (['left' => 'main', 'right' => 'aside'] as $position => $column) {
                 $column,
                 ($param['group_name'] ?? '') ?: 'Параметры',
                 (string)($param['tab'] ?? ''),
-                $drawInput($field, $field->input($field->value))
+                $drawInputMain($field, $field->input($field->value))
             );
         }
     }
     foreach ($this->params[$position] as $group) {
         foreach ($group['fields'] ?? [] as $field) {
             Field::setFieldValue($field, $group, $params, $row);
-            $addInput($column, (string)$group['label'], (string)($group['tab'] ?? ''), $drawInput($field, $field->input($field->value)));
+            $addInput($column, (string)$group['label'], (string)($group['tab'] ?? ''), $drawInputMain($field, $field->input($field->value)));
         }
     }
 }
@@ -148,10 +148,10 @@ foreach ($this->errors as $key => $error) {
         $errorTexts[] = (is_string($key) ? strip_tags($key) . ': ' : '') . strip_tags((string)$text);
     }
 }
-$save = fn(string $class) => Button::drawButton(
+$save = fn(string $class) => Button::drawButtonMain(
     className: $class,
     text: 'Сохранить',
-    size: ButtonSize::Small,
+    size: ButtonMainSize::Small,
     theme: $buttonTheme,
     attributes: ['type' => 'submit', 'name' => 'submit_apply'],
     iconLeft: 'check',
@@ -174,11 +174,11 @@ $save = fn(string $class) => Button::drawButton(
     <?= Page::get()->drawPageHead(strip_tags(html_entity_decode($title)), $save('page-head__save')) ?>
 
     <?php if ($errorTexts): ?>
-        <?= Notice::drawNotice(
+        <?= Notice::drawFeedbackNotice(
             'При сохранении возникли ошибки',
             implode('; ', $errorTexts),
-            NoticeStyle::Error,
-            NoticeTheme::from($theme),
+            FeedbackNoticeStyle::Error,
+            FeedbackNoticeTheme::from($theme),
             className: 'edit-form__errors',
         ) ?>
     <?php endif; ?>
@@ -186,12 +186,12 @@ $save = fn(string $class) => Button::drawButton(
     <?php if ($hasTabs): ?>
         <div class="edit-tabs" role="tablist" aria-label="Разделы формы">
             <?php foreach ($tabs as $tab => $tabLabel): ?>
-                <?= Tab::drawTab(
+                <?= Tab::drawTabMain(
                     className: 'edit-tabs__tab',
                     text: htmlspecialchars($tabLabel),
-                    style: TabStyle::Underline,
-                    size: TabSize::Small,
-                    theme: TabTheme::from($theme),
+                    style: TabMainStyle::Underline,
+                    size: TabMainSize::Small,
+                    theme: TabMainTheme::from($theme),
                     attributes: ['role' => 'tab', 'data-sf-tab-button' => $tabIds[$tab], 'id' => $tabIds[$tab] . '-button'],
                     active: $tab === array_key_first($tabs),
                 ) ?>
@@ -214,12 +214,12 @@ $save = fn(string $class) => Button::drawButton(
             <aside class="edit-aside" aria-label="Дополнительно" data-sf-edit-aside>
                 <div class="edit-aside__head">
                     <span class="edit-aside__title">Дополнительно</span>
-                    <?= ButtonIcon::drawButtonIcon(
+                    <?= ButtonIcon::drawButtonIconSmall(
                         icon: 'panel-right-close',
                         label: 'Скрыть панель',
                         className: 'edit-aside__toggle',
-                        style: ButtonIconStyle::Secondary,
-                        theme: ButtonIconTheme::from($theme),
+                        style: ButtonIconSmallStyle::Secondary,
+                        theme: ButtonIconSmallTheme::from($theme),
                         attributes: ['data-sf-aside-toggle' => '', 'aria-expanded' => 'true'],
                     ) ?>
                 </div>
@@ -245,20 +245,20 @@ $save = fn(string $class) => Button::drawButton(
 
     <div class="edit-bar edit-bar-theme_<?= $theme ?>" role="toolbar" aria-label="Сохранение">
         <?= $save('edit-bar__save') ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'edit-bar__save-exit',
             text: 'Сохранить и выйти',
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['type' => 'submit', 'name' => 'submit_save'],
         ) ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'edit-bar__cancel',
             text: 'Отмена',
             link: Page::get()->getPath(),
-            style: ButtonStyle::Outline,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Outline,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
         ) ?>
     </div>

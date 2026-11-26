@@ -24,14 +24,14 @@ class Layout extends LayoutBase
      * @param string $id Идентификатор группы; пусто — вычисляется
      * @param array<string,string> $attributes Атрибуты корневого элемента
      */
-    public static function drawCodeInput(
+    public static function drawInputCode(
         string         $name = 'code',
         int            $length = 6,
         string         $value = '',
-        CodeInputState $state = CodeInputState::Default,
+        InputCodeState $state = InputCodeState::Default,
         string         $message = '',
         string         $label = 'Код из сообщения',
-        CodeInputTheme $theme = CodeInputTheme::Light,
+        InputCodeTheme $theme = InputCodeTheme::Light,
         string         $id = '',
         string         $className = '',
         array          $attributes = [],

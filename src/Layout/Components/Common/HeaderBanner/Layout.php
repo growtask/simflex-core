@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\Common\HeaderBanner;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -46,8 +46,8 @@ class Layout extends LayoutBase
                 'attributes'
             ) + [
                 'key' => static::getKey($text, $buttonText, $buttonLink),
-                'buttonStyle' => ButtonStyle::Gray,
-                'closeTheme' => ButtonTheme::Dark,
+                'buttonStyle' => ButtonMainStyle::Gray,
+                'closeTheme' => ButtonMainTheme::Dark,
             ]
         );
     }

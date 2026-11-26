@@ -3,18 +3,18 @@
 
 use Simflex\Core\Layout\Components\Common\Header\Layout as Header;
 use Simflex\Core\Layout\Components\Common\MobileMenu\Layout as MobileMenu;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactStyle;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactStyle;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactType;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
 use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\Layout as BrandLogoAnim;
 use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallSize;
 
 $headerClasses = ['header', $data['className'] ?? ''];
 $hasCta = $data['buttonText'] !== '';
@@ -36,19 +36,19 @@ $drawBar = function (string $idPrefix, bool $fixed) use ($data, $hasCta, $ctaAtt
                     src: $data['logoSrc']
                 ) ?>
                 <?php if ($hasCta): ?>
-                    <?= Button::drawButton(
+                    <?= Button::drawButtonMain(
                         className: 'header__cta header__cta_top',
                         text: htmlspecialchars($data['buttonText']),
-                        style: ButtonStyle::Secondary,
-                        size: ButtonSize::Small,
+                        style: ButtonMainStyle::Secondary,
+                        size: ButtonMainSize::Small,
                         attributes: $ctaAttrs
                     ) ?>
                 <?php endif; ?>
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     className: 'header__burger',
                     iconLeft: 'menu-2-line',
-                    style: ButtonStyle::Gray,
-                    size: ButtonSize::Medium,
+                    style: ButtonMainStyle::Gray,
+                    size: ButtonMainSize::Medium,
                     attributes: [
                         'aria-label' => 'Открыть меню',
                         'aria-haspopup' => 'dialog',
@@ -69,11 +69,11 @@ $drawBar = function (string $idPrefix, bool $fixed) use ($data, $hasCta, $ctaAtt
                     <?php if ($data['socials']): ?>
                         <div class="header__socials">
                             <?php foreach ($data['socials'] as $network => $href): ?>
-                                <?php if ($href !== '' && SocialNetwork::tryFrom((string)$network)): ?>
-                                    <?= Social::drawSocial(
-                                        network: SocialNetwork::from((string)$network),
+                                <?php if ($href !== '' && ButtonSocialSmallNetwork::tryFrom((string)$network)): ?>
+                                    <?= Social::drawButtonSocialSmall(
+                                        network: ButtonSocialSmallNetwork::from((string)$network),
                                         href: $href,
-                                        size: SocialSize::Small
+                                        size: ButtonSocialSmallSize::Small
                                     ) ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
@@ -82,31 +82,31 @@ $drawBar = function (string $idPrefix, bool $fixed) use ($data, $hasCta, $ctaAtt
                     <?php if ($data['phone'] !== '' || $data['email'] !== ''): ?>
                         <div class="header__contacts">
                             <?php if ($data['phone'] !== ''): ?>
-                                <?= Contact::drawContact(
+                                <?= Contact::drawLinkContact(
                                     text: $data['phone'],
                                     value: $data['phone'],
-                                    type: ContactType::Phone,
-                                    style: ContactStyle::Filled,
-                                    size: ContactSize::ExtraSmall
+                                    type: LinkContactType::Phone,
+                                    style: LinkContactStyle::Filled,
+                                    size: LinkContactSize::ExtraSmall
                                 ) ?>
                             <?php endif; ?>
                             <?php if ($data['email'] !== ''): ?>
-                                <?= Contact::drawContact(
+                                <?= Contact::drawLinkContact(
                                     text: $data['email'],
                                     value: $data['email'],
-                                    type: ContactType::Email,
-                                    style: ContactStyle::Filled,
-                                    size: ContactSize::ExtraSmall
+                                    type: LinkContactType::Email,
+                                    style: LinkContactStyle::Filled,
+                                    size: LinkContactSize::ExtraSmall
                                 ) ?>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($hasCta): ?>
-                        <?= Button::drawButton(
+                        <?= Button::drawButtonMain(
                             className: 'header__cta',
                             text: htmlspecialchars($data['buttonText']),
-                            style: ButtonStyle::Secondary,
-                            size: ButtonSize::Small,
+                            style: ButtonMainStyle::Secondary,
+                            size: ButtonMainSize::Small,
                             attributes: $ctaAttrs
                         ) ?>
                     <?php endif; ?>

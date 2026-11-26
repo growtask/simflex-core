@@ -2,16 +2,16 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Link\LinkMain\Layout as Link;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkTheme;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\Layout as Toggle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\SwitchToggleSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\SwitchToggleTheme;
 
 $id = 'sf-cookie-' . substr(md5(uniqid('', true)), 0, 6);
 $theme = $data['theme'];
@@ -24,12 +24,12 @@ $classes = [
     $data['className'],
 ];
 $attributes = $data['attributes'] + ['role' => 'region', 'aria-labelledby' => "{$id}-title", 'data-sf-cookie' => ''];
-$button = static fn (string $text, ButtonStyle $style, string $action, string $class) => Button::drawButton(
+$button = static fn (string $text, ButtonMainStyle $style, string $action, string $class) => Button::drawButtonMain(
     className: $class,
     text: htmlspecialchars($text),
     style: $style,
-    size: ButtonSize::Small,
-    theme: ButtonTheme::from($theme),
+    size: ButtonMainSize::Small,
+    theme: ButtonMainTheme::from($theme),
     attributes: ['type' => 'button', 'data-sf-cookie-action' => $action],
 );
 ?>
@@ -44,10 +44,10 @@ $button = static fn (string $text, ButtonStyle $style, string $action, string $c
             <fieldset class="cookie__list cookie__only-settings">
                 <legend class="visually-hidden"><?= htmlspecialchars($data['settingsTitle']) ?></legend>
                 <?php foreach ($data['categories'] as $category): ?>
-                    <?= Toggle::drawToggle(
+                    <?= Toggle::drawSwitchToggle(
                         text: htmlspecialchars($category['text']),
-                        size: ToggleSize::Small,
-                        theme: ToggleTheme::from($theme),
+                        size: SwitchToggleSize::Small,
+                        theme: SwitchToggleTheme::from($theme),
                         attributes: ['name' => 'cookie-' . $category['key']]
                             + (!empty($category['required']) ? ['checked' => 'checked', 'aria-disabled' => 'true'] : []),
                     ) ?>
@@ -56,24 +56,24 @@ $button = static fn (string $text, ButtonStyle $style, string $action, string $c
             <?php if ($data['policyUrl'] !== ''): ?>
                 <p class="cookie__more">
                     <span>Подробнее в</span>
-                    <?= Link::drawLink(
+                    <?= Link::drawLinkMain(
                         className: 'cookie__policy',
                         text: 'политике обработки персональных данных',
                         href: $data['policyUrl'],
-                        size: LinkSize::Small,
-                        theme: LinkTheme::from($theme),
+                        size: LinkMainSize::Small,
+                        theme: LinkMainTheme::from($theme),
                     ) ?>
                 </p>
             <?php endif; ?>
         </div>
         <div class="cookie__actions cookie__only-default">
-            <?= $button('Принять все', ButtonStyle::Gray, 'accept', 'cookie__accept') ?>
-            <?= $button('Настройки', ButtonStyle::Monochrome, 'settings', 'cookie__settings') ?>
-            <?= $button('Отклонить', ButtonStyle::Flat, 'decline', 'cookie__decline') ?>
+            <?= $button('Принять все', ButtonMainStyle::Gray, 'accept', 'cookie__accept') ?>
+            <?= $button('Настройки', ButtonMainStyle::Monochrome, 'settings', 'cookie__settings') ?>
+            <?= $button('Отклонить', ButtonMainStyle::Flat, 'decline', 'cookie__decline') ?>
         </div>
         <div class="cookie__actions cookie__only-settings">
-            <?= $button('Сохранить выбор', ButtonStyle::Gray, 'save', 'cookie__save') ?>
-            <?= $button('Принять все', ButtonStyle::Monochrome, 'accept', 'cookie__accept') ?>
+            <?= $button('Сохранить выбор', ButtonMainStyle::Gray, 'save', 'cookie__save') ?>
+            <?= $button('Принять все', ButtonMainStyle::Monochrome, 'accept', 'cookie__accept') ?>
         </div>
     </div>
 </section>

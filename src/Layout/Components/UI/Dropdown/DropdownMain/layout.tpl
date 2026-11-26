@@ -3,17 +3,17 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 $theme = $data['theme'];
 $size = $data['size'];
-$tabSize = TabSize::from($size);
-$tabTheme = TabTheme::from($theme);
+$tabSize = TabMainSize::from($size);
+$tabTheme = TabMainTheme::from($theme);
 $classes = [
     'dropdown',
     "dropdown_view_{$data['view']}",
@@ -46,12 +46,12 @@ $id = $data['id'];
         </button>
         <div class="dropdown__panel dropdown__panel_position_bottom" id="<?= $id ?>-panel" hidden>
             <?php if ($data['search']): ?>
-                <?= TextInput::drawInput(
+                <?= TextInput::drawInputMain(
                     className: 'dropdown__search',
                     id: $id . '-search',
                     placeholder: 'Поиск',
-                    size: TextInputSize::Small,
-                    theme: TextInputTheme::from($theme),
+                    size: InputMainSize::Small,
+                    theme: InputMainTheme::from($theme),
                     icon: 'search',
                     attributes: ['data-sf-dropdown-search' => '', 'autocomplete' => 'off'],
                 ) ?>
@@ -59,11 +59,11 @@ $id = $data['id'];
             <div class="dropdown__list" role="listbox" aria-labelledby="<?= $id ?>">
                 <?php foreach ($data['options'] as $optionValue => $optionLabel): ?>
                     <?php $isSelected = (string)$optionValue === $data['value']; ?>
-                    <?= Tab::drawTab(
+                    <?= Tab::drawTabMain(
                         className: 'dropdown__option',
                         text: htmlspecialchars($optionLabel),
                         iconRight: 'check',
-                        style: TabStyle::Soft,
+                        style: TabMainStyle::Soft,
                         size: $tabSize,
                         theme: $tabTheme,
                         attributes: [
@@ -78,10 +78,10 @@ $id = $data['id'];
             </div>
             <div class="dropdown__empty" hidden>Ничего не найдено</div>
             <?php if ($data['searchUrl'] !== ''): ?>
-                <template data-sf-dropdown-option><?= Tab::drawTab(
+                <template data-sf-dropdown-option><?= Tab::drawTabMain(
                     className: 'dropdown__option',
                     iconRight: 'check',
-                    style: TabStyle::Soft,
+                    style: TabMainStyle::Soft,
                     size: $tabSize,
                     theme: $tabTheme,
                     attributes: ['role' => 'option', 'aria-selected' => 'false', 'tabindex' => '-1', 'data-value' => ''],
@@ -95,12 +95,12 @@ $id = $data['id'];
         <div class="dropdown__panel dropdown__panel_position_<?= $data['position'] ?> dropdown__panel_side_<?= htmlspecialchars($data['side']) ?> dropdown__panel_align_<?= $data['align'] ?>"
              id="<?= $id ?>-panel" role="menu" aria-label="<?= htmlspecialchars($data['label']) ?>" hidden>
             <?php foreach ($data['items'] as $item): ?>
-                <?= Tab::drawTab(
+                <?= Tab::drawTabMain(
                     className: 'dropdown__option',
                     text: htmlspecialchars($item['text']),
                     link: $item['link'] ?? '',
                     iconLeft: $item['icon'] ?? '',
-                    style: TabStyle::Soft,
+                    style: TabMainStyle::Soft,
                     size: $tabSize,
                     theme: $tabTheme,
                     attributes: ['role' => 'menuitem', 'tabindex' => '-1']

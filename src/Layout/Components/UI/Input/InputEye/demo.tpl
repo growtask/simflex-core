@@ -5,10 +5,10 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputEye\Layout as InputEye;
 
-$eyeTheme = ButtonIconTheme::from($theme);
+$eyeTheme = ButtonIconSmallTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row">

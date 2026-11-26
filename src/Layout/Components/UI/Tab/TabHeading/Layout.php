@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Layout\Components\UI\Tab\TabHeading;
 
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -25,7 +25,7 @@ class Layout extends LayoutBase
         string          $badge = '',
         TabHeadingStyle $style = TabHeadingStyle::Underline,
         TabHeadingSize  $size = TabHeadingSize::Medium,
-        TabTheme        $theme = TabTheme::Light,
+        TabMainTheme        $theme = TabMainTheme::Light,
         array           $attributes = [],
         bool            $active = false,
         bool            $disabled = false,

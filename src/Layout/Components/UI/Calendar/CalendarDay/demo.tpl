@@ -5,11 +5,11 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarTheme;
+use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMainTheme;
 use Simflex\Core\Layout\Components\UI\Calendar\CalendarDay\CalendarDayState;
 use Simflex\Core\Layout\Components\UI\Calendar\CalendarDay\Layout as CalendarDay;
 
-$calendarTheme = CalendarTheme::from($theme);
+$calendarTheme = CalendarMainTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row">

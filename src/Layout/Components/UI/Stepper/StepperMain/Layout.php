@@ -21,18 +21,18 @@ class Layout extends LayoutBase
      * @param string $label Доступное имя поля
      * @param array<string,string> $attributes Атрибуты поля
      */
-    public static function drawStepper(
+    public static function drawStepperMain(
         string         $name,
         int|float      $value = 0,
         int|float|null $min = null,
         int|float|null $max = null,
         int|float      $step = 1,
         string         $label = 'Количество',
-        StepperSize    $size = StepperSize::Medium,
-        StepperStyle   $style = StepperStyle::Default,
-        StepperFill    $fill = StepperFill::Filled,
-        StepperWidth   $width = StepperWidth::Hug,
-        StepperTheme   $theme = StepperTheme::Light,
+        StepperMainSize    $size = StepperMainSize::Medium,
+        StepperMainStyle   $style = StepperMainStyle::Default,
+        StepperMainFill    $fill = StepperMainFill::Filled,
+        StepperMainWidth   $width = StepperMainWidth::Hug,
+        StepperMainTheme   $theme = StepperMainTheme::Light,
         bool           $loading = false,
         bool           $disabled = false,
         string         $error = '',

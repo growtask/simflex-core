@@ -16,17 +16,17 @@ class Layout extends LayoutBase
     /**
      * @param string $trigger HTML элемента, к которому относится подсказка (первому тегу добавляется aria-describedby)
      * @param string $text Текст подсказки (экранируется)
-     * @param TooltipPosition $position Сторона стрелки: Top — подсказка под элементом, Left — справа от него
-     * @param TooltipSide $side Положение стрелки вдоль края (для Top и Bottom)
-     * @param TooltipStyle $style Error — красная подсказка к полю с ошибкой
+     * @param TooltipMainPosition $position Сторона стрелки: Top — подсказка под элементом, Left — справа от него
+     * @param TooltipMainSide $side Положение стрелки вдоль края (для Top и Bottom)
+     * @param TooltipMainStyle $style Error — красная подсказка к полю с ошибкой
      */
-    public static function drawTooltip(
+    public static function drawTooltipMain(
         string          $trigger,
         string          $text,
-        TooltipPosition $position = TooltipPosition::Top,
-        TooltipSide     $side = TooltipSide::Center,
-        TooltipStyle    $style = TooltipStyle::Default,
-        TooltipTheme    $theme = TooltipTheme::Light,
+        TooltipMainPosition $position = TooltipMainPosition::Top,
+        TooltipMainSide     $side = TooltipMainSide::Center,
+        TooltipMainStyle    $style = TooltipMainStyle::Default,
+        TooltipMainTheme    $theme = TooltipMainTheme::Light,
         string          $className = '',
     ): string {
         $id = static::nextId();

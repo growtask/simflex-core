@@ -3,7 +3,7 @@
 namespace Simflex\Core\Layout\Components\UI\Input\InputFlag;
 
 use Simflex\Core\Layout\Components\UI\Input\InputPhone\Layout as PhoneInput;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -11,7 +11,7 @@ use Simflex\Core\Layout\LayoutBase;
  */
 class Layout extends LayoutBase
 {
-    public static function drawInputFlag(PhoneCountry $style = PhoneCountry::Ru, string $className = ''): string
+    public static function drawInputFlag(InputPhoneCountry $style = InputPhoneCountry::Ru, string $className = ''): string
     {
         PhoneInput::initAssets();
 

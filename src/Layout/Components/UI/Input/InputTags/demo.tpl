@@ -7,15 +7,15 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputTags\Layout as TagsInput;
-use Simflex\Core\Layout\Components\UI\Input\InputTags\TagsInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputTags\InputTagsTheme;
 
-$tagsTheme = TagsInputTheme::from($theme);
+$tagsTheme = InputTagsTheme::from($theme);
 $options = ['red' => 'Красный', 'green' => 'Зелёный', 'blue' => 'Синий', 'yellow' => 'Жёлтый'];
 
 ?>
 <div class="ui-showcase__row ui-showcase__row_dropdowns">
     <span class="ui-showcase__field">
-        <?= TagsInput::drawTagsInput(
+        <?= TagsInput::drawInputTags(
             name: 'ui_tags_empty_' . $theme,
             options: $options,
             label: 'Пустое',
@@ -24,7 +24,7 @@ $options = ['red' => 'Красный', 'green' => 'Зелёный', 'blue' => '�
         ) ?>
     </span>
     <span class="ui-showcase__field">
-        <?= TagsInput::drawTagsInput(
+        <?= TagsInput::drawInputTags(
             name: 'ui_tags_selected_' . $theme,
             selected: ['red' => 'Красный', 'blue' => 'Синий'],
             options: $options,
@@ -34,7 +34,7 @@ $options = ['red' => 'Красный', 'green' => 'Зелёный', 'blue' => '�
         ) ?>
     </span>
     <span class="ui-showcase__field">
-        <?= TagsInput::drawTagsInput(
+        <?= TagsInput::drawInputTags(
             name: 'ui_tags_new_' . $theme,
             selected: ['green' => 'Зелёный'],
             options: $options,
@@ -46,7 +46,7 @@ $options = ['red' => 'Красный', 'green' => 'Зелёный', 'blue' => '�
         ) ?>
     </span>
     <span class="ui-showcase__field">
-        <?= TagsInput::drawTagsInput(
+        <?= TagsInput::drawInputTags(
             name: 'ui_tags_disabled_' . $theme,
             selected: ['red' => 'Красный'],
             label: 'Отключённое',

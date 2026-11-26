@@ -7,13 +7,13 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
-$inputTheme = TextInputTheme::from($theme);
+$inputTheme = InputMainTheme::from($theme);
 
 $nextId = static function () use ($theme): string {
     static $n = [];
@@ -23,12 +23,12 @@ $nextId = static function () use ($theme): string {
 };
 
 ?>
-<?php foreach (TextInputSize::cases() as $size): ?>
+<?php foreach (InputMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (TextInputStyle::cases() as $style): ?>
-            <?php foreach (TextInputLabelPos::cases() as $labelPos): ?>
-                <?= TextInput::drawInput(
+        <?php foreach (InputMainStyle::cases() as $style): ?>
+            <?php foreach (InputMainLabelPos::cases() as $labelPos): ?>
+                <?= TextInput::drawInputMain(
                     id: $nextId(),
                     placeholder: $style->name,
                     labelText: $labelPos->name,
@@ -44,12 +44,12 @@ $nextId = static function () use ($theme): string {
 
 <h3 class="ui-showcase__subtitle ui-m">Виды поля (kind)</h3>
 <div class="ui-showcase__row">
-    <?php foreach (TextInputKind::cases() as $kind): ?>
-        <?= TextInput::drawInput(
+    <?php foreach (InputMainKind::cases() as $kind): ?>
+        <?= TextInput::drawInputMain(
             id: $nextId(),
             placeholder: $kind->name,
             labelText: $kind->name,
-            labelPos: TextInputLabelPos::Standard,
+            labelPos: InputMainLabelPos::Standard,
             theme: $inputTheme,
             kind: $kind,
         ) ?>
@@ -58,31 +58,31 @@ $nextId = static function () use ($theme): string {
 
 <h3 class="ui-showcase__subtitle ui-m">Состояния</h3>
 <div class="ui-showcase__row">
-    <?= TextInput::drawInput(
+    <?= TextInput::drawInputMain(
         id: $nextId(),
         labelText: 'Подпись внутри',
-        labelPos: TextInputLabelPos::Inside,
+        labelPos: InputMainLabelPos::Inside,
         theme: $inputTheme,
         icon: 'check',
         counter: true,
         maxLength: 50,
     ) ?>
-    <?= TextInput::drawInput(
+    <?= TextInput::drawInputMain(
         id: $nextId(),
         labelText: 'Подпись внутри',
-        labelPos: TextInputLabelPos::Inside,
+        labelPos: InputMainLabelPos::Inside,
         theme: $inputTheme,
         icon: 'check',
         value: 'Текст',
         counter: true,
         maxLength: 50,
     ) ?>
-    <?= TextInput::drawInput(id: $nextId(), placeholder: 'Пусто', theme: $inputTheme) ?>
-    <?= TextInput::drawInput(id: $nextId(), placeholder: 'С иконкой', theme: $inputTheme, icon: 'search') ?>
-    <?= TextInput::drawInput(id: $nextId(), placeholder: 'Значение', theme: $inputTheme, value: 'Значение') ?>
-    <?= TextInput::drawInput(id: $nextId(), placeholder: 'Email', theme: $inputTheme, value: 'admin@', error: 'Неверный email') ?>
-    <?= TextInput::drawInput(id: $nextId(), placeholder: 'Логин', theme: $inputTheme, value: 'admin', success: true) ?>
-    <?= TextInput::drawInput(
+    <?= TextInput::drawInputMain(id: $nextId(), placeholder: 'Пусто', theme: $inputTheme) ?>
+    <?= TextInput::drawInputMain(id: $nextId(), placeholder: 'С иконкой', theme: $inputTheme, icon: 'search') ?>
+    <?= TextInput::drawInputMain(id: $nextId(), placeholder: 'Значение', theme: $inputTheme, value: 'Значение') ?>
+    <?= TextInput::drawInputMain(id: $nextId(), placeholder: 'Email', theme: $inputTheme, value: 'admin@', error: 'Неверный email') ?>
+    <?= TextInput::drawInputMain(id: $nextId(), placeholder: 'Логин', theme: $inputTheme, value: 'admin', success: true) ?>
+    <?= TextInput::drawInputMain(
         id: $nextId(),
         placeholder: 'Со счётчиком',
         theme: $inputTheme,
@@ -90,7 +90,7 @@ $nextId = static function () use ($theme): string {
         counter: true,
         maxLength: 50,
     ) ?>
-    <?= TextInput::drawInput(
+    <?= TextInput::drawInputMain(
         id: $nextId(),
         placeholder: 'Отключено',
         theme: $inputTheme,

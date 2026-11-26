@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderProgressLabel;
 
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -15,12 +15,12 @@ class Layout extends LayoutBase
      * Полоса с процентами: заполнение идёт фоном под подписью
      * @param string $text Подпись справа от процентов (имя файла, этап); экранируется
      */
-    public static function drawProgressLabel(
+    public static function drawLoaderProgressLabel(
         int                $percent = 0,
         string             $text = '',
-        ProgressLabelStyle $style = ProgressLabelStyle::Progress,
-        ProgressSize       $size = ProgressSize::Medium,
-        ProgressTheme      $theme = ProgressTheme::Light,
+        LoaderProgressLabelStyle $style = LoaderProgressLabelStyle::Progress,
+        LoaderProgressSize       $size = LoaderProgressSize::Medium,
+        LoaderProgressTheme      $theme = LoaderProgressTheme::Light,
         string             $className = '',
     ): string {
         return static::draw([

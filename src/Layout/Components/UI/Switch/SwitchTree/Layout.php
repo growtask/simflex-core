@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\UI\Switch\SwitchTree;
 
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -21,10 +21,10 @@ class Layout extends LayoutBase
      * @param string $name Имя чекбоксов в форме (name[]); пусто — чекбоксы без имени
      * @param string $label Доступное имя дерева
      */
-    public static function drawTree(
+    public static function drawSwitchTree(
         array     $items,
-        TreeSize  $size = TreeSize::Small,
-        TreeTheme $theme = TreeTheme::Light,
+        SwitchTreeSize  $size = SwitchTreeSize::Small,
+        SwitchTreeTheme $theme = SwitchTreeTheme::Light,
         string    $name = '',
         string    $label = '',
         string    $className = '',
@@ -41,7 +41,7 @@ class Layout extends LayoutBase
      * Строка узла: подпись и чекбокс (partial у родителя с частью выбранных детей)
      * @param array<string,mixed> $node Узел после normalize()
      */
-    public static function drawControl(array $node, string $name, TreeSize $size, TreeTheme $theme): string
+    public static function drawSwitchTreeControl(array $node, string $name, SwitchTreeSize $size, SwitchTreeTheme $theme): string
     {
         $attributes = ['value' => (string)$node['value']];
         if ($name !== '') {
@@ -56,10 +56,10 @@ class Layout extends LayoutBase
             $attributes['disabled'] = 'disabled';
         }
 
-        return Checkbox::drawCheckbox(
+        return Checkbox::drawSwitchCheckbox(
             text: htmlspecialchars((string)$node['label']),
-            size: $size === TreeSize::Small ? CheckboxSize::Small : CheckboxSize::Medium,
-            theme: CheckboxTheme::from($theme->value),
+            size: $size === SwitchTreeSize::Small ? SwitchCheckboxSize::Small : SwitchCheckboxSize::Medium,
+            theme: SwitchCheckboxTheme::from($theme->value),
             attributes: $attributes,
         );
     }

@@ -4,7 +4,7 @@ namespace Simflex\Core\Layout\Components\Common\Footer;
 
 use Simflex\Core\Http\Menu as SiteMenu;
 use Simflex\Core\Layout\LayoutBase;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallNetwork;
 use Simflex\Core\Models\Menu as MenuModel;
 use Simflex\Core\System\Container;
 use Simflex\Core\System\Settings;
@@ -24,9 +24,9 @@ class Layout extends LayoutBase
 {
     /** Соответствие настроек сайта и соцсетей подвала */
     protected const SOCIAL_SETTINGS = [
-        'vk' => SocialNetwork::Vkontakte,
-        'tg' => SocialNetwork::Telegram,
-        'whats_app' => SocialNetwork::Whatsapp,
+        'vk' => ButtonSocialSmallNetwork::Vkontakte,
+        'tg' => ButtonSocialSmallNetwork::Telegram,
+        'whats_app' => ButtonSocialSmallNetwork::Whatsapp,
     ];
 
     /**
@@ -35,7 +35,7 @@ class Layout extends LayoutBase
      *        Колонки меню; null - из таблицы menu (см. getMenuColumns())
      * @param string|null $phone Телефон; null - настройка phone, пустой - не выводится
      * @param string|null $email Почта; null - настройка email, пустая - не выводится
-     * @param array<string, string>|null $socials Соцсети: значение SocialNetwork => адрес; null - настройки vk, tg,
+     * @param array<string, string>|null $socials Соцсети: значение ButtonSocialSmallNetwork => адрес; null - настройки vk, tg,
      *        whats_app (пустые не выводятся)
      * @param string|null $company Название компании для строки «©»; null - настройка company, иначе site_name
      * @param string|null $logoName Слово рядом со знаком логотипа; null - настройка site_name
@@ -123,7 +123,7 @@ class Layout extends LayoutBase
     }
 
     /**
-     * Соцсети подвала из настроек сайта: значение SocialNetwork => адрес (пустые настройки пропускаются)
+     * Соцсети подвала из настроек сайта: значение ButtonSocialSmallNetwork => адрес (пустые настройки пропускаются)
      *
      * @return array<string, string>
      */

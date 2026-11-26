@@ -3,9 +3,9 @@
 namespace Simflex\Core\Layout\Components\UI\Selector\SelectorItem;
 
 use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\Layout as SelectorMain;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorSize;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorStyle;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorTheme;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainSize;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainStyle;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -26,9 +26,9 @@ class Layout extends LayoutBase
         string        $badge = '',
         bool          $active = false,
         bool          $disabled = false,
-        SelectorStyle $style = SelectorStyle::Filled,
-        SelectorSize  $size = SelectorSize::Medium,
-        SelectorTheme $theme = SelectorTheme::Light,
+        SelectorMainStyle $style = SelectorMainStyle::Filled,
+        SelectorMainSize  $size = SelectorMainSize::Medium,
+        SelectorMainTheme $theme = SelectorMainTheme::Light,
         string        $className = '',
     ): string {
         SelectorMain::initAssets();

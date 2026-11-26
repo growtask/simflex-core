@@ -18,14 +18,14 @@ class Layout extends LayoutBase
      * @param bool $error Состояние ошибки (aria-invalid, красная рамка)
      * @param array<string,string> $attributes Атрибуты input (name, checked, required, disabled и т. д.)
      */
-    public static function drawCheckbox(
+    public static function drawSwitchCheckbox(
         string           $className = '',
         string           $text = '',
         bool             $policy = false,
-        CheckboxStyle    $style = CheckboxStyle::Solid,
-        CheckboxSize     $size = CheckboxSize::Small,
-        CheckboxTheme    $theme = CheckboxTheme::Light,
-        CheckboxPosition $position = CheckboxPosition::Left,
+        SwitchCheckboxStyle    $style = SwitchCheckboxStyle::Solid,
+        SwitchCheckboxSize     $size = SwitchCheckboxSize::Small,
+        SwitchCheckboxTheme    $theme = SwitchCheckboxTheme::Light,
+        SwitchCheckboxPosition $position = SwitchCheckboxPosition::Left,
         array            $attributes = [],
         string           $policyUrl = '/policy',
         bool             $error = false

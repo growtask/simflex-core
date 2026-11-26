@@ -6,13 +6,13 @@ use Simflex\Core\Layout\LayoutBase;
 
 class Layout extends LayoutBase
 {
-    public static function drawToggle(
+    public static function drawSwitchToggle(
         string         $className = '',
         string         $text = '',
         bool           $icon = true,
-        ToggleSize     $size = ToggleSize::Medium,
-        ToggleTheme    $theme = ToggleTheme::Light,
-        TogglePosition $position = TogglePosition::Left,
+        SwitchToggleSize     $size = SwitchToggleSize::Medium,
+        SwitchToggleTheme    $theme = SwitchToggleTheme::Light,
+        SwitchTogglePosition $position = SwitchTogglePosition::Left,
         array          $attributes = []
     ): string {
         return static::draw(

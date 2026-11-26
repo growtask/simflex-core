@@ -6,14 +6,14 @@ use Simflex\Core\Layout\LayoutBase;
 
 class Layout extends LayoutBase
 {
-    public static function drawRadio(
+    public static function drawSwitchRadio(
         string        $className = '',
         string        $text = '',
         string        $id = '',
         string        $value = '',
-        RadioSize     $size = RadioSize::Small,
-        RadioTheme    $theme = RadioTheme::Light,
-        RadioPosition $position = RadioPosition::Left,
+        SwitchRadioSize     $size = SwitchRadioSize::Small,
+        SwitchRadioTheme    $theme = SwitchRadioTheme::Light,
+        SwitchRadioPosition $position = SwitchRadioPosition::Left,
         array         $attributes = []
     ): string {
         return static::draw(

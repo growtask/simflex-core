@@ -2,7 +2,7 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 
 $classes = ['notice', "notice_style_{$data['style']}", "notice-theme_{$data['theme']}", $data['className']];
@@ -21,11 +21,11 @@ $attributes['role'] ??= in_array($data['style'], ['error', 'alert'], true) ? 'al
             <?php endif; ?>
         </div>
         <?php if ($data['close']): ?>
-            <?= ButtonIcon::drawButtonIcon(
+            <?= ButtonIcon::drawButtonIconSmall(
                 icon: 'close',
                 label: 'Закрыть',
                 className: 'notice__close',
-                theme: ButtonIconTheme::from($data['theme']),
+                theme: ButtonIconSmallTheme::from($data['theme']),
                 attributes: ['data-sf-notice-close' => ''],
             ) ?>
         <?php endif; ?>

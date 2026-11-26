@@ -5,8 +5,8 @@ namespace Simflex\Core\Layout\Components\Common\Header;
 use Simflex\Core\Http\Menu as SiteMenu;
 use Simflex\Core\Layout\Components\UI\Dropdown\DropdownTab\Layout as DropdownTab;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
 use Simflex\Core\Layout\LayoutBase;
 use Simflex\Core\System\Container;
 
@@ -31,7 +31,7 @@ class Layout extends LayoutBase
      * @param string $logoHref Адрес главной страницы
      * @param string $phone Телефон (текст и значение для tel:); пусто - не выводится
      * @param string $email Почта; пусто - не выводится
-     * @param array<string,string> $socials Соцсети: значение SocialNetwork (telegram, vkontakte, whatsapp...) => адрес
+     * @param array<string,string> $socials Соцсети: значение ButtonSocialSmallNetwork (telegram, vkontakte, whatsapp...) => адрес
      * @param string $buttonText Текст кнопки; пусто - кнопки нет
      * @param string $buttonModal Значение data-modal кнопки: окно, которое она открывает
      * @param string $mobileMenuId Идентификатор мобильного меню (его выводит сама шапка)
@@ -114,11 +114,11 @@ class Layout extends LayoutBase
                     id: $idPrefix . '-' . $i
                 );
             } else {
-                $html .= Tab::drawTab(
+                $html .= Tab::drawTabMain(
                     text: htmlspecialchars((string)$item['text']),
                     link: (string)$item['link'],
-                    style: TabStyle::Secondary,
-                    size: TabSize::Small,
+                    style: TabMainStyle::Secondary,
+                    size: TabMainSize::Small,
                     active: !empty($item['active'])
                 );
             }

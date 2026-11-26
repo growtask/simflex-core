@@ -31,7 +31,7 @@ class Layout extends LayoutBase
      *        картинке экрана передают `loading` = `eager` и `fetchpriority` = `high`)
      * @param bool $deferred Картинка в скрытом блоке: файл подставляет `sfPlaceholderImg.reveal()` при показе,
      *        до этого браузер ничего не качает
-     * @param ImgMissing $missing Если нужного файла нет: заглушка или ничего
+     * @param PlaceholderImgMissing $missing Если нужного файла нет: заглушка или ничего
      * @param int $width Ширина картинки в px (атрибут `width`)
      * @param int $height Высота картинки в px (атрибут `height`)
      * @param string $imgClass Классы самого `img`
@@ -47,7 +47,7 @@ class Layout extends LayoutBase
         int $size = 811,
         array $attributes = [],
         bool $deferred = false,
-        ImgMissing $missing = ImgMissing::Placeholder,
+        PlaceholderImgMissing $missing = PlaceholderImgMissing::Placeholder,
         int $width = 0,
         int $height = 0,
         string $imgClass = '',
@@ -61,7 +61,7 @@ class Layout extends LayoutBase
 
         $isMissing = $desktop === '';
         if ($isMissing) {
-            if ($missing === ImgMissing::Hide) {
+            if ($missing === PlaceholderImgMissing::Hide) {
                 return '';
             }
             if ($placeholder !== '') {

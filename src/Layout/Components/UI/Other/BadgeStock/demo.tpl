@@ -14,7 +14,7 @@ use Simflex\Core\Layout\Components\UI\Other\BadgeStock\Layout as BadgeStock;
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
         <?php foreach (BadgeStockStyle::cases() as $style): ?>
-            <?= BadgeStock::drawBadge(text: $style->name, style: $style, size: $size) ?>
+            <?= BadgeStock::drawBadgeStock(text: $style->name, style: $style, size: $size) ?>
         <?php endforeach; ?>
     </div>
 <?php endforeach; ?>

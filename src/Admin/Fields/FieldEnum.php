@@ -107,13 +107,13 @@ class FieldEnum extends FieldString
         $value = $row[$this->name] ?? null;
 
         // смена статуса сохраняется сразу (action=change_enum, theme/js/list.js)
-        return \Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout::drawSelect(
+        return \Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout::drawDropdownMainSelect(
             $this->name . '_' . $row[$this->tablePk],
             $options,
             $value === null || $value === '' ? null : (string)$value,
             placeholder: '—',
-            size: \Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize::Small,
-            theme: \Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme::from(
+            size: \Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainSize::Small,
+            theme: \Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainTheme::from(
                 \Simflex\Core\Admin\Page::get()->getTheme()
             ),
             disabled: $this->readonly,

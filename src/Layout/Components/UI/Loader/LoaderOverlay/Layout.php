@@ -3,9 +3,9 @@
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderOverlay;
 
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout as LoaderIcon;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderStyle;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -23,11 +23,11 @@ class Layout extends LayoutBase
     public static function drawLoaderOverlay(
         string      $content,
         bool        $active = true,
-        LoaderTheme $theme = LoaderTheme::Light,
+        LoaderMainTheme $theme = LoaderMainTheme::Light,
         string      $label = 'Загрузка',
         string      $className = '',
     ): string {
-        $loader = LoaderIcon::drawLoader(LoaderSize::Medium, LoaderStyle::Primary, $theme, $label);
+        $loader = LoaderIcon::drawLoaderMain(LoaderMainSize::Medium, LoaderMainStyle::Primary, $theme, $label);
 
         return static::draw(compact('content', 'active', 'loader', 'className') + ['theme' => $theme->value]);
     }

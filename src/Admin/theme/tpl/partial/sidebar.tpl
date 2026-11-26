@@ -9,39 +9,39 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarSize;
 use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
 $isDark = $theme === Page::THEME_DARK;
-$buttonTheme = ButtonTheme::from($theme);
-$tooltipTheme = TooltipTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
+$tooltipTheme = TooltipMainTheme::from($theme);
 $user = Container::getUser();
 $userName = (string)($user?->name ?: $user?->login);
 $isCollapsed = $page->isMenuCollapsed();
-$action = fn(string $icon, string $label, array $attributes) => Tooltip::drawTooltip(
-    Button::drawButton(
+$action = fn(string $icon, string $label, array $attributes) => Tooltip::drawTooltipMain(
+    Button::drawButtonMain(
         className: 'menu-actions__button',
         icon: $icon,
-        style: ButtonStyle::Secondary,
-        size: ButtonSize::Small,
+        style: ButtonMainStyle::Secondary,
+        size: ButtonMainSize::Small,
         theme: $buttonTheme,
         attributes: $attributes + ['aria-label' => $label],
     ),
     $label,
-    position: TooltipPosition::Bottom,
+    position: TooltipMainPosition::Bottom,
     theme: $tooltipTheme,
     className: 'menu-actions__item',
 );
@@ -50,11 +50,11 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
        aria-label="Меню админки">
     <div class="menu__head">
         <?= $page->drawLogo('menu__logo', Page::url(''), isHomeLink: true) ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'menu__collapse',
             icon: 'chevron-m-left',
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: [
                 'aria-label' => $isCollapsed ? 'Развернуть меню' : 'Свернуть меню',
@@ -62,20 +62,20 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
                 'data-sf-menu-collapse' => '',
             ],
         ) ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'menu__close',
             icon: 'close',
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['aria-label' => 'Закрыть меню', 'data-sf-menu-close' => ''],
         ) ?>
     </div>
     <div class="menu__search">
-        <?= TextInput::drawInput(
+        <?= TextInput::drawInputMain(
             placeholder: 'Поиск',
-            size: TextInputSize::Small,
-            theme: TextInputTheme::from($theme),
+            size: InputMainSize::Small,
+            theme: InputMainTheme::from($theme),
             icon: 'search',
             id: 'sf-menu-search',
             attributes: ['data-sf-menu-search' => '', 'autocomplete' => 'off', 'aria-label' => 'Поиск по меню'],
@@ -95,10 +95,10 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
         </div>
         <hr class="menu__divider">
         <a class="menu-account" href="<?= Page::url('account') ?>">
-            <?= Placeholder::drawAvatar(
+            <?= Placeholder::drawPlaceholderAvatar(
                 $userName,
-                size: AvatarSize::Medium,
-                theme: AvatarTheme::from($theme),
+                size: PlaceholderAvatarSize::Medium,
+                theme: PlaceholderAvatarTheme::from($theme),
                 className: 'menu-account__avatar',
             ) ?>
             <span class="menu-account__text">

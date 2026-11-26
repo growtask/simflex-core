@@ -10,7 +10,7 @@ $dropdownTabClasses = [
 ];
 
 $menuTheme = $data['menuTheme'] === 'light' ? '' : 'dropdown-tab__menu_dark';
-$menuTabTheme = $data['menuTheme'] === 'light' ? Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme::Light : Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme::Dark;
+$menuTabTheme = $data['menuTheme'] === 'light' ? Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme::Light : Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme::Dark;
 
 $isLink = (bool)$data['link'];
 $triggerClasses = trim('dropdown-tab__trigger' . ($data['active'] ? ' active' : ''));
@@ -51,14 +51,14 @@ $tag = $isLink ? 'a' : 'button';
     <ul class="dropdown-tab__menu <?= $menuTheme ?>" id="<?= htmlspecialchars($data['id'], ENT_QUOTES, 'UTF-8') ?>-menu" data-pointer="center">
         <?php foreach ($data['options'] as $option): ?>
             <li class="dropdown-tab__option" data-value="<?= htmlspecialchars((string)($option['value'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
-                <?= Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout::drawTab(
+                <?= Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout::drawTabMain(
                     className: 'dropdown-tab__link',
                     text: $option['text'],
                     link: $option['link'] ?? '',
                     iconLeft: $option['icon'] ?? '',
                     badge: $option['badge'] ?? '',
-                    style: \Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle::Secondary,
-                    size: \Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize::Small,
+                    style: \Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle::Secondary,
+                    size: \Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize::Small,
                     theme: $menuTabTheme,
                     active: !empty($option['active']),
                 ) ?>

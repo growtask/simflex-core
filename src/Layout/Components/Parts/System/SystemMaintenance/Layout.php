@@ -17,8 +17,8 @@ class Layout extends LayoutBase
      * @param bool $inline Не занимать весь экран, а выводить в рамке в потоке (витрина)
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawMaintenance(
-        MaintenanceTheme $theme = MaintenanceTheme::Light,
+    public static function drawSystemMaintenance(
+        SystemMaintenanceTheme $theme = SystemMaintenanceTheme::Light,
         string           $title = 'Скоро вернёмся',
         string           $text = 'На сайте идут технические работы. Загляните позже.',
         string           $buttonText = 'Связаться с нами',

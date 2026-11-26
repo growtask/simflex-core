@@ -6,16 +6,16 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Selector\SelectorItem\Layout as SelectorItem;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorSize;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorStyle;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorTheme;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainSize;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainStyle;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainTheme;
 
-$selectorTheme = SelectorTheme::from($theme);
+$selectorTheme = SelectorMainTheme::from($theme);
 
 ?>
-<?php foreach (SelectorStyle::cases() as $style): ?>
+<?php foreach (SelectorMainStyle::cases() as $style): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $style->name ?></h3>
-    <?php foreach (SelectorSize::cases() as $size): ?>
+    <?php foreach (SelectorMainSize::cases() as $size): ?>
         <div class="ui-showcase__row">
             <?= SelectorItem::drawSelectorItem('Месяц', style: $style, size: $size, theme: $selectorTheme) ?>
             <?= SelectorItem::drawSelectorItem('Месяц', active: true, style: $style, size: $size, theme: $selectorTheme) ?>

@@ -6,11 +6,11 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputCountryItem\Layout as InputCountryItem;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 
 ?>
 <div class="ui-showcase__row">
-    <?php foreach (PhoneCountry::cases() as $country): ?>
-        <?= InputCountryItem::drawInputCountryItem($country, $country === PhoneCountry::Ru, $theme) ?>
+    <?php foreach (InputPhoneCountry::cases() as $country): ?>
+        <?= InputCountryItem::drawInputCountryItem($country, $country === InputPhoneCountry::Ru, $theme) ?>
     <?php endforeach; ?>
 </div>

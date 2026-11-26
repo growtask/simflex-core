@@ -5,12 +5,12 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tab\TabImage\Layout as TabImage;
 use Simflex\Core\Layout\Components\UI\Tab\TabImage\TabImageSize;
 use Simflex\Core\Layout\Components\UI\Tab\TabImage\TabImageStyle;
 
-$tabTheme = TabTheme::from($theme);
+$tabTheme = TabMainTheme::from($theme);
 // встроенная картинка (градиент), чтобы демо не зависело от файлов
 $picture = 'data:image/svg+xml,' . rawurlencode(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'

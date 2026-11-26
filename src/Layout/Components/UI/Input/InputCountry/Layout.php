@@ -3,7 +3,7 @@
 namespace Simflex\Core\Layout\Components\UI\Input\InputCountry;
 
 use Simflex\Core\Layout\Components\UI\Input\InputPhone\Layout as PhoneInput;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -16,7 +16,7 @@ class Layout extends LayoutBase
      * @param bool $open Показать список стран под кнопкой
      */
     public static function drawInputCountry(
-        PhoneCountry $country = PhoneCountry::Ru,
+        InputPhoneCountry $country = InputPhoneCountry::Ru,
         bool         $open = false,
         bool         $disabled = false,
         string       $theme = 'light',

@@ -6,26 +6,26 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\Layout as Radio;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioPosition;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\SwitchRadioPosition;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\SwitchRadioSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\SwitchRadioTheme;
 
-$radioTheme = RadioTheme::from($theme);
+$radioTheme = SwitchRadioTheme::from($theme);
 
 ?>
-<?php foreach (RadioSize::cases() as $size): ?>
+<?php foreach (SwitchRadioSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (RadioPosition::cases() as $position): ?>
+        <?php foreach (SwitchRadioPosition::cases() as $position): ?>
             <?php $id = 'ui-radio-' . $theme . '-' . $size->name . '-' . $position->name; ?>
-            <?= Radio::drawRadio(
+            <?= Radio::drawSwitchRadio(
                 text: $position->name,
                 id: $id,
                 size: $size,
                 theme: $radioTheme,
                 position: $position,
             ) ?>
-            <?= Radio::drawRadio(
+            <?= Radio::drawSwitchRadio(
                 text: 'checked',
                 id: $id . '-checked',
                 size: $size,
@@ -39,13 +39,13 @@ $radioTheme = RadioTheme::from($theme);
 
 <h3 class="ui-showcase__subtitle ui-m">Состояния</h3>
 <div class="ui-showcase__row">
-    <?= Radio::drawRadio(
+    <?= Radio::drawSwitchRadio(
         text: 'disabled',
         id: 'ui-radio-disabled-' . $theme,
         theme: $radioTheme,
         attributes: ['disabled' => 'disabled'],
     ) ?>
-    <?= Radio::drawRadio(
+    <?= Radio::drawSwitchRadio(
         text: 'disabled, checked',
         id: 'ui-radio-disabled-checked-' . $theme,
         theme: $radioTheme,

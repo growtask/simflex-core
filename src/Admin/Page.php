@@ -9,13 +9,13 @@ use Simflex\Core\Http\Assets;
 use Simflex\Core\Http\View;
 use Simflex\Core\Layout\LayoutManager;
 use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogoLayout;
-use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\BrandLogoTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as NoticeLayout;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeTheme;
 use Simflex\Core\System\Container;
 use Simflex\Core\System\ExtensionConfig;
 use Simflex\Core\Http\Csrf;
@@ -500,18 +500,18 @@ class Page
         $theme = $this->getTheme();
         $html = '';
         foreach (Notices::getVisible() as $notice) {
-            $buttons = $notice->linkUrl === '' ? '' : Button::drawButton(
+            $buttons = $notice->linkUrl === '' ? '' : Button::drawButtonMain(
                 text: $notice->linkText !== '' ? $notice->linkText : $notice->linkUrl,
                 link: $notice->linkUrl,
-                style: ButtonStyle::Monochrome,
-                size: ButtonSize::Small,
-                theme: ButtonTheme::from($theme),
+                style: ButtonMainStyle::Monochrome,
+                size: ButtonMainSize::Small,
+                theme: ButtonMainTheme::from($theme),
             );
-            $html .= NoticeLayout::drawNotice(
+            $html .= NoticeLayout::drawFeedbackNotice(
                 $notice->title,
                 $notice->text,
                 $notice->level->getStyle(),
-                NoticeTheme::from($theme),
+                FeedbackNoticeTheme::from($theme),
                 close: true,
                 buttons: $buttons,
                 attributes: [
@@ -561,7 +561,7 @@ class Page
 
     /**
      * Тема админки из cookie THEME_COOKIE, по умолчанию светлая. Значение совпадает со значением enum темы
-     * компонентов Layout (ButtonTheme::from($page->getTheme())) и с атрибутом data-theme на <html>
+     * компонентов Layout (ButtonMainTheme::from($page->getTheme())) и с атрибутом data-theme на <html>
      */
     public function getTheme(): string
     {
@@ -591,7 +591,7 @@ class Page
             name: $logo['name'],
             label: $logo['name'] . ($isHomeLink ? ' — главная админки' : ''),
             src: $src,
-            theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
+            theme: $isDark ? BrandLogoTheme::Dark : BrandLogoTheme::Light,
         );
     }
 

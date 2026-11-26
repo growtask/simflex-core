@@ -6,25 +6,25 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\Layout as Toast;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\ToastStyle;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\ToastWidth;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\FeedbackToastStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\FeedbackToastWidth;
 
 if ($theme !== 'light') {
     return;
 }
 
 ?>
-<?php foreach (ToastWidth::cases() as $width): ?>
+<?php foreach (FeedbackToastWidth::cases() as $width): ?>
     <h3 class="ui-showcase__subtitle ui-m">Ширина: <?= $width->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (ToastStyle::cases() as $style): ?>
-            <?= Toast::drawToast('Только текст', $style, $width) ?>
-            <?= Toast::drawToast('С иконкой', $style, $width, icon: true) ?>
-            <?= Toast::drawToast(
+        <?php foreach (FeedbackToastStyle::cases() as $style): ?>
+            <?= Toast::drawFeedbackToast('Только текст', $style, $width) ?>
+            <?= Toast::drawFeedbackToast('С иконкой', $style, $width, icon: true) ?>
+            <?= Toast::drawFeedbackToast(
                 'Изменения сохранены',
                 $style,
                 $width,
@@ -39,16 +39,16 @@ if ($theme !== 'light') {
 
 <h3 class="ui-showcase__subtitle ui-m">Вызов sfToast</h3>
 <div class="ui-showcase__row">
-    <?php foreach (ToastStyle::cases() as $style): ?>
-        <?= Button::drawButton(
+    <?php foreach (FeedbackToastStyle::cases() as $style): ?>
+        <?= Button::drawButtonMain(
             text: 'sfToast ' . $style->value,
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             attributes: ['data-ui-toast' => $style->value],
         ) ?>
     <?php endforeach; ?>
 </div>
-<?= Toast::drawStack() ?>
+<?= Toast::drawFeedbackToastStack() ?>
 <script>
     document.querySelectorAll('[data-ui-toast]').forEach((button) => {
         button.addEventListener('click', () => window.sfToast('Тост ' + button.dataset.uiToast, {

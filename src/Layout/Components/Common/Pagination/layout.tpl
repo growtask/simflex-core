@@ -3,27 +3,27 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\Common\Pagination\Layout as Pagination;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 $theme = $data['theme'];
 $page = $data['page'];
 $pageCount = $data['pageCount'];
-$arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::drawButton(
+$arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::drawButtonMain(
     link: $disabled ? '' : Pagination::getUrl($data['urlPattern'], $to, $data['urlPageOffset']),
     icon: $icon,
-    style: ButtonStyle::Flat,
-    size: ButtonSize::Small,
-    theme: ButtonTheme::from($theme),
+    style: ButtonMainStyle::Flat,
+    size: ButtonMainSize::Small,
+    theme: ButtonMainTheme::from($theme),
     attributes: ['aria-label' => $label],
     disabled: $disabled,
 );
@@ -41,12 +41,12 @@ $arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::dra
                         <li class="pagination__gap pagination__item_desktop" aria-hidden="true">…</li>
                     <?php else: ?>
                         <li class="pagination__item<?= in_array($number, $data['mobilePages'], true) ? '' : ' pagination__item_desktop' ?>">
-                            <?= Tab::drawTab(
+                            <?= Tab::drawTabMain(
                                 text: (string)$number,
                                 link: Pagination::getUrl($data['urlPattern'], $number, $data['urlPageOffset']),
-                                style: TabStyle::Soft,
-                                size: TabSize::Small,
-                                theme: TabTheme::from($theme),
+                                style: TabMainStyle::Soft,
+                                size: TabMainSize::Small,
+                                theme: TabMainTheme::from($theme),
                                 attributes: ['aria-label' => 'Страница ' . $number],
                                 active: $number === $page,
                             ) ?>
@@ -61,11 +61,11 @@ $arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::dra
         <form class="pagination__search" data-sf-pagination-search
               data-url-pattern="<?= htmlspecialchars($data['urlPattern']) ?>" data-page-count="<?= $pageCount ?>"
               data-page-offset="<?= (int)$data['urlPageOffset'] ?>">
-            <?= TextInput::drawInput(
+            <?= TextInput::drawInputMain(
                 className: 'pagination__input',
                 placeholder: 'Стр.',
-                size: TextInputSize::Small,
-                theme: TextInputTheme::from($theme),
+                size: InputMainSize::Small,
+                theme: InputMainTheme::from($theme),
                 reset: false,
                 attributes: [
                     'inputmode' => 'numeric',
@@ -73,11 +73,11 @@ $arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::dra
                     'name' => 'page',
                 ],
             ) ?>
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 text: 'Перейти',
-                style: ButtonStyle::Gray,
-                size: ButtonSize::Small,
-                theme: ButtonTheme::from($theme),
+                style: ButtonMainStyle::Gray,
+                size: ButtonMainSize::Small,
+                theme: ButtonMainTheme::from($theme),
                 attributes: ['type' => 'submit'],
             ) ?>
         </form>

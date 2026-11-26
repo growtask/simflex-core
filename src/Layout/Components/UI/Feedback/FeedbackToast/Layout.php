@@ -8,7 +8,7 @@ use Simflex\Core\Layout\LayoutBase;
  * Тост (набор Figma Feedback/toast) и стопка тостов (Feedback/stack): короткое временное сообщение поверх страницы,
  * исчезает само (не меньше 5 секунд, пауза при наведении и фокусе, Esc закрывает). Не больше трёх одновременно.
  * Тосты из JS: window.sfToast(message, {type, action: {text, href | onClick}, timeout, timer, icon}) — нужна стопка
- * drawStack() на странице, тост собирается из её шаблонов
+ * drawFeedbackToastStack() на странице, тост собирается из её шаблонов
  */
 class Layout extends LayoutBase
 {
@@ -23,10 +23,10 @@ class Layout extends LayoutBase
      * @param bool $timer Линия таймера у нижнего края
      * @param int $timeout Время показа, мс (не меньше MIN_TIMEOUT)
      */
-    public static function drawToast(
+    public static function drawFeedbackToast(
         string     $text,
-        ToastStyle $style = ToastStyle::Default,
-        ToastWidth $width = ToastWidth::Hug,
+        FeedbackToastStyle $style = FeedbackToastStyle::Default,
+        FeedbackToastWidth $width = FeedbackToastWidth::Hug,
         bool       $icon = false,
         string     $actionText = '',
         string     $actionLink = '',
@@ -46,17 +46,17 @@ class Layout extends LayoutBase
     /**
      * Стопка тостов: контейнер (живой регион) с тостами, которые есть при выводе страницы, и шаблонами тостов
      * для window.sfToast()
-     * @param string $toasts HTML тостов (drawToast)
+     * @param string $toasts HTML тостов (drawFeedbackToast)
      * @param string $className Класс расположения стопки на странице
      */
-    public static function drawStack(
+    public static function drawFeedbackToastStack(
         string     $toasts = '',
-        ToastWidth $width = ToastWidth::Hug,
+        FeedbackToastWidth $width = FeedbackToastWidth::Hug,
         string     $className = '',
     ): string {
         $templates = '';
-        foreach (ToastStyle::cases() as $style) {
-            $toast = static::drawToast('', $style, $width, icon: true, actionText: ' ', timer: true);
+        foreach (FeedbackToastStyle::cases() as $style) {
+            $toast = static::drawFeedbackToast('', $style, $width, icon: true, actionText: ' ', timer: true);
             $templates .= '<template data-sf-toast-template="' . $style->value . '">' . trim($toast) . '</template>';
         }
 

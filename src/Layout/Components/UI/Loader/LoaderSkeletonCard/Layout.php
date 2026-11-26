@@ -3,9 +3,9 @@
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderSkeletonCard;
 
 use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\Layout as Skeleton;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonShape;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonShape;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -14,12 +14,12 @@ use Simflex\Core\Layout\LayoutBase;
 class Layout extends LayoutBase
 {
     /** Карточка-заглушка: аватар, две строки и картинка */
-    public static function drawSkeletonCard(
-        SkeletonTheme $theme = SkeletonTheme::Light,
+    public static function drawLoaderSkeletonCard(
+        LoaderSkeletonTheme $theme = LoaderSkeletonTheme::Light,
         bool          $animation = true,
         string        $className = '',
     ): string {
-        $block = static fn(SkeletonShape $shape, SkeletonSize $size, string $width = '') => Skeleton::drawSkeleton(
+        $block = static fn(LoaderSkeletonShape $shape, LoaderSkeletonSize $size, string $width = '') => Skeleton::drawLoaderSkeleton(
             $shape,
             $size,
             $theme,
@@ -30,10 +30,10 @@ class Layout extends LayoutBase
         return static::draw([
             'theme' => $theme->value,
             'className' => $className,
-            'avatar' => $block(SkeletonShape::Circle, SkeletonSize::Medium),
-            'title' => $block(SkeletonShape::Text, SkeletonSize::Medium, '60%'),
-            'line' => $block(SkeletonShape::Text, SkeletonSize::Small, '40%'),
-            'image' => $block(SkeletonShape::Rect, SkeletonSize::Large, '100%'),
+            'avatar' => $block(LoaderSkeletonShape::Circle, LoaderSkeletonSize::Medium),
+            'title' => $block(LoaderSkeletonShape::Text, LoaderSkeletonSize::Medium, '60%'),
+            'line' => $block(LoaderSkeletonShape::Text, LoaderSkeletonSize::Small, '40%'),
+            'image' => $block(LoaderSkeletonShape::Rect, LoaderSkeletonSize::Large, '100%'),
         ]);
     }
 }

@@ -2,11 +2,11 @@
 
 namespace Simflex\Core\Layout\Components\UI\Input\InputCalendar;
 
-use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMode;
-use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarTheme;
+use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMainMode;
+use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMainTheme;
 use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\Layout as Calendar;
 use Simflex\Core\Layout\Components\UI\Input\InputDate\Layout as InputDate;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -22,16 +22,16 @@ class Layout extends LayoutBase
     public static function drawInputCalendar(
         bool           $top = false,
         bool           $open = true,
-        TextInputTheme $theme = TextInputTheme::Light,
+        InputMainTheme $theme = InputMainTheme::Light,
         string         $value = '',
         string         $className = '',
     ): string {
         $field = InputDate::drawInputDate(theme: $theme, value: $value);
         $calendar = $open
-            ? Calendar::drawCalendar(
+            ? Calendar::drawCalendarMain(
                 value: '',
-                mode: CalendarMode::Date,
-                theme: CalendarTheme::from($theme->value),
+                mode: CalendarMainMode::Date,
+                theme: CalendarMainTheme::from($theme->value),
             )
             : '';
 

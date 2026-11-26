@@ -6,14 +6,14 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipInfo\Layout as TooltipInfo;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
 
-$tooltipTheme = TooltipTheme::from($theme);
+$tooltipTheme = TooltipMainTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row ui-showcase__row_tooltips">
-    <?php foreach (TooltipPosition::cases() as $position): ?>
-        <?= TooltipInfo::drawInfo('Короткое пояснение термина', $tooltipTheme, $position) ?>
+    <?php foreach (TooltipMainPosition::cases() as $position): ?>
+        <?= TooltipInfo::drawTooltipInfo('Короткое пояснение термина', $tooltipTheme, $position) ?>
     <?php endforeach; ?>
 </div>

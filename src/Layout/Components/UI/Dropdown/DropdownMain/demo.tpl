@@ -6,16 +6,16 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownAlign;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownPosition;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainAlign;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainPosition;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainSize;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainTheme;
 use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as Dropdown;
 
-$dropdownTheme = DropdownTheme::from($theme);
+$dropdownTheme = DropdownMainTheme::from($theme);
 $statuses = ['new' => 'Новый', 'work' => 'В работе', 'done' => 'Выполнен', 'cancel' => 'Отменён'];
 $cities = array_combine(
     range(1, 12),
@@ -29,11 +29,11 @@ $menuItems = [
 ];
 
 ?>
-<?php foreach (DropdownSize::cases() as $size): ?>
+<?php foreach (DropdownMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m">Список: <?= $size->name ?></h3>
     <div class="ui-showcase__row ui-showcase__row_dropdowns">
         <span class="ui-showcase__field">
-            <?= Dropdown::drawSelect(
+            <?= Dropdown::drawDropdownMainSelect(
                 'ui_status_' . $size->name . '_' . $theme,
                 $statuses,
                 'work',
@@ -43,7 +43,7 @@ $menuItems = [
             ) ?>
         </span>
         <span class="ui-showcase__field">
-            <?= Dropdown::drawSelect(
+            <?= Dropdown::drawDropdownMainSelect(
                 'ui_city_' . $size->name . '_' . $theme,
                 $cities,
                 placeholder: 'Город с поиском',
@@ -59,7 +59,7 @@ $menuItems = [
 <h3 class="ui-showcase__subtitle ui-m">Прокрутка списка (scroll)</h3>
 <div class="ui-showcase__row ui-showcase__row_dropdowns">
     <span class="ui-showcase__field">
-        <?= Dropdown::drawSelect(
+        <?= Dropdown::drawDropdownMainSelect(
             'ui_scroll_on_' . $theme,
             $cities,
             placeholder: 'С прокруткой',
@@ -68,7 +68,7 @@ $menuItems = [
         ) ?>
     </span>
     <span class="ui-showcase__field">
-        <?= Dropdown::drawSelect(
+        <?= Dropdown::drawDropdownMainSelect(
             'ui_scroll_off_' . $theme,
             $statuses,
             placeholder: 'Без прокрутки',
@@ -82,7 +82,7 @@ $menuItems = [
 <h3 class="ui-showcase__subtitle ui-m">Отключённый список</h3>
 <div class="ui-showcase__row">
     <span class="ui-showcase__field">
-        <?= Dropdown::drawSelect(
+        <?= Dropdown::drawDropdownMainSelect(
             'ui_disabled_' . $theme,
             $statuses,
             'work',
@@ -93,16 +93,16 @@ $menuItems = [
     </span>
 </div>
 
-<?php foreach (DropdownPosition::cases() as $position): ?>
+<?php foreach (DropdownMainPosition::cases() as $position): ?>
     <h3 class="ui-showcase__subtitle ui-m">Меню: <?= $position->name ?></h3>
     <div class="ui-showcase__row ui-showcase__row_dropdowns">
-        <?php foreach (DropdownAlign::cases() as $align): ?>
-            <?= Dropdown::drawMenu(
-                ButtonIcon::drawButtonIcon(
+        <?php foreach (DropdownMainAlign::cases() as $align): ?>
+            <?= Dropdown::drawDropdownMainMenu(
+                ButtonIcon::drawButtonIconSmall(
                     icon: 'dots-vertical',
                     label: 'Ещё, ' . $align->name,
-                    style: ButtonIconStyle::Secondary,
-                    theme: ButtonIconTheme::from($theme),
+                    style: ButtonIconSmallStyle::Secondary,
+                    theme: ButtonIconSmallTheme::from($theme),
                 ),
                 $menuItems,
                 theme: $dropdownTheme,

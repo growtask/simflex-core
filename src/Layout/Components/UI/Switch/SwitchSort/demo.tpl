@@ -6,17 +6,17 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonStyle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonTheme;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SortDirection;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonStyle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SwitchSortDirection;
 
-$sortTheme = SortButtonTheme::from($theme);
+$sortTheme = SwitchSortButtonTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row">
-    <?php foreach (SortDirection::cases() as $direction): ?>
-        <?php foreach (SortButtonStyle::cases() as $style): ?>
-            <?= Sort::drawSort('Название', '#asc', '#desc', $direction, $style, $sortTheme) ?>
+    <?php foreach (SwitchSortDirection::cases() as $direction): ?>
+        <?php foreach (SwitchSortButtonStyle::cases() as $style): ?>
+            <?= Sort::drawSwitchSort('Название', '#asc', '#desc', $direction, $style, $sortTheme) ?>
         <?php endforeach; ?>
     <?php endforeach; ?>
 </div>

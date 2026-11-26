@@ -2,20 +2,20 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $id = 'sf-age-gate-' . substr(md5(uniqid('', true)), 0, 6);
 $classes = ['age-gate', "age-gate-theme_{$data['theme']}", $data['inline'] ? 'age-gate_inline' : '', $data['className']];
 $attributes = $data['attributes'] + ($data['inline'] ? [] : ['data-sf-age-gate' => '']);
-$button = static fn (string $text, ButtonStyle $style, string $action) => Button::drawButton(
+$button = static fn (string $text, ButtonMainStyle $style, string $action) => Button::drawButtonMain(
     className: "age-gate__{$action}",
     text: htmlspecialchars($text),
     style: $style,
-    size: ButtonSize::Large,
-    theme: ButtonTheme::from($data['theme']),
+    size: ButtonMainSize::Large,
+    theme: ButtonMainTheme::from($data['theme']),
     attributes: ['type' => 'button', 'data-sf-age-gate-action' => $action],
 );
 ?>
@@ -27,8 +27,8 @@ $button = static fn (string $text, ButtonStyle $style, string $action) => Button
             <p class="age-gate__text" id="<?= $id ?>-text"><?= htmlspecialchars($data['text']) ?></p>
         </div>
         <div class="age-gate__actions">
-            <?= $button($data['confirmText'], ButtonStyle::Primary, 'confirm') ?>
-            <?= $button($data['declineText'], ButtonStyle::Secondary, 'decline') ?>
+            <?= $button($data['confirmText'], ButtonMainStyle::Primary, 'confirm') ?>
+            <?= $button($data['declineText'], ButtonMainStyle::Secondary, 'decline') ?>
         </div>
     </div>
 </div>

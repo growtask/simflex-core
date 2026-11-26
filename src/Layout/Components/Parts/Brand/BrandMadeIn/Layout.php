@@ -20,7 +20,7 @@ class Layout extends LayoutBase
      * @param array<string,mixed> $attributes Атрибуты ссылки
      */
     public static function drawBrandMadeIn(
-        MadeInTheme $theme = MadeInTheme::Light,
+        BrandMadeInTheme $theme = BrandMadeInTheme::Light,
         bool        $flag = true,
         string      $caption = 'Сайт сделан в студии',
         string      $href = '',
@@ -30,7 +30,7 @@ class Layout extends LayoutBase
         string      $className = '',
         array       $attributes = []
     ): string {
-        $dark = $theme === MadeInTheme::Dark ? '-dark' : '';
+        $dark = $theme === BrandMadeInTheme::Dark ? '-dark' : '';
         $brandSrc = $src !== '' ? $src : asset('images/brand/made-in' . $dark . '.svg');
 
         return static::draw([

@@ -6,32 +6,32 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 $theme = Page::get()->getTheme();
-$input = fn(string $label, string $name, string $value, array $attributes = [], TextInputKind $kind = TextInputKind::Text)
-    => '<div class="form-input">' . TextInput::drawInput(
+$input = fn(string $label, string $name, string $value, array $attributes = [], InputMainKind $kind = InputMainKind::Text)
+    => '<div class="form-input">' . TextInput::drawInputMain(
         placeholder: $label,
         labelText: $label,
-        labelPos: TextInputLabelPos::Standard,
-        theme: TextInputTheme::from($theme),
+        labelPos: InputMainLabelPos::Standard,
+        theme: InputMainTheme::from($theme),
         id: 'account-' . $name,
         attributes: $attributes + ($name !== '' ? ['name' => $name] : []),
         kind: $kind,
         value: $value,
         reset: false,
     ) . '</div>';
-$save = Button::drawButton(
+$save = Button::drawButtonMain(
     text: 'Сохранить',
-    size: ButtonSize::Small,
-    theme: ButtonTheme::from($theme),
+    size: ButtonMainSize::Small,
+    theme: ButtonMainTheme::from($theme),
     attributes: ['type' => 'submit'],
     iconLeft: 'check',
 );
@@ -52,11 +52,11 @@ $save = Button::drawButton(
                         <?= $input('Роль', '', (string)$data['role_name'], ['disabled' => 'disabled']) ?>
                         <?= $input('Логин', '', (string)$data['login'], ['disabled' => 'disabled']) ?>
                         <?= $input('Имя', 'name', (string)$data['name']) ?>
-                        <?= $input('E-mail', 'email', (string)$data['email'], kind: TextInputKind::Email) ?>
+                        <?= $input('E-mail', 'email', (string)$data['email'], kind: InputMainKind::Email) ?>
                         <?= $input('Новый пароль', 'password', '', [
                             'autocomplete' => 'new-password',
                             'placeholder' => 'Оставьте пустым, если не требуется изменить',
-                        ], TextInputKind::Password) ?>
+                        ], InputMainKind::Password) ?>
                     </div>
                 </div>
             </section>
@@ -64,12 +64,12 @@ $save = Button::drawButton(
     </div>
     <div class="edit-bar edit-bar-theme_<?= $theme ?>" role="toolbar" aria-label="Сохранение">
         <?= $save ?>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             text: 'Выйти из админки',
             link: Page::url('logout'),
-            style: ButtonStyle::Outline,
-            size: ButtonSize::Small,
-            theme: ButtonTheme::from($theme),
+            style: ButtonMainStyle::Outline,
+            size: ButtonMainSize::Small,
+            theme: ButtonMainTheme::from($theme),
             iconLeft: 'log-out',
         ) ?>
     </div>

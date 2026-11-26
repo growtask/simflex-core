@@ -12,17 +12,17 @@ class Layout extends LayoutBase
     /**
      * @param string $className Дополнительные CSS-классы
      * @param string $text Видимый текст (номер или адрес); если пуст, берётся $value
-     * @param string $value Номер телефона, адрес почты или адрес ссылки (для ContactType::Custom)
+     * @param string $value Номер телефона, адрес почты или адрес ссылки (для LinkContactType::Custom)
      * @param array<string,mixed> $attributes Дополнительные HTML-атрибуты ссылки
      */
-    public static function drawContact(
+    public static function drawLinkContact(
         string       $className = '',
         string       $text = '',
         string       $value = '',
-        ContactType  $type = ContactType::Phone,
-        ContactStyle $style = ContactStyle::Flat,
-        ContactSize  $size = ContactSize::Small,
-        ContactTheme $theme = ContactTheme::Light,
+        LinkContactType  $type = LinkContactType::Phone,
+        LinkContactStyle $style = LinkContactStyle::Flat,
+        LinkContactSize  $size = LinkContactSize::Small,
+        LinkContactTheme $theme = LinkContactTheme::Light,
         array        $attributes = []
     ): string {
         return static::draw(
@@ -43,12 +43,12 @@ class Layout extends LayoutBase
     /**
      * Адрес ссылки: tel: с номером без пробелов, mailto: для почты
      */
-    public static function getHref(ContactType $type, string $value): string
+    public static function getHref(LinkContactType $type, string $value): string
     {
         return match ($type) {
-            ContactType::Phone => 'tel:' . preg_replace('/[^\d+]/', '', $value),
-            ContactType::Email => 'mailto:' . trim($value),
-            ContactType::Custom => $value,
+            LinkContactType::Phone => 'tel:' . preg_replace('/[^\d+]/', '', $value),
+            LinkContactType::Email => 'mailto:' . trim($value),
+            LinkContactType::Custom => $value,
         };
     }
 }

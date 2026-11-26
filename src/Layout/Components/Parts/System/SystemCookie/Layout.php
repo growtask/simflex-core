@@ -19,10 +19,10 @@ class Layout extends LayoutBase
      * @param bool $inline Не закреплять у края окна, а выводить в потоке страницы (витрина, страница настроек)
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawCookie(
-        CookieState    $state = CookieState::Default,
-        CookieTheme    $theme = CookieTheme::Light,
-        CookiePosition $position = CookiePosition::Bottom,
+    public static function drawSystemCookie(
+        SystemCookieState    $state = SystemCookieState::Default,
+        SystemCookieTheme    $theme = SystemCookieTheme::Light,
+        SystemCookiePosition $position = SystemCookiePosition::Bottom,
         string         $title = 'Сайт использует cookie',
         string         $text = 'Мы используем cookie и сторонние сервисы, чтобы анализировать трафик, подбирать контент и улучшать сайт.',
         string         $settingsTitle = 'Настройки cookie',

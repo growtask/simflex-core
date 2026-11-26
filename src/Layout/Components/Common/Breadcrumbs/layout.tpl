@@ -2,14 +2,14 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 
 $theme = $data['theme'];
 $items = $data['items'];
@@ -22,12 +22,12 @@ $isCollapsible = $last >= 2;
     <ol class="breadcrumbs__list">
         <?php if ($data['homeLink'] !== ''): ?>
             <li class="breadcrumbs__home">
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     link: $data['homeLink'],
                     icon: 'home',
-                    style: ButtonStyle::Secondary,
-                    size: ButtonSize::ExtraSmall,
-                    theme: ButtonTheme::from($theme),
+                    style: ButtonMainStyle::Secondary,
+                    size: ButtonMainSize::ExtraSmall,
+                    theme: ButtonMainTheme::from($theme),
                     attributes: ['aria-label' => $data['homeLabel']],
                 ) ?>
             </li>
@@ -35,11 +35,11 @@ $isCollapsible = $last >= 2;
         <?php foreach ($items as $i => $item): ?>
             <?php if ($isCollapsible && $i === 1): ?>
                 <li class="breadcrumbs__item breadcrumbs__more">
-                    <?= Tab::drawTab(
+                    <?= Tab::drawTabMain(
                         text: '…',
-                        style: TabStyle::Flat,
-                        size: TabSize::ExtraSmall,
-                        theme: TabTheme::from($theme),
+                        style: TabMainStyle::Flat,
+                        size: TabMainSize::ExtraSmall,
+                        theme: TabMainTheme::from($theme),
                         attributes: [
                             'data-sf-breadcrumbs-more' => '',
                             'aria-label' => 'Показать все разделы',
@@ -51,12 +51,12 @@ $isCollapsible = $last >= 2;
             <?php $isMiddle = $isCollapsible && $i > 0 && $i < $last - 1; ?>
             <li class="breadcrumbs__item<?= $isMiddle ? ' breadcrumbs__item_middle' : '' ?>">
                 <?php if ($i < $last && ($item['link'] ?? '') !== ''): ?>
-                    <?= Tab::drawTab(
+                    <?= Tab::drawTabMain(
                         text: htmlspecialchars($item['name']),
                         link: $item['link'],
-                        style: TabStyle::Flat,
-                        size: TabSize::ExtraSmall,
-                        theme: TabTheme::from($theme),
+                        style: TabMainStyle::Flat,
+                        size: TabMainSize::ExtraSmall,
+                        theme: TabMainTheme::from($theme),
                     ) ?>
                 <?php elseif ($i < $last): ?>
                     <span class="breadcrumbs__text"><?= htmlspecialchars($item['name']) ?></span>

@@ -6,19 +6,19 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Link\LinkMain\Layout as Link;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkStyle;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkTheme;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainStyle;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainTheme;
 
-$linkTheme = LinkTheme::from($theme);
+$linkTheme = LinkMainTheme::from($theme);
 
 ?>
-<?php foreach (LinkSize::cases() as $size): ?>
+<?php foreach (LinkMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (LinkStyle::cases() as $style): ?>
-            <?= Link::drawLink(text: $style->name, href: '#link', style: $style, size: $size, theme: $linkTheme) ?>
-            <?= Link::drawLink(
+        <?php foreach (LinkMainStyle::cases() as $style): ?>
+            <?= Link::drawLinkMain(text: $style->name, href: '#link', style: $style, size: $size, theme: $linkTheme) ?>
+            <?= Link::drawLinkMain(
                 text: 'С иконками',
                 href: '#link',
                 iconLeft: 'home',
@@ -27,7 +27,7 @@ $linkTheme = LinkTheme::from($theme);
                 size: $size,
                 theme: $linkTheme,
             ) ?>
-            <?= Link::drawLink(
+            <?= Link::drawLinkMain(
                 text: 'Внешняя',
                 href: 'https://example.com',
                 external: true,

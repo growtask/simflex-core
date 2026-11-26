@@ -2,8 +2,8 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Marker\Layout as Marker;
 use Simflex\Core\Layout\Components\UI\Marker\MarkerSize;
@@ -35,21 +35,21 @@ if ($data['style'] === 'load') {
         <?php if ($data['buttons']): ?>
             <div class="states__buttons">
                 <?php if ($data['secondaryButton']): ?>
-                    <?= Button::drawButton(
+                    <?= Button::drawButtonMain(
                         className: 'states__button',
                         text: $data['secondaryText'],
                         link: $data['secondaryLink'],
-                        style: ButtonStyle::Secondary,
-                        theme: ButtonTheme::from($data['theme']),
+                        style: ButtonMainStyle::Secondary,
+                        theme: ButtonMainTheme::from($data['theme']),
                         attributes: $data['secondaryAttributes'],
                     ) ?>
                 <?php endif; ?>
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     className: 'states__button',
                     text: $data['primaryText'],
                     link: $data['primaryLink'],
-                    style: ButtonStyle::Primary,
-                    theme: ButtonTheme::from($data['theme']),
+                    style: ButtonMainStyle::Primary,
+                    theme: ButtonMainTheme::from($data['theme']),
                     attributes: $data['primaryAttributes'],
                 ) ?>
             </div>

@@ -6,12 +6,12 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\Layout as Scrollbar;
-use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarDirection;
-use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarSize;
-use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarStyle;
-use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarTheme;
+use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarMainDirection;
+use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarMainSize;
+use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarMainStyle;
+use Simflex\Core\Layout\Components\UI\Scrollbar\ScrollbarMain\ScrollbarMainTheme;
 
-$scrollbarTheme = ScrollbarTheme::from($theme);
+$scrollbarTheme = ScrollbarMainTheme::from($theme);
 $lines = '';
 for ($i = 1; $i <= 24; $i++) {
     $lines .= '<p class="t3">Строка списка ' . $i . '</p>';
@@ -23,16 +23,16 @@ for ($i = 1; $i <= 14; $i++) {
 $wide .= '</div>';
 
 ?>
-<?php foreach (ScrollbarStyle::cases() as $style): ?>
+<?php foreach (ScrollbarMainStyle::cases() as $style): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $style->name ?>: вертикальная</h3>
     <div class="ui-showcase__row">
-        <?php foreach (ScrollbarSize::cases() as $size): ?>
+        <?php foreach (ScrollbarMainSize::cases() as $size): ?>
             <?php foreach ([false, true] as $arrows): ?>
                 <div class="ui-showcase__field">
-                    <?= Scrollbar::drawScrollbar(
+                    <?= Scrollbar::drawScrollbarMain(
                         $lines,
                         $style,
-                        ScrollbarDirection::Vertical,
+                        ScrollbarMainDirection::Vertical,
                         $size,
                         $arrows,
                         $scrollbarTheme,
@@ -45,14 +45,14 @@ $wide .= '</div>';
     </div>
 
     <h3 class="ui-showcase__subtitle ui-m"><?= $style->name ?>: горизонтальная</h3>
-    <?php foreach (ScrollbarSize::cases() as $size): ?>
+    <?php foreach (ScrollbarMainSize::cases() as $size): ?>
         <div class="ui-showcase__row">
             <?php foreach ([false, true] as $arrows): ?>
                 <div class="ui-showcase__field">
-                    <?= Scrollbar::drawScrollbar(
+                    <?= Scrollbar::drawScrollbarMain(
                         $wide,
                         $style,
-                        ScrollbarDirection::Horizontal,
+                        ScrollbarMainDirection::Horizontal,
                         $size,
                         $arrows,
                         $scrollbarTheme,

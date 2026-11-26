@@ -6,25 +6,25 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 
-$tabTheme = TabTheme::from($theme);
+$tabTheme = TabMainTheme::from($theme);
 
 ?>
-<?php foreach (TabSize::cases() as $size): ?>
+<?php foreach (TabMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (TabStyle::cases() as $style): ?>
-            <?= Tab::drawTab(text: $style->name, style: $style, size: $size, theme: $tabTheme) ?>
-            <?= Tab::drawTab(text: 'active', style: $style, size: $size, theme: $tabTheme, active: true) ?>
-            <?= Tab::drawTab(text: 'disabled', style: $style, size: $size, theme: $tabTheme, disabled: true) ?>
+        <?php foreach (TabMainStyle::cases() as $style): ?>
+            <?= Tab::drawTabMain(text: $style->name, style: $style, size: $size, theme: $tabTheme) ?>
+            <?= Tab::drawTabMain(text: 'active', style: $style, size: $size, theme: $tabTheme, active: true) ?>
+            <?= Tab::drawTabMain(text: 'disabled', style: $style, size: $size, theme: $tabTheme, disabled: true) ?>
         <?php endforeach; ?>
     </div>
     <div class="ui-showcase__row">
-        <?php foreach (TabStyle::cases() as $style): ?>
-            <?= Tab::drawTab(
+        <?php foreach (TabMainStyle::cases() as $style): ?>
+            <?= Tab::drawTabMain(
                 text: 'Иконки',
                 iconLeft: 'home',
                 iconRight: 'chevron-s-down',

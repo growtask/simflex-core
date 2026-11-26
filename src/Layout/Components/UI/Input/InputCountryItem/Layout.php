@@ -3,7 +3,7 @@
 namespace Simflex\Core\Layout\Components\UI\Input\InputCountryItem;
 
 use Simflex\Core\Layout\Components\UI\Input\InputPhone\Layout as PhoneInput;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -16,7 +16,7 @@ class Layout extends LayoutBase
      * @param bool $active Страна выбрана
      */
     public static function drawInputCountryItem(
-        PhoneCountry $country = PhoneCountry::Ru,
+        InputPhoneCountry $country = InputPhoneCountry::Ru,
         bool         $active = false,
         string       $theme = 'light',
         string       $className = '',

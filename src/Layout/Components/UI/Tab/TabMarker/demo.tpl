@@ -5,12 +5,12 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tab\TabMarker\Layout as TabMarker;
 use Simflex\Core\Layout\Components\UI\Tab\TabMarker\TabMarkerSize;
 use Simflex\Core\Layout\Components\UI\Tab\TabMarker\TabMarkerStyle;
 
-$tabTheme = TabTheme::from($theme);
+$tabTheme = TabMainTheme::from($theme);
 
 ?>
 <?php foreach (TabMarkerSize::cases() as $size): ?>

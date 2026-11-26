@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderSteps;
 
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -17,12 +17,12 @@ class Layout extends LayoutBase
      * @param int $current Текущий шаг, 1–$total
      * @param bool $showLabel Подпись «Шаг 2 из 4» над сегментами
      */
-    public static function drawSteps(
+    public static function drawLoaderSteps(
         int           $total = 4,
         int           $current = 1,
         bool          $showLabel = false,
-        ProgressSize  $size = ProgressSize::Medium,
-        ProgressTheme $theme = ProgressTheme::Light,
+        LoaderProgressSize  $size = LoaderProgressSize::Medium,
+        LoaderProgressTheme $theme = LoaderProgressTheme::Light,
         string        $className = '',
     ): string {
         $total = max(3, min(5, $total));

@@ -2,8 +2,8 @@
 
 namespace Simflex\Core\Layout\Components\UI\Calendar\CalendarMain;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -11,7 +11,7 @@ use Simflex\Core\Layout\LayoutBase;
  * Календарь (Figma Calendar/calendar, day, item; design-ui-calendar.md): виды days (сетка дней, неделя
  * с понедельника), months, years, time (часы и минуты). Сетку строит script.js по data-value; выбор — событие
  * calendar:select на корне ({detail: {value: 'Y-m-d' | 'Y-m-d H:i' | 'H:i'}}). Поле даты — TextInput с
- * TextInputKind::Date, DateTime, Time: календарь раскрывается под ним
+ * InputMainKind::Date, DateTime, Time: календарь раскрывается под ним
  */
 class Layout extends LayoutBase
 {
@@ -25,14 +25,14 @@ class Layout extends LayoutBase
      * @param int $minuteStep Шаг минут в виде time
      * @param string $label Доступное имя календаря
      * @param array<string,string> $attributes Атрибуты корня
-     * @param CalendarSelection $selection None — только показ, Single — один день, Range — диапазон
+     * @param CalendarMainSelection $selection None — только показ, Single — один день, Range — диапазон
      *        (значение 'Y-m-d/Y-m-d', событие calendar:select после выбора конца)
-     * @param CalendarFormat $format H24 или H12 (в виде time колонки часов, минут и AM/PM)
+     * @param CalendarMainFormat $format H24 или H12 (в виде time колонки часов, минут и AM/PM)
      */
-    public static function drawCalendar(
+    public static function drawCalendarMain(
         string        $value = '',
-        CalendarMode  $mode = CalendarMode::Date,
-        CalendarTheme $theme = CalendarTheme::Light,
+        CalendarMainMode  $mode = CalendarMainMode::Date,
+        CalendarMainTheme $theme = CalendarMainTheme::Light,
         bool          $card = true,
         string        $min = '',
         string        $max = '',
@@ -41,16 +41,16 @@ class Layout extends LayoutBase
         string        $id = '',
         string        $className = '',
         array         $attributes = [],
-        CalendarSelection $selection = CalendarSelection::Single,
-        CalendarFormat $format = CalendarFormat::H24,
+        CalendarMainSelection $selection = CalendarMainSelection::Single,
+        CalendarMainFormat $format = CalendarMainFormat::H24,
     ): string {
         $id = $id !== '' ? $id : 'sf-calendar-' . ++self::$counter;
-        $arrow = fn(string $icon, string $text, string $step) => ButtonIcon::drawButtonIcon(
+        $arrow = fn(string $icon, string $text, string $step) => ButtonIcon::drawButtonIconSmall(
             icon: $icon,
             label: $text,
             className: 'calendar__arrow',
-            style: ButtonIconStyle::Flat,
-            theme: ButtonIconTheme::from($theme->value),
+            style: ButtonIconSmallStyle::Flat,
+            theme: ButtonIconSmallTheme::from($theme->value),
             attributes: ['data-sf-calendar-step' => $step],
         );
         $prev = $arrow('chevron-m-left', 'Назад', '-1');

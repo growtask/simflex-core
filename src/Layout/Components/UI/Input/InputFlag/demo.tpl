@@ -6,11 +6,11 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputFlag\Layout as InputFlag;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 
 ?>
 <div class="ui-showcase__row">
-    <?php foreach (PhoneCountry::cases() as $country): ?>
+    <?php foreach (InputPhoneCountry::cases() as $country): ?>
         <?= InputFlag::drawInputFlag($country) ?>
     <?php endforeach; ?>
 </div>

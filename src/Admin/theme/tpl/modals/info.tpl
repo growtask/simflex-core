@@ -9,8 +9,8 @@
 use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
 use Simflex\Core\Layout\Components\Common\Modal\ModalSize;
 use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 ?>
@@ -18,12 +18,12 @@ use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
     id: 'sf-modal-info',
     title: 'Информация',
     content: '<div class="modal-info__talbe-wrapper"></div>',
-    footer: Button::drawButton(
+    footer: Button::drawButtonMain(
         className: 'modal-info__btn-edit',
         text: 'Редактировать',
         link: '#',
-        size: ButtonSize::Small,
-        theme: ButtonTheme::from($page->getTheme()),
+        size: ButtonMainSize::Small,
+        theme: ButtonMainTheme::from($page->getTheme()),
         iconLeft: 'pencil-line',
     ),
     size: ModalSize::Medium,

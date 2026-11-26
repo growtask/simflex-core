@@ -13,29 +13,29 @@
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
 use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\Layout as Radio;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\SwitchRadioTheme;
 
 $label = strip_tags($field->label);
 $menuId = 'sf-th-filter-' . $field->name;
 $isSet = $value !== '';
-$buttonTheme = ButtonTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
 $reset = Page::get()->getPath() . '?' . http_build_query(['filter' => [$field->name => ''], 'p' => 0]);
 ?>
 <div class="th-filter<?= $isSet ? ' th-filter_set' : '' ?>" data-sf-th-filter>
-    <?= ButtonIcon::drawButtonIcon(
+    <?= ButtonIcon::drawButtonIconSmall(
         icon: 'filter',
         label: 'Фильтр: ' . $label,
         className: 'th-filter__button',
-        style: ButtonIconStyle::Secondary,
-        theme: ButtonIconTheme::from($theme),
+        style: ButtonIconSmallStyle::Secondary,
+        theme: ButtonIconSmallTheme::from($theme),
         attributes: [
             'aria-haspopup' => 'dialog',
             'aria-expanded' => 'false',
@@ -68,33 +68,33 @@ $reset = Page::get()->getPath() . '?' . http_build_query(['filter' => [$field->n
                         $attributes['checked'] = 'checked';
                     }
                     ?>
-                    <?= Radio::drawRadio(
+                    <?= Radio::drawSwitchRadio(
                         className: 'th-filter__option',
                         // подпись не длиннее 2 строк: полностью — во всплывающей подсказке браузера
                         text: '<span title="' . htmlspecialchars($optionLabel) . '">'
                             . htmlspecialchars($optionLabel) . '</span>',
                         id: $menuId . '-' . md5((string)$optionValue),
                         value: (string)$optionValue,
-                        theme: RadioTheme::from($theme),
+                        theme: SwitchRadioTheme::from($theme),
                         attributes: $attributes,
                     ) ?>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
         <div class="th-filter__buttons">
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 className: 'th-filter__apply',
                 text: 'Применить',
-                size: ButtonSize::Small,
+                size: ButtonMainSize::Small,
                 theme: $buttonTheme,
                 attributes: ['data-sf-th-filter-apply' => ''],
             ) ?>
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 className: 'th-filter__reset',
                 text: 'Сбросить',
                 link: $reset,
-                style: ButtonStyle::Secondary,
-                size: ButtonSize::Small,
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Small,
                 theme: $buttonTheme,
             ) ?>
         </div>

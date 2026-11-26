@@ -17,15 +17,15 @@ class Layout extends LayoutBase
      * @param string $label Название цвета («Красный»); экранируется
      * @param array<string,string> $attributes Атрибуты input
      */
-    public static function drawRadioColor(
+    public static function drawSwitchRadioColor(
         string          $name,
         string          $value,
         string          $label,
-        RadioColorValue $color = RadioColorValue::Dark,
+        SwitchRadioColorValue $color = SwitchRadioColorValue::Dark,
         bool            $checked = false,
         bool            $disabled = false,
-        RadioColorSize  $size = RadioColorSize::Medium,
-        RadioColorTheme $theme = RadioColorTheme::Light,
+        SwitchRadioColorSize  $size = SwitchRadioColorSize::Medium,
+        SwitchRadioColorTheme $theme = SwitchRadioColorTheme::Light,
         string          $id = '',
         array           $attributes = [],
         string          $className = '',

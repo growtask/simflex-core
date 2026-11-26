@@ -3,30 +3,30 @@
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderInline;
 
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout as LoaderIcon;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderStyle;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
  * Загрузка в строке с текстом (Figma Loaders/inline): спиннер и подпись, что именно грузится. Одна строка;
- * тема — LoaderTheme. Подпись экранируется
+ * тема — LoaderMainTheme. Подпись экранируется
  */
 class Layout extends LayoutBase
 {
     public static function drawLoaderInline(
         string          $text = 'Загрузка…',
         LoaderInlineSize $size = LoaderInlineSize::Medium,
-        LoaderTheme     $theme = LoaderTheme::Light,
+        LoaderMainTheme     $theme = LoaderMainTheme::Light,
         string          $className = '',
     ): string {
-        $loader = LoaderIcon::drawLoader(
+        $loader = LoaderIcon::drawLoaderMain(
             match ($size) {
-                LoaderInlineSize::Small => LoaderSize::ExtraSmall,
-                LoaderInlineSize::Medium => LoaderSize::Small,
-                LoaderInlineSize::Large => LoaderSize::Medium,
+                LoaderInlineSize::Small => LoaderMainSize::ExtraSmall,
+                LoaderInlineSize::Medium => LoaderMainSize::Small,
+                LoaderInlineSize::Large => LoaderMainSize::Medium,
             },
-            LoaderStyle::Primary,
+            LoaderMainStyle::Primary,
             $theme,
             label: $text,
         );

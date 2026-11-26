@@ -1,9 +1,9 @@
 <?php
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
 
-/** @var PhoneCountry $country */
+/** @var InputPhoneCountry $country */
 $country = $data['country'];
 $classes = [
     'phone-input',

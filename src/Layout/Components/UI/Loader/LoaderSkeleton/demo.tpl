@@ -6,19 +6,19 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\Layout as Skeleton;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonShape;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\SkeletonTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonShape;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderSkeleton\LoaderSkeletonTheme;
 
-$skeletonTheme = SkeletonTheme::from($theme);
+$skeletonTheme = LoaderSkeletonTheme::from($theme);
 
 ?>
-<?php foreach (SkeletonShape::cases() as $shape): ?>
+<?php foreach (LoaderSkeletonShape::cases() as $shape): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $shape->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (SkeletonSize::cases() as $size): ?>
-            <?= Skeleton::drawSkeleton($shape, $size, $skeletonTheme) ?>
-            <?= Skeleton::drawSkeleton($shape, $size, $skeletonTheme, animation: false) ?>
+        <?php foreach (LoaderSkeletonSize::cases() as $size): ?>
+            <?= Skeleton::drawLoaderSkeleton($shape, $size, $skeletonTheme) ?>
+            <?= Skeleton::drawLoaderSkeleton($shape, $size, $skeletonTheme, animation: false) ?>
         <?php endforeach; ?>
     </div>
 <?php endforeach; ?>

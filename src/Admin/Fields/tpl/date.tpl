@@ -6,24 +6,24 @@
  * @var \Simflex\Core\Admin\Fields\Field $this
  * @var string $name
  * @var string $value
- * @var \Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind $kind
+ * @var \Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind $kind
  * @var bool $readonly
  */
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 $attributes = ['name' => $name, 'aria-label' => strip_tags((string)$this->label)];
 if ($readonly) {
     $attributes['readonly'] = 'readonly';
 }
 ?>
-<?= TextInput::drawInput(
+<?= TextInput::drawInputMain(
     className: 'form-input__text form-input__date',
-    size: TextInputSize::Small,
-    theme: TextInputTheme::from(Page::get()->getTheme()),
+    size: InputMainSize::Small,
+    theme: InputMainTheme::from(Page::get()->getTheme()),
     id: 'field-' . $name . '-' . substr(md5((string)$this->table), 0, 6),
     attributes: $attributes,
     kind: $kind,

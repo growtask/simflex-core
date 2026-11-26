@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Layout\Components\UI\Calendar\CalendarItem;
 
-use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarTheme;
+use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMainTheme;
 use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\Layout as CalendarMain;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -16,7 +16,7 @@ class Layout extends LayoutBase
         string        $text = 'Март',
         bool          $selected = false,
         bool          $current = false,
-        CalendarTheme $theme = CalendarTheme::Light,
+        CalendarMainTheme $theme = CalendarMainTheme::Light,
         string        $className = '',
     ): string {
         CalendarMain::initAssets();

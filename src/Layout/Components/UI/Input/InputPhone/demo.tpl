@@ -6,13 +6,13 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Input\InputPhone\Layout as PhoneInput;
-use Simflex\Core\Layout\Components\UI\Input\InputPhone\PhoneCountry;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputPhone\InputPhoneCountry;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
-$inputTheme = TextInputTheme::from($theme);
+$inputTheme = InputMainTheme::from($theme);
 
 $nextId = static function () use ($theme): string {
     static $n = [];
@@ -22,20 +22,20 @@ $nextId = static function () use ($theme): string {
 };
 
 ?>
-<?php foreach (TextInputSize::cases() as $size): ?>
+<?php foreach (InputMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (TextInputStyle::cases() as $style): ?>
-            <?= PhoneInput::drawPhoneInput(id: $nextId(), style: $style, size: $size, theme: $inputTheme) ?>
-            <?= PhoneInput::drawPhoneInput(id: $nextId(), value: '79161234567', style: $style, size: $size, theme: $inputTheme) ?>
+        <?php foreach (InputMainStyle::cases() as $style): ?>
+            <?= PhoneInput::drawInputPhone(id: $nextId(), style: $style, size: $size, theme: $inputTheme) ?>
+            <?= PhoneInput::drawInputPhone(id: $nextId(), value: '79161234567', style: $style, size: $size, theme: $inputTheme) ?>
         <?php endforeach; ?>
     </div>
 <?php endforeach; ?>
 
 <h3 class="ui-showcase__subtitle ui-m">Страны</h3>
 <div class="ui-showcase__row">
-    <?php foreach (PhoneCountry::cases() as $country): ?>
-        <?= PhoneInput::drawPhoneInput(
+    <?php foreach (InputPhoneCountry::cases() as $country): ?>
+        <?= PhoneInput::drawInputPhone(
             name: 'ui_phone_' . $country->value . '_' . $theme,
             value: $country->dial() . '123456789',
             country: $country,
@@ -47,15 +47,15 @@ $nextId = static function () use ($theme): string {
 
 <h3 class="ui-showcase__subtitle ui-m">Подпись и состояния</h3>
 <div class="ui-showcase__row">
-    <?= PhoneInput::drawPhoneInput(
+    <?= PhoneInput::drawInputPhone(
         id: $nextId(),
         labelText: 'Телефон',
-        labelPos: TextInputLabelPos::Standard,
+        labelPos: InputMainLabelPos::Standard,
         theme: $inputTheme,
     ) ?>
-    <?= PhoneInput::drawPhoneInput(id: $nextId(), value: '7916123', error: 'Введите номер полностью', theme: $inputTheme) ?>
-    <?= PhoneInput::drawPhoneInput(id: $nextId(), value: '79161234567', success: true, theme: $inputTheme) ?>
-    <?= PhoneInput::drawPhoneInput(
+    <?= PhoneInput::drawInputPhone(id: $nextId(), value: '7916123', error: 'Введите номер полностью', theme: $inputTheme) ?>
+    <?= PhoneInput::drawInputPhone(id: $nextId(), value: '79161234567', success: true, theme: $inputTheme) ?>
+    <?= PhoneInput::drawInputPhone(
         id: $nextId(),
         value: '79161234567',
         theme: $inputTheme,

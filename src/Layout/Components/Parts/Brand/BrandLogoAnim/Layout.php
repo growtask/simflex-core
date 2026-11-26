@@ -21,7 +21,7 @@ class Layout extends LayoutBase
      * @param array<string,mixed> $attributes Атрибуты ссылки
      */
     public static function drawBrandLogoAnim(
-        LogoAnimTheme $theme = LogoAnimTheme::Light,
+        BrandLogoAnimTheme $theme = BrandLogoAnimTheme::Light,
         bool          $text = true,
         string        $caption = '',
         string        $homeText = 'Главная',
@@ -32,7 +32,7 @@ class Layout extends LayoutBase
         string        $className = '',
         array         $attributes = []
     ): string {
-        $dark = $theme === LogoAnimTheme::Dark ? '-dark' : '';
+        $dark = $theme === BrandLogoAnimTheme::Dark ? '-dark' : '';
         $brandSrc = $src !== '' ? $src : asset('images/brand/logo' . $dark . '.svg');
 
         return static::draw([

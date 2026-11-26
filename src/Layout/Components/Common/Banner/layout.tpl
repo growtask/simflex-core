@@ -2,8 +2,8 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\Layout as PlaceholderImg;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Other\StepIndicator\Layout as StepIndicator;
 use Simflex\Core\Layout\Components\UI\Other\StepIndicator\StepIndicatorSize;
@@ -65,12 +65,12 @@ if ($multiple) {
                             <p class="banner__text"><?= $esc($slide['text']) ?></p>
                         <?php endif; ?>
                         <?php if (($slide['buttonText'] ?? '') !== '' && ($slide['buttonLink'] ?? '') !== ''): ?>
-                            <?= Button::drawButton(
+                            <?= Button::drawButtonMain(
                                 className: 'banner__button',
                                 text: $esc($slide['buttonText']),
                                 link: (string)$slide['buttonLink'],
-                                style: ButtonStyle::Primary,
-                                size: ButtonSize::Medium,
+                                style: ButtonMainStyle::Primary,
+                                size: ButtonMainSize::Medium,
                                 iconRight: 'arrow-up-right'
                             ) ?>
                         <?php endif; ?>
@@ -81,18 +81,18 @@ if ($multiple) {
 
         <?php if ($multiple): ?>
             <div class="banner__arrows">
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     className: 'banner__arrow banner__arrow_prev',
-                    style: ButtonStyle::Secondary,
-                    size: ButtonSize::Medium,
+                    style: ButtonMainStyle::Secondary,
+                    size: ButtonMainSize::Medium,
                     iconLeft: 'arrow-left',
                     disabled: true,
                     attributes: ['aria-label' => $data['prevLabel'], 'data-banner-prev' => '']
                 ) ?>
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     className: 'banner__arrow banner__arrow_next',
-                    style: ButtonStyle::Secondary,
-                    size: ButtonSize::Medium,
+                    style: ButtonMainStyle::Secondary,
+                    size: ButtonMainSize::Medium,
                     iconLeft: 'arrow-right',
                     attributes: ['aria-label' => $data['nextLabel'], 'data-banner-next' => '']
                 ) ?>

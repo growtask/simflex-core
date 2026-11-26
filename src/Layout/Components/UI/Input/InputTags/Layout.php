@@ -3,17 +3,17 @@
 namespace Simflex\Core\Layout\Components\UI\Input\InputTags;
 
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tag\Layout as Tag;
 use Simflex\Core\Layout\Components\UI\Tag\TagSize;
 use Simflex\Core\Layout\Components\UI\Tag\TagStyle;
 use Simflex\Core\Layout\Components\UI\Tag\TagTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -33,7 +33,7 @@ class Layout extends LayoutBase
      * @param string $label Доступное имя поля
      * @param array<string,string> $attributes Атрибуты корня
      */
-    public static function drawTagsInput(
+    public static function drawInputTags(
         string         $name,
         array          $selected = [],
         array          $options = [],
@@ -41,7 +41,7 @@ class Layout extends LayoutBase
         bool           $allowNew = false,
         string         $placeholder = 'Начните вводить',
         string         $label = '',
-        TagsInputTheme $theme = TagsInputTheme::Light,
+        InputTagsTheme $theme = InputTagsTheme::Light,
         bool           $disabled = false,
         string         $id = '',
         string         $className = '',
@@ -58,12 +58,12 @@ class Layout extends LayoutBase
             close: !$disabled,
             closeLabel: 'Удалить ' . $text,
         );
-        $option = fn(string|int $value, string $text) => Tab::drawTab(
+        $option = fn(string|int $value, string $text) => Tab::drawTabMain(
             className: 'tags-input__option',
             text: htmlspecialchars($text),
-            style: TabStyle::Flat,
-            size: TabSize::Small,
-            theme: TabTheme::from($theme->value),
+            style: TabMainStyle::Flat,
+            size: TabMainSize::Small,
+            theme: TabMainTheme::from($theme->value),
             attributes: ['role' => 'option', 'data-value' => (string)$value, 'tabindex' => '-1'],
         );
         $tags = '';
@@ -74,12 +74,12 @@ class Layout extends LayoutBase
         foreach ($options as $value => $text) {
             $optionsHtml .= $option($value, (string)$text);
         }
-        $field = TextInput::drawInput(
+        $field = TextInput::drawInputMain(
             className: 'tags-input__field',
             placeholder: $placeholder,
-            style: TextInputStyle::Filled,
-            size: TextInputSize::Small,
-            theme: TextInputTheme::from($theme->value),
+            style: InputMainStyle::Filled,
+            size: InputMainSize::Small,
+            theme: InputMainTheme::from($theme->value),
             icon: $searchUrl !== '' ? 'search' : '',
             reset: false,
             id: $id . '-text',

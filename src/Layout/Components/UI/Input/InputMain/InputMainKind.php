@@ -1,0 +1,21 @@
+<?php
+
+namespace Simflex\Core\Layout\Components\UI\Input\InputMain;
+
+/**
+ * Заготовка поля (примеры phone и email набора Figma Inputs)
+ */
+enum InputMainKind: string
+{
+    case Text = 'text';
+    case Phone = 'phone';
+    case Email = 'email';
+    /** Пароль: кнопка «Показать пароль» справа */
+    case Password = 'password';
+    /** Дата ДД.ММ.ГГГГ: маска и календарь (Calendar) под полем */
+    case Date = 'date';
+    /** Дата и время ДД.ММ.ГГГГ ЧЧ:ММ: после дня в календаре — часы и минуты */
+    case DateTime = 'datetime';
+    /** Время ЧЧ:ММ: календарь в виде time */
+    case Time = 'time';
+}

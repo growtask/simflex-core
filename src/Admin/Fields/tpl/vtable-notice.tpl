@@ -7,12 +7,12 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeTheme;
 
 ?>
-<?= Notice::drawNotice(
+<?= Notice::drawFeedbackNotice(
     title: strip_tags((string)$this->label),
     text: 'Строки можно будет добавить после сохранения записи.',
-    theme: NoticeTheme::from(Page::get()->getTheme()),
+    theme: FeedbackNoticeTheme::from(Page::get()->getTheme()),
     className: 'edit-table-notice',
 ) ?>

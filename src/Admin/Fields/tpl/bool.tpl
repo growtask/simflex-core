@@ -9,7 +9,7 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\Layout as Toggle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\SwitchToggleTheme;
 
 $attributes = ['name' => $name, 'value' => '1', 'aria-label' => strip_tags((string)$this->label)];
 if ($checked) {
@@ -19,9 +19,9 @@ if ($readonly) {
     $attributes['disabled'] = 'disabled';
 }
 ?>
-<?= Toggle::drawToggle(
+<?= Toggle::drawSwitchToggle(
     className: 'form-input__toggle',
-    theme: ToggleTheme::from(Page::get()->getTheme()),
+    theme: SwitchToggleTheme::from(Page::get()->getTheme()),
     attributes: $attributes,
 ) ?>
 <?php if ($readonly && $checked): ?>

@@ -17,12 +17,12 @@ class Layout extends LayoutBase
      * @param array<string,string> $attributes Атрибуты элемента (type для button, по умолчанию button)
      * @param bool $disabled Кнопка недоступна
      */
-    public static function drawButtonIcon(
+    public static function drawButtonIconSmall(
         string          $icon,
         string          $label,
         string          $className = '',
-        ButtonIconStyle $style = ButtonIconStyle::Flat,
-        ButtonIconTheme $theme = ButtonIconTheme::Light,
+        ButtonIconSmallStyle $style = ButtonIconSmallStyle::Flat,
+        ButtonIconSmallTheme $theme = ButtonIconSmallTheme::Light,
         string          $link = '',
         array           $attributes = [],
         bool            $disabled = false,

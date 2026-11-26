@@ -7,18 +7,18 @@ use Simflex\Core\Layout\Components\Common\Form\Result\Layout as Result;
 use Simflex\Core\Layout\Components\Common\Form\Result\ResultStyle;
 use Simflex\Core\Layout\Components\Common\Form\Result\ResultTheme;
 use Simflex\Core\Layout\Components\Common\Form\Result\ResultType;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
 use Simflex\Core\Layout\Components\UI\Textarea\Layout as Textarea;
 use Simflex\Core\Layout\Components\UI\Textarea\TextareaState;
 use Simflex\Core\Layout\Components\UI\Textarea\TextareaTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 use Simflex\Core\System\Container;
 
@@ -94,7 +94,7 @@ class Layout extends LayoutBase
         ];
 
         $dark = $theme === CallbackTheme::Dark;
-        $inputTheme = $dark ? TextInputTheme::Dark : TextInputTheme::Light;
+        $inputTheme = $dark ? InputMainTheme::Dark : InputMainTheme::Light;
         $hasErrors = $state === CallbackState::Error;
         $sending = $state === CallbackState::Sending;
         $err = fn(string $field): string => $hasErrors ? (string)($errors[$field] ?? '') : '';
@@ -104,11 +104,11 @@ class Layout extends LayoutBase
 
         $fields = [];
         if ($name) {
-            $fields['name'] = TextInput::drawInput(
+            $fields['name'] = TextInput::drawInputMain(
                 className: 'callback__field callback__field_name',
                 placeholder: 'Иван',
                 labelText: 'Имя*',
-                labelPos: TextInputLabelPos::Standard,
+                labelPos: InputMainLabelPos::Standard,
                 theme: $inputTheme,
                 id: "$id-name",
                 attributes: $fieldAttrs('name', [
@@ -118,11 +118,11 @@ class Layout extends LayoutBase
             );
         }
         if ($phone) {
-            $fields['phone'] = TextInput::drawInput(
+            $fields['phone'] = TextInput::drawInputMain(
                 className: 'callback__field callback__field_phone',
                 placeholder: '+7 999 123-45-67',
                 labelText: 'Телефон*',
-                labelPos: TextInputLabelPos::Standard,
+                labelPos: InputMainLabelPos::Standard,
                 theme: $inputTheme,
                 icon: 'phone',
                 id: "$id-phone",
@@ -134,11 +134,11 @@ class Layout extends LayoutBase
             );
         }
         if ($email) {
-            $fields['email'] = TextInput::drawInput(
+            $fields['email'] = TextInput::drawInputMain(
                 className: 'callback__field callback__field_email',
                 placeholder: 'name@example.com',
                 labelText: 'Почта',
-                labelPos: TextInputLabelPos::Standard,
+                labelPos: InputMainLabelPos::Standard,
                 theme: $inputTheme,
                 icon: 'mail',
                 id: "$id-email",
@@ -165,23 +165,23 @@ class Layout extends LayoutBase
         $consentHtml = '';
         if ($consent) {
             $policy = htmlspecialchars($policyUrl, ENT_QUOTES);
-            $consentHtml = Checkbox::drawCheckbox(
+            $consentHtml = Checkbox::drawSwitchCheckbox(
                 className: 'callback__consent',
                 text: $consentText !== ''
                     ? $consentText
                     : 'Я принимаю <a href="' . $policy . '" target="_blank" rel="noopener">политику обработки персональных данных</a>',
-                theme: $dark ? CheckboxTheme::Dark : CheckboxTheme::Light,
+                theme: $dark ? SwitchCheckboxTheme::Dark : SwitchCheckboxTheme::Light,
                 attributes: ['name' => 'consent', 'value' => '1', 'required' => '', 'aria-required' => 'true']
                     + ($err('consent') !== '' ? ['aria-invalid' => 'true'] : []),
             );
         }
 
-        $submit = Button::drawButton(
+        $submit = Button::drawButtonMain(
             className: 'callback__submit',
             text: htmlspecialchars($submitText),
-            style: ButtonStyle::Primary,
-            size: ButtonSize::Medium,
-            theme: $dark ? ButtonTheme::Dark : ButtonTheme::Light,
+            style: ButtonMainStyle::Primary,
+            size: ButtonMainSize::Medium,
+            theme: $dark ? ButtonMainTheme::Dark : ButtonMainTheme::Light,
             load: $sending,
             disabled: $sending,
             attributes: ['type' => 'submit'],

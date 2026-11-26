@@ -5,7 +5,7 @@ use Simflex\Core\Layout\Components\UI\Badge\BadgeSize;
 use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
 use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
 use Simflex\Core\Layout\Components\UI\Link\LinkMain\Layout as Link;
-use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkMainSize;
 use Simflex\Core\Layout\Components\UI\Marker\Layout as Marker;
 use Simflex\Core\Layout\Components\UI\Marker\MarkerSize;
 use Simflex\Core\Layout\Components\UI\Marker\MarkerTheme;
@@ -63,12 +63,12 @@ $hasSign = $data['type'] === 'number' ? $data['number'] !== '' : $data['icon'] !
             ) ?>
         <?php endif; ?>
         <?php if ($data['link']): ?>
-            <?= Link::drawLink(
+            <?= Link::drawLinkMain(
                 className: 'benefit__link',
                 text: (string)$data['link']['text'],
                 href: (string)$data['link']['href'],
                 iconRight: 'chevron-right',
-                size: $data['size'] === 's' ? LinkSize::Small : LinkSize::Medium,
+                size: $data['size'] === 's' ? LinkMainSize::Small : LinkMainSize::Medium,
                 attributes: [
                     // Имя ссылки включает видимый текст и называет, о чём она
                     'aria-label' => (string)($data['link']['label']

@@ -6,9 +6,9 @@
  */
 
 use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\Layout as BrandLogoAnim;
-use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\LogoAnimTheme;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\BrandLogoAnimTheme;
 
-$logoTheme = LogoAnimTheme::from($theme);
+$logoTheme = BrandLogoAnimTheme::from($theme);
 
 ?>
 <h3 class="ui-showcase__subtitle ui-m">С подписью (text включён)</h3>

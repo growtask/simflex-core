@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Layout\Components\UI\Tab\TabMarker;
 
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -33,7 +33,7 @@ class Layout extends LayoutBase
         string         $iconRight = '',
         TabMarkerStyle $style = TabMarkerStyle::Filled,
         TabMarkerSize  $size = TabMarkerSize::Medium,
-        TabTheme       $theme = TabTheme::Light,
+        TabMainTheme       $theme = TabMainTheme::Light,
         array          $attributes = [],
         bool           $active = false,
         bool           $disabled = false,

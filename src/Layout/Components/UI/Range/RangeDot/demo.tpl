@@ -6,9 +6,9 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Range\RangeDot\Layout as RangeDot;
-use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeTheme;
+use Simflex\Core\Layout\Components\UI\Range\RangeMain\RangeMainTheme;
 
-$rangeTheme = RangeTheme::from($theme);
+$rangeTheme = RangeMainTheme::from($theme);
 
 ?>
 <div class="ui-showcase__row">

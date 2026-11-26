@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
 use Simflex\Core\Helpers\Time;
 
 class FieldTime extends Field
@@ -25,7 +25,7 @@ class FieldTime extends Field
             'name' => $this->inputName(),
             'value' => $value ? (string)Time::convert($value, $this->pattern, false) : '',
             // с секундами — поле без календаря: в нём только часы и минуты
-            'kind' => @$this->params['use_seconds'] ? TextInputKind::Text : TextInputKind::Time,
+            'kind' => @$this->params['use_seconds'] ? InputMainKind::Text : InputMainKind::Time,
             'readonly' => $this->readonly,
         ]);
     }

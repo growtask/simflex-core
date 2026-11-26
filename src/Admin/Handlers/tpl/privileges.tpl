@@ -7,8 +7,8 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\Layout as Toggle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\SwitchToggleSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\SwitchToggleTheme;
 
 $theme = Page::get()->getTheme();
 ?>
@@ -36,11 +36,11 @@ $theme = Page::get()->getTheme();
                 ?>
                 <tr class="tr privilege-table__row" data-privilege="<?= htmlspecialchars($row['name']) ?>">
                     <td class="td" data-label="Активно">
-                        <?= Toggle::drawToggle(
+                        <?= Toggle::drawSwitchToggle(
                             className: 'privilege-table__switch',
                             icon: false,
-                            size: ToggleSize::Small,
-                            theme: ToggleTheme::from($theme),
+                            size: SwitchToggleSize::Small,
+                            theme: SwitchToggleTheme::from($theme),
                             attributes: $attributes,
                         ) ?>
                     </td>

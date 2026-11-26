@@ -12,15 +12,15 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
-$theme = TextInputTheme::from(Page::get()->getTheme());
-$draw = fn(string $side, string $placeholder, string $date) => TextInput::drawInput(
+$theme = InputMainTheme::from(Page::get()->getTheme());
+$draw = fn(string $side, string $placeholder, string $date) => TextInput::drawInputMain(
     className: 'filter-date__input',
     placeholder: $placeholder,
-    size: TextInputSize::Small,
+    size: InputMainSize::Small,
     theme: $theme,
     id: uniqid('filter-' . $name . '-' . $side . '-'),
     attributes: [
@@ -28,7 +28,7 @@ $draw = fn(string $side, string $placeholder, string $date) => TextInput::drawIn
         'autocomplete' => 'off',
         'aria-label' => $label . ': ' . mb_strtolower($placeholder),
     ],
-    kind: TextInputKind::Date,
+    kind: InputMainKind::Date,
     value: $date,
 );
 ?>

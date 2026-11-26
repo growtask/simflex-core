@@ -6,9 +6,9 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $theme = $page->getTheme();
@@ -18,8 +18,8 @@ $card = $page->drawLogo('auth__logo', '/')
     . '<h1 class="auth-card__title">Недостаточно прав для входа в панель управления</h1>'
     . '<p class="auth-card__text">Войдите под учётной записью с доступом к админке.</p>'
     . '<div class="auth-card__buttons">'
-    . Button::drawButton(text: 'Выйти', link: Page::url('logout'), theme: ButtonTheme::from($theme), iconLeft: 'log-out')
-    . Button::drawButton(text: 'На сайт', link: '/', style: ButtonStyle::Secondary, theme: ButtonTheme::from($theme))
+    . Button::drawButtonMain(text: 'Выйти', link: Page::url('logout'), theme: ButtonMainTheme::from($theme), iconLeft: 'log-out')
+    . Button::drawButtonMain(text: 'На сайт', link: '/', style: ButtonMainStyle::Secondary, theme: ButtonMainTheme::from($theme))
     . '</div></div>'
     . '<p class="auth__version">Simflex CMS v' . htmlspecialchars(getSimflexVersion()) . '</p>';
 ?>

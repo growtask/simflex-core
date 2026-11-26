@@ -9,14 +9,14 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Extensions\Alert\Alert;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
@@ -30,10 +30,10 @@ $card = $page->drawLogo('auth__logo', '/')
     . '<h1 class="auth-card__title">Вход в панель управления</h1>'
     . $messages['notices']
     . '<div class="auth-card__fields">'
-    . TextInput::drawInput(
+    . TextInput::drawInputMain(
         placeholder: 'Логин',
         labelText: 'Логин',
-        theme: TextInputTheme::from($theme),
+        theme: InputMainTheme::from($theme),
         icon: 'user',
         attributes: [
             'name' => 'login[login]',
@@ -43,31 +43,31 @@ $card = $page->drawLogo('auth__logo', '/')
             'autofocus' => 'autofocus',
         ] + $errorAttributes,
     )
-    . TextInput::drawInput(
+    . TextInput::drawInputMain(
         placeholder: 'Пароль',
         labelText: 'Пароль',
-        theme: TextInputTheme::from($theme),
+        theme: InputMainTheme::from($theme),
         icon: 'lock-on',
         attributes: ['name' => 'login[password]', 'required' => 'required'] + $errorAttributes,
-        kind: TextInputKind::Password,
+        kind: InputMainKind::Password,
     )
     . '</div>'
-    . Checkbox::drawCheckbox(
+    . Checkbox::drawSwitchCheckbox(
         text: 'Запомнить меня',
-        theme: CheckboxTheme::from($theme),
+        theme: SwitchCheckboxTheme::from($theme),
         attributes: ['name' => 'login[remember]', 'checked' => 'checked'],
     )
     . '<div class="auth-card__buttons">'
-    . Button::drawButton(
+    . Button::drawButtonMain(
         text: 'Войти',
-        theme: ButtonTheme::from($theme),
+        theme: ButtonMainTheme::from($theme),
         attributes: ['type' => 'submit'],
     )
-    . Button::drawButton(
+    . Button::drawButtonMain(
         className: 'auth-card__restore',
         text: 'Не помню пароль',
-        style: ButtonStyle::Secondary,
-        theme: ButtonTheme::from($theme),
+        style: ButtonMainStyle::Secondary,
+        theme: ButtonMainTheme::from($theme),
     )
     . '</div>'
     . '<p class="auth-card__text" id="login-restore-sent" role="status" hidden>Заявка успешно отправлена</p>'

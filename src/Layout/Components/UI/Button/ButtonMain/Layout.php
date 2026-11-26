@@ -20,27 +20,27 @@ class Layout extends LayoutBase
      * @param string $iconRight Иконка справа от текста
      * @param bool $load Состояние загрузки: спиннер вместо иконок и текста, ширина сохраняется, aria-busy
      * @param bool $disabled Кнопка недоступна: у button атрибут disabled, у ссылки aria-disabled без href
-     * @param ButtonState $state Результат действия: успех или ошибка (Figma Buttons/states), цвета не зависят от style
+     * @param ButtonMainState $state Результат действия: успех или ошибка (Figma Buttons/states), цвета не зависят от style
      */
-    public static function drawButton(
+    public static function drawButtonMain(
         string        $className = '',
         string        $text = '',
         string        $link = '',
         string        $icon = '',
         bool          $loader = false,
-        ButtonStyle   $style = ButtonStyle::Primary,
-        ButtonSize    $size = ButtonSize::Medium,
-        ButtonTheme   $theme = ButtonTheme::Light,
-        ButtonIconPos $iconPos = ButtonIconPos::Left,
+        ButtonMainStyle   $style = ButtonMainStyle::Primary,
+        ButtonMainSize    $size = ButtonMainSize::Medium,
+        ButtonMainTheme   $theme = ButtonMainTheme::Light,
+        ButtonMainIconPos $iconPos = ButtonMainIconPos::Left,
         array         $attributes = [],
         string        $iconLeft = '',
         string        $iconRight = '',
         bool          $load = false,
         bool          $disabled = false,
-        ButtonState   $state = ButtonState::Default
+        ButtonMainState   $state = ButtonMainState::Default
     ): string {
         if ($icon !== '') {
-            if ($iconPos === ButtonIconPos::Right) {
+            if ($iconPos === ButtonMainIconPos::Right) {
                 $iconRight = $iconRight ?: $icon;
             } else {
                 $iconLeft = $iconLeft ?: $icon;

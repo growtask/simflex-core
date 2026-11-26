@@ -6,9 +6,9 @@
  */
 
 use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeIn\Layout as BrandMadeIn;
-use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeIn\MadeInTheme;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeIn\BrandMadeInTheme;
 
-$madeTheme = MadeInTheme::from($theme);
+$madeTheme = BrandMadeInTheme::from($theme);
 
 ?>
 <h3 class="ui-showcase__subtitle ui-m">С флагом (flag включён)</h3>

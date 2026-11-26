@@ -2,10 +2,10 @@
 
 namespace Simflex\Core\Layout\Components\UI\Input\InputMain;
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMode;
-use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarTheme;
+use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMainMode;
+use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\CalendarMainTheme;
 use Simflex\Core\Layout\Components\UI\Calendar\CalendarMain\Layout as Calendar;
 use Simflex\Core\Layout\LayoutBase;
 
@@ -39,19 +39,19 @@ class Layout extends LayoutBase
      * @param bool $success Состояние success: ввод принят
      * @param string $slot HTML справа в поле (кнопки ButtonIcon); с ним кнопки очистки нет
      */
-    public static function drawInput(
+    public static function drawInputMain(
         string            $className = '',
         string            $placeholder = '',
         string            $labelText = '',
-        TextInputLabelPos $labelPos = TextInputLabelPos::Hidden,
-        TextInputStyle    $style = TextInputStyle::Filled,
-        TextInputSize     $size = TextInputSize::Medium,
-        TextInputTheme    $theme = TextInputTheme::Light,
+        InputMainLabelPos $labelPos = InputMainLabelPos::Hidden,
+        InputMainStyle    $style = InputMainStyle::Filled,
+        InputMainSize     $size = InputMainSize::Medium,
+        InputMainTheme    $theme = InputMainTheme::Light,
         string            $icon = '',
         bool              $reset = true,
         string            $id = '',
         array             $attributes = [],
-        TextInputKind     $kind = TextInputKind::Text,
+        InputMainKind     $kind = InputMainKind::Text,
         string            $value = '',
         string            $error = '',
         ?bool             $counter = null,
@@ -61,19 +61,19 @@ class Layout extends LayoutBase
         string            $slot = '',
     ): string {
         $attributes += match ($kind) {
-            TextInputKind::Phone => [
+            InputMainKind::Phone => [
                 'type' => 'tel',
                 'inputmode' => 'tel',
                 'autocomplete' => 'tel',
             ],
-            TextInputKind::Email => [
+            InputMainKind::Email => [
                 'type' => 'email',
                 'inputmode' => 'email',
                 'autocomplete' => 'email',
                 'autocapitalize' => 'off',
                 'spellcheck' => 'false',
             ],
-            TextInputKind::Password => [
+            InputMainKind::Password => [
                 'type' => 'password',
                 'autocomplete' => 'current-password',
                 'autocapitalize' => 'off',
@@ -82,16 +82,16 @@ class Layout extends LayoutBase
             default => [],
         };
         $calendarMode = match ($kind) {
-            TextInputKind::Date => CalendarMode::Date,
-            TextInputKind::DateTime => CalendarMode::DateTime,
-            TextInputKind::Time => CalendarMode::Time,
+            InputMainKind::Date => CalendarMainMode::Date,
+            InputMainKind::DateTime => CalendarMainMode::DateTime,
+            InputMainKind::Time => CalendarMainMode::Time,
             default => null,
         };
         if ($calendarMode !== null) {
             [$mask, $hint] = match ($calendarMode) {
-                CalendarMode::Date => ['##.##.####', 'ДД.ММ.ГГГГ'],
-                CalendarMode::DateTime => ['##.##.#### ##:##', 'ДД.ММ.ГГГГ ЧЧ:ММ'],
-                CalendarMode::Time => ['##:##', 'ЧЧ:ММ'],
+                CalendarMainMode::Date => ['##.##.####', 'ДД.ММ.ГГГГ'],
+                CalendarMainMode::DateTime => ['##.##.#### ##:##', 'ДД.ММ.ГГГГ ЧЧ:ММ'],
+                CalendarMainMode::Time => ['##:##', 'ЧЧ:ММ'],
             };
             $min = (string)($attributes['min'] ?? '');
             $max = (string)($attributes['max'] ?? '');
@@ -103,30 +103,30 @@ class Layout extends LayoutBase
                 'data-date-mask' => $mask,
             ];
             $placeholder = $placeholder ?: $hint;
-            $isTime = $calendarMode === CalendarMode::Time;
-            $slot .= ButtonIcon::drawButtonIcon(
+            $isTime = $calendarMode === CalendarMainMode::Time;
+            $slot .= ButtonIcon::drawButtonIconSmall(
                 icon: $isTime ? 'alarm' : 'calendar',
                 label: $isTime ? 'Выбрать время' : 'Выбрать дату',
                 className: 'text-input__date-toggle',
-                theme: ButtonIconTheme::from($theme->value),
+                theme: ButtonIconSmallTheme::from($theme->value),
                 attributes: ['aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'data-sf-date-toggle' => ''],
                 disabled: isset($attributes['disabled']) || isset($attributes['readonly']),
             );
             $popup = '<div class="text-input__calendar" role="dialog" aria-label="'
                 . ($isTime ? 'Выбор времени' : 'Выбор даты') . '" hidden>'
-                . Calendar::drawCalendar(
+                . Calendar::drawCalendarMain(
                     mode: $calendarMode,
-                    theme: CalendarTheme::from($theme->value),
+                    theme: CalendarMainTheme::from($theme->value),
                     min: $min,
                     max: $max,
                 ) . '</div>';
         }
-        if ($kind === TextInputKind::Password) {
-            $slot .= ButtonIcon::drawButtonIcon(
+        if ($kind === InputMainKind::Password) {
+            $slot .= ButtonIcon::drawButtonIconSmall(
                 icon: 'eye',
                 label: 'Показать пароль',
                 className: 'text-input__password-toggle',
-                theme: ButtonIconTheme::from($theme->value),
+                theme: ButtonIconSmallTheme::from($theme->value),
                 attributes: ['aria-pressed' => 'false', 'data-sf-password-toggle' => '', 'title' => ''],
             );
         }
@@ -134,35 +134,35 @@ class Layout extends LayoutBase
             $reset = false;
         }
         $popup ??= '';
-        if ($kind === TextInputKind::Phone) {
+        if ($kind === InputMainKind::Phone) {
             $attributes['data-mask'] = '+7 (###) ###-##-##';
             $maxLength = $maxLength ?: self::PHONE_DIGITS;
             $placeholder = $placeholder ?: '+7 (___) ___-__-__';
             $errorInvalid = $errorInvalid ?: 'Введите номер полностью';
-        } elseif ($kind === TextInputKind::Email) {
+        } elseif ($kind === InputMainKind::Email) {
             $errorInvalid = $errorInvalid ?: 'Введите корректный email';
         }
         // подпись внутри поля поднимается по :placeholder-shown, поэтому placeholder задан всегда (пробел не виден)
-        if ($labelPos === TextInputLabelPos::Inside && $placeholder === '') {
+        if ($labelPos === InputMainLabelPos::Inside && $placeholder === '') {
             $placeholder = ' ';
         }
         $icon = $icon ?: match ($kind) {
-            TextInputKind::Phone => 'phone',
-            TextInputKind::Email => 'mail',
+            InputMainKind::Phone => 'phone',
+            InputMainKind::Email => 'mail',
             default => '',
         };
-        $counter ??= $kind === TextInputKind::Phone;
+        $counter ??= $kind === InputMainKind::Phone;
         if ($counter && $maxLength <= 0) {
             $counter = false;
         }
         // У телефона maxlength не задаём: маска длиннее числа цифр, лимит цифр держит скрипт
-        if ($maxLength > 0 && $kind !== TextInputKind::Phone) {
+        if ($maxLength > 0 && $kind !== InputMainKind::Phone) {
             $attributes['maxlength'] = (string)$maxLength;
         }
         if ($id === '') {
             $id = 'text-input-' . substr(md5($kind->value . ($attributes['name'] ?? '') . $labelText . $placeholder), 0, 8);
         }
-        $length = $kind === TextInputKind::Phone ? strlen(preg_replace('/\D/', '', $value)) : mb_strlen($value);
+        $length = $kind === InputMainKind::Phone ? strlen(preg_replace('/\D/', '', $value)) : mb_strlen($value);
 
         return static::draw(
             compact(

@@ -8,9 +8,9 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 
 $visible = fn(array $items) => array_filter($items, fn(array $item) => !$item['hidden']);
 ?>
@@ -27,14 +27,14 @@ $visible = fn(array $items) => array_filter($items, fn(array $item) => !$item['h
                 <ul class="group-card__items">
                     <?php foreach ($children as $child): ?>
                         <li>
-                            <?= Tab::drawTab(
+                            <?= Tab::drawTabMain(
                                 className: 'group-card__item',
                                 text: htmlspecialchars($child['name']),
                                 link: $child['link'],
                                 iconLeft: $child['icon'],
-                                style: TabStyle::Flat,
-                                size: TabSize::Small,
-                                theme: TabTheme::from($theme),
+                                style: TabMainStyle::Flat,
+                                size: TabMainSize::Small,
+                                theme: TabMainTheme::from($theme),
                             ) ?>
                         </li>
                     <?php endforeach; ?>

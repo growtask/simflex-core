@@ -2,7 +2,7 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 
 $bannerClasses = [
     'header-banner',
@@ -20,20 +20,20 @@ $hasButton = $data['buttonText'] !== '' && $data['buttonLink'] !== '';
         <div class="header-banner__content">
             <p class="header-banner__text"><?= htmlspecialchars($data['text']) ?></p>
             <?php if ($hasButton): ?>
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 className: 'header-banner__button',
                 text: htmlspecialchars($data['buttonText']),
                 link: $data['buttonLink'],
                 style: $data['buttonStyle'],
-                size: ButtonSize::Small
+                size: ButtonMainSize::Small
             ) ?>
             <?php endif; ?>
         </div>
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             className: 'header-banner__close',
             iconLeft: 'close',
-            style: \Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle::Flat,
-            size: ButtonSize::Small,
+            style: \Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle::Flat,
+            size: ButtonMainSize::Small,
             theme: $data['closeTheme'],
             attributes: ['aria-label' => $data['closeLabel'], 'data-header-banner-close' => '']
         ) ?>

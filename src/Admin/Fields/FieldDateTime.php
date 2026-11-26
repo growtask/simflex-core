@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
 
 class FieldDateTime extends Field
 {
@@ -21,7 +21,7 @@ class FieldDateTime extends Field
         return $this->render('date', [
             'value' => $time ? date('d.m.Y H:i', $time) : '',
             'name' => $this->inputName(),
-            'kind' => TextInputKind::DateTime,
+            'kind' => InputMainKind::DateTime,
             'readonly' => $this->readonly,
         ]);
     }

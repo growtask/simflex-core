@@ -13,60 +13,60 @@ use Simflex\Core\Layout\Components\Common\Pagination\Layout as Pagination;
 use Simflex\Core\Layout\Components\Common\Pagination\PaginationTheme;
 use Simflex\Core\Layout\Components\Common\Pagination\PaginationType;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout as LoaderIcon;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderStyle;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderTheme;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarSize;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarStyle;
 use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
-use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\PlaceholderAvatarTheme;
 use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
 use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonState;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainState;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainSize;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainTheme;
 use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as Dropdown;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\Layout as SortButton;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonStyle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonTheme;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SortDirection;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonStyle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SwitchSortDirection;
 use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout as Stepper;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperFill;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperStyle;
-use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeStyle;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainFill;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainStyle;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperMainTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\FeedbackNoticeTheme;
 use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\Layout as Toast;
-use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\ToastStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\FeedbackToastStyle;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipStyle;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainStyle;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\SwitchCheckboxTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\Layout as Radio;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\SwitchRadioTheme;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 use Simflex\Core\Layout\Components\UI\Tag\Layout as Tag;
 use Simflex\Core\Layout\Components\UI\Tag\TagTheme;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\Components\UI\Textarea\Layout as Textarea;
 use Simflex\Core\Layout\Components\UI\Textarea\TextareaTheme;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\Layout as Toggle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\SwitchToggleTheme;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipInfo\Layout as TooltipInfo;
 use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 
@@ -74,10 +74,10 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 <div class="ui-showcase">
     <div class="ui-showcase__widths" role="group" aria-label="Открыть витрину в окне ширины макета">
         <?php foreach (Ui::WIDTHS as $width): ?>
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 text: (string)$width,
-                style: ButtonStyle::Secondary,
-                size: ButtonSize::Small,
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Small,
                 attributes: ['data-ui-width' => (string)$width],
             ) ?>
         <?php endforeach; ?>
@@ -88,21 +88,21 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
             <h2 class="ui-showcase__title heading-h4"><?= $themeName ?> тема</h2>
 
             <h3 class="ui-showcase__subtitle ui-m">Buttons/main</h3>
-            <?php foreach (ButtonSize::cases() as $size): ?>
+            <?php foreach (ButtonMainSize::cases() as $size): ?>
                 <div class="ui-showcase__row">
-                    <?php foreach (ButtonStyle::cases() as $style): ?>
-                        <?= Button::drawButton(
+                    <?php foreach (ButtonMainStyle::cases() as $style): ?>
+                        <?= Button::drawButtonMain(
                             text: $style->name,
                             icon: 'plus',
                             style: $style,
                             size: $size,
-                            theme: ButtonTheme::from($theme),
+                            theme: ButtonMainTheme::from($theme),
                         ) ?>
                     <?php endforeach; ?>
-                    <?= Button::drawButton(
+                    <?= Button::drawButtonMain(
                         text: 'disabled',
                         size: $size,
-                        theme: ButtonTheme::from($theme),
+                        theme: ButtonMainTheme::from($theme),
                         disabled: true,
                     ) ?>
                 </div>
@@ -110,20 +110,20 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 
             <h3 class="ui-showcase__subtitle ui-m">Buttons/icon-small</h3>
             <div class="ui-showcase__row">
-                <?php foreach (ButtonIconStyle::cases() as $style): ?>
+                <?php foreach (ButtonIconSmallStyle::cases() as $style): ?>
                     <?php foreach (['close', 'copy', 'trash', 'pencil-line'] as $icon): ?>
-                        <?= ButtonIcon::drawButtonIcon(
+                        <?= ButtonIcon::drawButtonIconSmall(
                             icon: $icon,
                             label: $icon,
                             style: $style,
-                            theme: ButtonIconTheme::from($theme),
+                            theme: ButtonIconSmallTheme::from($theme),
                         ) ?>
                     <?php endforeach; ?>
-                    <?= ButtonIcon::drawButtonIcon(
+                    <?= ButtonIcon::drawButtonIconSmall(
                         icon: 'close',
                         label: 'disabled',
                         style: $style,
-                        theme: ButtonIconTheme::from($theme),
+                        theme: ButtonIconSmallTheme::from($theme),
                         disabled: true,
                     ) ?>
                 <?php endforeach; ?>
@@ -131,42 +131,42 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 
             <h3 class="ui-showcase__subtitle ui-m">Tooltip/main, Tooltip/info</h3>
             <div class="ui-showcase__row ui-showcase__row_tooltips">
-                <?php foreach (TooltipPosition::cases() as $position): ?>
-                    <?= Tooltip::drawTooltip(
-                        Button::drawButton(
+                <?php foreach (TooltipMainPosition::cases() as $position): ?>
+                    <?= Tooltip::drawTooltipMain(
+                        Button::drawButtonMain(
                             text: $position->name,
-                            style: ButtonStyle::Secondary,
-                            size: ButtonSize::Small,
-                            theme: ButtonTheme::from($theme),
+                            style: ButtonMainStyle::Secondary,
+                            size: ButtonMainSize::Small,
+                            theme: ButtonMainTheme::from($theme),
                         ),
                         'Подсказка: тултип стоит с противоположной стороны от стрелки',
                         position: $position,
-                        theme: TooltipTheme::from($theme),
+                        theme: TooltipMainTheme::from($theme),
                     ) ?>
                 <?php endforeach; ?>
-                <?= Tooltip::drawTooltip(
-                    Button::drawButton(text: 'error', size: ButtonSize::Small, theme: ButtonTheme::from($theme)),
+                <?= Tooltip::drawTooltipMain(
+                    Button::drawButtonMain(text: 'error', size: ButtonMainSize::Small, theme: ButtonMainTheme::from($theme)),
                     'Неверный email',
-                    style: TooltipStyle::Error,
-                    theme: TooltipTheme::from($theme),
+                    style: TooltipMainStyle::Error,
+                    theme: TooltipMainTheme::from($theme),
                 ) ?>
-                <?= TooltipInfo::drawInfo('Короткое пояснение термина', TooltipTheme::from($theme)) ?>
+                <?= TooltipInfo::drawTooltipInfo('Короткое пояснение термина', TooltipMainTheme::from($theme)) ?>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Feedback/notice</h3>
             <div class="ui-showcase__grid">
-                <?php foreach (NoticeStyle::cases() as $style): ?>
-                    <?= Notice::drawNotice(
+                <?php foreach (FeedbackNoticeStyle::cases() as $style): ?>
+                    <?= Notice::drawFeedbackNotice(
                         title: 'Заголовок ' . $style->value,
                         text: 'Строка под заголовком: что случилось и что делать',
                         style: $style,
-                        theme: NoticeTheme::from($theme),
+                        theme: FeedbackNoticeTheme::from($theme),
                         close: true,
-                        buttons: Button::drawButton(
+                        buttons: Button::drawButtonMain(
                             text: 'Действие',
-                            style: ButtonStyle::Monochrome,
-                            size: ButtonSize::Small,
-                            theme: ButtonTheme::from($theme),
+                            style: ButtonMainStyle::Monochrome,
+                            size: ButtonMainSize::Small,
+                            theme: ButtonMainTheme::from($theme),
                         ),
                     ) ?>
                 <?php endforeach; ?>
@@ -199,49 +199,49 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 
             <h3 class="ui-showcase__subtitle ui-m">placeholders/avatar, no-image</h3>
             <div class="ui-showcase__row">
-                <?php foreach (AvatarSize::cases() as $size): ?>
-                    <?= Placeholder::drawAvatar('Иван Петров', size: $size, theme: AvatarTheme::from($theme)) ?>
-                    <?= Placeholder::drawAvatar(
+                <?php foreach (PlaceholderAvatarSize::cases() as $size): ?>
+                    <?= Placeholder::drawPlaceholderAvatar('Иван Петров', size: $size, theme: PlaceholderAvatarTheme::from($theme)) ?>
+                    <?= Placeholder::drawPlaceholderAvatar(
                         'Иван Петров',
                         size: $size,
-                        style: AvatarStyle::Silhouette,
-                        theme: AvatarTheme::from($theme),
+                        style: PlaceholderAvatarStyle::Silhouette,
+                        theme: PlaceholderAvatarTheme::from($theme),
                     ) ?>
                 <?php endforeach; ?>
-                <span class="ui-showcase__image"><?= Placeholder::drawNoImage(theme: AvatarTheme::from($theme)) ?></span>
+                <span class="ui-showcase__image"><?= Placeholder::drawPlaceholderAvatarNoImage(theme: PlaceholderAvatarTheme::from($theme)) ?></span>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Tabs/main</h3>
             <div class="ui-showcase__row">
-                <?php foreach (TabStyle::cases() as $style): ?>
-                    <?= Tab::drawTab(text: $style->name, style: $style, theme: TabTheme::from($theme)) ?>
-                    <?= Tab::drawTab(text: 'active', style: $style, theme: TabTheme::from($theme), active: true) ?>
+                <?php foreach (TabMainStyle::cases() as $style): ?>
+                    <?= Tab::drawTabMain(text: $style->name, style: $style, theme: TabMainTheme::from($theme)) ?>
+                    <?= Tab::drawTabMain(text: 'active', style: $style, theme: TabMainTheme::from($theme), active: true) ?>
                 <?php endforeach; ?>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Inputs/main, textarea</h3>
             <div class="ui-showcase__row">
-                <?= TextInput::drawInput(
+                <?= TextInput::drawInputMain(
                     placeholder: 'Название',
                     labelText: 'Название',
-                    theme: TextInputTheme::from($theme),
+                    theme: InputMainTheme::from($theme),
                 ) ?>
-                <?= TextInput::drawInput(
+                <?= TextInput::drawInputMain(
                     placeholder: 'Email',
-                    theme: TextInputTheme::from($theme),
+                    theme: InputMainTheme::from($theme),
                     value: 'admin@',
                     error: 'Неверный email',
                 ) ?>
-                <?= TextInput::drawInput(
+                <?= TextInput::drawInputMain(
                     placeholder: 'Пароль',
-                    theme: TextInputTheme::from($theme),
+                    theme: InputMainTheme::from($theme),
                     id: 'ui-password-' . $theme,
-                    kind: TextInputKind::Password,
+                    kind: InputMainKind::Password,
                     value: 'secret',
                 ) ?>
-                <?= TextInput::drawInput(
+                <?= TextInput::drawInputMain(
                     placeholder: 'Логин',
-                    theme: TextInputTheme::from($theme),
+                    theme: InputMainTheme::from($theme),
                     value: 'admin',
                     success: true,
                 ) ?>
@@ -251,16 +251,16 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
             <h3 class="ui-showcase__subtitle ui-m">Dropdown/input, Dropdown/main</h3>
             <div class="ui-showcase__row ui-showcase__row_dropdowns">
                 <span class="ui-showcase__field">
-                    <?= Dropdown::drawSelect(
+                    <?= Dropdown::drawDropdownMainSelect(
                         'ui_status_' . $theme,
                         ['new' => 'Новый', 'work' => 'В работе', 'done' => 'Выполнен', 'cancel' => 'Отменён'],
                         'work',
-                        theme: DropdownTheme::from($theme),
+                        theme: DropdownMainTheme::from($theme),
                         attributes: ['aria-label' => 'Статус'],
                     ) ?>
                 </span>
                 <span class="ui-showcase__field">
-                    <?= Dropdown::drawSelect(
+                    <?= Dropdown::drawDropdownMainSelect(
                         'ui_city_' . $theme,
                         array_combine(
                             range(1, 12),
@@ -268,40 +268,40 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
                                 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону', 'Уфа', 'Красноярск']
                         ),
                         placeholder: 'Город',
-                        size: DropdownSize::Small,
-                        theme: DropdownTheme::from($theme),
+                        size: DropdownMainSize::Small,
+                        theme: DropdownMainTheme::from($theme),
                         search: true,
                         attributes: ['aria-label' => 'Город'],
                     ) ?>
                 </span>
-                <?= Dropdown::drawMenu(
-                    ButtonIcon::drawButtonIcon(
+                <?= Dropdown::drawDropdownMainMenu(
+                    ButtonIcon::drawButtonIconSmall(
                         icon: 'dots-vertical',
                         label: 'Ещё',
-                        style: ButtonIconStyle::Secondary,
-                        theme: ButtonIconTheme::from($theme),
+                        style: ButtonIconSmallStyle::Secondary,
+                        theme: ButtonIconSmallTheme::from($theme),
                     ),
                     [
                         ['text' => 'Редактировать', 'icon' => 'pencil-line', 'link' => '#edit'],
                         ['text' => 'Копировать', 'icon' => 'copy'],
                         ['text' => 'Удалить', 'icon' => 'trash'],
                     ],
-                    theme: DropdownTheme::from($theme),
+                    theme: DropdownMainTheme::from($theme),
                     side: 'left',
                 ) ?>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Switches/sort, sort-button</h3>
             <div class="ui-showcase__row">
-                <?php foreach (SortDirection::cases() as $direction): ?>
-                    <?php foreach (SortButtonStyle::cases() as $style): ?>
-                        <?= Sort::drawSort(
+                <?php foreach (SwitchSortDirection::cases() as $direction): ?>
+                    <?php foreach (SwitchSortButtonStyle::cases() as $style): ?>
+                        <?= Sort::drawSwitchSort(
                             'Название',
                             '#asc',
                             '#desc',
                             $direction,
                             $style,
-                            SortButtonTheme::from($theme),
+                            SwitchSortButtonTheme::from($theme),
                         ) ?>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
@@ -309,33 +309,33 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 
             <h3 class="ui-showcase__subtitle ui-m">Stepper/main</h3>
             <div class="ui-showcase__row">
-                <?php foreach (StepperSize::cases() as $size): ?>
-                    <?= Stepper::drawStepper(
+                <?php foreach (StepperMainSize::cases() as $size): ?>
+                    <?= Stepper::drawStepperMain(
                         'ui_npp_' . $theme,
                         1,
                         min: 1,
                         max: 5,
                         size: $size,
-                        theme: StepperTheme::from($theme),
+                        theme: StepperMainTheme::from($theme),
                     ) ?>
                 <?php endforeach; ?>
-                <?= Stepper::drawStepper(
+                <?= Stepper::drawStepperMain(
                     'ui_npp2_' . $theme,
                     5,
                     max: 5,
-                    style: StepperStyle::Input,
-                    fill: StepperFill::Outline,
-                    theme: StepperTheme::from($theme),
+                    style: StepperMainStyle::Input,
+                    fill: StepperMainFill::Outline,
+                    theme: StepperMainTheme::from($theme),
                     error: 'Осталось только 5',
                 ) ?>
-                <?= Stepper::drawStepper('ui_npp3_' . $theme, 3, theme: StepperTheme::from($theme), loading: true) ?>
+                <?= Stepper::drawStepperMain('ui_npp3_' . $theme, 3, theme: StepperMainTheme::from($theme), loading: true) ?>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Switches</h3>
             <div class="ui-showcase__row">
-                <?= Checkbox::drawCheckbox(text: 'Чекбокс', theme: CheckboxTheme::from($theme)) ?>
-                <?= Radio::drawRadio(text: 'Радио', id: 'ui-radio-' . $theme, theme: RadioTheme::from($theme)) ?>
-                <?= Toggle::drawToggle(text: 'Переключатель', theme: ToggleTheme::from($theme)) ?>
+                <?= Checkbox::drawSwitchCheckbox(text: 'Чекбокс', theme: SwitchCheckboxTheme::from($theme)) ?>
+                <?= Radio::drawSwitchRadio(text: 'Радио', id: 'ui-radio-' . $theme, theme: SwitchRadioTheme::from($theme)) ?>
+                <?= Toggle::drawSwitchToggle(text: 'Переключатель', theme: SwitchToggleTheme::from($theme)) ?>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Badges, Tags</h3>
@@ -345,21 +345,21 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
                 <?php endforeach; ?>
                 <?= Tag::drawTag(text: 'Тег', theme: TagTheme::from($theme)) ?>
                 <?= Tag::drawTag(text: 'Статус: новый', theme: TagTheme::from($theme), icon: 'filter', close: true) ?>
-                <?= Toggle::drawToggle(
+                <?= Toggle::drawSwitchToggle(
                     text: 'disabled',
-                    theme: ToggleTheme::from($theme),
+                    theme: SwitchToggleTheme::from($theme),
                     attributes: ['disabled' => 'disabled', 'checked' => 'checked'],
                 ) ?>
-                <?= Radio::drawRadio(
+                <?= Radio::drawSwitchRadio(
                     text: 'disabled',
                     id: 'ui-radio-disabled-' . $theme,
-                    theme: RadioTheme::from($theme),
+                    theme: SwitchRadioTheme::from($theme),
                     attributes: ['disabled' => 'disabled', 'checked' => 'checked'],
                 ) ?>
-                <?= Button::drawButton(text: 'success', state: ButtonState::Success, size: ButtonSize::Small) ?>
-                <?= Button::drawButton(text: 'error', state: ButtonState::Error, size: ButtonSize::Small) ?>
-                <?= LoaderIcon::drawLoader(theme: LoaderTheme::from($theme)) ?>
-                <?= LoaderIcon::drawLoader(LoaderSize::Small, LoaderStyle::Monochrome, LoaderTheme::from($theme)) ?>
+                <?= Button::drawButtonMain(text: 'success', state: ButtonMainState::Success, size: ButtonMainSize::Small) ?>
+                <?= Button::drawButtonMain(text: 'error', state: ButtonMainState::Error, size: ButtonMainSize::Small) ?>
+                <?= LoaderIcon::drawLoaderMain(theme: LoaderMainTheme::from($theme)) ?>
+                <?= LoaderIcon::drawLoaderMain(LoaderMainSize::Small, LoaderMainStyle::Monochrome, LoaderMainTheme::from($theme)) ?>
             </div>
         </section>
     <?php endforeach; ?>
@@ -367,8 +367,8 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
     <section class="ui-showcase__theme" aria-label="Тосты">
         <h2 class="ui-showcase__title heading-h4">Feedback/toast</h2>
         <div class="ui-showcase__row">
-            <?php foreach (ToastStyle::cases() as $style): ?>
-                <?= Toast::drawToast(
+            <?php foreach (FeedbackToastStyle::cases() as $style): ?>
+                <?= Toast::drawFeedbackToast(
                     'Изменения сохранены',
                     $style,
                     icon: true,
@@ -379,11 +379,11 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
             <?php endforeach; ?>
         </div>
         <div class="ui-showcase__row">
-            <?php foreach (ToastStyle::cases() as $style): ?>
-                <?= Button::drawButton(
+            <?php foreach (FeedbackToastStyle::cases() as $style): ?>
+                <?= Button::drawButtonMain(
                     text: 'sfToast ' . $style->value,
-                    style: ButtonStyle::Secondary,
-                    size: ButtonSize::Small,
+                    style: ButtonMainStyle::Secondary,
+                    size: ButtonMainSize::Small,
                     attributes: ['data-ui-toast' => $style->value],
                 ) ?>
             <?php endforeach; ?>
@@ -402,7 +402,7 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
         </ul>
     </section>
 </div>
-<?= Toast::drawStack() ?>
+<?= Toast::drawFeedbackToastStack() ?>
 <script>
     document.querySelectorAll('[data-ui-toast]').forEach((button) => {
         button.addEventListener('click', () => window.sfToast('Тост ' + button.dataset.uiToast, {

@@ -5,20 +5,20 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressTheme;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderProgressLabel\Layout as ProgressLabel;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgressLabel\ProgressLabelStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgressLabel\LoaderProgressLabelStyle;
 
-$progressTheme = ProgressTheme::from($theme);
+$progressTheme = LoaderProgressTheme::from($theme);
 
 ?>
-<?php foreach ([ProgressSize::Medium, ProgressSize::Small] as $size): ?>
+<?php foreach ([LoaderProgressSize::Medium, LoaderProgressSize::Small] as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (ProgressLabelStyle::cases() as $labelStyle): ?>
+        <?php foreach (LoaderProgressLabelStyle::cases() as $labelStyle): ?>
             <?php foreach ([0, 50, 75] as $percent): ?>
-                <?= ProgressLabel::drawProgressLabel($percent, 'report.pdf', $labelStyle, $size, $progressTheme) ?>
+                <?= ProgressLabel::drawLoaderProgressLabel($percent, 'report.pdf', $labelStyle, $size, $progressTheme) ?>
             <?php endforeach; ?>
         <?php endforeach; ?>
     </div>

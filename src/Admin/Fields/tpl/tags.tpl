@@ -13,10 +13,10 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Input\InputTags\Layout as TagsInput;
-use Simflex\Core\Layout\Components\UI\Input\InputTags\TagsInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputTags\InputTagsTheme;
 
 ?>
-<?= TagsInput::drawTagsInput(
+<?= TagsInput::drawInputTags(
     name: $name,
     selected: $selected,
     options: $options,
@@ -24,7 +24,7 @@ use Simflex\Core\Layout\Components\UI\Input\InputTags\TagsInputTheme;
     allowNew: $allowNew,
     placeholder: $searchUrl !== '' ? 'Начните вводить название' : ($allowNew ? 'Введите тег' : 'Выберите'),
     label: strip_tags((string)$this->label),
-    theme: TagsInputTheme::from(Page::get()->getTheme()),
+    theme: InputTagsTheme::from(Page::get()->getTheme()),
     disabled: $this->readonly,
     className: 'form-input__tags',
 ) ?>

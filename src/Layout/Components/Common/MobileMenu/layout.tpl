@@ -2,20 +2,20 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\Common\MobileMenu\Layout as MobileMenu;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactType;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
 use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\Layout as BrandLogoAnim;
 use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallSize;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
 
 $id = htmlspecialchars($data['id']);
 $items = MobileMenu::getListItems($data['items']);
@@ -31,11 +31,11 @@ $items = MobileMenu::getListItems($data['items']);
                 name: $data['logoName'],
                 src: $data['logoSrc']
             ) ?>
-            <?= Button::drawButton(
+            <?= Button::drawButtonMain(
                 className: 'mobile-menu__close',
                 iconLeft: 'close',
-                style: ButtonStyle::Secondary,
-                size: ButtonSize::Medium,
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Medium,
                 attributes: ['aria-label' => $data['closeLabel'], 'data-mobile-menu-close' => '']
             ) ?>
         </div>
@@ -53,12 +53,12 @@ $items = MobileMenu::getListItems($data['items']);
                             <li class="mobile-menu__item">
                                 <?php if ($item['children']): ?>
                                     <?php $subId = $id . '-sub-' . $i; ?>
-                                    <?= Tab::drawTab(
+                                    <?= Tab::drawTabMain(
                                         className: 'mobile-menu__toggle',
                                         text: htmlspecialchars((string)$item['text']),
                                         iconRight: 'chevron-down-sm',
-                                        style: TabStyle::Secondary,
-                                        size: TabSize::Small,
+                                        style: TabMainStyle::Secondary,
+                                        size: TabMainSize::Small,
                                         attributes: [
                                             'aria-expanded' => 'false',
                                             'aria-controls' => $subId,
@@ -69,22 +69,22 @@ $items = MobileMenu::getListItems($data['items']);
                                     <ul class="mobile-menu__sublist" id="<?= $subId ?>" hidden>
                                         <?php foreach ($item['children'] as $child): ?>
                                             <li class="mobile-menu__item">
-                                                <?= Tab::drawTab(
+                                                <?= Tab::drawTabMain(
                                                     text: htmlspecialchars((string)$child['text']),
                                                     link: (string)$child['link'],
-                                                    style: TabStyle::Secondary,
-                                                    size: TabSize::Small,
+                                                    style: TabMainStyle::Secondary,
+                                                    size: TabMainSize::Small,
                                                     active: !empty($child['active'])
                                                 ) ?>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>
                                 <?php else: ?>
-                                    <?= Tab::drawTab(
+                                    <?= Tab::drawTabMain(
                                         text: htmlspecialchars((string)$item['text']),
                                         link: (string)$item['link'],
-                                        style: TabStyle::Secondary,
-                                        size: TabSize::Small,
+                                        style: TabMainStyle::Secondary,
+                                        size: TabMainSize::Small,
                                         active: !empty($item['active'])
                                     ) ?>
                                 <?php endif; ?>
@@ -97,26 +97,26 @@ $items = MobileMenu::getListItems($data['items']);
 
         <div class="mobile-menu__footer">
             <?php if ($data['phone'] !== ''): ?>
-                <?= Contact::drawContact(text: $data['phone'], value: $data['phone'], type: ContactType::Phone, size: ContactSize::Small) ?>
+                <?= Contact::drawLinkContact(text: $data['phone'], value: $data['phone'], type: LinkContactType::Phone, size: LinkContactSize::Small) ?>
             <?php endif; ?>
             <?php if ($data['email'] !== ''): ?>
-                <?= Contact::drawContact(text: $data['email'], value: $data['email'], type: ContactType::Email, size: ContactSize::Small) ?>
+                <?= Contact::drawLinkContact(text: $data['email'], value: $data['email'], type: LinkContactType::Email, size: LinkContactSize::Small) ?>
             <?php endif; ?>
             <?php if ($data['socials']): ?>
                 <div class="mobile-menu__socials">
                     <?php foreach ($data['socials'] as $network => $href): ?>
-                        <?php if ($href !== '' && SocialNetwork::tryFrom((string)$network)): ?>
-                            <?= Social::drawSocial(network: SocialNetwork::from((string)$network), href: $href, size: SocialSize::Small) ?>
+                        <?php if ($href !== '' && ButtonSocialSmallNetwork::tryFrom((string)$network)): ?>
+                            <?= Social::drawButtonSocialSmall(network: ButtonSocialSmallNetwork::from((string)$network), href: $href, size: ButtonSocialSmallSize::Small) ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
             <?php if ($data['buttonText'] !== ''): ?>
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     className: 'mobile-menu__cta',
                     text: htmlspecialchars($data['buttonText']),
-                    style: ButtonStyle::Secondary,
-                    size: ButtonSize::Medium,
+                    style: ButtonMainStyle::Secondary,
+                    size: ButtonMainSize::Medium,
                     attributes: $data['buttonModal'] !== '' ? ['data-modal' => $data['buttonModal']] : []
                 ) ?>
             <?php endif; ?>

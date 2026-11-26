@@ -10,15 +10,15 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 ?>
-<?= TextInput::drawInput(
+<?= TextInput::drawInputMain(
     className: 'filter-search',
     placeholder: $placeholder !== '' ? $placeholder : 'Поиск',
-    size: TextInputSize::Small,
-    theme: TextInputTheme::from(Page::get()->getTheme()),
+    size: InputMainSize::Small,
+    theme: InputMainTheme::from(Page::get()->getTheme()),
     icon: 'search',
     id: uniqid('filter-' . $name . '-'),
     attributes: ['name' => 'filter[' . $name . ']', 'data-sf-filter' => '', 'autocomplete' => 'off']

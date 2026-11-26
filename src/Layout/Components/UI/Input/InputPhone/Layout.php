@@ -3,10 +3,10 @@
 namespace Simflex\Core\Layout\Components\UI\Input\InputPhone;
 
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -22,30 +22,30 @@ class Layout extends LayoutBase
     /**
      * @param string $name Имя скрытого поля с полным номером (цифры, код страны первым)
      * @param string $value Номер с кодом страны (цифры или +код…); страна определяется по коду, пусто — страна $country
-     * @param PhoneCountry $country Страна по умолчанию
-     * @param list<PhoneCountry> $countries Страны в списке; по умолчанию все
+     * @param InputPhoneCountry $country Страна по умолчанию
+     * @param list<InputPhoneCountry> $countries Страны в списке; по умолчанию все
      * @param string $placeholder Подсказка; пусто — маска страны (___)
      * @param string $error Текст ошибки под полем
      * @param array<string,string> $attributes Атрибуты поля номера (required, disabled и т. д.)
      */
-    public static function drawPhoneInput(
+    public static function drawInputPhone(
         string            $name = 'phone',
         string            $value = '',
-        PhoneCountry      $country = PhoneCountry::Ru,
+        InputPhoneCountry      $country = InputPhoneCountry::Ru,
         array             $countries = [],
         string            $placeholder = '',
         string            $labelText = '',
-        TextInputLabelPos $labelPos = TextInputLabelPos::Hidden,
-        TextInputStyle    $style = TextInputStyle::Filled,
-        TextInputSize     $size = TextInputSize::Medium,
-        TextInputTheme    $theme = TextInputTheme::Light,
+        InputMainLabelPos $labelPos = InputMainLabelPos::Hidden,
+        InputMainStyle    $style = InputMainStyle::Filled,
+        InputMainSize     $size = InputMainSize::Medium,
+        InputMainTheme    $theme = InputMainTheme::Light,
         string            $error = '',
         bool              $success = false,
         string            $id = '',
         string            $className = '',
         array             $attributes = [],
     ): string {
-        $countries = $countries ?: PhoneCountry::cases();
+        $countries = $countries ?: InputPhoneCountry::cases();
         if (!in_array($country, $countries, true)) {
             $country = $countries[0];
         }
@@ -69,7 +69,7 @@ class Layout extends LayoutBase
         $fullValue = $digits === '' ? '' : $country->dial() . $digits;
         $id = $id !== '' ? $id : 'sf-phone-' . ++self::$counter;
         $disabled = isset($attributes['disabled']);
-        $field = TextInput::drawInput(
+        $field = TextInput::drawInputMain(
             className: 'phone-input__input',
             placeholder: $placeholder !== '' ? $placeholder : str_replace('#', '_', $country->mask()),
             labelText: $labelText,

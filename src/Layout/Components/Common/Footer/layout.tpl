@@ -1,11 +1,11 @@
 <?php
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
-use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\LinkContactType;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
 use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogo;
 use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeBy\Layout as BrandMadeBy;
@@ -13,12 +13,12 @@ use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeIn\Layout as BrandMadeIn
 use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
 use Simflex\Core\Layout\Components\UI\Other\Separator\SeparatorOrientation;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\ButtonSocialSmallTheme;
 use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
-use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainStyle;
 
 $e = fn(string $s): string => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 $columns = $data['columns'];
@@ -35,11 +35,11 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
                     name: $data['logoName'],
                     src: $data['logoSrc']
                 ) ?>
-                <?= Button::drawButton(
+                <?= Button::drawButtonMain(
                     className: 'footer__button',
                     text: $data['callbackText'],
-                    style: ButtonStyle::Primary,
-                    size: ButtonSize::Medium,
+                    style: ButtonMainStyle::Primary,
+                    size: ButtonMainSize::Medium,
                     attributes: $buttonAttrs
                 ) ?>
             </div>
@@ -49,11 +49,11 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
                     <?php if ($data['phone'] !== ''): ?>
                         <div class="footer__phone">
                             <span class="footer__desc">Телефон:</span>
-                            <?= Contact::drawContact(
+                            <?= Contact::drawLinkContact(
                                 text: $data['phone'],
                                 value: $data['phone'],
-                                type: ContactType::Phone,
-                                size: ContactSize::Small
+                                type: LinkContactType::Phone,
+                                size: LinkContactSize::Small
                             ) ?>
                         </div>
                     <?php endif; ?>
@@ -61,11 +61,11 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
                     <?php if ($data['email'] !== ''): ?>
                         <div class="footer__mail">
                             <span class="footer__desc">Почта:</span>
-                            <?= Contact::drawContact(
+                            <?= Contact::drawLinkContact(
                                 text: $data['email'],
                                 value: $data['email'],
-                                type: ContactType::Email,
-                                size: ContactSize::Small
+                                type: LinkContactType::Email,
+                                size: LinkContactSize::Small
                             ) ?>
                         </div>
                     <?php endif; ?>
@@ -75,11 +75,11 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
                             <span class="footer__desc">Соцсети:</span>
                             <div class="footer__socials">
                                 <?php foreach ($data['socials'] as $network => $href): ?>
-                                    <?= Social::drawSocial(
-                                        network: SocialNetwork::from($network),
+                                    <?= Social::drawButtonSocialSmall(
+                                        network: ButtonSocialSmallNetwork::from($network),
                                         href: $href,
-                                        size: SocialSize::Small,
-                                        theme: SocialTheme::Dark
+                                        size: ButtonSocialSmallSize::Small,
+                                        theme: ButtonSocialSmallTheme::Dark
                                     ) ?>
                                 <?php endforeach; ?>
                             </div>
@@ -99,11 +99,11 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
                         <ul class="footer__tab-list">
                             <?php foreach ($column['links'] as $link): ?>
                                 <li class="footer__tab-item">
-                                    <?= Tab::drawTab(
+                                    <?= Tab::drawTabMain(
                                         text: $e($link['text']),
                                         link: $link['href'],
-                                        style: TabStyle::Flat,
-                                        size: TabSize::Small,
+                                        style: TabMainStyle::Flat,
+                                        size: TabMainSize::Small,
                                         active: !empty($link['active'])
                                     ) ?>
                                 </li>

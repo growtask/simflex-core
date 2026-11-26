@@ -3,8 +3,8 @@
 namespace Simflex\Core\Layout\Components\UI\Switch\SwitchTreeItem;
 
 use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\Layout as Tree;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\TreeSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\TreeTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\SwitchTreeSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchTree\SwitchTreeTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -17,15 +17,15 @@ class Layout extends LayoutBase
      * @param int $level Уровень вложенности 0–2 (отступ слева)
      * @param string $count Счётчик справа; пусто — без счётчика
      */
-    public static function drawTreeItem(
+    public static function drawSwitchTreeItem(
         string          $label = '',
         string          $count = '',
         int             $level = 0,
-        TreeItemExpand  $expand = TreeItemExpand::None,
-        TreeItemState   $state = TreeItemState::Off,
+        SwitchTreeItemExpand  $expand = SwitchTreeItemExpand::None,
+        SwitchTreeItemState   $state = SwitchTreeItemState::Off,
         bool            $disabled = false,
-        TreeSize        $size = TreeSize::Small,
-        TreeTheme       $theme = TreeTheme::Light,
+        SwitchTreeSize        $size = SwitchTreeSize::Small,
+        SwitchTreeTheme       $theme = SwitchTreeTheme::Light,
         string          $className = '',
     ): string {
         Tree::initAssets();
@@ -36,7 +36,7 @@ class Layout extends LayoutBase
             'disabled' => $disabled,
             'state' => $state->value,
         ];
-        $control = Tree::drawControl($node, '', $size, $theme);
+        $control = Tree::drawSwitchTreeControl($node, '', $size, $theme);
 
         return static::draw(compact('label', 'count', 'disabled', 'control', 'className') + [
             'level' => max(0, min(2, $level)),

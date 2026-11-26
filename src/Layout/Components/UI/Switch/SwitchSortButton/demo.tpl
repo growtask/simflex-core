@@ -7,18 +7,18 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\Layout as SortButton;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonSize;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonStyle;
-use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonSize;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonStyle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SwitchSortButtonTheme;
 
-$sortTheme = SortButtonTheme::from($theme);
+$sortTheme = SwitchSortButtonTheme::from($theme);
 
 ?>
-<?php foreach (SortButtonSize::cases() as $size): ?>
+<?php foreach (SwitchSortButtonSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">
-        <?php foreach (SortButtonStyle::cases() as $style): ?>
-            <?= SortButton::drawSortButton(
+        <?php foreach (SwitchSortButtonStyle::cases() as $style): ?>
+            <?= SortButton::drawSwitchSortButton(
                 up: true,
                 label: $style->name . ', вверх',
                 link: '#up',
@@ -26,7 +26,7 @@ $sortTheme = SortButtonTheme::from($theme);
                 size: $size,
                 theme: $sortTheme,
             ) ?>
-            <?= SortButton::drawSortButton(
+            <?= SortButton::drawSwitchSortButton(
                 up: false,
                 label: $style->name . ', вниз',
                 link: '#down',
@@ -34,7 +34,7 @@ $sortTheme = SortButtonTheme::from($theme);
                 size: $size,
                 theme: $sortTheme,
             ) ?>
-            <?= SortButton::drawSortButton(
+            <?= SortButton::drawSwitchSortButton(
                 up: true,
                 label: 'active',
                 link: '#active',

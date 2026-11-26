@@ -7,8 +7,8 @@ use Simflex\Core\Layout\LayoutBase;
 /**
  * Выпадающий список (Figma Dropdown/main, Dropdown/input, design-ui-dropdown.md).
  *
- * drawSelect() — поле-селект: кнопка с выбранным значением и шевроном, панель вариантов (listbox) со
- * скрытым полем формы, поиск по вариантам. drawMenu() — меню действий под своей кнопкой (menu).
+ * drawDropdownMainSelect() — поле-селект: кнопка с выбранным значением и шевроном, панель вариантов (listbox) со
+ * скрытым полем формы, поиск по вариантам. drawDropdownMainMenu() — меню действий под своей кнопкой (menu).
  * Панель на 8 px от кнопки, не уже её, открывается вверх, если снизу нет места; стрелки, Enter, Esc, ввод
  * буквы — переход к пункту, клик снаружи закрывает (script.js). Выбор в селекте — событие change на скрытом поле
  */
@@ -28,13 +28,13 @@ class Layout extends LayoutBase
      * @param bool $scroll Figma scroll: список ограничен по высоте и прокручивается (по умолчанию); false — панель
      *        растёт по числу вариантов, без прокрутки (для коротких списков)
      */
-    public static function drawSelect(
+    public static function drawDropdownMainSelect(
         string          $name,
         array           $options,
         string|int|null $value = null,
         string          $placeholder = 'Выберите',
-        DropdownSize    $size = DropdownSize::Medium,
-        DropdownTheme   $theme = DropdownTheme::Light,
+        DropdownMainSize    $size = DropdownMainSize::Medium,
+        DropdownMainTheme   $theme = DropdownMainTheme::Light,
         bool            $search = false,
         bool            $disabled = false,
         string          $id = '',
@@ -71,16 +71,16 @@ class Layout extends LayoutBase
      * @param list<array{text: string, link?: string, icon?: string, attributes?: array<string,string>,
      *        disabled?: bool, active?: bool}> $items Пункты: ссылка или кнопка (обработчик — по attributes, например
      *        data-action); active — выбранный пункт (меню выбора: «где искать» и т. п.)
-     * @param DropdownAlign $align Left — пункты по левому краю (длинные тексты), Center — по центру
+     * @param DropdownMainAlign $align Left — пункты по левому краю (длинные тексты), Center — по центру
      * @param string $side Край кнопки, по которому выровнена панель: left или right
      */
-    public static function drawMenu(
+    public static function drawDropdownMainMenu(
         string           $trigger,
         array            $items,
-        DropdownSize     $size = DropdownSize::Small,
-        DropdownTheme    $theme = DropdownTheme::Light,
-        DropdownAlign    $align = DropdownAlign::Left,
-        DropdownPosition $position = DropdownPosition::Bottom,
+        DropdownMainSize     $size = DropdownMainSize::Small,
+        DropdownMainTheme    $theme = DropdownMainTheme::Light,
+        DropdownMainAlign    $align = DropdownMainAlign::Left,
+        DropdownMainPosition $position = DropdownMainPosition::Bottom,
         string           $side = 'right',
         string           $label = 'Действия',
         string           $className = '',

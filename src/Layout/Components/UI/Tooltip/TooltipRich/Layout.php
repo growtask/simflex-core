@@ -3,9 +3,9 @@
 namespace Simflex\Core\Layout\Components\UI\Tooltip\TooltipRich;
 
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as TooltipMain;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipSide;
-use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainSide;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -23,16 +23,16 @@ class Layout extends LayoutBase
      * @param string $actionLink Ссылка действия
      * @param string $icon Иконка перед заголовком; пустая — без иконки
      */
-    public static function drawRich(
+    public static function drawTooltipRich(
         string          $trigger,
         string          $title,
         string          $text = '',
         string          $actionText = '',
         string          $actionLink = '',
         string          $icon = '',
-        TooltipPosition $position = TooltipPosition::Top,
-        TooltipSide     $side = TooltipSide::Center,
-        TooltipTheme    $theme = TooltipTheme::Light,
+        TooltipMainPosition $position = TooltipMainPosition::Top,
+        TooltipMainSide     $side = TooltipMainSide::Center,
+        TooltipMainTheme    $theme = TooltipMainTheme::Light,
         string          $className = '',
     ): string {
         TooltipMain::initAssets();

@@ -10,19 +10,19 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 $attributes = ['name' => $name, 'aria-label' => strip_tags((string)$this->label)];
 if ($readonly) {
     $attributes['readonly'] = 'readonly';
 }
 ?>
-<?= TextInput::drawInput(
+<?= TextInput::drawInputMain(
     className: 'form-input__text',
     placeholder: (string)$placeholder,
-    size: TextInputSize::Small,
-    theme: TextInputTheme::from(Page::get()->getTheme()),
+    size: InputMainSize::Small,
+    theme: InputMainTheme::from(Page::get()->getTheme()),
     reset: !$readonly,
     id: 'field-' . $name . '-' . substr(md5((string)$this->table), 0, 6),
     attributes: $attributes,

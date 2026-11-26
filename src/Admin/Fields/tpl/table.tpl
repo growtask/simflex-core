@@ -22,23 +22,23 @@ use Simflex\Core\Admin\Plugins\Editor\Editor;
 use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
 use Simflex\Core\Layout\Components\Common\Modal\ModalSize;
 use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconSmallTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize;
-use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainSize;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownMainTheme;
 use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as Dropdown;
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 
 $theme = Page::get()->getTheme();
-$buttonTheme = ButtonTheme::from($theme);
-$iconTheme = ButtonIconTheme::from($theme);
+$buttonTheme = ButtonMainTheme::from($theme);
+$iconTheme = ButtonIconSmallTheme::from($theme);
 $columns = (json_decode($value, true) ?: [])['s'] ?? [];
 $modalId = 'sf-table-editor-' . crc32($this->inputName());
 $hasEditor = false;
@@ -47,7 +47,7 @@ $searchBase = $attributes['data-sf-table-url'] ?? '';
 $searchPk = isset($attributes['data-sf-table-pk']) ? '&' . $attributes['data-sf-table-pk'] : '';
 
 // поле окна строки: значение колонки — в элементе с data-sf-column (без name: окно не отправляется с формой)
-$drawControl = function (array $column) use ($theme, $buttonTheme, $searchBase, $searchPk, &$hasEditor): string {
+$drawSwitchTreeControl = function (array $column) use ($theme, $buttonTheme, $searchBase, $searchPk, &$hasEditor): string {
     $name = (string)$column['n'];
     $type = (string)$column['t'];
     $label = strip_tags((string)$column['l']);
@@ -67,27 +67,27 @@ $drawControl = function (array $column) use ($theme, $buttonTheme, $searchBase, 
             . '<input class="edit-table-file__input" type="file" tabindex="-1" aria-hidden="true"'
             . ($isImage ? ' accept="image/*"' : '') . '>'
             . '<div class="edit-table-file__buttons">'
-            . Button::drawButton(
+            . Button::drawButtonMain(
                 text: 'Загрузить',
-                style: ButtonStyle::Secondary,
-                size: ButtonSize::Small,
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Small,
                 theme: $buttonTheme,
                 attributes: ['data-sf-table-upload' => ''],
                 iconLeft: 'upload',
             )
             // файл из файлового менеджера (window.fileManager)
-            . Button::drawButton(
+            . Button::drawButtonMain(
                 text: 'Из библиотеки',
-                style: ButtonStyle::Secondary,
-                size: ButtonSize::Small,
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Small,
                 theme: $buttonTheme,
                 attributes: ['data-sf-table-library' => ''],
                 iconLeft: 'folder',
             )
-            . Button::drawButton(
+            . Button::drawButtonMain(
                 text: 'Удалить',
-                style: ButtonStyle::Flat,
-                size: ButtonSize::Small,
+                style: ButtonMainStyle::Flat,
+                size: ButtonMainSize::Small,
                 theme: $buttonTheme,
                 attributes: ['data-sf-table-clear' => ''],
                 iconLeft: 'trash',
@@ -104,12 +104,12 @@ $drawControl = function (array $column) use ($theme, $buttonTheme, $searchBase, 
             // поиск вариантов действием раздела (ответ [{id, name}]); выбранный вариант строки — тот же запрос с id
             $searchUrl = $searchBase . '?action=' . rawurlencode(substr($extra, 5)) . $searchPk;
             $inputAttributes['data-sf-table-search'] = $searchUrl;
-            return Dropdown::drawSelect(
+            return Dropdown::drawDropdownMainSelect(
                 name: '',
                 options: [],
                 placeholder: 'Начните вводить название',
-                size: DropdownSize::Small,
-                theme: DropdownTheme::from($theme),
+                size: DropdownMainSize::Small,
+                theme: DropdownMainTheme::from($theme),
                 attributes: ['aria-label' => $label],
                 searchUrl: $searchUrl,
                 inputAttributes: $inputAttributes,
@@ -120,19 +120,19 @@ $drawControl = function (array $column) use ($theme, $buttonTheme, $searchBase, 
             [$key, $text] = array_pad(explode('=', $option, 2), 2, '');
             $options[$key] = $text;
         }
-        return Dropdown::drawSelect(
+        return Dropdown::drawDropdownMainSelect(
             name: '',
             options: $options,
-            size: DropdownSize::Small,
-            theme: DropdownTheme::from($theme),
+            size: DropdownMainSize::Small,
+            theme: DropdownMainTheme::from($theme),
             attributes: ['aria-label' => $label],
             inputAttributes: $inputAttributes,
         );
     }
-    return TextInput::drawInput(
+    return TextInput::drawInputMain(
         placeholder: $label,
-        size: TextInputSize::Small,
-        theme: TextInputTheme::from($theme),
+        size: InputMainSize::Small,
+        theme: InputMainTheme::from($theme),
         attributes: $columnAttributes + ['type' => $type === 'int' ? 'number' : 'text'],
     );
 };
@@ -144,7 +144,7 @@ foreach ($columns as $column) {
     }
     $controls .= '<div class="form-input form-input_wide" data-field="' . htmlspecialchars((string)$column['n']) . '">'
         . '<div class="form-input__label">' . $column['l'] . '</div>'
-        . '<div class="form-input__control">' . $drawControl($column) . '</div></div>';
+        . '<div class="form-input__control">' . $drawSwitchTreeControl($column) . '</div></div>';
 }
 if ($hasEditor) {
     Editor::addScript();
@@ -160,10 +160,10 @@ foreach ($attributes as $key => $attribute) {
     <input type="hidden"<?= $isVirtual ? '' : ' name="' . htmlspecialchars($this->inputName()) . '"' ?>
            value="<?= htmlspecialchars($value) ?>" data-sf-table-value>
     <div class="edit-table__head">
-        <?= Button::drawButton(
+        <?= Button::drawButtonMain(
             text: 'Добавить строку',
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['data-sf-table-add' => ''],
             iconLeft: 'plus',
@@ -188,17 +188,17 @@ foreach ($attributes as $key => $attribute) {
     <?php if ($isVirtual): ?>
         <div class="edit-table__footer" data-sf-table-pages hidden>
             <span class="edit-table__info" data-sf-table-info></span>
-            <?= ButtonIcon::drawButtonIcon(
+            <?= ButtonIcon::drawButtonIconSmall(
                 icon: 'chevron-s-left',
                 label: 'Предыдущая страница',
-                style: ButtonIconStyle::Secondary,
+                style: ButtonIconSmallStyle::Secondary,
                 theme: $iconTheme,
                 attributes: ['data-sf-table-page' => '-1'],
             ) ?>
-            <?= ButtonIcon::drawButtonIcon(
+            <?= ButtonIcon::drawButtonIconSmall(
                 icon: 'chevron-s-right',
                 label: 'Следующая страница',
-                style: ButtonIconStyle::Secondary,
+                style: ButtonIconSmallStyle::Secondary,
                 theme: $iconTheme,
                 attributes: ['data-sf-table-page' => '1'],
             ) ?>
@@ -206,17 +206,17 @@ foreach ($attributes as $key => $attribute) {
     <?php endif; ?>
     <template data-sf-table-actions>
         <div class="row-actions">
-            <?= ButtonIcon::drawButtonIcon(
+            <?= ButtonIcon::drawButtonIconSmall(
                 icon: 'pencil-line',
                 label: 'Редактировать',
-                style: ButtonIconStyle::Secondary,
+                style: ButtonIconSmallStyle::Secondary,
                 theme: $iconTheme,
                 attributes: ['data-sf-table-edit' => ''],
             ) ?>
-            <?= ButtonIcon::drawButtonIcon(
+            <?= ButtonIcon::drawButtonIconSmall(
                 icon: 'trash',
                 label: 'Удалить',
-                style: ButtonIconStyle::Secondary,
+                style: ButtonIconSmallStyle::Secondary,
                 theme: $iconTheme,
                 attributes: ['data-sf-table-delete' => ''],
             ) ?>
@@ -227,16 +227,16 @@ foreach ($attributes as $key => $attribute) {
         title: strip_tags((string)$this->label),
         // не form: окно выводится внутри формы записи, вложенную форму браузер отбросит
         content: '<div class="edit-table__form" data-sf-table-form>' . $controls . '</div>',
-        footer: Button::drawButton(
+        footer: Button::drawButtonMain(
             text: 'Сохранить',
-            size: ButtonSize::Small,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['data-sf-table-save' => ''],
             iconLeft: 'check',
-        ) . Button::drawButton(
+        ) . Button::drawButtonMain(
             text: 'Отмена',
-            style: ButtonStyle::Secondary,
-            size: ButtonSize::Small,
+            style: ButtonMainStyle::Secondary,
+            size: ButtonMainSize::Small,
             theme: $buttonTheme,
             attributes: ['data-modal-close' => ''],
         ),

@@ -3,11 +3,11 @@
 namespace Simflex\Core\Layout\Components\UI\Input\InputEmail;
 
 use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputLabelPos;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputStyle;
-use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainLabelPos;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainStyle;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\InputMainTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -21,10 +21,10 @@ class Layout extends LayoutBase
     public static function drawInputEmail(
         string            $placeholder = '',
         string            $labelText = '',
-        TextInputLabelPos $labelPos = TextInputLabelPos::Hidden,
-        TextInputStyle    $style = TextInputStyle::Filled,
-        TextInputSize     $size = TextInputSize::Medium,
-        TextInputTheme    $theme = TextInputTheme::Light,
+        InputMainLabelPos $labelPos = InputMainLabelPos::Hidden,
+        InputMainStyle    $style = InputMainStyle::Filled,
+        InputMainSize     $size = InputMainSize::Medium,
+        InputMainTheme    $theme = InputMainTheme::Light,
         string            $value = '',
         string            $error = '',
         bool              $success = false,
@@ -32,7 +32,7 @@ class Layout extends LayoutBase
         array             $attributes = [],
         string            $className = '',
     ): string {
-        return TextInput::drawInput(
+        return TextInput::drawInputMain(
             className: $className,
             placeholder: $placeholder,
             labelText: $labelText,
@@ -42,7 +42,7 @@ class Layout extends LayoutBase
             theme: $theme,
             id: $id,
             attributes: $attributes,
-            kind: TextInputKind::Email,
+            kind: InputMainKind::Email,
             value: $value,
             error: $error,
             success: $success,

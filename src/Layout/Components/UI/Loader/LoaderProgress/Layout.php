@@ -15,12 +15,12 @@ class Layout extends LayoutBase
      * @param bool $animation Indeterminate: бегущая полоса; false — полоса стоит
      * @param string $label Доступное имя
      */
-    public static function drawProgress(
+    public static function drawLoaderProgress(
         int           $value = 0,
-        ProgressType  $type = ProgressType::Determinate,
-        ProgressSize  $size = ProgressSize::Medium,
-        ProgressStyle $style = ProgressStyle::Primary,
-        ProgressTheme $theme = ProgressTheme::Light,
+        LoaderProgressType  $type = LoaderProgressType::Determinate,
+        LoaderProgressSize  $size = LoaderProgressSize::Medium,
+        LoaderProgressStyle $style = LoaderProgressStyle::Primary,
+        LoaderProgressTheme $theme = LoaderProgressTheme::Light,
         bool          $animation = true,
         string        $label = 'Выполнено',
         string        $className = '',

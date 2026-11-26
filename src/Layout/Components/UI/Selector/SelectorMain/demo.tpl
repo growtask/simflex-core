@@ -6,11 +6,11 @@
  */
 
 use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\Layout as Selector;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorSize;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorStyle;
-use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorTheme;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainSize;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainStyle;
+use Simflex\Core\Layout\Components\UI\Selector\SelectorMain\SelectorMainTheme;
 
-$selectorTheme = SelectorTheme::from($theme);
+$selectorTheme = SelectorMainTheme::from($theme);
 $items = [['text' => 'День'], ['text' => 'Неделя'], ['text' => 'Месяц']];
 $rich = [
     ['text' => 'Все', 'icon' => 'check', 'badge' => '-20%'],
@@ -19,17 +19,17 @@ $rich = [
 ];
 
 ?>
-<?php foreach (SelectorStyle::cases() as $style): ?>
+<?php foreach (SelectorMainStyle::cases() as $style): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $style->name ?></h3>
-    <?php foreach (SelectorSize::cases() as $size): ?>
+    <?php foreach (SelectorMainSize::cases() as $size): ?>
         <div class="ui-showcase__row">
-            <?= Selector::drawSelector($items, $style, $size, $selectorTheme) ?>
-            <?= Selector::drawSelector($rich, $style, $size, $selectorTheme) ?>
+            <?= Selector::drawSelectorMain($items, $style, $size, $selectorTheme) ?>
+            <?= Selector::drawSelectorMain($rich, $style, $size, $selectorTheme) ?>
         </div>
     <?php endforeach; ?>
 <?php endforeach; ?>
 
 <h3 class="ui-showcase__subtitle ui-m">Ширина fill</h3>
 <div class="ui-showcase__field">
-    <?= Selector::drawSelector($items, SelectorStyle::Primary, SelectorSize::Small, $selectorTheme, fill: true) ?>
+    <?= Selector::drawSelectorMain($items, SelectorMainStyle::Primary, SelectorMainSize::Small, $selectorTheme, fill: true) ?>
 </div>

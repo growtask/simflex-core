@@ -2,9 +2,9 @@
 
 namespace Simflex\Core\Layout\Components\UI\Loader\LoaderRing;
 
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressSize;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressStyle;
-use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\ProgressTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderProgress\LoaderProgressTheme;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
@@ -16,12 +16,12 @@ class Layout extends LayoutBase
      * Кольцо: доля или оценка в компактном виде
      * @param bool $showValue Показать проценты внутри кольца
      */
-    public static function drawRing(
+    public static function drawLoaderRing(
         int           $value = 0,
         bool          $showValue = true,
-        ProgressSize  $size = ProgressSize::Medium,
-        ProgressStyle $style = ProgressStyle::Primary,
-        ProgressTheme $theme = ProgressTheme::Light,
+        LoaderProgressSize  $size = LoaderProgressSize::Medium,
+        LoaderProgressStyle $style = LoaderProgressStyle::Primary,
+        LoaderProgressTheme $theme = LoaderProgressTheme::Light,
         string        $label = 'Выполнено',
         string        $className = '',
     ): string {

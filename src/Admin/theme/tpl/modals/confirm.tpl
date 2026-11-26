@@ -7,26 +7,26 @@
 
 use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
 use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
-$buttonTheme = ButtonTheme::from($page->getTheme());
+$buttonTheme = ButtonMainTheme::from($page->getTheme());
 ?>
 <?= Modal::drawModal(
     id: 'sf-modal-confirm',
     title: 'Подтвердите действие',
     text: ' ',
-    footer: Button::drawButton(
+    footer: Button::drawButtonMain(
         text: 'Да',
-        size: ButtonSize::Small,
+        size: ButtonMainSize::Small,
         theme: $buttonTheme,
         attributes: ['data-sf-confirm' => 'yes'],
-    ) . Button::drawButton(
+    ) . Button::drawButtonMain(
         text: 'Отмена',
-        style: ButtonStyle::Outline,
-        size: ButtonSize::Small,
+        style: ButtonMainStyle::Outline,
+        size: ButtonMainSize::Small,
         theme: $buttonTheme,
         attributes: ['data-sf-confirm' => 'no'],
     ),
