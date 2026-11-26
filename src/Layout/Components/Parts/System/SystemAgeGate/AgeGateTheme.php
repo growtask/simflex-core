@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Parts\System\AgeGate;
+namespace Simflex\Core\Layout\Components\Parts\System\SystemAgeGate;
 
 enum AgeGateTheme: string
 {

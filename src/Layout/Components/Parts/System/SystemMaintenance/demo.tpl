@@ -6,8 +6,8 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\System\Maintenance\Layout as Maintenance;
-use Simflex\Core\Layout\Components\Parts\System\Maintenance\MaintenanceTheme;
+use Simflex\Core\Layout\Components\Parts\System\SystemMaintenance\Layout as Maintenance;
+use Simflex\Core\Layout\Components\Parts\System\SystemMaintenance\MaintenanceTheme;
 use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
 use Simflex\Core\Layout\Components\UI\Other\Logo\LogoTheme;
 use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;

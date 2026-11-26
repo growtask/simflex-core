@@ -5,8 +5,8 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\System\Consent\ConsentTheme;
-use Simflex\Core\Layout\Components\Parts\System\Consent\Layout as Consent;
+use Simflex\Core\Layout\Components\Parts\System\SystemConsent\ConsentTheme;
+use Simflex\Core\Layout\Components\Parts\System\SystemConsent\Layout as Consent;
 
 $consentTheme = ConsentTheme::from($theme);
 

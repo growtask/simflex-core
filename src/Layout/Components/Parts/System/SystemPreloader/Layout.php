@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Parts\System\Preloader;
+namespace Simflex\Core\Layout\Components\Parts\System\SystemPreloader;
 
 use Simflex\Core\Layout\LayoutBase;
 

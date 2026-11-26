@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Parts\System\Consent;
+namespace Simflex\Core\Layout\Components\Parts\System\SystemConsent;
 
 enum ConsentTheme: string
 {

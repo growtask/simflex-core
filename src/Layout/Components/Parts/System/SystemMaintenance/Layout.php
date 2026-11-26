@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Parts\System\Maintenance;
+namespace Simflex\Core\Layout\Components\Parts\System\SystemMaintenance;
 
 use Simflex\Core\Layout\LayoutBase;
 

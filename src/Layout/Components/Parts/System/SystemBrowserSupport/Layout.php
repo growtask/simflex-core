@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Parts\System\BrowserSupport;
+namespace Simflex\Core\Layout\Components\Parts\System\SystemBrowserSupport;
 
 use Simflex\Core\Layout\LayoutBase;
 

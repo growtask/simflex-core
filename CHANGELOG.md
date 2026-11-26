@@ -9,8 +9,8 @@
 - Компонент `Layout/Components/Parts/States` (блок States в Figma): `Parts\States\Layout::drawStates()` - состояния
   `Empty`, `Load`, `Alert`, `Success`, `Error` (маркер, заголовок, текст, кнопки; тёмная тема; на телефоне кнопки друг под
   другом). Витрина UI получила раздел «Части страниц» (`LayoutShowcase::SECTIONS['Parts']`).
-- Компоненты `Layout/Components/Parts/System` (блок System в Figma, без captcha): `Cookie`, `Consent`, `AgeGate`,
-  `BrowserSupport`, `Preloader`, `Maintenance` (`drawCookie()`, `drawConsent()`, `drawAgeGate()`, `drawBrowserSupport()`,
+- Компоненты `Layout/Components/Parts/System` (блок System в Figma, без captcha): `SystemCookie`, `SystemConsent`, `SystemAgeGate`,
+  `SystemBrowserSupport`, `SystemPreloader`, `SystemMaintenance` (`drawCookie()`, `drawConsent()`, `drawAgeGate()`, `drawBrowserSupport()`,
   `drawPreloader()`, `drawMaintenance()`; светлая и тёмная тема). Логика как в grotesk-ui-kit: `script.js` у cookie
   (событие `sf:cookie-choose`), age-gate (`sf:age-gate`, фокус внутри окна), browser-support и preloader; параметр
   `inline` выводит закреплённые компоненты в потоке (витрина).

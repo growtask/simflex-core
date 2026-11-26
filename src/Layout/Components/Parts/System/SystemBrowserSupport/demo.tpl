@@ -6,8 +6,8 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\System\BrowserSupport\BrowserSupportTheme;
-use Simflex\Core\Layout\Components\Parts\System\BrowserSupport\Layout as BrowserSupport;
+use Simflex\Core\Layout\Components\Parts\System\SystemBrowserSupport\BrowserSupportTheme;
+use Simflex\Core\Layout\Components\Parts\System\SystemBrowserSupport\Layout as BrowserSupport;
 
 $bannerTheme = BrowserSupportTheme::from($theme);
 

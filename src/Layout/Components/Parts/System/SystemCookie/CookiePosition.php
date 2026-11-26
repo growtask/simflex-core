@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Parts\System\Cookie;
+namespace Simflex\Core\Layout\Components\Parts\System\SystemCookie;
 
 enum CookiePosition: string
 {

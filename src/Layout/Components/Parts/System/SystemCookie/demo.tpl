@@ -6,10 +6,10 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\System\Cookie\CookiePosition;
-use Simflex\Core\Layout\Components\Parts\System\Cookie\CookieState;
-use Simflex\Core\Layout\Components\Parts\System\Cookie\CookieTheme;
-use Simflex\Core\Layout\Components\Parts\System\Cookie\Layout as Cookie;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\CookiePosition;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\CookieState;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\CookieTheme;
+use Simflex\Core\Layout\Components\Parts\System\SystemCookie\Layout as Cookie;
 
 $cookieTheme = CookieTheme::from($theme);
 

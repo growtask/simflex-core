@@ -6,8 +6,8 @@
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\Parts\System\Preloader\Layout as Preloader;
-use Simflex\Core\Layout\Components\Parts\System\Preloader\PreloaderTheme;
+use Simflex\Core\Layout\Components\Parts\System\SystemPreloader\Layout as Preloader;
+use Simflex\Core\Layout\Components\Parts\System\SystemPreloader\PreloaderTheme;
 use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
 use Simflex\Core\Layout\Components\UI\Other\Logo\LogoTheme;
 use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;
