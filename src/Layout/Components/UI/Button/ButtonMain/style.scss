@@ -4,11 +4,9 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: transparent solid;
     width: fit-content;
     touch-action: manipulation;
-    @include transition((border, background, color, opacity));
-    @include border-w(2px);
+    @include transition((box-shadow, background, color, opacity));
 
     &__text {
 
@@ -61,19 +59,19 @@
 
     /*============QUICK CONFIG============*/
     &-size_l {
-        @include t2-b;
+        @include ui-m;
         border-radius: var(--radius-ui-medium);
     }
     &-size_m {
-        @include t2-b;
+        @include ui-m;
         border-radius: var(--radius-ui-medium);
     }
     &-size_s {
-        @include t3-b;
+        @include ui-s;
         border-radius: var(--radius-ui-medium);
     }
     &-size_xs {
-        @include t3-b;
+        @include ui-s;
         border-radius: var(--radius-ui-small);
     }
     /*====================================*/
@@ -96,6 +94,7 @@
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
         }
     }
@@ -117,8 +116,8 @@
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
-            color: var(--color-main-gray-white);
         }
     }
 
@@ -139,6 +138,7 @@
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
         }
     }
@@ -160,6 +160,7 @@
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
         }
     }
@@ -167,52 +168,56 @@
     &-outline {
         background: transparent;
         color: var(--color-main-gray-darker);
-        border-color: var(--color-main-color1-main);
+        box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
                 background: var(--color-main-color1-light);
                 color: var(--color-main-gray-white);
-                border-color: var(--color-main-color1-light);
+                box-shadow: inset 0 0 0 2px var(--color-main-color1-light);
             }
         }
 
         &:active {
             background: var(--color-main-color1-dark);
             color: var(--color-main-gray-white);
-            border-color: var(--color-main-color1-dark);
+            box-shadow: inset 0 0 0 2px var(--color-main-color1-dark);
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
-            color: var(--color-main-gray-white);
-            border-color: transparent;
+            box-shadow: none;
         }
     }
 
     &-monochrome {
         background: transparent;
         color: var(--color-main-gray-darker);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
                 background: var(--color-main-gray-light);
                 color: var(--color-main-color1-dark);
+                box-shadow: none;
             }
         }
 
         &:active {
             background: var(--color-main-color1-lighter);
             color: var(--color-main-color1-darker);
+            box-shadow: none;
         }
 
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
-            color: var(--color-main-gray-white);
+            box-shadow: none;
         }
     }
 
@@ -235,8 +240,8 @@
         &:disabled,
         &[aria-disabled='true'] {
             cursor: not-allowed;
+            color: var(--color-main-gray-medium);
             background: var(--color-states-disabled-medium);
-            color: var(--color-main-gray-white);
         }
     }
 
@@ -452,6 +457,7 @@
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
             }
         }
@@ -473,6 +479,7 @@
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
             }
         }
@@ -489,14 +496,14 @@
 
             &:active {
                 background: var(--color-main-gray-darker);
-                border-color: var(--color-main-gray-dark);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
-                color: var(--color-main-gray-dark);
             }
         }
 
@@ -517,41 +524,41 @@
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
-                color: var(--color-main-gray-dark);
             }
         }
 
         &.btn-outline {
             background: transparent;
             color: var(--color-main-gray-white);
-            border-color: var(--color-main-color1-main);
+            box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
                     background: var(--color-main-color1-light);
-                    border-color: var(--color-main-color1-light);
+                    box-shadow: inset 0 0 0 2px var(--color-main-color1-light);
                 }
             }
 
             &:active {
                 background: var(--color-main-color1-dark);
-                border-color: var(--color-main-color1-dark);
+                box-shadow: inset 0 0 0 2px var(--color-main-color1-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
-                color: var(--color-main-gray-dark);
-                border-color: transparent;
+                box-shadow: none;
             }
         }
 
         &.btn-monochrome {
             background: transparent;
             color: var(--color-main-gray-white);
-            border-color: var(--color-main-gray-medium);
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-medium);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
@@ -566,9 +573,9 @@
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
-                color: var(--color-main-gray-dark);
-                border-color: transparent;
+                box-shadow: none;
             }
         }
 
@@ -586,16 +593,67 @@
             &:active {
                 background: var(--color-main-gray-darker);
                 color: var(--color-main-color1-light);
-                border-color: var(--color-main-gray-dark);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
             }
 
             &:disabled,
         &[aria-disabled='true'] {
                 cursor: not-allowed;
+                color: var(--color-main-gray-medium);
                 background: var(--color-states-disabled-dark);
-                color: var(--color-main-gray-dark);
-                border-color: transparent;
+                box-shadow: none;
             }
+        }
+    }
+}
+
+/* Загрузка (Figma state=load): фон как у hover, текст скрыт, вместо него спиннер */
+.btn.loading {
+    &.btn-primary {
+        background: var(--color-main-color1-light);
+    }
+
+    &.btn-accent {
+        background: var(--color-main-color2-main);
+    }
+
+    &.btn-secondary {
+        background: var(--color-main-color1-lighter);
+    }
+
+    &.btn-gray {
+        background: var(--color-main-gray-dark);
+    }
+
+    &.btn-outline {
+        background: var(--color-main-color1-light);
+        box-shadow: none;
+    }
+
+    &.btn-monochrome {
+        background: var(--color-main-gray-light);
+        box-shadow: none;
+    }
+
+    &.btn-flat {
+        background: var(--color-main-gray-lighter);
+    }
+
+    &.btn-theme_dark {
+        &.btn-secondary {
+            background: var(--color-main-gray-medium);
+        }
+
+        &.btn-gray {
+            background: var(--color-main-gray-light);
+        }
+
+        &.btn-monochrome {
+            background: var(--color-main-gray-medium);
+        }
+
+        &.btn-flat {
+            background: var(--color-main-gray-dark);
         }
     }
 }
