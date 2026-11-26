@@ -2,7 +2,7 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\Common\Pagination\Layout as Pagination;
+use Simflex\Core\Layout\Components\Base\Nav\NavPagination\Layout as Pagination;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
@@ -30,6 +30,22 @@ $arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::dra
 ?>
 <nav class="pagination pagination_type_<?= $data['type'] ?> pagination-theme_<?= $theme ?> <?= htmlspecialchars($data['className']) ?>"
      aria-label="<?= htmlspecialchars($data['label']) ?>">
+    <?php if ($data['type'] === 'more'): ?>
+        <div class="pagination__more">
+            <?= Button::drawButtonMain(
+                text: $data['moreText'],
+                link: $page >= $pageCount ? '' : Pagination::getUrl($data['urlPattern'], $page + 1, $data['urlPageOffset']),
+                style: ButtonMainStyle::Secondary,
+                size: ButtonMainSize::Small,
+                theme: ButtonMainTheme::from($theme),
+                attributes: ['data-sf-pagination-more' => ''],
+                disabled: $page >= $pageCount,
+            ) ?>
+            <?php if ($data['caption'] !== ''): ?>
+                <span class="pagination__caption" aria-live="polite"><?= htmlspecialchars($data['caption']) ?></span>
+            <?php endif; ?>
+        </div>
+    <?php else: ?>
     <div class="pagination__pages">
         <?= $arrow($page - 1, 'chevron-s-left', 'Предыдущая страница', $page <= 1) ?>
         <?php if ($data['type'] === 'compact'): ?>
@@ -81,5 +97,6 @@ $arrow = fn(int $to, string $icon, string $label, bool $disabled) => Button::dra
                 attributes: ['type' => 'submit'],
             ) ?>
         </form>
+    <?php endif; ?>
     <?php endif; ?>
 </nav>

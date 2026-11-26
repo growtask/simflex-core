@@ -7,11 +7,11 @@
  */
 
 use Simflex\Core\Admin\Handlers\Ui;
-use Simflex\Core\Layout\Components\Common\Breadcrumbs\BreadcrumbsTheme;
-use Simflex\Core\Layout\Components\Common\Breadcrumbs\Layout as Breadcrumbs;
-use Simflex\Core\Layout\Components\Common\Pagination\Layout as Pagination;
-use Simflex\Core\Layout\Components\Common\Pagination\PaginationTheme;
-use Simflex\Core\Layout\Components\Common\Pagination\PaginationType;
+use Simflex\Core\Layout\Components\Base\Nav\NavBreadcrumbs\NavBreadcrumbsTheme;
+use Simflex\Core\Layout\Components\Base\Nav\NavBreadcrumbs\Layout as Breadcrumbs;
+use Simflex\Core\Layout\Components\Base\Nav\NavPagination\Layout as Pagination;
+use Simflex\Core\Layout\Components\Base\Nav\NavPagination\NavPaginationTheme;
+use Simflex\Core\Layout\Components\Base\Nav\NavPagination\NavPaginationType;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout as LoaderIcon;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainSize;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderMainStyle;
@@ -173,7 +173,7 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">nav/breadcrumbs</h3>
-            <?= Breadcrumbs::drawBreadcrumbs(
+            <?= Breadcrumbs::drawNavBreadcrumbs(
                 [
                     ['name' => 'Каталог', 'link' => '#catalog'],
                     ['name' => 'Товары', 'link' => '#products'],
@@ -181,19 +181,19 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
                     ['name' => 'Ноутбук Apple MacBook Air'],
                 ],
                 homeLink: '#home',
-                theme: BreadcrumbsTheme::from($theme),
+                theme: NavBreadcrumbsTheme::from($theme),
             ) ?>
 
             <h3 class="ui-showcase__subtitle ui-m">nav/pagination</h3>
             <?php foreach ([1, 10, 20] as $page): ?>
-                <?= Pagination::drawPagination($page, 20, '#page-{page}', theme: PaginationTheme::from($theme)) ?>
+                <?= Pagination::drawNavPagination($page, 20, '#page-{page}', theme: NavPaginationTheme::from($theme)) ?>
             <?php endforeach; ?>
-            <?= Pagination::drawPagination(
+            <?= Pagination::drawNavPagination(
                 10,
                 20,
                 '#page-{page}',
-                type: PaginationType::Compact,
-                theme: PaginationTheme::from($theme),
+                type: NavPaginationType::Compact,
+                theme: NavPaginationTheme::from($theme),
                 search: false,
             ) ?>
 

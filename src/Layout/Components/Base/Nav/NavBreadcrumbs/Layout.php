@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Breadcrumbs;
+namespace Simflex\Core\Layout\Components\Base\Nav\NavBreadcrumbs;
 
 use Simflex\Core\Layout\LayoutBase;
 
@@ -17,11 +17,11 @@ class Layout extends LayoutBase
      * @param string $homeLink Адрес кнопки «домой», пусто — без кнопки
      * @param string $homeLabel Доступное имя кнопки «домой»
      */
-    public static function drawBreadcrumbs(
+    public static function drawNavBreadcrumbs(
         array            $items,
         string           $homeLink = '/',
         string           $homeLabel = 'Главная',
-        BreadcrumbsTheme $theme = BreadcrumbsTheme::Light,
+        NavBreadcrumbsTheme $theme = NavBreadcrumbsTheme::Light,
         string           $label = 'Хлебные крошки',
         string           $className = '',
     ): string {

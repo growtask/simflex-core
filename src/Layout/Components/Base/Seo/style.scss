@@ -1,0 +1,126 @@
+/*
+ * SEO-текст (Figma seo/main, design-base-seo.md): колонки в ряд (на телефоне друг под другом), заголовок heading/h3,
+ * текст t2, свёрнутый текст обрезан после трёх строк, облако запросов из тегов gray s.
+ * Светлая: фон gray/lighter, заголовок gray/darker, текст gray/dark; тёмная: gray/darker, white, lighter.
+ */
+.seo {
+    background: var(--color-main-gray-lighter);
+    @include spacing(padding-block, 80px, 80px, 40px, 40px);
+    @include spacing(padding-inline, 250px, 45px, 16px, 16px);
+
+    &__content {
+        display: grid;
+        @include spacing(column-gap, 20px, 20px, 16px, 32px);
+        @include spacing(row-gap, 32px);
+    }
+
+    &_columns_1 &__content {
+        grid-template-columns: minmax(0, 1fr);
+        // одна колонка занимает 8 из 12 колонок сетки
+        max-width: 78%;
+    }
+
+    &_columns_2 &__content {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &_columns_3 &__content {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        @include spacing(gap, 12px);
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--color-text-icon-gray-darker);
+        @include h3;
+    }
+
+    &__text {
+        color: var(--color-text-icon-gray-dark);
+        hyphens: auto;
+        @include t2;
+
+        > :first-child {
+            margin-top: 0;
+        }
+
+        > :last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // свёрнуто: три строки текста; в разметке остаётся весь текст
+    &:not(&_expanded) &__text {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+    }
+
+    &__more,
+    &__tags {
+        @include spacing(margin-top, 24px);
+    }
+
+    &__tags {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 12px);
+    }
+
+    &__tags-title {
+        margin: 0;
+        color: var(--color-text-icon-gray-darker);
+        @include ui-s;
+    }
+
+    &__tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(gap, 8px);
+    }
+
+    &-theme_dark {
+        background: var(--color-main-gray-darker);
+    }
+
+    &-theme_dark &__title,
+    &-theme_dark &__tags-title {
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &-theme_dark &__text {
+        color: var(--color-text-icon-gray-lighter);
+    }
+
+    @include Tablet {
+        &_columns_1 &__content {
+            max-width: none;
+        }
+
+        &_columns_3 &__content {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @include Mobile {
+        &_columns_1 &__content {
+            max-width: none;
+        }
+
+        &_columns_2 &__content,
+        &_columns_3 &__content {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Pagination;
+namespace Simflex\Core\Layout\Components\Base\Nav\NavPagination;
 
 use Simflex\Core\Layout\LayoutBase;
 
@@ -19,22 +19,26 @@ class Layout extends LayoutBase
      * @param string $urlPattern Адрес страницы, {page} заменяется номером: /admin/user?page={page}
      * @param bool $search Переход на страницу: поле «Стр.» и кнопка «Перейти»
      * @param int $urlPageOffset Смещение номера в адресе: -1 — страницы в адресе с нуля (?p=0 — первая)
+     * @param string $caption Подпись типа More: «20 из 120» (экранируется)
+     * @param string $moreText Текст кнопки типа More
      */
-    public static function drawPagination(
+    public static function drawNavPagination(
         int             $page,
         int             $pageCount,
         string          $urlPattern,
-        PaginationType  $type = PaginationType::Pages,
-        PaginationTheme $theme = PaginationTheme::Light,
+        NavPaginationType  $type = NavPaginationType::Pages,
+        NavPaginationTheme $theme = NavPaginationTheme::Light,
         bool            $search = true,
         string          $label = 'Страницы',
         string          $className = '',
         int             $urlPageOffset = 0,
+        string          $caption = '',
+        string          $moreText = 'Показать ещё',
     ): string {
         $pageCount = max(1, $pageCount);
         $page = min(max(1, $page), $pageCount);
 
-        $data = compact('page', 'pageCount', 'urlPattern', 'search', 'label', 'className', 'urlPageOffset');
+        $data = compact('page', 'pageCount', 'urlPattern', 'search', 'label', 'className', 'urlPageOffset', 'caption', 'moreText');
 
         return static::draw($data + [
             'type' => $type->value,

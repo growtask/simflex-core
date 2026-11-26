@@ -7,8 +7,8 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\Common\Pagination\Layout as PaginationLayout;
-use Simflex\Core\Layout\Components\Common\Pagination\PaginationTheme;
+use Simflex\Core\Layout\Components\Base\Nav\NavPagination\Layout as PaginationLayout;
+use Simflex\Core\Layout\Components\Base\Nav\NavPagination\NavPaginationTheme;
 
 $request = \Simflex\Core\System\Container::getRequest();
 $from = $this->p * $this->pOn + 1;
@@ -19,11 +19,11 @@ $urlPattern = Page::get()->getPath() . '?' . str_replace('PAGE_NUMBER', '{page}'
 <div class="table-footer">
     <p class="table-footer__info">Показано <?= $from ?>–<?= $to ?> из <?= $this->count ?></p>
     <?php if ($this->pCount > 1): ?>
-    <?= PaginationLayout::drawPagination(
+    <?= PaginationLayout::drawNavPagination(
         $this->p + 1,
         $this->pCount,
         $urlPattern,
-        theme: PaginationTheme::from(Page::get()->getTheme()),
+        theme: NavPaginationTheme::from(Page::get()->getTheme()),
         className: 'table-footer__pagination',
         urlPageOffset: -1,
     ) ?>

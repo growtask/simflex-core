@@ -1,0 +1,59 @@
+/*
+ * Список меню nav/menu-list (design-base-nav.md): вкладки soft s с зазором 4, подменю сдвинуто на 12;
+ * раскрытие 300 мс ease-out (grid-template-rows 0fr -> 1fr), шеврон поворачивается на 180°.
+ */
+.nav-menu-list {
+    &__list,
+    &__sub-list {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(gap, 4px);
+    }
+
+    &__tab {
+        width: 100%;
+        justify-content: flex-start;
+        text-align: left;
+
+        .tab__text {
+            flex: 1;
+        }
+    }
+
+    &__toggle .tab__icon-right {
+        transition: transform 300ms ease-out;
+    }
+
+    &__item_open > &__toggle .tab__icon-right {
+        transform: rotate(180deg);
+    }
+
+    &__sub {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out;
+        @include spacing(padding-left, 12px);
+    }
+
+    &__sub-list {
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    &__item_open > &__sub {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        @include spacing(padding-top, 4px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__toggle .tab__icon-right,
+        &__sub {
+            transition: none;
+        }
+    }
+}

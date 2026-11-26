@@ -3,8 +3,8 @@
 namespace Simflex\Core\Admin\Modules\Breadcrumbs;
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\Common\Breadcrumbs\BreadcrumbsTheme;
-use Simflex\Core\Layout\Components\Common\Breadcrumbs\Layout as BreadcrumbsLayout;
+use Simflex\Core\Layout\Components\Base\Nav\NavBreadcrumbs\NavBreadcrumbsTheme;
+use Simflex\Core\Layout\Components\Base\Nav\NavBreadcrumbs\Layout as BreadcrumbsLayout;
 use Simflex\Core\System\ModuleBase;
 
 /**
@@ -26,11 +26,11 @@ class Breadcrumbs extends ModuleBase
     {
         $page = Page::get();
 
-        return BreadcrumbsLayout::drawBreadcrumbs(
+        return BreadcrumbsLayout::drawNavBreadcrumbs(
             $crumbs,
             homeLink: Page::url(''),
             homeLabel: 'Главная админки',
-            theme: BreadcrumbsTheme::from($page->getTheme()),
+            theme: NavBreadcrumbsTheme::from($page->getTheme()),
             className: 'page-head__breadcrumbs',
         );
     }

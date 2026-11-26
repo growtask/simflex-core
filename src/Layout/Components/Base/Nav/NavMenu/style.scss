@@ -1,0 +1,64 @@
+/*
+ * Мобильное меню nav/menu (design-base-nav.md): панель 414 × 820, отступы сверху и по бокам 16, зазор между блоками 20,
+ * снизу 70; линия gray/lighter (тёмная gray/dark); фон white (тёмная gray/darker).
+ */
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 414px;
+    background: var(--color-main-gray-white);
+    @include spacing(gap, 20px);
+    @include spacing(padding-top, 16px);
+    @include spacing(padding-inline, 16px);
+    @include spacing(padding-bottom, 70px);
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__line {
+        width: 100%;
+        height: 1px;
+        margin: 0;
+        border: 0;
+        background: var(--color-main-gray-lighter);
+    }
+
+    &__location {
+        align-self: flex-start;
+    }
+
+    &__list {
+        flex: 1;
+    }
+
+    &__contacts,
+    &__socials {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        @include spacing(gap, 12px);
+    }
+
+    &__socials {
+        flex-direction: row;
+        flex-wrap: wrap;
+        @include spacing(gap, 8px);
+    }
+
+    &__button {
+        width: 100%;
+    }
+
+    &-theme_dark {
+        background: var(--color-main-gray-darker);
+    }
+
+    &-theme_dark &__line {
+        background: var(--color-main-gray-dark);
+    }
+}

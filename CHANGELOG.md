@@ -22,6 +22,15 @@
   «Сайт сделан в студии» и «Powered by» вместо «Создано» и «На базе». Стили админки: `.logo__image` → `.brand-logo__image`.
 - Исправлено: аватар `PlaceholderAvatar` приведён к Figma (placeholders/avatar): радиус `ui-xlarge` вместо круга (у `l` и `xl` скруглённый
   квадрат), фон `gray/lighter`, инициалы `gray/dark` размером 12, 15, 18, 24, 32 px, иконка `gray/medium`.
+- Раздел витрины «Базовые компоненты» (`LayoutShowcase::SECTIONS['Base']`, `Layout/Components/Base`, страница Base в Figma).
+  Компонент `Base/Seo` (`drawSeo()`, `SeoState`, `SeoTheme`): SEO-текст в 1–3 колонки, «Читать далее», облако запросов.
+  Новые `Base/Nav/NavMenu` и `Base/Nav/NavMenuList` (`drawNavMenu()`, `drawNavMenuList()`). `NavPagination` получил тип
+  `More` (кнопка «Показать ещё», параметры `caption`, `moreText`). У компонентов Nav появились `demo.tpl` и описания Figma.
+- **Несовместимое изменение:** `Common/Breadcrumbs` и `Common/Pagination` перенесены в `Base/Nav/NavBreadcrumbs` и
+  `Base/Nav/NavPagination`; `BreadcrumbsTheme` → `NavBreadcrumbsTheme`, `drawBreadcrumbs()` → `drawNavBreadcrumbs()`,
+  `PaginationTheme` → `NavPaginationTheme`, `PaginationType` → `NavPaginationType`, `drawPagination()` → `drawNavPagination()`.
+  Переход: замените `Components\Common\Breadcrumbs` на `Components\Base\Nav\NavBreadcrumbs`, `Components\Common\Pagination`
+  на `Components\Base\Nav\NavPagination` и перечисленные имена; css-классы не менялись.
 - **Несовместимое изменение:** имена enum и draw-методов компонентов `Layout/Components/Parts` и `UI` приведены к имени
   директории компонента: enum — `<ИмяДиректории><Суффикс>`, метод — `draw<ИмяДиректории>[Вид]`
   (группа в имя не добавляется: `UI/Other/Separator` остался `Separator`). Файлы enum переименованы вместе с классами.

@@ -36,6 +36,23 @@
         color: var(--color-text-icon-gray-white);
     }
 
+    // тип more: кнопка «Показать ещё» и подпись «20 из 120»
+    &__more {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        @include spacing(gap, 8px);
+    }
+
+    &__caption {
+        color: var(--color-text-icon-gray-dark);
+        @include t3;
+    }
+
+    &-theme_dark &__caption {
+        color: var(--color-text-icon-gray-lighter);
+    }
+
     &__search {
         display: flex;
         align-items: center;
@@ -61,6 +78,10 @@
 
         &__search {
             justify-content: center;
+        }
+
+        &__more {
+            align-items: stretch;
         }
     }
 }
