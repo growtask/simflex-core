@@ -3,10 +3,10 @@
 namespace Simflex\Core\Layout\Components\Common\Header;
 
 use Simflex\Core\Http\Menu as SiteMenu;
-use Simflex\Core\Layout\Components\UI\Core\DropdownTab\Layout as DropdownTab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabSize;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabStyle;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownTab\Layout as DropdownTab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
 use Simflex\Core\Layout\LayoutBase;
 use Simflex\Core\System\Container;
 
@@ -107,8 +107,8 @@ class Layout extends LayoutBase
                 $html .= DropdownTab::drawDropdownTab(
                     text: htmlspecialchars((string)$item['text']),
                     link: (string)($item['link'] ?? ''),
-                    style: \Simflex\Core\Layout\Components\UI\Core\DropdownTab\DropdownTabStyle::Secondary,
-                    size: \Simflex\Core\Layout\Components\UI\Core\DropdownTab\DropdownTabSize::Small,
+                    style: \Simflex\Core\Layout\Components\UI\Dropdown\DropdownTab\DropdownTabStyle::Secondary,
+                    size: \Simflex\Core\Layout\Components\UI\Dropdown\DropdownTab\DropdownTabSize::Small,
                     options: $options,
                     active: !empty($item['active']),
                     id: $idPrefix . '-' . $i

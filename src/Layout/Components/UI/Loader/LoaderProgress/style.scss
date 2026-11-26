@@ -1,0 +1,83 @@
+/* Полоса прогресса (Figma Loaders/progress) */
+$progress-fills: (
+    primary: var(--color-main-color1-main),
+    success: var(--color-states-success-dark),
+    error: var(--color-states-error-dark),
+);
+
+/* Полоса */
+.progress {
+    --pg-height: #{vw(8px)};
+    --pg-track: var(--color-main-gray-medium);
+    --pg-fill: var(--color-main-color1-main);
+
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: var(--pg-height);
+    overflow: hidden;
+    background: var(--pg-track);
+    border-radius: var(--radius-pill);
+
+    &__line {
+        display: block;
+        height: 100%;
+        background: var(--pg-fill);
+        border-radius: var(--radius-pill);
+        @include transition((width), 0.3s);
+    }
+
+    &_indeterminate &__line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40%;
+        animation: progress-run 1.4s ease-in-out infinite;
+    }
+
+    &_static &__line {
+        animation: none;
+        left: 30%;
+    }
+
+    @each $name, $px in (l: 12px, m: 8px, s: 4px) {
+        &_size_#{$name} {
+            --pg-height: #{vw($px)};
+
+            @include HD {
+                --pg-height: #{vwh($px)};
+            }
+            @include Tablet {
+                --pg-height: #{vwt($px)};
+            }
+            @include Mobile {
+                --pg-height: #{vwm($px)};
+            }
+        }
+    }
+
+    @each $name, $fill in $progress-fills {
+        &_style_#{$name} {
+            --pg-fill: #{$fill};
+        }
+    }
+
+    &-theme_dark {
+        --pg-track: var(--color-main-gray-dark);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &_indeterminate &__line {
+            animation-duration: 4s;
+        }
+    }
+}
+
+@keyframes progress-run {
+    0% {
+        left: -40%;
+    }
+    100% {
+        left: 100%;
+    }
+}

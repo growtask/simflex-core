@@ -6,6 +6,92 @@
 
 ## [4.0.0] — не выпущена
 
+- `LayoutFoundations::getIconGroups()` — иконки спрайта по группам страницы Icons в Figma (раздел и подгруппы,
+  `slim` отдельно); страница UI «Иконки» разбита на разделы и подгруппы.
+- Скругления: все скругления компонентов ядра (`Layout/Components`, тема админки) заданы переменными `--radius-*`
+  из Figma (Corner radius) вместо чисел в `border-r(12px)`: 4 → `ui-xsmall`, 8 → `ui-small`, 12 → `ui-medium`,
+  16 → `ui-large`, 24 → `ui-xlarge`, 32 → `blocks`. Токены считаются как остальные размеры: на сайте в vw
+  (FullHD `vw`, HD `vwh`, планшет `vwt`, телефон `vwm`) миксином `radius-mode()`, в админке тем же файлом в px.
+  Значения вне шкалы взяты из Figma: Accordion и Skeleton (`rect`) - `ui-large`, `Accordion__badge` и Skeleton `text` -
+  `--radius-pill`; у `WelcomeScreen` 32/24/24/12 → `blocks`/`ui-xlarge`/`ui-xlarge`/`ui-medium`. Чекбокс размера m (6 px),
+  меню админки (10 px) и логотип (2 px) остались числами; круги `50%` не менялись. Режимы `data-radius`
+  (`none`, `s`, `m`, `l`, `full`). Добавлена `--radius-pill` (полная таблетка, одна на все режимы). На странице UI
+  «Скругления» - таблица как в Figma: шесть групп × пять режимов (`LayoutFoundations::getRadiusScale()`).
+- **Несовместимое изменение:** компоненты `Layout/Components/UI` сгруппированы по блокам страницы UI в Figma:
+  `UI/<Блок>/<Блок><Набор>` (namespace `Simflex\Core\Layout\Components\UI\<Блок>\<Блок><Набор>`), блоки из одного
+  набора — без папки блока (`UI/Badge`, `UI/Tag`, `UI/Accordion`, `UI/Textarea`, `UI/Marker`), компоненты без Figma —
+  `UI/Other`. Старые пути удалены без алиасов. Переход: замените namespace в `use` и вызовах, а переопределённые
+  компоненты сайта переложите по новым путям. Карта (старый → новый, от `UI/`): Buttons/Button → Button/ButtonMain;
+  Buttons/ButtonFeedback → Button/ButtonFeedback; Buttons/ButtonIcon → Button/ButtonIconSmall; Buttons/ButtonMenu →
+  Button/ButtonMenu; Buttons/ButtonSocial → Button/ButtonSocial; Social → Button/ButtonSocialSmall; Checkbox →
+  Switch/SwitchCheckbox; ToggleSwitch → Switch/SwitchToggle; RadioOption → Switch/SwitchRadio; RadioColor →
+  Switch/SwitchRadioColor; Tree → Switch/SwitchTree; SortButton → Switch/SwitchSortButton; Selector →
+  Selector/SelectorMain; Tab, TabMarker, TabHeading, TabImage → Tab/TabMain, TabMarker, TabHeading, TabImage;
+  Link → Link/LinkMain; Contact → Link/LinkContact; TextInput → Input/InputMain; TagsInput, LoginInput, PhoneInput,
+  SearchInput, CodeInput → Input/InputTags, InputLogin, InputPhone, InputSearch, InputCode; Dropdown, DropdownTab →
+  Dropdown/DropdownMain, DropdownTab; LoaderIcon → Loader/LoaderMain; LoaderDots, LoaderInline, LoaderOverlay →
+  Loader/LoaderDots, LoaderInline, LoaderOverlay; Progress → Loader/LoaderProgress; Skeleton → Loader/LoaderSkeleton;
+  Tooltip → Tooltip/TooltipMain; Notice, Toast → Feedback/FeedbackNotice, FeedbackToast; Range → Range/RangeMain;
+  Stepper → Stepper/StepperMain; Calendar → Calendar/CalendarMain; Scrollbar → Scrollbar/ScrollbarMain; BadgeStock,
+  Logo, Separator, StepIndicator, Placeholder → Other/<то же имя>. `Accordion`, `Badge`, `Marker`, `Tag`, `Textarea` не
+  перемещены.
+- **Несовместимое изменение:** наборы Figma, которые были режимами других компонентов, стали отдельными компонентами:
+  `ButtonStyle::Success` и `Error` убраны — состояния кнопки (`Buttons/states`) рисует
+  `Button\ButtonStates\Layout::drawButtonStates()` (`ButtonStatesState`: `Disabled`, `Success`, `Error`, классы
+  `.btn-states_*`); `Skeleton::drawCard()` → `Loader\LoaderSkeletonCard\Layout::drawSkeletonCard()`;
+  `Progress::drawProgressLabel()`, `drawRing()`, `drawSteps()` → `LoaderProgressLabel::drawProgressLabel()`,
+  `LoaderRing::drawRing()`, `LoaderSteps::drawSteps()` (`ProgressLabelStyle` — в `LoaderProgressLabel`);
+  `Tooltip::drawInfo()` и `drawRich()` → `Tooltip\TooltipInfo\Layout::drawInfo()` и `Tooltip\TooltipRich\Layout::drawRich()`;
+  `SortButton::drawSort()` и `SortDirection` → `Switch\SwitchSort\Layout::drawSort()` и `SwitchSort\SortDirection`.
+- Добавлены компоненты-части и надстройки наборов Figma (отдельный `demo.tpl`, разметка и стили общие с основным
+  компонентом блока): `SelectorItem`, `RangeDot`, `CalendarDay`, `CalendarItem`, `ScrollbarArrow`, `SwitchTreeItem`,
+  `TabDisabled`, `StepperQuantity`, `DropdownInput`, `InputPassword`, `InputEye`, `InputEmail`, `InputDate`,
+  `InputCalendar`, `InputFlag`, `InputCountry`, `InputCountryItem`.
+- Витрина UI: компоненты идут в порядке страницы UI в Figma, у группы (блока) своя страница `/ui?block=<Блок>`
+  со списком наборов, в таблице полноты — колонка «Блок»; `LayoutShowcase::GROUP_TITLES` задаёт названия групп.
+- **Несовместимое изменение:** компоненты `Layout/Components/UI/Core/*` перенесены на уровень выше —
+  `Layout/Components/UI/*` (namespace `Simflex\Core\Layout\Components\UI\<Компонент>` вместо
+  `...\UI\Core\<Компонент>`). Переход: в сайтах, шаблонах и расширениях замените `Components\UI\Core\` на
+  `Components\UI\` в `use` и вызовах, а переопределённые компоненты сайта `Layout/Components/UI/Core/<Компонент>`
+  переложите в `Layout/Components/UI/<Компонент>`.
+- **Несовместимое изменение:** папка `Layout/Components/UI/Other` убрана — `LoaderIcon` и `Placeholder` перенесены
+  в `Layout/Components/UI/` (namespace `Simflex\Core\Layout\Components\UI\LoaderIcon` и `...\UI\Placeholder`
+  вместо `...\UI\Other\LoaderIcon` и `...\UI\Other\Placeholder`). Переход: замените `Components\UI\Other\` на
+  `Components\UI\` в `use` и вызовах, а переопределённые компоненты сайта `Layout/Components/UI/Other/<Компонент>`
+  переложите в `Layout/Components/UI/<Компонент>`.
+- **Несовместимое изменение:** из `BadgeStyle` убраны товарные метки `Sale`, `New`, `NoStock`, `Hit`, `Info`,
+  `Preorder`, `Video`, `ThreeD` (их нет в дизайн-системе, страница UI) и их стили `badge-sale`, `badge-new`,
+  `badge-no-stock`, `badge-hit`, `badge-info`, `badge-preorder`, `badge-video`, `badge-3d`. Остались 13 стилей
+  Figma. Переход: для остатка на складе — `BadgeStock`; остальные метки сайт оформляет своим стилем.
+- UI по Figma (страница UI): `ButtonMenu` — расположение `direction` (`ButtonMenuDirection::Vertical`,
+  `Horizontal`: иконка, подпись и счётчик в строку); `Stepper` — стиль `StepperStyle::Among` (стрелки и счётчик
+  «текущее/всего»); `Tooltip` — расширенная подсказка `drawRich()` (заголовок, текст, действие, иконка). В демо
+  `Button` добавлены кнопки только с иконкой. `TextInput` — подпись внутри поля `TextInputLabelPos::Inside`
+  (поднимается при вводе и фокусе). Новые компоненты: `LoginInput` и `SearchInput` (поле с иконкой и очисткой),
+  `CodeInput` (поле одноразового кода на 4–6 цифр: переход между полями, вставка, состояния Error и Success,
+  событие `sf-code-complete`), `PhoneInput` (поле телефона с выбором страны и флагами). `Calendar` — выбор периода
+  `CalendarSelection::Range` (и `None`), 12-часовой формат `CalendarFormat::H12`; `Dropdown::drawSelect()` —
+  параметр `scroll`. Новые табы: `TabMarker` (слот, заголовок и описание), `TabImage` (картинка, размеры до XL),
+  `TabHeading` (заголовок раздела: underline и filled).
+  Простые компоненты: `ButtonSocial` (кнопка соцсети: 3 нейтральных стиля и 11 брендов, квадрат или строка),
+  `ButtonFeedback` («нравится»/«не нравится» со счётчиком), `RadioColor` (выбор цвета), `Skeleton` (заглушка
+  и карточка), `Progress` (полоса, полоса с процентами, кольцо, шаги), загрузчики `LoaderDots`, `LoaderInline`,
+  `LoaderOverlay`; `LoaderIcon::drawLoader()` — параметр `animation`.
+  Компоненты с поведением: `Selector` (сегментный выбор, три стиля и четыре размера), `Tree` (дерево с чекбоксами:
+  partial у родителя, раскрытие веток), `Range` (ползунок «от–до» и одиночный, синхрон с полями), `Scrollbar`
+  (своя полоса прокрутки, classic и overlay, стрелки).
+- Витрина UI-компонентов: `Layout\LayoutShowcase` находит компоненты раздела (`LayoutShowcase::SECTIONS`, сейчас `UI`)
+  с файлом витрины в папке компонента — `demo.tpl` (все варианты в теме `$theme`), в `Layout/Components` ядра
+  и сайта; рисует его в светлой и тёмной темах (`renderDemo()`). Компонент сайта
+  с тем же путём переопределяет компонент ядра: его `demo.tpl` заменяет ядровый, в разделе «Переопределение»
+  видно, что заменено (`getFiles()`); ошибка отрисовки выводится в панели. Демо добавлено всем компонентам `UI`; страница витрины
+  живёт в шаблоне сайта (`Extensions/Content/tpl/ui.tpl`).
+- Витрина UI: разделы «Начало» (введение, полнота по Figma) и «Основы» (цвета, типографика, тени, скругления, движение,
+  иконки) по образцу UI-кита; значения читает `Layout\LayoutFoundations` из SCSS ядра и спрайта иконок. На странице
+  компонента — «Описание из Figma» (Зачем / Как работать / Ограничения): данные в `Layout/figma-docs.php`,
+  доступ `LayoutShowcase::getFigmaDocs()` и `getAllFigmaDocs()`.
+- Выпадающий список `Dropdown` с поиском: у поля поиска `id` вида `<id списка>-search` вместо общего для всех
+  списков с одинаковыми параметрами (повторяющиеся `id` на странице).
 - Уведомления админки: расширение объявляет источник в `ExtensionConfig::$adminNoticeSources` (класс
   `Simflex\Core\Admin\NoticeSource`, метод `getNotices()` возвращает `Simflex\Core\Admin\Notice` с ключом, уровнем
   `NoticeLevel` info/warning/error, заголовком, текстом и необязательной кнопкой-ссылкой). Уведомления выводятся
@@ -204,8 +290,8 @@
   группы меню — карточки подпунктов, виджеты — карточки (обёртка `widgets` перенесена в шаблон); страница «нет доступа»
   в стиле входа. Удалены окна `help`, `context`, `account`, `sidebar`, `mobilebar`.
 
-- Компоненты Layout: `UI/Core/Calendar` (виды дни, месяцы, годы, время, клавиатура, `min`/`max`, событие
-  `calendar:select`), `UI/Core/TagsInput` (поле тегов с подсказками и поиском на сервере), `Common/Uploader`
+- Компоненты Layout: `UI/Calendar/CalendarMain` (виды дни, месяцы, годы, время, клавиатура, `min`/`max`, событие
+  `calendar:select`), `UI/Input/InputTags` (поле тегов с подсказками и поиском на сервере), `Common/Uploader`
   (загрузка одного файла: перетаскивание, прогресс, «Из библиотеки», удаление). `TextInputKind::Date`, `DateTime`,
   `Time` — поле с маской и календарём.
 - Поля админки на новых компонентах: `FieldDate`, `FieldDateTime`, `FieldTime` — маска и календарь (значение
@@ -524,7 +610,7 @@
   `--color-text-icon-*`, `--backdrop-fade-*`, оттенки и новые сервисы `--socials-*`, `--delivery-*`, тени
   `--shadow-gray-*` и `--shadow-primary-*`, скругления `--radius-ui-*` и `--radius-blocks` (режим на `:root` через
   `data-radius`), `--font-main`, `--font-mono`; sass-алиасы и миксины `ui-*`, `code`.
-- Сверка UI `Components/UI/Core` с Figma (старые css-классы сохранены): `Button` — `iconLeft`/`iconRight`, `load`
+- Сверка UI `Components/UI` с Figma (старые css-классы сохранены): `Button` — `iconLeft`/`iconRight`, `load`
   (спиннер вместо содержимого, ширина сохраняется, `aria-busy`), `disabled` (у ссылки `aria-disabled` без `href`),
   `type` не дублируется; `Tab` и `DropdownTab` — стили `filled`/`soft` (названия Figma для `primary`/`secondary`),
   `active` (`aria-current`, `aria-selected`), `disabled`, вкладка только с иконкой, `DropdownTab` — шаблон disclosure

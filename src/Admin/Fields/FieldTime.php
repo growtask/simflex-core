@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Admin\Fields;
 
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
 use Simflex\Core\Helpers\Time;
 
 class FieldTime extends Field

@@ -225,7 +225,7 @@
         background: $track;
         background-clip: content-box;
         border: $inset solid transparent;
-        border-radius: 9999px;
+        border-radius: var(--radius-pill);
     }
     &::-webkit-scrollbar-thumb {
         min-height: 24px;
@@ -233,7 +233,7 @@
         background: $thumb;
         background-clip: padding-box;
         border: $inset solid transparent;
-        border-radius: 9999px;
+        border-radius: var(--radius-pill);
 
         &:hover {
             background-color: $thumbHover;

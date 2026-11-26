@@ -1,0 +1,86 @@
+/* Три точки загрузки LoaderDots (Figma Loaders/dots) */
+.loader-dots {
+    --ld-dot: #{vw(8px)};
+    --ld-color: var(--color-main-color1-main);
+
+    display: inline-flex;
+    align-items: center;
+    @include spacing(gap, 6px);
+
+    &__dot {
+        display: block;
+        width: var(--ld-dot);
+        height: var(--ld-dot);
+        background: var(--ld-color);
+        border-radius: 50%;
+        animation: loader-dots-pulse 1.2s ease-in-out infinite;
+
+        &:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+    }
+
+    @each $name, $px in (s: 6px, m: 8px, l: 10px) {
+        &_size_#{$name} {
+            --ld-dot: #{vw($px)};
+
+            @include HD {
+                --ld-dot: #{vwh($px)};
+            }
+            @include Tablet {
+                --ld-dot: #{vwt($px)};
+            }
+            @include Mobile {
+                --ld-dot: #{vwm($px)};
+            }
+        }
+    }
+
+    &-theme_dark {
+        --ld-color: var(--color-main-color1-light);
+    }
+
+    &_style_monochrome {
+        --ld-color: var(--color-text-icon-gray-dark);
+
+        &.loader-dots-theme_dark {
+            --ld-color: var(--color-text-icon-gray-lighter);
+        }
+    }
+
+    // animation off: три ступени яркости
+    &_static &__dot {
+        animation: none;
+
+        &:nth-child(1) {
+            opacity: 0.35;
+        }
+
+        &:nth-child(2) {
+            opacity: 0.65;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__dot {
+            animation-duration: 3s;
+        }
+    }
+}
+
+@keyframes loader-dots-pulse {
+    0%,
+    80%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

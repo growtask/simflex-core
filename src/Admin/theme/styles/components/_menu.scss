@@ -282,6 +282,7 @@
         justify-content: center;
         background: var(--color-main-gray-lighter);
         color: var(--color-text-icon-gray-darker);
+        /* 10px: пункт меню админки, в Figma такого радиуса нет */
         @include border-r(10px);
         @include spacing(width, 32px);
         @include spacing(height, 32px);

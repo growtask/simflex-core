@@ -2,7 +2,7 @@
 
 namespace Simflex\Core\Admin;
 
-use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeStyle;
 
 /**
  * Уровень уведомления админки (Notice): определяет оформление компонента Notice

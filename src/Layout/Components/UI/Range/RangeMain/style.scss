@@ -1,0 +1,200 @@
+/* Ползунок Range/main и Range/dot (Figma «UI»): поля, трек с ручками, значение над нажатой ручкой */
+.range {
+    --range-line: var(--color-main-gray-lighter);
+    --range-fill: var(--color-main-color1-lighter);
+    --range-dot: var(--color-main-color1-main);
+    --range-dot-hover: var(--color-main-color1-light);
+    --range-dot-press: var(--color-main-color1-dark);
+    --range-mark: var(--color-main-gray-light);
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    @include spacing(width, 220px);
+    @include spacing(gap, 8px);
+
+    &-width_fill {
+        width: 100%;
+    }
+
+    &__inputs {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 8px);
+
+        > .text-input {
+            flex: 1;
+            min-width: 0;
+        }
+    }
+
+    &__dash {
+        flex-shrink: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+    }
+
+    &__track {
+        position: relative;
+        touch-action: none;
+        cursor: pointer;
+        @include spacing(height, 20px);
+    }
+
+    // рельс — область хода центров ручек: линия 4 px, ручки сидят в нём по процентам;
+    // отступ 10 px по краям, чтобы ручки диаметром 20 не выходили за трек
+    &__rail {
+        position: absolute;
+        top: 50%;
+        left: vw(10px);
+        right: vw(10px);
+        background: var(--range-line);
+        border-radius: var(--radius-pill);
+        transform: translateY(-50%);
+        @include spacing(height, 4px);
+
+        @include HD {
+            left: vwh(10px);
+            right: vwh(10px);
+        }
+        @include Tablet {
+            left: vwt(10px);
+            right: vwt(10px);
+        }
+        @include Mobile {
+            left: vwm(10px);
+            right: vwm(10px);
+        }
+    }
+
+    &__fill {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: var(--range-fill);
+        border-radius: inherit;
+    }
+
+    &__dot {
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+        box-sizing: border-box;
+        background: var(--range-dot);
+        border-radius: 50%;
+        cursor: grab;
+        transform: translate(-50%, -50%);
+        @include spacing(width, 20px);
+        @include spacing(height, 20px);
+        @include transition((background-color));
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: var(--range-dot-hover);
+            }
+        }
+
+        &_active,
+        &_active:hover {
+            z-index: 2;
+            background: var(--range-dot-press);
+            cursor: grabbing;
+
+            .range__tooltip {
+                display: block;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    // значение над нажатой ручкой (press)
+    &__tooltip {
+        position: absolute;
+        bottom: calc(100% + #{vw(8px)});
+        left: 50%;
+        display: none;
+        white-space: nowrap;
+        pointer-events: none;
+        background: var(--color-main-gray-black);
+        color: var(--color-text-icon-gray-white);
+        border-radius: var(--radius-ui-medium);
+        box-shadow: var(--shadow-gray-s);
+        transform: translateX(-50%);
+        @include spacing(padding, 8px 12px);
+        @include ui-xs;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            border: vw(4px) solid transparent;
+            border-top-color: var(--color-main-gray-black);
+            transform: translateX(-50%);
+        }
+    }
+
+    &__marks {
+        display: flex;
+        justify-content: space-between;
+        @include spacing(padding-inline, 9px);
+    }
+
+    &__mark {
+        background: var(--range-mark);
+        @include spacing(width, 2px);
+        @include spacing(height, 8px);
+    }
+
+    &__labels {
+        display: flex;
+        justify-content: space-between;
+        color: var(--color-text-icon-gray-medium);
+        @include t4;
+    }
+
+    &-theme_dark {
+        --range-line: var(--color-main-gray-dark);
+        --range-fill: var(--color-main-color1-darker);
+        --range-mark: var(--color-main-gray-dark);
+
+        .range__tooltip {
+            background: var(--color-main-gray-white);
+            color: var(--color-text-icon-gray-darker);
+
+            &::after {
+                border-top-color: var(--color-main-gray-white);
+            }
+        }
+    }
+
+    &_disabled {
+        --range-line: var(--color-states-disabled-light);
+        --range-fill: var(--color-states-disabled-medium);
+        --range-dot: var(--color-states-disabled-medium);
+        --range-dot-hover: var(--color-states-disabled-medium);
+        --range-mark: var(--color-states-disabled-medium);
+
+        .range__track,
+        .range__dot {
+            cursor: not-allowed;
+        }
+    }
+
+    &_disabled.range-theme_dark {
+        --range-line: var(--color-states-disabled-dark);
+        --range-fill: var(--color-states-disabled-dark);
+        --range-dot: var(--color-states-disabled-dark);
+        --range-dot-hover: var(--color-states-disabled-dark);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__dot {
+            transition: none;
+        }
+    }
+}

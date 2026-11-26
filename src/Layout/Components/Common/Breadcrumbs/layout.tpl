@@ -2,14 +2,14 @@
 
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Tab\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabSize;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabStyle;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
 
 $theme = $data['theme'];
 $items = $data['items'];

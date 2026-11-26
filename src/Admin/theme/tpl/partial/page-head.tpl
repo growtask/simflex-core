@@ -12,10 +12,10 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $theme = $page->getTheme();
 // «Назад» на телефоне — на предпоследний пункт крошек (родитель текущей страницы) или на главную админки

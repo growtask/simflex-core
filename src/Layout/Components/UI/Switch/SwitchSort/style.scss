@@ -1,0 +1,16 @@
+/* Переключатель направления сортировки (Figma Switches/sort) */
+.sort {
+    display: inline-flex;
+    align-items: center;
+    @include spacing(gap, 4px);
+
+    &__buttons {
+        display: inline-flex;
+        flex-direction: column;
+
+        // две стрелки 16 px друг над другом: у треугольника поля сверху и снизу, кнопки заходят друг на друга
+        .sort-button + .sort-button {
+            @include spacing(margin-top, -6px);
+        }
+    }
+}

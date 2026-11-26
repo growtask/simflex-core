@@ -1,0 +1,190 @@
+/* Кнопка соцсети ButtonSocial (Figma Buttons/social): плашка с логотипом, подпись, стрелка; square и row, m и s */
+.btn-social {
+    --bs-bg: var(--color-main-color1-main);
+    --bs-bg-hover: var(--color-main-color1-light);
+    --bs-bg-press: var(--color-main-color1-dark);
+    --bs-color: var(--color-text-icon-gray-white);
+    --bs-plate: var(--color-main-gray-white);
+    --bs-accent: var(--color-main-color1-main);
+
+    display: flex;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    text-align: left;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
+    color: var(--bs-color);
+    background: var(--bs-bg);
+    border-radius: var(--radius-ui-large, 16px);
+    touch-action: manipulation;
+    @include transition((background, transform));
+
+    // у ссылки цвет не должен браться из стилей a
+    &:link,
+    &:visited,
+    &:hover,
+    &:active {
+        color: var(--bs-color);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--bs-bg-hover);
+        }
+    }
+
+    &:active {
+        background: var(--bs-bg-press);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    &__content {
+        display: flex;
+        min-width: 0;
+        @include spacing(gap, 12px);
+    }
+
+    &__plate {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bs-accent);
+        background: var(--bs-plate);
+    }
+
+    &__text {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    &__arrow {
+        flex-shrink: 0;
+        @include icon(24px);
+    }
+
+    /*----------TYPES и SIZES-----------*/
+    &-type_square {
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        @include spacing(max-width, 160px);
+        @include spacing(padding, 20px);
+        @include spacing(gap, 20px);
+
+        .btn-social__content {
+            flex-direction: column;
+        }
+
+        .btn-social__plate {
+            @include spacing(width, 32px);
+            @include spacing(height, 32px);
+            border-radius: var(--radius-ui-small);
+        }
+
+        .btn-social__icon {
+            @include icon(16px);
+        }
+
+        .btn-social__text {
+            @include ui-s;
+        }
+    }
+
+    &-type_row {
+        align-items: center;
+        width: 100%;
+        @include spacing(max-width, 380px);
+        @include spacing(padding, 12px);
+        @include spacing(gap, 12px);
+
+        .btn-social__content {
+            flex: 1;
+            align-items: center;
+        }
+
+        .btn-social__plate {
+            @include spacing(width, 40px);
+            @include spacing(height, 40px);
+            border-radius: var(--radius-ui-medium);
+        }
+
+        .btn-social__icon {
+            @include icon(24px);
+        }
+
+        .btn-social__text {
+            flex: 1;
+            @include ui-m;
+        }
+    }
+
+    // размер s: плитка 148 × 120, строка 320 × 56
+    &-type_square#{&}-size_s {
+        @include spacing(max-width, 148px);
+        @include spacing(padding, 16px);
+        @include spacing(gap, 16px);
+    }
+
+    &-type_row#{&}-size_s {
+        @include spacing(max-width, 320px);
+        @include spacing(padding, 8px);
+
+        .btn-social__text {
+            @include ui-s;
+        }
+    }
+
+    /*----------STYLES-----------*/
+    &-style_secondary {
+        --bs-bg: var(--color-main-color1-lighter);
+        --bs-bg-hover: var(--color-main-color1-lighter);
+        --bs-bg-press: var(--color-main-color1-light);
+        --bs-color: var(--color-text-icon-color1-dark);
+    }
+
+    &-style_gray {
+        --bs-bg: var(--color-main-gray-lighter);
+        --bs-bg-hover: var(--color-main-gray-light);
+        --bs-bg-press: var(--color-main-gray-medium);
+        --bs-color: var(--color-text-icon-gray-darker);
+        --bs-accent: var(--color-text-icon-gray-dark);
+    }
+
+    // сети: фон — цвет сети, плашка белая с логотипом (его цвета в самом svg)
+    $networks: (figma: figma, google: google, instagram: instagram, max: max, rutube: ru, telegram: telegram, vkontakte: vk, whatsapp: whatsapp, yandex: yandex, yandex-zen: zen, youtube: youtube);
+    @each $name, $token in $networks {
+        &-style_#{$name} {
+            --bs-bg: var(--color-social-#{$token}-main);
+            --bs-bg-hover: var(--color-social-#{$token}-light);
+            --bs-bg-press: var(--color-social-#{$token}-dark);
+        }
+    }
+
+    /*----------THEME-----------*/
+    &-theme_dark {
+        &.btn-social-style_secondary {
+            --bs-bg: var(--color-main-gray-darker);
+            --bs-bg-hover: var(--color-main-gray-dark);
+            --bs-bg-press: var(--color-main-gray-darker);
+            --bs-color: var(--color-text-icon-gray-white);
+            --bs-plate: var(--color-main-gray-dark);
+            --bs-accent: var(--color-main-color1-light);
+        }
+
+        &.btn-social-style_gray {
+            --bs-bg: var(--color-main-gray-dark);
+            --bs-bg-hover: var(--color-main-gray-darker);
+            --bs-bg-press: var(--color-main-gray-black);
+            --bs-color: var(--color-text-icon-gray-white);
+            --bs-plate: var(--color-main-gray-darker);
+            --bs-accent: var(--color-text-icon-gray-lighter);
+        }
+    }
+}

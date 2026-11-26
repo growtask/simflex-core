@@ -1,0 +1,260 @@
+.checkbox {
+    /*----------CORE STYLE-----------*/
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    width: fit-content;
+    @include spacing(padding, 2px);
+    @include spacing(margin, -2px);
+    @include spacing(gap, 10px);
+    touch-action: manipulation;
+    @include transition((background-color));
+
+    &-position {
+        &_left {
+            flex-direction: row;
+        }
+
+        &_right {
+            flex-direction: row-reverse;
+        }
+    }
+
+    &__input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked ~ .checkbox__custom::after,
+&:indeterminate ~ .checkbox__custom::after {
+            transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+        }
+    }
+
+    &__custom {
+        flex-shrink: 0;
+        position: relative;
+        border: solid var(--color-main-gray-medium);
+        @include transition((border, background));
+        @include border-w(2px);
+
+        /* Checkmark */
+        &::after {
+            content: '';
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            width: 30%;
+            height: 50%;
+            border-top: 0 !important;
+            border-left: 0 !important;
+            transform-origin: center;
+            transform: translate(-50%, -50%) rotate(45deg) scale(0);
+            @include transition((transform));
+        }
+    }
+
+    &__text {
+        user-select: none;
+        @include t2;
+    }
+
+    &__policy {
+        user-select: none;
+        @include spacing(margin-block, 2px);
+        @include t3;
+
+        a {
+            color: var(--color-main-color1-dark);
+            @include transition((color));
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: var(--color-main-color1-main);
+                }
+            }
+
+            &:active {
+                color: var(--color-main-color1-darker);
+            }
+        }
+    }
+
+    /*----------STYLES-----------*/
+    &-solid {
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                .checkbox__input:not(:checked) ~ .checkbox__custom::after {
+                    border-color: var(--color-main-gray-medium);
+                    transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+                }
+
+                .checkbox__input:checked ~ .checkbox__custom,
+.checkbox__input:indeterminate ~ .checkbox__custom {
+                    background: var(--color-main-color1-light);
+                    border-color: var(--color-main-color1-light);
+                }
+            }
+        }
+
+        .checkbox__input {
+            &:checked ~ .checkbox__custom,
+&:indeterminate ~ .checkbox__custom {
+                background: var(--color-main-color1-main);
+                border-color: var(--color-main-color1-main);
+            }
+        }
+
+        .checkbox__custom {
+            &::after {
+                border: solid var(--color-main-gray-white);
+                @include border-w(1px);
+            }
+        }
+    }
+
+    &-line {
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                .checkbox__input:not(:checked) ~ .checkbox__custom::after {
+                    border-color: var(--color-main-color1-light);
+                    transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+                }
+
+                .checkbox__input:checked ~ .checkbox__custom,
+.checkbox__input:indeterminate ~ .checkbox__custom {
+                    background: transparent;
+                    border-color: var(--color-main-color1-dark);
+                }
+
+                .checkbox__input:checked ~ .checkbox__custom::after,
+.checkbox__input:indeterminate ~ .checkbox__custom::after {
+                    border-color: var(--color-main-color1-dark);
+                }
+            }
+        }
+
+        .checkbox__input {
+            &:checked ~ .checkbox__custom,
+&:indeterminate ~ .checkbox__custom {
+                background: transparent;
+                border-color: var(--color-main-color1-main);
+            }
+        }
+
+        .checkbox__custom {
+            &::after {
+                border: solid var(--color-main-color1-main);
+                @include border-w(1px);
+            }
+        }
+    }
+
+    /*----------SIZES-----------*/
+    &-size_m {
+        .checkbox__custom {
+            /* 6px: радиус нарисован в иконке чекбокса Figma, токена у него нет (l - ui-small, s - ui-xsmall) */
+            @include border-r(6px);
+            @include icon(28px);
+        }
+    }
+
+    &-size_s {
+        .checkbox__custom {
+            border-radius: var(--radius-ui-xsmall);
+            @include icon(20px);
+        }
+    }
+
+    &-size_l {
+        .checkbox__custom {
+            border-radius: var(--radius-ui-small);
+            @include icon(36px);
+        }
+    }
+
+    /*----------THEME-----------*/
+    &-theme_light {
+        .checkbox__text {
+            color: var(--color-main-gray-darker);
+        }
+    }
+
+    &-theme_dark {
+        .checkbox__text {
+            color: var(--color-main-gray-lighter);
+        }
+    }
+}
+
+/*----------PARTIAL (indeterminate)-----------*/
+/* Выбрана часть вложенных: чёрточка вместо галочки */
+.checkbox .checkbox__input:indeterminate ~ .checkbox__custom::after {
+    top: 50%;
+    width: 50%;
+    height: 0;
+    border-right: 0 !important;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/*----------FOCUS-----------*/
+/* Кольцо фокуса вокруг самого бокса: 2 px цвета бренда, зазор 2 px */
+.checkbox__input:focus-visible ~ .checkbox__custom {
+    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
+    outline-offset: 2px;
+}
+
+/*----------STATES-----------*/
+.checkbox_error .checkbox__custom {
+    border-color: var(--color-states-error-dark);
+}
+
+.checkbox_disabled {
+    cursor: not-allowed;
+
+    .checkbox__text,
+    .checkbox__policy {
+        color: var(--color-main-gray-medium);
+    }
+}
+
+.checkbox__input:disabled ~ .checkbox__custom {
+    border-color: var(--color-states-disabled-medium);
+}
+
+.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom,
+.checkbox-solid .checkbox__input:disabled:indeterminate ~ .checkbox__custom {
+    background: var(--color-states-disabled-medium);
+    border-color: var(--color-states-disabled-medium);
+}
+
+.checkbox-line .checkbox__input:disabled:checked ~ .checkbox__custom,
+.checkbox-line .checkbox__input:disabled:indeterminate ~ .checkbox__custom {
+    background: transparent;
+    border-color: var(--color-states-disabled-medium);
+}
+
+.checkbox-line .checkbox__input:disabled:checked ~ .checkbox__custom::after {
+    border-color: var(--color-states-disabled-medium);
+}
+
+.checkbox-theme_dark {
+    .checkbox__input:disabled ~ .checkbox__custom,
+    &.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom {
+        border-color: var(--color-states-disabled-dark);
+    }
+
+    &.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom {
+        background: var(--color-states-disabled-dark);
+    }
+
+    &.checkbox_error .checkbox__custom {
+        border-color: var(--color-states-error-medium);
+    }
+
+    .checkbox__policy a {
+        color: var(--color-main-color1-light);
+    }
+}

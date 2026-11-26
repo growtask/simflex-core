@@ -6,10 +6,10 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
 
 ?>
 <?= TextInput::drawInput(

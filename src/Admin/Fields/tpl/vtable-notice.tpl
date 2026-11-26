@@ -6,8 +6,8 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Notice\Layout as Notice;
-use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
 
 ?>
 <?= Notice::drawNotice(

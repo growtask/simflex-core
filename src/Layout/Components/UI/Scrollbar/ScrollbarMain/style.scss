@@ -1,0 +1,288 @@
+/* Полоса прокрутки Scrollbar/scrollbar и Scrollbar/arrow (Figma «UI»): блок со своей полосой
+ * Толщина ползунка s 4, m 8, l 12 px (со стрелками полоса 12/16/20 — по стрелке), концы круглые.
+ * classic: дорожка и ползунок с прозрачностью, hover и press темнее; overlay: без дорожки, поверх содержимого. */
+.scrollbar {
+    --sb-size: #{vw(8px)};
+    --sb-box: #{vw(8px)};
+    --sb-arrow: #{vw(16px)};
+    --sb-gap: #{vw(4px)};
+    --sb-hit: #{vw(16px)};
+    --sb-track: color-mix(in srgb, var(--color-main-gray-lighter) 20%, transparent);
+    --sb-track-active: color-mix(in srgb, var(--color-main-gray-lighter) 50%, transparent);
+    --sb-thumb: color-mix(in srgb, var(--color-main-color1-light) 20%, transparent);
+    --sb-thumb-hover: color-mix(in srgb, var(--color-main-color1-main) 50%, transparent);
+    --sb-thumb-press: color-mix(in srgb, var(--color-main-color1-dark) 50%, transparent);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 0;
+
+    @include HD {
+        --sb-size: #{vwh(8px)};
+        --sb-box: #{vwh(8px)};
+        --sb-arrow: #{vwh(16px)};
+        --sb-gap: #{vwh(4px)};
+        --sb-hit: #{vwh(16px)};
+    }
+    @include Tablet {
+        --sb-size: #{vwt(8px)};
+        --sb-box: #{vwt(8px)};
+        --sb-arrow: #{vwt(16px)};
+        --sb-gap: #{vwt(4px)};
+        --sb-hit: #{vwt(16px)};
+    }
+    @include Mobile {
+        --sb-size: #{vwm(8px)};
+        --sb-box: #{vwm(8px)};
+        --sb-arrow: #{vwm(16px)};
+        --sb-gap: #{vwm(4px)};
+        --sb-hit: #{vwm(16px)};
+    }
+
+    @each $name, $thickness, $arrow in (s, 4px, 12px), (m, 8px, 16px), (l, 12px, 20px) {
+        &-size_#{$name} {
+            --sb-size: #{vw($thickness)};
+            --sb-box: #{vw($thickness)};
+            --sb-arrow: #{vw($arrow)};
+
+            @include HD {
+                --sb-size: #{vwh($thickness)};
+                --sb-box: #{vwh($thickness)};
+                --sb-arrow: #{vwh($arrow)};
+            }
+            @include Tablet {
+                --sb-size: #{vwt($thickness)};
+                --sb-box: #{vwt($thickness)};
+                --sb-arrow: #{vwt($arrow)};
+            }
+            @include Mobile {
+                --sb-size: #{vwm($thickness)};
+                --sb-box: #{vwm($thickness)};
+                --sb-arrow: #{vwm($arrow)};
+            }
+
+            &.scrollbar_arrows {
+                --sb-box: var(--sb-arrow);
+            }
+        }
+    }
+
+    &-style_overlay {
+        --sb-track: transparent;
+        --sb-track-active: transparent;
+        --sb-thumb: color-mix(in srgb, var(--color-main-gray-medium) 60%, transparent);
+        --sb-thumb-hover: var(--color-main-color1-main);
+        --sb-thumb-press: var(--color-main-color1-dark);
+    }
+
+    &-theme_dark {
+        --sb-track: color-mix(in srgb, var(--color-main-gray-dark) 20%, transparent);
+        --sb-track-active: color-mix(in srgb, var(--color-main-gray-dark) 50%, transparent);
+        --sb-thumb: color-mix(in srgb, var(--color-main-color1-main) 20%, transparent);
+        --sb-thumb-hover: color-mix(in srgb, var(--color-main-color1-light) 50%, transparent);
+        --sb-thumb-press: color-mix(in srgb, var(--color-main-color1-lighter) 50%, transparent);
+
+        &.scrollbar-style_overlay {
+            --sb-track: transparent;
+            --sb-track-active: transparent;
+            --sb-thumb: color-mix(in srgb, var(--color-main-gray-light) 60%, transparent);
+            --sb-thumb-hover: var(--color-main-color1-main);
+            --sb-thumb-press: var(--color-main-color1-light);
+        }
+    }
+
+    &__viewport {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: -2px;
+        }
+    }
+
+    &_vertical &__viewport {
+        overflow-x: hidden;
+    }
+
+    &_horizontal &__viewport {
+        overflow-y: hidden;
+    }
+
+    // своя полоса — только с мышью и после запуска скрипта; на сенсорных устройствах остаётся системная
+    &__bar {
+        display: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &_ready &__viewport {
+            @include hide-scrollbar;
+        }
+
+        // classic занимает место рядом с содержимым (+ промежуток 4 px), overlay плавает над ним
+        &_ready#{&}-style_classic#{&}_vertical#{&}_scrollable &__viewport {
+            padding-right: calc(var(--sb-box) + var(--sb-gap));
+        }
+
+        &_ready#{&}-style_classic#{&}_horizontal#{&}_scrollable &__viewport {
+            padding-bottom: calc(var(--sb-box) + var(--sb-gap));
+        }
+
+        &_ready#{&}_scrollable &__bar {
+            position: absolute;
+            z-index: 1;
+            display: flex;
+            touch-action: none;
+            user-select: none;
+        }
+    }
+
+    // зона нажатия не меньше 16 px при видимой толщине 4–12 px: поле до дорожки прозрачное, дорожка у края
+    &_vertical &__bar {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: max(var(--sb-hit), var(--sb-box));
+    }
+
+    &_horizontal &__bar {
+        right: 0;
+        bottom: 0;
+        left: 0;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: max(var(--sb-hit), var(--sb-box));
+    }
+
+    // подложка во всю длину полосы: стрелки по краям и ход ползунка между ними
+    &__rail {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        border-radius: var(--radius-pill);
+        background: var(--sb-track);
+        @include transition((background-color));
+    }
+
+    &_vertical &__rail {
+        flex: 1;
+        flex-direction: column;
+        width: var(--sb-box);
+        min-height: 0;
+    }
+
+    &_horizontal &__rail {
+        flex: 0 0 auto;
+        flex-direction: row;
+        width: 100%;
+        height: var(--sb-box);
+    }
+
+    &__track {
+        position: relative;
+        flex: 1;
+        align-self: stretch;
+        min-width: 0;
+        min-height: 0;
+        cursor: pointer;
+    }
+
+    &__thumb {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: var(--radius-pill);
+        background: var(--sb-thumb);
+        cursor: grab;
+        @include transition((background-color));
+    }
+
+    &_vertical &__thumb {
+        left: calc((var(--sb-box) - var(--sb-size)) / 2);
+        width: var(--sb-size);
+    }
+
+    &_horizontal &__thumb {
+        top: calc((var(--sb-box) - var(--sb-size)) / 2);
+        height: var(--sb-size);
+    }
+
+    &__bar:hover &__rail,
+    &_dragging &__rail {
+        background: var(--sb-track-active);
+    }
+
+    &__bar:hover &__thumb {
+        background: var(--sb-thumb-hover);
+    }
+
+    &_dragging &__thumb {
+        cursor: grabbing;
+        background: var(--sb-thumb-press);
+    }
+
+    // стрелка: кнопка 12/16/20 px, иконка chevron s (у l — chevron m)
+    &__arrow {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: var(--sb-arrow);
+        height: var(--sb-arrow);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: var(--radius-ui-xsmall);
+        background: transparent;
+        color: var(--color-text-icon-gray-medium);
+        cursor: pointer;
+        @include transition((background-color, color));
+
+        &:hover {
+            background: var(--color-main-gray-light);
+            color: var(--color-text-icon-gray-darker);
+        }
+
+        &:active {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-text-icon-gray-black);
+        }
+    }
+
+    &__arrow-icon {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+    }
+
+    &-theme_dark &__arrow {
+        color: var(--color-text-icon-gray-white);
+
+        &:hover {
+            background: var(--color-main-gray-darker);
+        }
+
+        &:active {
+            background: var(--color-main-gray-black);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__viewport {
+            scroll-behavior: auto;
+        }
+
+        &__rail,
+        &__thumb,
+        &__arrow {
+            transition: none;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+/* Загрузка-подложка поверх блока LoaderOverlay (Figma Loaders/overlay) */
+.loader-overlay {
+    --lo-fill: var(--color-main-gray-white);
+
+    position: relative;
+
+    &__scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border-radius: inherit;
+
+        // вуаль: белая (в тёмной теме тёмная) заливка 70 %
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--lo-fill);
+            opacity: 0.7;
+            border-radius: inherit;
+        }
+
+        .loader {
+            position: relative;
+        }
+    }
+
+    &_active > &__scrim {
+        display: flex;
+    }
+
+    // блок под вуалью недоступен: ни клика, ни фокуса
+    &_active > &__content {
+        pointer-events: none;
+        user-select: none;
+    }
+
+    &-theme_dark {
+        --lo-fill: var(--color-main-gray-darker);
+    }
+}

@@ -9,16 +9,16 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;

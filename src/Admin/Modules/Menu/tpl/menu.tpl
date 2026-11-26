@@ -8,13 +8,13 @@
  * @var string $theme Тема админки
  */
 
-use Simflex\Core\Layout\Components\UI\Core\Tab\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabSize;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabStyle;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabTheme;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
 
 $tabTheme = TabTheme::from($theme);
 $tooltipTheme = TooltipTheme::from($theme);

@@ -1,0 +1,86 @@
+/* Цветной радио-образец RadioColor (Figma Switches/radio-color): s 24, m 32, l 40 px */
+.radio-color {
+    --rc-size: #{vw(32px)};
+    --rc-ring: var(--color-main-color1-main);
+    --rc-gap: var(--color-main-gray-white);
+
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+
+    &__input {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    &__label {
+        display: block;
+        cursor: pointer;
+    }
+
+    &__swatch {
+        display: block;
+        box-sizing: border-box;
+        width: var(--rc-size);
+        height: var(--rc-size);
+        background: var(--rc-color);
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+        @include transition((box-shadow, transform));
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &__input:hover:not(:disabled) + &__label &__swatch {
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 0 0 2px var(--rc-gap), 0 0 0 4px var(--color-main-gray-medium);
+        }
+    }
+
+    &__input:active:not(:disabled) + &__label &__swatch {
+        transform: scale(0.94);
+    }
+
+    // выбранный: белый зазор и кольцо бренда
+    &__input:checked + &__label &__swatch {
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 0 0 2px var(--rc-gap), 0 0 0 4px var(--rc-ring);
+    }
+
+    &__input:focus-visible + &__label &__swatch {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 6px;
+    }
+
+    &__input:disabled + &__label {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
+
+    @each $name in (dark, violet, green, blue, red, purple, orange, gold, pink, light) {
+        &-color_#{$name} {
+            --rc-color: var(--color-uniq-#{$name});
+        }
+    }
+
+    @each $name, $px in (s: 24px, m: 32px, l: 40px) {
+        &-size_#{$name} {
+            --rc-size: #{vw($px)};
+
+            @include HD {
+                --rc-size: #{vwh($px)};
+            }
+            @include Tablet {
+                --rc-size: #{vwt($px)};
+            }
+            @include Mobile {
+                --rc-size: #{vwm($px)};
+            }
+        }
+    }
+
+    &-theme_dark {
+        --rc-ring: var(--color-main-color1-light);
+        --rc-gap: var(--color-main-gray-darker);
+    }
+}

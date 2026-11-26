@@ -1,0 +1,25 @@
+/* Загрузка в строке LoaderInline (Figma Loaders/inline): спиннер LoaderIcon и подпись */
+.loader-inline {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    color: var(--color-text-icon-gray-dark);
+    @include spacing(gap, 12px);
+    @include ui-m;
+
+    &__text {
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    &_size_s {
+        @include spacing(gap, 8px);
+        @include ui-s;
+    }
+
+    &-theme_dark {
+        color: var(--color-text-icon-gray-lighter);
+    }
+}

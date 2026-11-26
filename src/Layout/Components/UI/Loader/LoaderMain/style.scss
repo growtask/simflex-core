@@ -1,0 +1,113 @@
+.loader-icon {
+    --animation-speed: 2s;
+    transform-origin: center;
+    animation: rotate var(--animation-speed) linear infinite;
+    will-change: transform;
+    overflow: visible;
+
+    &__track {
+        fill: none;
+        opacity: 0;
+        @include transition((stroke), 0.5s);
+    }
+
+    &__car {
+        fill: none;
+        @include spacing(stroke-width, 5px);
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+        stroke-linecap: round;
+        animation: stretch calc(var(--animation-speed) * 0.75) ease-in-out infinite;
+        will-change: stroke-dasharray, stroke-dashoffset;
+        @include transition((stroke), 0.5s);
+    }
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes stretch {
+    0% {
+        stroke-dasharray: 0, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 75, 150;
+        stroke-dashoffset: -25;
+    }
+    100% {
+        stroke-dashoffset: -100;
+    }
+}
+/* Лоадер с рамкой: drawLoader() (design-ui-loaders.md, раздел 2) */
+.loader {
+    --loader-frame: #{vw(32px)};
+    --loader-ring: #{vw(24px)};
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--loader-frame);
+    height: var(--loader-frame);
+    color: var(--color-text-icon-color1-main);
+
+    .loader-icon {
+        width: var(--loader-ring);
+        height: var(--loader-ring);
+    }
+
+    $sizes: (xs: (16px, 12px), s: (24px, 20px), m: (32px, 24px), l: (40px, 32px), xl: (48px, 40px));
+    @each $name, $size in $sizes {
+        &_size_#{$name} {
+            --loader-frame: #{vw(nth($size, 1))};
+            --loader-ring: #{vw(nth($size, 2))};
+
+            @include HD {
+                --loader-frame: #{vwh(nth($size, 1))};
+                --loader-ring: #{vwh(nth($size, 2))};
+            }
+            @include Tablet {
+                --loader-frame: #{vwt(nth($size, 1))};
+                --loader-ring: #{vwt(nth($size, 2))};
+            }
+            @include Mobile {
+                --loader-frame: #{vwm(nth($size, 1))};
+                --loader-ring: #{vwm(nth($size, 2))};
+            }
+        }
+    }
+
+    // primary в дизайне — градиент text-icon/gradient1: обводка svg его не принимает, берётся основной цвет
+    &-theme_dark {
+        color: var(--color-text-icon-color1-light);
+    }
+
+    &_style_monochrome {
+        color: var(--color-text-icon-gray-dark);
+
+        &.loader-theme_dark {
+            color: var(--color-text-icon-gray-lighter);
+        }
+    }
+
+    // animation off: застывшее кольцо с дугой в три четверти
+    &_static .loader-icon,
+    &_static .loader-icon__car {
+        animation: none;
+    }
+
+    &_static .loader-icon__car {
+        stroke-dasharray: 75, 150;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .loader-icon,
+        .loader-icon__car {
+            animation-duration: 6s;
+        }
+    }
+}

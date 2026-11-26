@@ -11,17 +11,17 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Badge\BadgeStyle;
-use Simflex\Core\Layout\Components\UI\Core\Badge\Layout as Badge;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Core\RadioOption\Layout as Radio;
-use Simflex\Core\Layout\Components\UI\Core\RadioOption\RadioTheme;
+use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
+use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\Layout as Radio;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioTheme;
 
 $label = strip_tags($field->label);
 $menuId = 'sf-th-filter-' . $field->name;

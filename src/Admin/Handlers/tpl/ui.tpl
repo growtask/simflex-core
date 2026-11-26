@@ -12,60 +12,64 @@ use Simflex\Core\Layout\Components\Common\Breadcrumbs\Layout as Breadcrumbs;
 use Simflex\Core\Layout\Components\Common\Pagination\Layout as Pagination;
 use Simflex\Core\Layout\Components\Common\Pagination\PaginationTheme;
 use Simflex\Core\Layout\Components\Common\Pagination\PaginationType;
-use Simflex\Core\Layout\Components\UI\Other\LoaderIcon\Layout as LoaderIcon;
-use Simflex\Core\Layout\Components\UI\Other\LoaderIcon\LoaderSize;
-use Simflex\Core\Layout\Components\UI\Other\LoaderIcon\LoaderStyle;
-use Simflex\Core\Layout\Components\UI\Other\LoaderIcon\LoaderTheme;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout as LoaderIcon;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderSize;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderStyle;
+use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderTheme;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarStyle;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
 use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
-use Simflex\Core\Layout\Components\UI\Core\Badge\BadgeStyle;
-use Simflex\Core\Layout\Components\UI\Core\Badge\Layout as Badge;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownSize;
-use Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownTheme;
-use Simflex\Core\Layout\Components\UI\Core\Dropdown\Layout as Dropdown;
-use Simflex\Core\Layout\Components\UI\Core\Notice\Layout as Notice;
-use Simflex\Core\Layout\Components\UI\Core\SortButton\Layout as SortButton;
-use Simflex\Core\Layout\Components\UI\Core\SortButton\SortButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\SortButton\SortButtonTheme;
-use Simflex\Core\Layout\Components\UI\Core\SortButton\SortDirection;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\Layout as Stepper;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\StepperFill;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\StepperSize;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\StepperStyle;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\StepperTheme;
-use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeStyle;
-use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeTheme;
-use Simflex\Core\Layout\Components\UI\Core\Toast\Layout as Toast;
-use Simflex\Core\Layout\Components\UI\Core\Toast\ToastStyle;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\Layout as Tooltip;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipPosition;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipStyle;
-use Simflex\Core\Layout\Components\UI\Core\Tooltip\TooltipTheme;
-use Simflex\Core\Layout\Components\UI\Core\Checkbox\CheckboxTheme;
-use Simflex\Core\Layout\Components\UI\Core\Checkbox\Layout as Checkbox;
-use Simflex\Core\Layout\Components\UI\Core\RadioOption\Layout as Radio;
-use Simflex\Core\Layout\Components\UI\Core\RadioOption\RadioTheme;
-use Simflex\Core\Layout\Components\UI\Core\Tab\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabStyle;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabTheme;
-use Simflex\Core\Layout\Components\UI\Core\Tag\Layout as Tag;
-use Simflex\Core\Layout\Components\UI\Core\Tag\TagTheme;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
-use Simflex\Core\Layout\Components\UI\Core\Textarea\Layout as Textarea;
-use Simflex\Core\Layout\Components\UI\Core\Textarea\TextareaTheme;
-use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\Layout as Toggle;
-use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
+use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Button\ButtonStates\ButtonStatesState;
+use Simflex\Core\Layout\Components\UI\Button\ButtonStates\Layout as ButtonStates;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as Dropdown;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\Layout as SortButton;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonStyle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSortButton\SortButtonTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\SortDirection;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout as Stepper;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperFill;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperStyle;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\Layout as Toast;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\ToastStyle;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipStyle;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\CheckboxTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchCheckbox\Layout as Checkbox;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\Layout as Radio;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchRadio\RadioTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tag\Layout as Tag;
+use Simflex\Core\Layout\Components\UI\Tag\TagTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Textarea\Layout as Textarea;
+use Simflex\Core\Layout\Components\UI\Textarea\TextareaTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\Layout as Toggle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Tooltip\TooltipInfo\Layout as TooltipInfo;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
 
 ?>
 <div class="ui-showcase">
@@ -147,7 +151,7 @@ use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleTheme;
                     style: TooltipStyle::Error,
                     theme: TooltipTheme::from($theme),
                 ) ?>
-                <?= Tooltip::drawInfo('Короткое пояснение термина', TooltipTheme::from($theme)) ?>
+                <?= TooltipInfo::drawInfo('Короткое пояснение термина', TooltipTheme::from($theme)) ?>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Feedback/notice</h3>
@@ -292,7 +296,7 @@ use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleTheme;
             <div class="ui-showcase__row">
                 <?php foreach (SortDirection::cases() as $direction): ?>
                     <?php foreach (SortButtonStyle::cases() as $style): ?>
-                        <?= SortButton::drawSort(
+                        <?= Sort::drawSort(
                             'Название',
                             '#asc',
                             '#desc',
@@ -353,8 +357,8 @@ use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleTheme;
                     theme: RadioTheme::from($theme),
                     attributes: ['disabled' => 'disabled', 'checked' => 'checked'],
                 ) ?>
-                <?= Button::drawButton(text: 'success', style: ButtonStyle::Success, size: ButtonSize::Small) ?>
-                <?= Button::drawButton(text: 'error', style: ButtonStyle::Error, size: ButtonSize::Small) ?>
+                <?= ButtonStates::drawButtonStates(text: 'success', state: ButtonStatesState::Success, size: ButtonSize::Small) ?>
+                <?= ButtonStates::drawButtonStates(text: 'error', state: ButtonStatesState::Error, size: ButtonSize::Small) ?>
                 <?= LoaderIcon::drawLoader(theme: LoaderTheme::from($theme)) ?>
                 <?= LoaderIcon::drawLoader(LoaderSize::Small, LoaderStyle::Monochrome, LoaderTheme::from($theme)) ?>
             </div>

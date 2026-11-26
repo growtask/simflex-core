@@ -6,14 +6,14 @@
  * @var \Simflex\Core\Admin\Fields\Field $this
  * @var string $name
  * @var string $value
- * @var \Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputKind $kind
+ * @var \Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputKind $kind
  * @var bool $readonly
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\Layout as TextInput;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputSize;
-use Simflex\Core\Layout\Components\UI\Core\TextInput\TextInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\Layout as TextInput;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputSize;
+use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
 
 $attributes = ['name' => $name, 'aria-label' => strip_tags((string)$this->label)];
 if ($readonly) {

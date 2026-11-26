@@ -1,0 +1,179 @@
+/* Сегментный селектор Selector/main и Selector/item (Figma «UI»): ряд сегментов, выбран один */
+.selector {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    border: 0 solid transparent;
+    @include spacing(padding, 4px);
+    @include spacing(gap, 4px);
+
+    &-width_fill {
+        display: flex;
+        width: 100%;
+
+        .selector-item {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+    }
+
+    &-size_xs {
+        border-radius: var(--radius-ui-medium);
+    }
+
+    &-size_s,
+    &-size_m,
+    &-size_l {
+        border-radius: var(--radius-ui-large);
+    }
+
+    &-style_filled,
+    &-style_primary {
+        background-color: var(--color-main-gray-lighter);
+
+        &.selector-theme_dark {
+            background-color: var(--color-main-gray-black);
+            border-color: var(--color-main-gray-dark);
+            @include border-w(2px);
+        }
+    }
+
+    &-style_outline {
+        border-color: var(--color-main-gray-light);
+        @include border-w(2px);
+
+        &.selector-theme_dark {
+            border-color: var(--color-main-gray-dark);
+        }
+    }
+}
+
+.selector-item {
+    --si-bg-active: var(--color-main-gray-white);
+    --si-color-active: var(--color-text-icon-gray-darker);
+    --si-hover: var(--color-text-icon-color1-main);
+    --si-press: var(--color-text-icon-color1-dark);
+    --si-disabled: var(--color-states-disabled-medium);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    background-color: var(--color-states-clear-light);
+    color: var(--color-text-icon-gray-medium);
+    @include transition((background-color, color));
+
+    &__icon {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include icon(24px);
+    }
+
+    &__text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include spacing(padding-inline, 4px);
+    }
+
+    &__badge {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-pill);
+        background-color: var(--color-main-color1-light);
+        color: var(--color-text-icon-gray-darker);
+        @include spacing(padding, 4px 5px);
+        @include ui-xs;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:not(.selector-item_active):not(:disabled):hover {
+            color: var(--si-hover);
+        }
+    }
+
+    &:not(.selector-item_active):not(:disabled):active {
+        color: var(--si-press);
+    }
+
+    &_active {
+        cursor: default;
+        background-color: var(--si-bg-active);
+        color: var(--si-color-active);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        color: var(--si-disabled);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    &-size_xs {
+        border-radius: var(--radius-ui-small);
+        @include spacing(min-height, 32px);
+        @include spacing(padding, 4px);
+        @include ui-s;
+    }
+
+    &-size_s {
+        border-radius: var(--radius-ui-medium);
+        @include spacing(min-height, 40px);
+        @include spacing(padding, 8px);
+        @include spacing(gap, 4px);
+        @include ui-s;
+    }
+
+    &-size_m {
+        border-radius: var(--radius-ui-medium);
+        @include spacing(min-height, 48px);
+        @include spacing(padding, 12px);
+        @include spacing(gap, 4px);
+        @include ui-m;
+    }
+
+    &-size_l {
+        border-radius: var(--radius-ui-medium);
+        @include spacing(min-height, 56px);
+        @include spacing(padding, 16px);
+        @include spacing(gap, 8px);
+        @include ui-m;
+    }
+
+    &-style_outline {
+        --si-bg-active: var(--color-main-gray-lighter);
+    }
+
+    &-style_primary {
+        --si-bg-active: var(--color-main-color1-main);
+        --si-color-active: var(--color-text-icon-gray-white);
+    }
+
+    &-theme_dark {
+        --si-hover: var(--color-text-icon-color1-light);
+        --si-press: var(--color-text-icon-color1-main);
+        --si-disabled: var(--color-states-disabled-dark);
+
+        &.selector-item-style_filled,
+        &.selector-item-style_outline {
+            --si-bg-active: var(--color-main-gray-dark);
+            --si-color-active: var(--color-text-icon-gray-white);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}

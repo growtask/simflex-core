@@ -1,14 +1,14 @@
 <?php
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Core\Badge\BadgeSize;
-use Simflex\Core\Layout\Components\UI\Core\Badge\BadgeStyle;
-use Simflex\Core\Layout\Components\UI\Core\Badge\Layout as Badge;
-use Simflex\Core\Layout\Components\UI\Core\Link\Layout as Link;
-use Simflex\Core\Layout\Components\UI\Core\Link\LinkSize;
-use Simflex\Core\Layout\Components\UI\Core\Marker\Layout as Marker;
-use Simflex\Core\Layout\Components\UI\Core\Marker\MarkerSize;
-use Simflex\Core\Layout\Components\UI\Core\Marker\MarkerTheme;
+use Simflex\Core\Layout\Components\UI\Badge\BadgeSize;
+use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
+use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\Layout as Link;
+use Simflex\Core\Layout\Components\UI\Link\LinkMain\LinkSize;
+use Simflex\Core\Layout\Components\UI\Marker\Layout as Marker;
+use Simflex\Core\Layout\Components\UI\Marker\MarkerSize;
+use Simflex\Core\Layout\Components\UI\Marker\MarkerTheme;
 
 $esc = static fn($value) => htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 $h = 'h' . (int)$data['headingLevel'];

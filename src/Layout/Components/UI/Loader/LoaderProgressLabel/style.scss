@@ -1,0 +1,93 @@
+/* Полоса с процентами */
+.progress-label {
+    --pl-bg: var(--color-main-gray-white);
+    --pl-border: var(--color-main-gray-lighter);
+    --pl-bar: var(--color-main-color1-lighter);
+    --pl-value: var(--color-text-icon-color1-dark);
+    --pl-text: var(--color-text-icon-gray-dark);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    color: var(--pl-text);
+    background: var(--pl-bg);
+    border: 2px solid var(--pl-border);
+    border-radius: var(--radius-ui-medium);
+    @include spacing(max-width, 278px);
+    @include spacing(padding, 10px 12px);
+    @include spacing(gap, 4px);
+
+    &__bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background: var(--pl-bar);
+        @include transition((width), 0.3s);
+    }
+
+    &__value,
+    &__text {
+        position: relative;
+    }
+
+    &__value {
+        color: var(--pl-value);
+        font-variant-numeric: tabular-nums;
+        @include ui-l;
+    }
+
+    &__text {
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @include ui-s;
+    }
+
+    &_size_s {
+        @include spacing(padding, 6px 12px);
+
+        .progress-label__value {
+            @include ui-m;
+        }
+
+        .progress-label__text {
+            @include ui-xs;
+        }
+    }
+
+    &_style_active {
+        --pl-border: var(--color-main-color1-main);
+    }
+
+    &_style_disabled {
+        --pl-bg: var(--color-main-gray-lighter);
+        --pl-bar: var(--color-main-gray-light);
+        --pl-value: var(--color-text-icon-gray-medium);
+        --pl-text: var(--color-text-icon-gray-medium);
+    }
+
+    &-theme_dark {
+        --pl-bg: var(--color-main-gray-darker);
+        --pl-border: var(--color-main-gray-dark);
+        --pl-bar: var(--color-main-gray-dark);
+        --pl-value: var(--color-text-icon-color1-light);
+        --pl-text: var(--color-text-icon-gray-lighter);
+
+        &.progress-label_style_active {
+            --pl-border: var(--color-main-color1-main);
+        }
+
+        &.progress-label_style_disabled {
+            --pl-bg: var(--color-main-gray-dark);
+            --pl-bar: var(--color-main-gray-medium);
+            --pl-value: var(--color-text-icon-gray-medium);
+            --pl-text: var(--color-text-icon-gray-medium);
+        }
+    }
+}

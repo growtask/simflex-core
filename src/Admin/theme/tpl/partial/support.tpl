@@ -7,9 +7,9 @@
  * @var \Simflex\Core\Admin\Page $page
  */
 
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\Layout as ButtonIcon;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
 use Simflex\Core\System\Container;
 
 $formUrl = 'https://growtask.ru/remoteform.php?tpl=help&ws=https://'

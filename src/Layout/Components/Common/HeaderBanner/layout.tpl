@@ -1,8 +1,8 @@
 <?php
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
 
 $bannerClasses = [
     'header-banner',
@@ -32,7 +32,7 @@ $hasButton = $data['buttonText'] !== '' && $data['buttonLink'] !== '';
         <?= Button::drawButton(
             className: 'header-banner__close',
             iconLeft: 'close',
-            style: \Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle::Flat,
+            style: \Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle::Flat,
             size: ButtonSize::Small,
             theme: $data['closeTheme'],
             attributes: ['aria-label' => $data['closeLabel'], 'data-header-banner-close' => '']

@@ -1,0 +1,258 @@
+/* Подсказка Tooltip/main, Tooltip/info (design-ui-tooltips.md) */
+.tooltip-wrap {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+
+    // показ при наведении и фокусе с задержкой 150 мс; Esc (script.js) прячет до ухода курсора и фокуса
+    &:hover,
+    &:focus-within,
+    &.tooltip-wrap_open {
+        &:not(.tooltip-wrap_closed) > .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 150ms;
+        }
+    }
+}
+
+.tooltip {
+    --tooltip-bg: var(--color-main-gray-black);
+    --tooltip-gap: #{vw(8px)};
+    --tooltip-arrow: #{vw(4px)};
+
+    position: absolute;
+    z-index: z('tooltip');
+    width: max-content;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    background: var(--tooltip-bg);
+    color: var(--color-text-icon-gray-white);
+    border-radius: var(--radius-ui-medium);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    @include ui-xs;
+    @include spacing(max-width, 240px);
+    @include spacing(padding-block, 12px);
+    @include spacing(padding-inline, 16px);
+    @include transition((opacity, visibility), 0.15s);
+
+    @include Tablet {
+        --tooltip-gap: #{vwt(8px)};
+        --tooltip-arrow: #{vwt(4px)};
+    }
+    @include Mobile {
+        --tooltip-gap: #{vwm(8px)};
+        --tooltip-arrow: #{vwm(4px)};
+    }
+
+    // стрелка цвета плашки
+    &::before {
+        content: '';
+        position: absolute;
+        border: var(--tooltip-arrow) solid transparent;
+    }
+
+    &-theme_dark {
+        --tooltip-bg: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-darker);
+    }
+
+    &_style_error {
+        --tooltip-bg: var(--color-states-error-light);
+        color: var(--color-states-error-dark);
+
+        &.tooltip-theme_dark {
+            --tooltip-bg: var(--color-states-error-dark);
+            color: var(--color-states-error-light);
+        }
+    }
+
+    // стрелка сверху: подсказка под элементом
+    &_position_top {
+        top: calc(100% + var(--tooltip-gap));
+
+        &::before {
+            bottom: 100%;
+            border-bottom-color: var(--tooltip-bg);
+        }
+    }
+
+    &_position_bottom {
+        bottom: calc(100% + var(--tooltip-gap));
+
+        &::before {
+            top: 100%;
+            border-top-color: var(--tooltip-bg);
+        }
+    }
+
+    &_position_top,
+    &_position_bottom {
+        &.tooltip_side_center {
+            left: 50%;
+            transform: translateX(-50%);
+
+            &::before {
+                left: calc(50% - var(--tooltip-arrow));
+            }
+        }
+
+        &.tooltip_side_left {
+            left: 0;
+
+            &::before {
+                left: calc(var(--tooltip-arrow) * 3);
+            }
+        }
+
+        &.tooltip_side_right {
+            right: 0;
+
+            &::before {
+                right: calc(var(--tooltip-arrow) * 3);
+            }
+        }
+    }
+
+    // стрелка слева: подсказка справа от элемента
+    &_position_left,
+    &_position_right {
+        top: 50%;
+        transform: translateY(-50%);
+
+        &::before {
+            top: calc(50% - var(--tooltip-arrow));
+        }
+    }
+
+    &_position_left {
+        left: calc(100% + var(--tooltip-gap));
+
+        &::before {
+            right: 100%;
+            border-right-color: var(--tooltip-bg);
+        }
+    }
+
+    &_position_right {
+        right: calc(100% + var(--tooltip-gap));
+
+        &::before {
+            left: 100%;
+            border-left-color: var(--tooltip-bg);
+        }
+    }
+
+    // rich (Tooltip/rich): заголовок, текст, действие; на плашку можно навести курсор и нажать ссылку
+    &_rich {
+        --tooltip-bg: var(--color-main-gray-black);
+        display: flex;
+        flex-direction: column;
+        pointer-events: auto;
+        box-shadow: 0 0 vw(10px) vw(2px) rgba(13, 13, 13, 0.1);
+        @include spacing(gap, 12px);
+        @include spacing(min-width, 200px);
+        @include spacing(max-width, 240px);
+        @include spacing(padding, 16px);
+
+        // невидимый мостик через зазор, чтобы подсказка не пропадала по пути курсора
+        &::after {
+            content: '';
+            position: absolute;
+        }
+
+        .tooltip__head {
+            display: flex;
+            align-items: center;
+            @include spacing(gap, 8px);
+        }
+
+        .tooltip__icon {
+            flex-shrink: 0;
+            fill: currentColor;
+            @include spacing(width, 16px);
+            @include spacing(height, 16px);
+        }
+
+        .tooltip__title {
+            @include ui-s;
+        }
+
+        .tooltip__text {
+            color: var(--color-text-icon-gray-lighter);
+            @include ui-xs-light;
+        }
+
+        .tooltip__action {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            color: var(--color-text-icon-color1-light);
+            text-decoration: none;
+            @include t4;
+
+            &:focus-visible {
+                outline: 2px solid var(--color-main-color1-main);
+                outline-offset: 2px;
+            }
+        }
+
+        .tooltip__action-icon {
+            fill: currentColor;
+            @include spacing(width, 16px);
+            @include spacing(height, 16px);
+        }
+
+        &.tooltip_position_top::after,
+        &.tooltip_position_bottom::after {
+            left: 0;
+            right: 0;
+            height: var(--tooltip-gap);
+        }
+
+        &.tooltip_position_top::after {
+            bottom: 100%;
+        }
+
+        &.tooltip_position_bottom::after {
+            top: 100%;
+        }
+
+        &.tooltip_position_left::after,
+        &.tooltip_position_right::after {
+            top: 0;
+            bottom: 0;
+            width: var(--tooltip-gap);
+        }
+
+        &.tooltip_position_left::after {
+            right: 100%;
+        }
+
+        &.tooltip_position_right::after {
+            left: 100%;
+        }
+
+        &.tooltip-theme_dark {
+            --tooltip-bg: var(--color-main-gray-light);
+
+            .tooltip__text {
+                color: var(--color-text-icon-gray-dark);
+            }
+        }
+    }
+
+    // поверх предка с overflow (script.js): координаты экрана, без сдвига по стороне
+    &.tooltip_fixed {
+        position: fixed;
+        right: auto;
+        bottom: auto;
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}

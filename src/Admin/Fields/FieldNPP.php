@@ -37,13 +37,13 @@ class FieldNPP extends Field
         }
 
         // порядок в форме — степпер (Stepper/main, поле input)
-        return \Simflex\Core\Layout\Components\UI\Core\Stepper\Layout::drawStepper(
+        return \Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout::drawStepper(
             $this->inputName(),
             (int)$value,
             label: strip_tags((string)$this->label),
-            size: \Simflex\Core\Layout\Components\UI\Core\Stepper\StepperSize::Small,
-            style: \Simflex\Core\Layout\Components\UI\Core\Stepper\StepperStyle::Input,
-            theme: \Simflex\Core\Layout\Components\UI\Core\Stepper\StepperTheme::from(
+            size: \Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize::Small,
+            style: \Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperStyle::Input,
+            theme: \Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme::from(
                 \Simflex\Core\Admin\Page::get()->getTheme()
             ),
             disabled: $this->readonly,

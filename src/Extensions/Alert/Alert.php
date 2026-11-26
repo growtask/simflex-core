@@ -3,11 +3,11 @@
 namespace Simflex\Core\Extensions\Alert;
 
 use Simflex\Core\Http\Assets;
-use Simflex\Core\Layout\Components\UI\Core\Notice\Layout as Notice;
-use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeStyle;
-use Simflex\Core\Layout\Components\UI\Core\Notice\NoticeTheme;
-use Simflex\Core\Layout\Components\UI\Core\Toast\Layout as Toast;
-use Simflex\Core\Layout\Components\UI\Core\Toast\ToastStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\Layout as Notice;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeStyle;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackNotice\NoticeTheme;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\Layout as Toast;
+use Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\ToastStyle;
 use Simflex\Core\Http\PageAssets;
 use Simflex\Core\Http\View;
 use Simflex\Core\System\Container;

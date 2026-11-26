@@ -1,0 +1,67 @@
+/* Кнопки «нравится» и «не нравится» ButtonFeedback (Figma Buttons/feedback): flat и secondary */
+.btn-feedback {
+    --bf-color: var(--color-text-icon-gray-medium);
+    --bf-color-hover: var(--color-main-color1-main);
+    --bf-color-active: var(--color-text-icon-color1-main);
+    --bf-bg: transparent;
+    --bf-bg-hover: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    color: var(--bf-color);
+    background: var(--bf-bg);
+    touch-action: manipulation;
+    @include spacing(gap, 8px);
+    @include spacing(padding-block, 4px);
+    @include ui-m;
+    @include transition((background, color));
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--bf-color-hover);
+            background: var(--bf-bg-hover);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    &.active {
+        color: var(--bf-color-active);
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        @include icon(24px);
+    }
+
+    &__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    &-style_secondary {
+        --bf-bg: var(--color-main-gray-lighter);
+        --bf-bg-hover: var(--color-main-color1-lighter);
+
+        @include spacing(padding-inline, 8px);
+        border-radius: var(--radius-ui-small);
+    }
+
+    &-theme_dark {
+        --bf-color: var(--color-text-icon-gray-light);
+        --bf-color-hover: var(--color-main-color1-light);
+        --bf-color-active: var(--color-text-icon-color1-light);
+
+        &.btn-feedback-style_secondary {
+            --bf-bg: var(--color-main-gray-dark);
+            --bf-bg-hover: var(--color-main-gray-darker);
+        }
+    }
+}

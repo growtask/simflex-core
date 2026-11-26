@@ -1,0 +1,170 @@
+/* Дерево Switches/tree и Switches/tree-item (Figma «UI»): строка — стрелка, чекбокс с подписью, счётчик */
+.tree {
+    width: 100%;
+
+    &__list,
+    &__group {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+.tree-node {
+    // направляющая вложенных строк: линия 2 px под стрелкой родителя, дальше отступ
+    &__children {
+        position: relative;
+        @include spacing(margin-left, 15px);
+        @include spacing(padding-left, 9px);
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            background-color: var(--color-main-gray-light);
+            @include spacing(width, 2px);
+        }
+
+        &[hidden] {
+            display: none;
+        }
+    }
+}
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: var(--color-states-clear-light);
+    @include spacing(padding-inline, 4px);
+    @include spacing(gap, 8px);
+    @include transition((background-color));
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        margin: 0;
+        border: 0;
+        background-color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-medium);
+        cursor: pointer;
+        border-radius: var(--radius-ui-small);
+        @include icon(24px);
+        @include spacing(padding, 4px);
+        @include transition((background-color, color));
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background-color: var(--color-main-gray-lighter);
+                color: var(--color-text-icon-color1-light);
+            }
+        }
+
+        &:active {
+            background-color: var(--color-main-color1-lighter);
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 1px;
+        }
+
+        &_empty {
+            visibility: hidden;
+        }
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include icon(16px);
+        @include transition((transform));
+    }
+
+    &__toggle[aria-expanded="true"] &__chevron {
+        transform: rotate(90deg);
+    }
+
+    &__control {
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+        @include spacing(padding-block, 8px);
+
+        .checkbox {
+            min-width: 0;
+        }
+    }
+
+    &__count {
+        flex-shrink: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include t4;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:not(.tree-item_disabled):hover {
+            background-color: var(--color-main-gray-lighter);
+        }
+    }
+
+    &-size_s {
+        border-radius: var(--radius-ui-small);
+    }
+
+    &-size_m {
+        border-radius: var(--radius-ui-medium);
+
+        .tree-item__control {
+            @include spacing(padding-block, 12px);
+        }
+    }
+
+    &-theme_dark {
+        .tree-item__toggle {
+            background-color: var(--color-main-gray-darker);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    background-color: var(--color-main-gray-dark);
+                    color: var(--color-text-icon-color1-light);
+                }
+            }
+
+            &:active {
+                background-color: var(--color-main-gray-darker);
+                color: var(--color-text-icon-color1-light);
+            }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:not(.tree-item_disabled):hover {
+                background-color: var(--color-main-gray-darker);
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        &__toggle,
+        &__chevron {
+            transition: none;
+        }
+    }
+}
+
+.tree-theme_dark {
+    .tree-node__children::before {
+        background-color: var(--color-main-gray-dark);
+    }
+}

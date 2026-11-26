@@ -1,0 +1,58 @@
+/* Шаги */
+.progress-steps {
+    --ps-height: #{vw(8px)};
+    --ps-track: var(--color-main-gray-lighter);
+    --ps-fill: var(--color-main-color1-main);
+    --ps-text: var(--color-text-icon-gray-dark);
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    @include spacing(max-width, 240px);
+    @include spacing(gap, 8px);
+
+    &__label {
+        color: var(--ps-text);
+        @include ui-xs;
+    }
+
+    &__segments {
+        display: flex;
+        @include spacing(gap, 4px);
+    }
+
+    &__segment {
+        flex: 1;
+        min-width: 0;
+        height: var(--ps-height);
+        background: var(--ps-track);
+        border-radius: var(--radius-pill);
+        @include transition((background));
+
+        &_done {
+            background: var(--ps-fill);
+        }
+    }
+
+    @each $name, $px in (l: 12px, m: 8px, s: 4px) {
+        &_size_#{$name} {
+            --ps-height: #{vw($px)};
+
+            @include HD {
+                --ps-height: #{vwh($px)};
+            }
+            @include Tablet {
+                --ps-height: #{vwt($px)};
+            }
+            @include Mobile {
+                --ps-height: #{vwm($px)};
+            }
+        }
+    }
+
+    &-theme_dark {
+        --ps-track: var(--color-main-gray-dark);
+        --ps-fill: var(--color-main-color1-light);
+        --ps-text: var(--color-text-icon-gray-lighter);
+    }
+}

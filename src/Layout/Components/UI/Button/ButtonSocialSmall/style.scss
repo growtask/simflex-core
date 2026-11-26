@@ -1,0 +1,146 @@
+.social {
+    /*----------CORE STYLE-----------*/
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    text-decoration: none;
+    @include transition((background, color, filter));
+
+    &__icon {
+        flex-shrink: 0;
+        @include icon(24px);
+    }
+
+    &__icon_mono {
+        fill: currentColor;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    /*----------STYLES-----------*/
+    /* Серая плашка: цветной знак, по наведению и нажатию знак монохромный и синий */
+    &-default {
+        background: var(--color-main-gray-lighter);
+        color: var(--color-main-color1-main);
+
+        .social__icon_mono {
+            display: none;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                .social__icon_color {
+                    display: none;
+                }
+
+                .social__icon_mono {
+                    display: block;
+                }
+            }
+        }
+
+        &:active {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-main-color1-dark);
+
+            .social__icon_color {
+                display: none;
+            }
+
+            .social__icon_mono {
+                display: block;
+            }
+        }
+    }
+
+    /* Заливка цветом сети, знак белый; hover и press — через яркость, пока у сетей нет светлой и тёмной версий */
+    &-brand {
+        color: var(--color-main-gray-white);
+        background: var(--social-bg, var(--color-main-color1-main));
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                filter: brightness(1.12);
+            }
+        }
+
+        &:active {
+            filter: brightness(.88);
+        }
+    }
+
+    /*----------NETWORKS-----------*/
+    &-network_vkontakte { --social-bg: var(--color-social-vk-main); }
+    &-network_telegram { --social-bg: var(--color-social-telegram-main); }
+    &-network_whatsapp { --social-bg: var(--color-social-whatsapp-main); }
+    &-network_yandex { --social-bg: var(--color-social-yandex-main); }
+    &-network_instagram { --social-bg: var(--color-social-instagram-main); }
+    &-network_google { --social-bg: var(--social-google-main, var(--color-main-color1-main)); }
+    &-network_youtube { --social-bg: var(--social-youtube-main, var(--color-states-error-dark)); }
+    &-network_figma { --social-bg: var(--social-figma-main, var(--color-main-color1-main)); }
+    &-network_rutube { --social-bg: var(--social-rutube-main, var(--color-main-gray-black)); }
+    &-network_yandex-zen { --social-bg: var(--social-zen-main, var(--color-main-gray-black)); }
+    &-network_max { --social-bg: var(--social-max-main, var(--color-main-color1-main)); }
+
+    /*----------SIZES-----------*/
+    &-size_xs {
+        @include spacing(width, 32px);
+        @include spacing(height, 32px);
+        border-radius: var(--radius-ui-small);
+
+        .social__icon {
+            @include icon(16px);
+        }
+    }
+
+    &-size_s {
+        @include spacing(width, 40px);
+        @include spacing(height, 40px);
+        border-radius: var(--radius-ui-medium);
+    }
+
+    &-size_m {
+        @include spacing(width, 48px);
+        @include spacing(height, 48px);
+        border-radius: var(--radius-ui-medium);
+    }
+
+    &-size_l {
+        @include spacing(width, 56px);
+        @include spacing(height, 56px);
+        border-radius: var(--radius-ui-medium);
+    }
+
+    /*----------THEME-----------*/
+    /* В тёмной теме серый стиль монохромный, цвета текста */
+    &-theme_dark {
+        &.social-default {
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
+
+            .social__icon_color {
+                display: none;
+            }
+
+            .social__icon_mono {
+                display: block;
+            }
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: var(--color-main-color1-light);
+                }
+            }
+
+            &:active {
+                background: var(--color-main-gray-darker);
+                color: var(--color-main-color1-main);
+            }
+        }
+    }
+}

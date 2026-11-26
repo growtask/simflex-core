@@ -8,8 +8,8 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\Layout as Toggle;
-use Simflex\Core\Layout\Components\UI\Core\ToggleSwitch\ToggleTheme;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\Layout as Toggle;
+use Simflex\Core\Layout\Components\UI\Switch\SwitchToggle\ToggleTheme;
 
 $attributes = ['name' => $name, 'value' => '1', 'aria-label' => strip_tags((string)$this->label)];
 if ($checked) {

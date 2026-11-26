@@ -1,0 +1,39 @@
+/* Карточка-заглушка (Figma Loaders/skeleton-card) */
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-ui-large, 16px);
+    @include spacing(max-width, 280px);
+    @include spacing(padding, 16px);
+    @include spacing(gap, 16px);
+
+    &__head {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 12px);
+    }
+
+    &__lines {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 8px);
+    }
+
+    &-theme_dark {
+        background: var(--color-main-gray-darker);
+    }
+}
+
+@keyframes skeleton-shine {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}

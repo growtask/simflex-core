@@ -1,0 +1,24 @@
+/*----------STATES (Buttons/states): disabled, success, error. Основа .btn и размеры - в ButtonMain-----------*/
+.btn-states_disabled,
+.btn-states_success,
+.btn-states_error {
+    color: var(--color-main-gray-white);
+    border-color: transparent;
+}
+
+.btn-states_disabled {
+    background: var(--color-states-disabled-medium);
+    cursor: not-allowed;
+
+    &.btn-theme_dark {
+        background: var(--color-states-disabled-dark);
+    }
+}
+
+.btn-states_success {
+    background: var(--color-states-success-dark);
+}
+
+.btn-states_error {
+    background: var(--color-states-error-dark);
+}

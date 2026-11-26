@@ -28,7 +28,7 @@ use Simflex\Core\System\Container;
 // сообщения после действий (Alert): успех — тосты, ошибки и важное — уведомления
 $messages = \Simflex\Core\Extensions\Alert\Alert::drawAdminMessages($page->getTheme());
 ?>
-<?= \Simflex\Core\Layout\Components\UI\Core\Toast\Layout::drawStack($messages['toasts'], className: 'app__toasts') ?>
+<?= \Simflex\Core\Layout\Components\UI\Feedback\FeedbackToast\Layout::drawStack($messages['toasts'], className: 'app__toasts') ?>
 <div class="app__notices" data-sf-notices><?= $messages['notices'] ?></div>
 
 <?php

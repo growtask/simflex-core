@@ -2,20 +2,20 @@
 /** @var array $data */
 
 use Simflex\Core\Layout\Components\Common\MobileMenu\Layout as MobileMenu;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\Contact\ContactSize;
-use Simflex\Core\Layout\Components\UI\Core\Contact\ContactType;
-use Simflex\Core\Layout\Components\UI\Core\Contact\Layout as Contact;
-use Simflex\Core\Layout\Components\UI\Core\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Core\Separator\Layout as Separator;
-use Simflex\Core\Layout\Components\UI\Core\Social\Layout as Social;
-use Simflex\Core\Layout\Components\UI\Core\Social\SocialNetwork;
-use Simflex\Core\Layout\Components\UI\Core\Social\SocialSize;
-use Simflex\Core\Layout\Components\UI\Core\Tab\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabSize;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
+use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
+use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
+use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
 
 $id = htmlspecialchars($data['id']);
 $items = MobileMenu::getListItems($data['items']);

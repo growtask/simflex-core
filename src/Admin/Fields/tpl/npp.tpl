@@ -9,9 +9,9 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\Layout as Stepper;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\StepperSize;
-use Simflex\Core\Layout\Components\UI\Core\Stepper\StepperTheme;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\Layout as Stepper;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperSize;
+use Simflex\Core\Layout\Components\UI\Stepper\StepperMain\StepperTheme;
 
 ?>
 <?= Stepper::drawStepper(

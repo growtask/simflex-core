@@ -1,0 +1,256 @@
+.textarea {
+    /*----------CORE STYLE-----------*/
+    &__wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    &__container {
+        position: relative;
+        display: flex;
+        width: 100%;
+    }
+
+    &__label {
+        flex-shrink: 0;
+        color: var(--color-main-gray-medium);
+        @include t4;
+        @include spacing(margin-bottom, 2px);
+    }
+
+    &__field {
+        display: block;
+        width: 100%;
+        border: solid transparent;
+        resize: vertical;
+        font-family: inherit;
+        @include t2;
+        @include border-w(2px);
+        @include transition((background, border, color, opacity));
+
+        &::placeholder {
+            color: var(--color-main-gray-medium);
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            color: var(--color-main-gray-medium);
+            background: var(--color-states-disabled-light);
+            border-color: transparent;
+        }
+    }
+
+    /* Счётчик лежит поверх поля и высоту поля не меняет */
+    &__counter {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        pointer-events: none;
+        color: var(--color-main-gray-medium);
+        @include t4;
+        @include spacing(padding-block, 4px);
+        @include spacing(padding-inline, 3px);
+        @include spacing(margin-right, 9px);
+        @include spacing(margin-bottom, 4px);
+    }
+
+    &__message {
+        @include t4;
+        @include spacing(margin-top, 2px);
+    }
+
+    /*----------LABEL POSITION-----------*/
+    /* Подпись внутри поля: маленький текст в верхней части поля */
+    &-pos_inside {
+        .textarea__label {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+            margin-bottom: 0;
+            @include spacing(top, 6px);
+            @include spacing(left, 14px);
+        }
+
+        .textarea__field {
+            @include spacing(padding-top, 22px);
+        }
+    }
+
+    /*----------STYLES-----------*/
+    &-style_filled {
+        .textarea__field {
+            background: var(--color-main-gray-lighter);
+            color: var(--color-main-gray-darker);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled) {
+                    border-color: var(--color-main-gray-light);
+                }
+            }
+
+            &:focus:not(:disabled) {
+                background: var(--color-main-gray-white);
+                border-color: var(--color-main-gray-light);
+            }
+        }
+    }
+
+    &-style_outline {
+        .textarea__field {
+            background: var(--color-main-gray-white);
+            border-color: var(--color-main-gray-light);
+            color: var(--color-main-gray-darker);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled) {
+                    border-color: var(--color-main-color1-light);
+                }
+            }
+
+            &:focus:not(:disabled) {
+                border-color: var(--color-main-color1-main);
+            }
+        }
+    }
+
+    &-style_underline {
+        .textarea__field {
+            background: transparent;
+            border-bottom-color: var(--color-main-gray-light);
+            color: var(--color-main-gray-darker);
+            border-radius: 0 !important;
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled) {
+                    border-bottom-color: var(--color-main-color1-light);
+                }
+            }
+
+            &:focus:not(:disabled) {
+                border-bottom-color: var(--color-main-color1-main);
+            }
+
+            &:disabled {
+                background: transparent;
+                border-bottom-color: var(--color-states-disabled-medium);
+            }
+        }
+    }
+
+    /*----------SIZES-----------*/
+    &-size_xs {
+        .textarea__field {
+            @include spacing(min-height, 72px);
+            @include spacing(padding, 8px);
+            border-radius: var(--radius-ui-small);
+        }
+    }
+
+    &-size_s {
+        .textarea__field {
+            @include spacing(min-height, 80px);
+            @include spacing(padding, 12px);
+            border-radius: var(--radius-ui-medium);
+        }
+    }
+
+    &-size_m {
+        .textarea__field {
+            @include spacing(min-height, 96px);
+            @include spacing(padding, 14px);
+            border-radius: var(--radius-ui-medium);
+        }
+    }
+
+    &-size_l {
+        .textarea__field {
+            @include spacing(min-height, 116px);
+            @include spacing(padding, 16px);
+            border-radius: var(--radius-ui-medium);
+        }
+    }
+
+    /*----------STATES-----------*/
+    /* Error и Success только уведомляют: цвет получают текст и сообщение, заливка и обводка не меняются */
+    &-state_error {
+        .textarea__field,
+        .textarea__message {
+            color: var(--color-states-error-dark);
+        }
+    }
+
+    &-state_success {
+        .textarea__field,
+        .textarea__message {
+            color: var(--color-states-success-dark);
+        }
+    }
+
+    /*----------THEME-----------*/
+    &-theme_dark {
+        .textarea__label,
+        .textarea__counter {
+            color: var(--color-main-gray-medium);
+        }
+
+        &.textarea-style_filled .textarea__field {
+            background: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
+
+            &:focus:not(:disabled) {
+                background: var(--color-main-gray-black);
+            }
+        }
+
+        &.textarea-style_outline .textarea__field {
+            background: transparent;
+            border-color: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled) {
+                    border-color: var(--color-main-gray-medium);
+                }
+            }
+
+            &:focus:not(:disabled) {
+                border-color: var(--color-main-color1-main);
+            }
+        }
+
+        &.textarea-style_underline .textarea__field {
+            border-bottom-color: var(--color-main-gray-dark);
+            color: var(--color-main-gray-lighter);
+        }
+
+        &.textarea-state_error {
+            .textarea__field,
+            .textarea__message {
+                color: var(--color-states-error-medium);
+            }
+        }
+
+        &.textarea-state_success {
+            .textarea__field,
+            .textarea__message {
+                color: var(--color-states-success-medium);
+            }
+        }
+
+        .textarea__field:disabled {
+            background: var(--color-states-disabled-dark);
+            color: var(--color-main-gray-medium);
+        }
+    }
+}

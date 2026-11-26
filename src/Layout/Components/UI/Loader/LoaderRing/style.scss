@@ -1,0 +1,82 @@
+/* Кольцо (Figma Loaders/ring) */
+$progress-fills: (
+    primary: var(--color-main-color1-main),
+    success: var(--color-states-success-dark),
+    error: var(--color-states-error-dark),
+);
+
+.progress-ring {
+    --pr-size: #{vw(56px)};
+    --pr-track: var(--color-main-gray-lighter);
+    --pr-fill: var(--color-main-color1-main);
+    --pr-text: var(--color-text-icon-gray-darker);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--pr-size);
+    height: var(--pr-size);
+
+    &__svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    &__track,
+    &__fill {
+        stroke-width: 5;
+    }
+
+    &__track {
+        stroke: var(--pr-track);
+    }
+
+    &__fill {
+        stroke: var(--pr-fill);
+        stroke-linecap: round;
+        transition: stroke-dasharray 0.3s ease;
+    }
+
+    &__value {
+        position: relative;
+        color: var(--pr-text);
+        font-variant-numeric: tabular-nums;
+        @include ui-s;
+    }
+
+    @each $name, $px in (l: 72px, m: 56px, s: 40px) {
+        &_size_#{$name} {
+            --pr-size: #{vw($px)};
+
+            @include HD {
+                --pr-size: #{vwh($px)};
+            }
+            @include Tablet {
+                --pr-size: #{vwt($px)};
+            }
+            @include Mobile {
+                --pr-size: #{vwm($px)};
+            }
+        }
+    }
+
+    &_size_s &__value {
+        @include ui-xs;
+    }
+
+    @each $name, $fill in $progress-fills {
+        &_style_#{$name} {
+            --pr-fill: #{$fill};
+        }
+    }
+
+    &-theme_dark {
+        --pr-track: var(--color-main-gray-dark);
+        --pr-text: var(--color-text-icon-gray-white);
+    }
+}

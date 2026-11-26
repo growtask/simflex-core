@@ -1,47 +1,64 @@
 /*----------CORNER RADIUS (Figma: коллекция corner radius, режим m по умолчанию)-----------*/
-:root,
-[data-radius="m"] {
-    --radius-ui-xsmall: 4px;
-    --radius-ui-small: 8px;
-    --radius-ui-medium: 12px;
-    --radius-ui-large: 16px;
-    --radius-ui-xlarge: 24px;
-    --radius-blocks: 32px;
+/*
+ * Токены --radius-* считаются как все размеры: FullHD - vw(), HD - vwh(), планшет - vwt(), телефон - vwm().
+ * Админка подключает этот же файл со своими функциями (px на десктопе), поэтому там токены в px.
+ * Значения режимов - данные: LayoutFoundations::getRadiusScale() читает их для страницы UI «Скругления»,
+ * поэтому формат вызовов radius-mode() менять нельзя (селектор, затем карта «токен: значение в px»).
+ * 9999px и 0 не масштабируются.
+ */
+@function radius-value($px, $fn) {
+    @if $px == 0 or $px >= 9999px {
+        @return $px;
+    }
+    @if $fn == 'vwh' {
+        @return vwh($px);
+    }
+    @if $fn == 'vwt' {
+        @return vwt($px);
+    }
+    @if $fn == 'vwm' {
+        @return vwm($px);
+    }
+
+    @return vw($px);
 }
 
-[data-radius="none"] {
-    --radius-ui-xsmall: 0;
-    --radius-ui-small: 0;
-    --radius-ui-medium: 0;
-    --radius-ui-large: 0;
-    --radius-ui-xlarge: 0;
-    --radius-blocks: 0;
+@mixin radius-mode($selector, $values) {
+    #{$selector} {
+        @each $name, $px in $values {
+            --radius-#{$name}: #{radius-value($px, 'vw')};
+        }
+
+        @include HD {
+            @each $name, $px in $values {
+                --radius-#{$name}: #{radius-value($px, 'vwh')};
+            }
+        }
+        @include Tablet {
+            @each $name, $px in $values {
+                --radius-#{$name}: #{radius-value($px, 'vwt')};
+            }
+        }
+        @include Mobile {
+            @each $name, $px in $values {
+                --radius-#{$name}: #{radius-value($px, 'vwm')};
+            }
+        }
+    }
 }
 
-[data-radius="s"] {
-    --radius-ui-xsmall: 2px;
-    --radius-ui-small: 4px;
-    --radius-ui-medium: 8px;
-    --radius-ui-large: 12px;
-    --radius-ui-xlarge: 20px;
-    --radius-blocks: 28px;
-}
+@include radius-mode(':root, [data-radius="m"]', (ui-xsmall: 4px, ui-small: 8px, ui-medium: 12px, ui-large: 16px, ui-xlarge: 24px, blocks: 32px));
 
-[data-radius="l"] {
-    --radius-ui-xsmall: 6px;
-    --radius-ui-small: 12px;
-    --radius-ui-medium: 16px;
-    --radius-ui-large: 20px;
-    --radius-ui-xlarge: 28px;
-    --radius-blocks: 36px;
-}
+@include radius-mode('[data-radius="none"]', (ui-xsmall: 0, ui-small: 0, ui-medium: 0, ui-large: 0, ui-xlarge: 0, blocks: 0));
+
+@include radius-mode('[data-radius="s"]', (ui-xsmall: 2px, ui-small: 4px, ui-medium: 8px, ui-large: 12px, ui-xlarge: 20px, blocks: 28px));
+
+@include radius-mode('[data-radius="l"]', (ui-xsmall: 6px, ui-small: 12px, ui-medium: 16px, ui-large: 20px, ui-xlarge: 28px, blocks: 36px));
 
 /* full: pill только до ui/medium; у large, xlarge и blocks потолок */
-[data-radius="full"] {
-    --radius-ui-xsmall: 9999px;
-    --radius-ui-small: 9999px;
-    --radius-ui-medium: 9999px;
-    --radius-ui-large: 24px;
-    --radius-ui-xlarge: 32px;
-    --radius-blocks: 40px;
+@include radius-mode('[data-radius="full"]', (ui-xsmall: 9999px, ui-small: 9999px, ui-medium: 9999px, ui-large: 24px, ui-xlarge: 32px, blocks: 40px));
+
+/* Полная «таблетка» для полос, бейджей и тумблеров: одна на все режимы (в Figma это ui/xsmall с режимом full) */
+:root {
+    --radius-pill: 9999px;
 }

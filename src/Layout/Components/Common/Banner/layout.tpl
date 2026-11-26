@@ -1,12 +1,12 @@
 <?php
 /** @var array $data */
 
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonSize;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\ButtonStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\Button\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Core\StepIndicator\Layout as StepIndicator;
-use Simflex\Core\Layout\Components\UI\Core\StepIndicator\StepIndicatorSize;
-use Simflex\Core\Layout\Components\UI\Core\StepIndicator\StepIndicatorTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
+use Simflex\Core\Layout\Components\UI\Other\StepIndicator\Layout as StepIndicator;
+use Simflex\Core\Layout\Components\UI\Other\StepIndicator\StepIndicatorSize;
+use Simflex\Core\Layout\Components\UI\Other\StepIndicator\StepIndicatorTheme;
 
 $slides = $data['slides'];
 $total = count($slides);

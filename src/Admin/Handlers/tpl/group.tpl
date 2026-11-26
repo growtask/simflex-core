@@ -7,10 +7,10 @@
  * @var string $theme
  */
 
-use Simflex\Core\Layout\Components\UI\Core\Tab\Layout as Tab;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabSize;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabStyle;
-use Simflex\Core\Layout\Components\UI\Core\Tab\TabTheme;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\Layout as Tab;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabSize;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabStyle;
+use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabTheme;
 
 $visible = fn(array $items) => array_filter($items, fn(array $item) => !$item['hidden']);
 ?>

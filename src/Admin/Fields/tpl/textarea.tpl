@@ -11,10 +11,10 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Textarea\Layout as Textarea;
-use Simflex\Core\Layout\Components\UI\Core\Textarea\TextareaLabelPos;
-use Simflex\Core\Layout\Components\UI\Core\Textarea\TextareaSize;
-use Simflex\Core\Layout\Components\UI\Core\Textarea\TextareaTheme;
+use Simflex\Core\Layout\Components\UI\Textarea\Layout as Textarea;
+use Simflex\Core\Layout\Components\UI\Textarea\TextareaLabelPos;
+use Simflex\Core\Layout\Components\UI\Textarea\TextareaSize;
+use Simflex\Core\Layout\Components\UI\Textarea\TextareaTheme;
 
 $attributes = ['name' => $name, 'aria-label' => strip_tags((string)$this->label)];
 if ($readonly) {

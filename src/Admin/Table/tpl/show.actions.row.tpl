@@ -9,12 +9,12 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconStyle;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\ButtonIconTheme;
-use Simflex\Core\Layout\Components\UI\Core\Buttons\ButtonIcon\Layout as ButtonIcon;
-use Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownSize;
-use Simflex\Core\Layout\Components\UI\Core\Dropdown\DropdownTheme;
-use Simflex\Core\Layout\Components\UI\Core\Dropdown\Layout as Dropdown;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
+use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownSize;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\DropdownTheme;
+use Simflex\Core\Layout\Components\UI\Dropdown\DropdownMain\Layout as Dropdown;
 
 $theme = Page::get()->getTheme();
 $iconTheme = ButtonIconTheme::from($theme);

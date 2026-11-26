@@ -1,0 +1,82 @@
+/* Поле одноразового кода CodeInput (Figma Inputs/code) */
+.code-input {
+    --code-input-bg: var(--color-main-gray-lighter);
+    --code-input-bg-focus: var(--color-main-gray-white);
+    --code-input-border: var(--color-main-gray-light);
+    --code-input-color: var(--color-text-icon-gray-darker);
+    --code-input-placeholder: var(--color-text-icon-gray-medium);
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    @include spacing(max-width, 328px);
+    @include spacing(gap, 8px);
+
+    &__digits {
+        display: flex;
+        @include spacing(gap, 8px);
+    }
+
+    &__digit {
+        flex: 1;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        color: var(--code-input-color);
+        background: var(--code-input-bg);
+        border: 2px solid transparent;
+        border-radius: var(--radius-ui-medium);
+        caret-color: var(--color-main-color1-main);
+        @include spacing(height, 56px);
+        @include t1;
+        @include transition((background, border-color, color));
+
+        &::placeholder {
+            color: var(--code-input-placeholder);
+        }
+
+        &:focus {
+            outline: none;
+            background: var(--code-input-bg-focus);
+            border-color: var(--code-input-border);
+        }
+
+        &:focus::placeholder {
+            color: transparent;
+        }
+    }
+
+    &__message {
+        margin: 0;
+        @include t3;
+    }
+
+    // success и error: все поля белые с обводкой, под ними сообщение
+    &_state_success &__digit,
+    &_state_error &__digit {
+        background: var(--code-input-bg-focus);
+        border-color: var(--code-input-border);
+    }
+
+    &_state_success &__message {
+        color: var(--color-states-success-dark);
+    }
+
+    &_state_error &__digit {
+        border-color: var(--color-states-error-dark);
+    }
+
+    &_state_error &__message {
+        color: var(--color-states-error-dark);
+    }
+
+    &-theme_dark {
+        --code-input-bg: var(--color-main-gray-dark);
+        --code-input-bg-focus: var(--color-main-gray-black);
+        --code-input-border: var(--color-main-gray-medium);
+        --code-input-color: var(--color-text-icon-gray-white);
+        --code-input-placeholder: var(--color-main-gray-light);
+    }
+}

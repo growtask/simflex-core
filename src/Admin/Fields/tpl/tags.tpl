@@ -12,8 +12,8 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Core\TagsInput\Layout as TagsInput;
-use Simflex\Core\Layout\Components\UI\Core\TagsInput\TagsInputTheme;
+use Simflex\Core\Layout\Components\UI\Input\InputTags\Layout as TagsInput;
+use Simflex\Core\Layout\Components\UI\Input\InputTags\TagsInputTheme;
 
 ?>
 <?= TagsInput::drawTagsInput(

@@ -4,7 +4,7 @@ namespace Simflex\Core\Layout\Components\Common\Footer;
 
 use Simflex\Core\Http\Menu as SiteMenu;
 use Simflex\Core\Layout\LayoutBase;
-use Simflex\Core\Layout\Components\UI\Core\Social\SocialNetwork;
+use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
 use Simflex\Core\Models\Menu as MenuModel;
 use Simflex\Core\System\Container;
 use Simflex\Core\System\Settings;

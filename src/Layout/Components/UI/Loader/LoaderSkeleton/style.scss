@@ -1,0 +1,61 @@
+/* Заглушка загрузки Skeleton (Figma Loaders/skeleton) */
+.skeleton {
+    --sk-base: var(--color-main-gray-lighter);
+    --sk-shine: var(--color-main-gray-white);
+    --sk-height: #{vw(16px)};
+
+    display: block;
+    flex-shrink: 0;
+    max-width: 100%;
+    height: var(--sk-height);
+    background: var(--sk-base);
+    background-image: linear-gradient(90deg, transparent 0, var(--sk-shine) 50%, transparent 100%);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    background-position: 200% 0;
+    animation: skeleton-shine 1.6s ease-in-out infinite;
+
+    &_shape_text {
+        width: #{vw(160px)};
+        border-radius: var(--radius-pill);
+    }
+
+    &_shape_rect {
+        width: #{vw(160px)};
+        border-radius: var(--radius-ui-large);
+    }
+
+    &_shape_circle {
+        width: var(--sk-height);
+        border-radius: 50%;
+    }
+
+    @each $name, $text, $circle, $rect in (s, 12px, 32px, 48px), (m, 16px, 40px, 80px), (l, 20px, 48px, 120px) {
+        &_shape_text#{&}_size_#{$name} {
+            --sk-height: #{vw($text)};
+        }
+
+        &_shape_circle#{&}_size_#{$name} {
+            --sk-height: #{vw($circle)};
+        }
+
+        &_shape_rect#{&}_size_#{$name} {
+            --sk-height: #{vw($rect)};
+        }
+    }
+
+    &-theme_dark {
+        --sk-base: var(--color-main-gray-dark);
+        --sk-shine: var(--color-main-gray-medium);
+    }
+
+    &_static {
+        animation: none;
+        background-image: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        background-image: none;
+    }
+}
