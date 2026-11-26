@@ -1,0 +1,22 @@
+/*
+ * Согласие на обработку персональных данных (Figma, блок System: consent): чекбокс solid s и строка t3
+ * «Я принимаю» + ссылка flat m; зазор 8, текст с отступом 2 сверху и снизу (по центру флажка 24).
+ * Текст: light - gray/medium, dark - gray/light. Сам чекбокс и ссылка - стили UI.
+ */
+.consent.checkbox {
+    align-items: flex-start;
+
+    .checkbox__text {
+        @include spacing(margin-block, 2px);
+        color: var(--color-text-icon-gray-medium);
+        @include t3;
+    }
+
+    .consent__link {
+        display: inline;
+    }
+
+    &.consent-theme_dark .checkbox__text {
+        color: var(--color-text-icon-gray-light);
+    }
+}

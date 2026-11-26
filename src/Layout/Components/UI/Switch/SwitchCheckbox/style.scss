@@ -211,6 +211,30 @@
     border-color: var(--color-states-error-dark);
 }
 
+/* ошибка при наведении: галочка и рамка остаются красными, а не синими/серыми */
+@media (hover: hover) and (pointer: fine) {
+    .checkbox_error:hover {
+        .checkbox__input:not(:checked):not(:indeterminate) ~ .checkbox__custom::after,
+        .checkbox__input:checked ~ .checkbox__custom::after {
+            border-color: var(--color-states-error-dark);
+        }
+
+        .checkbox__input:checked ~ .checkbox__custom,
+        .checkbox__input:indeterminate ~ .checkbox__custom {
+            border-color: var(--color-states-error-dark);
+        }
+    }
+
+    .checkbox-theme_dark.checkbox_error:hover {
+        .checkbox__input:not(:checked):not(:indeterminate) ~ .checkbox__custom::after,
+        .checkbox__input:checked ~ .checkbox__custom::after,
+        .checkbox__input:checked ~ .checkbox__custom,
+        .checkbox__input:indeterminate ~ .checkbox__custom {
+            border-color: var(--color-states-error-medium);
+        }
+    }
+}
+
 .checkbox_disabled {
     cursor: not-allowed;
 

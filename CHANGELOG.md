@@ -9,6 +9,15 @@
 - Компонент `Layout/Components/Parts/States` (блок States в Figma): `Parts\States\Layout::drawStates()` - состояния
   `Empty`, `Load`, `Alert`, `Success`, `Error` (маркер, заголовок, текст, кнопки; тёмная тема; на телефоне кнопки друг под
   другом). Витрина UI получила раздел «Части страниц» (`LayoutShowcase::SECTIONS['Parts']`).
+- Компоненты `Layout/Components/Parts/System` (блок System в Figma, без captcha): `Cookie`, `Consent`, `AgeGate`,
+  `BrowserSupport`, `Preloader`, `Maintenance` (`drawCookie()`, `drawConsent()`, `drawAgeGate()`, `drawBrowserSupport()`,
+  `drawPreloader()`, `drawMaintenance()`; светлая и тёмная тема). Логика как в grotesk-ui-kit: `script.js` у cookie
+  (событие `sf:cookie-choose`), age-gate (`sf:age-gate`, фокус внутри окна), browser-support и preloader; параметр
+  `inline` выводит закреплённые компоненты в потоке (витрина).
+- Исправлено: `UI/Button/ButtonMain` приведён к Figma (Buttons/main и alt): текст кнопок `ui/m` (l, m: 16 px) и `ui/s`
+  (s, xs: 14 px), вес 600, межстрочный 140%; обводка рисуется внутри (`box-shadow: inset`), ширина кнопки больше не
+  растёт на 4 px; у `Monochrome` в светлой теме рамка `gray/light`; у `load` фон как у hover; у disabled текст и иконка
+  `gray/medium` в обеих темах.
 - Исправлено: у `MarkerStyle::Alert` иконка `notify-alert` вместо `alert` (иконки `alert` в спрайте нет, маркер был пустым).
 - `LayoutFoundations::getIconGroups()` — иконки спрайта по группам страницы Icons в Figma (раздел и подгруппы,
   `slim` отдельно); страница UI «Иконки» разбита на разделы и подгруппы.

@@ -1,0 +1,87 @@
+/*
+ * Проверка возраста (Figma, блок System: age-gate): окно 480, отступ 32 (на телефоне 24, ширина 374), зазор 20,
+ * скругление ui/xlarge. Логотип, заголовок h5 и текст t2 по центру через 12; кнопки l primary и secondary
+ * поровну через 12, на телефоне столбиком. Окно закрывает страницу до ответа; age-gate_inline - в рамке (витрина).
+ */
+.age-gate {
+    --age-gate-bg: var(--color-main-bg-light);
+    --age-gate-title: var(--color-text-icon-gray-black);
+    --age-gate-text: var(--color-text-icon-gray-dark);
+
+    position: fixed;
+    inset: 0;
+    z-index: z('modal');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow-y: auto;
+    @include spacing(padding, 20px);
+    background: var(--color-overlay);
+
+    &__window {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        @include spacing(max-width, 480px, 480px, 480px, 374px);
+        @include spacing(padding, 32px, 32px, 32px, 24px);
+        @include spacing(gap, 20px);
+        background: var(--age-gate-bg);
+        border-radius: var(--radius-ui-xlarge);
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        text-align: center;
+        @include spacing(gap, 12px);
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--age-gate-title);
+        @include h5;
+    }
+
+    &__text {
+        margin: 0;
+        color: var(--age-gate-text);
+        @include t2;
+    }
+
+    &__actions {
+        display: flex;
+        align-self: stretch;
+        @include spacing(gap, 12px);
+
+        > * {
+            flex: 1;
+        }
+
+        @include Mobile {
+            flex-direction: column;
+
+            > * {
+                flex: none;
+                width: 100%;
+            }
+        }
+    }
+
+    &_inline {
+        position: relative;
+        inset: auto;
+        z-index: auto;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    &-theme_dark {
+        --age-gate-bg: var(--color-main-bg-dark);
+        --age-gate-title: var(--color-text-icon-gray-white);
+        --age-gate-text: var(--color-text-icon-gray-lighter);
+    }
+}

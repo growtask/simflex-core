@@ -1,0 +1,37 @@
+/*
+ * Прелоадер (Figma, блок System: preloader): на весь экран, фон main/bg, по центру логотип и лоадер xl primary
+ * через 32. Во всех размерах экрана одинаков. Скрытие плавное: прозрачность за --motion-slow, затем элемент
+ * убирается. preloader_inline - в рамке (витрина).
+ */
+.preloader {
+    position: fixed;
+    inset: 0;
+    z-index: z('debug');
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @include spacing(gap, 32px);
+    background: var(--color-main-bg-light);
+
+    &_inline {
+        position: relative;
+        inset: auto;
+        z-index: auto;
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        box-sizing: border-box;
+    }
+
+    &-theme_dark {
+        background: var(--color-main-bg-dark);
+    }
+
+    /* скрытие из script.js */
+    &_hidden {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--motion-slow) var(--ease-in-out);
+    }
+}

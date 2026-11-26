@@ -1,0 +1,62 @@
+/*
+ * Баннер «Браузер устарел» (Figma, блок System: browser-support): на всю ширину, фон states/alert, отступы 16
+ * сверху и снизу, бока 250 / 45 / 16 / 16. В ряд через 16: иконка 24, текст t2 (растягивается), кнопка gray s;
+ * на телефоне столбиком через 12, кнопка на всю ширину. Сайт не блокирует: стоит в потоке страницы.
+ */
+.browser-support {
+    --browser-support-bg: var(--color-states-alert-light);
+    --browser-support-text: var(--color-text-icon-gray-black);
+
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    @include spacing(gap, 16px);
+    @include spacing(padding-block, 16px);
+    @include spacing(padding-inline, 250px, 45px, 16px, 16px);
+    background: var(--browser-support-bg);
+    color: var(--browser-support-text);
+
+    // display: flex перебивает атрибут hidden (с check баннер скрыт до проверки script.js)
+    &[hidden] {
+        display: none;
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include icon(24px);
+    }
+
+    &__text {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        @include t2;
+    }
+
+    &__action {
+        flex-shrink: 0;
+    }
+
+    /* inline: боковые отступы не привязаны к ширине экрана (витрина, блок внутри страницы) */
+    &_inline {
+        @include spacing(padding-inline, 24px, 24px, 16px, 16px);
+    }
+
+    &-theme_dark {
+        --browser-support-bg: var(--color-states-alert-dark);
+        --browser-support-text: var(--color-text-icon-gray-white);
+    }
+
+    @include Mobile {
+        flex-direction: column;
+        align-items: flex-start;
+        @include spacing(gap, 12px);
+
+        .browser-support__action {
+            align-self: stretch;
+            width: 100%;
+        }
+    }
+}

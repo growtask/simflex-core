@@ -1,0 +1,73 @@
+/*
+ * Технические работы (Figma, блок System: maintenance): страница на весь экран, по центру через 32: логотип,
+ * текст (заголовок h3 и строка t1 через 12, ширина 700 / 628 / 360 / 382) и кнопка secondary m
+ * (на телефоне на всю ширину, текст t2). maintenance_inline - в рамке (витрина).
+ */
+.maintenance {
+    --maintenance-bg: var(--color-main-bg-light);
+    --maintenance-title: var(--color-text-icon-gray-black);
+    --maintenance-text: var(--color-text-icon-gray-dark);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 100vh;
+    min-height: 100dvh;
+    @include spacing(padding, 20px);
+    @include spacing(gap, 32px);
+    background: var(--maintenance-bg);
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        @include spacing(max-width, 700px, 628px, 360px, 382px);
+        text-align: center;
+        @include spacing(gap, 12px);
+
+        @include Mobile {
+            max-width: none;
+        }
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--maintenance-title);
+        @include h3;
+    }
+
+    &__text {
+        margin: 0;
+        color: var(--maintenance-text);
+        @include t1;
+
+        @include Mobile {
+            @include t2;
+        }
+    }
+
+    &__action {
+        @include Mobile {
+            align-self: stretch;
+            width: 100%;
+        }
+    }
+
+    &_inline {
+        width: 100%;
+        min-height: 100%;
+    }
+
+    &-theme_dark {
+        --maintenance-bg: var(--color-main-bg-dark);
+        --maintenance-title: var(--color-text-icon-gray-white);
+        --maintenance-text: var(--color-text-icon-gray-lighter);
+    }
+
+    @include Mobile {
+        @include spacing(padding-block, 20px);
+        @include spacing(padding-inline, 16px);
+    }
+}

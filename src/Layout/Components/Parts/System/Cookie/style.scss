@@ -1,0 +1,130 @@
+/*
+ * Плашка cookie (Figma, блок System: cookie): state default | settings, ширина экрана fullhd | hd | tablet | mobile, theme.
+ * Сверху линия 2 px, под ней через 12 (на планшете и телефоне 8) содержимое; низ 16, бока 250 / 45 / 16 / 16.
+ * fullhd, hd: текст слева, кнопки справа в ряд; tablet: кнопки под текстом; mobile: кнопки столбиком на всю ширину.
+ * Заголовок t2, текст t4. В настройках - переключатели в ряд через 12 (на телефоне столбиком).
+ */
+.cookie {
+    --cookie-bg: var(--color-main-gray-lighter);
+    --cookie-line: var(--color-main-gray-light);
+    --cookie-title: var(--color-text-icon-gray-darker);
+    --cookie-text: var(--color-text-icon-gray-dark);
+
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: z('notification');
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--cookie-bg);
+    @include spacing(gap, 12px, 12px, 8px, 8px);
+    @include spacing(padding-inline, 250px, 45px, 16px, 16px);
+    @include spacing(padding-bottom, 16px);
+
+    &__line {
+        flex-shrink: 0;
+        @include spacing(height, 2px);
+        background: var(--cookie-line);
+    }
+
+    &__container {
+        display: flex;
+        align-items: center;
+        @include spacing(gap, 8px);
+
+        @include Tablet {
+            flex-direction: column;
+            align-items: stretch;
+            @include spacing(gap, 12px);
+        }
+    }
+
+    &__text {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+        @include spacing(gap, 4px);
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--cookie-title);
+        @include t2-b;
+    }
+
+    &__desc,
+    &__more {
+        margin: 0;
+        color: var(--cookie-text);
+        @include t4;
+    }
+
+    &__more {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        @include spacing(gap, 4px);
+    }
+
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        @include spacing(gap, 12px);
+        @include spacing(padding-block, 8px);
+
+        @include Mobile {
+            flex-direction: column;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        @include spacing(gap, 8px);
+
+        @include Mobile {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    /* разметка выводит оба вида, script.js меняет cookie-state_* */
+    &-state_default .cookie__only-settings,
+    &-state_settings .cookie__only-default {
+        display: none;
+    }
+
+    /* top: плашка у верхнего края, линия снизу */
+    &-position_top {
+        top: 0;
+        bottom: auto;
+        @include spacing(padding-top, 16px);
+        @include spacing(padding-bottom, 0px);
+
+        .cookie__line {
+            order: 1;
+        }
+    }
+
+    /* inline: в потоке страницы (витрина, страница настроек cookie) */
+    &_inline {
+        position: relative;
+        inset: auto;
+        z-index: auto;
+        @include spacing(padding-inline, 24px, 24px, 16px, 16px);
+    }
+
+    &-theme_dark {
+        --cookie-bg: var(--color-main-gray-darker);
+        --cookie-line: var(--color-main-gray-dark);
+        --cookie-title: var(--color-text-icon-gray-white);
+        --cookie-text: var(--color-text-icon-gray-lighter);
+    }
+}
