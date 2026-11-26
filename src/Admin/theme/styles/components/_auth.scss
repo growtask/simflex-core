@@ -9,7 +9,7 @@
     @include spacing(padding, 24px, 24px, 16px, 16px);
     @include spacing(gap, 24px);
 
-    &__logo .logo__image {
+    &__logo .brand-logo__image {
         display: block;
         width: auto;
         @include spacing(height, 40px);

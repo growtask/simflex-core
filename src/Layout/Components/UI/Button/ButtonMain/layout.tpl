@@ -6,6 +6,7 @@ $buttonClasses = [
     "btn-{$data['style']}",
     "btn-size_{$data['size']}",
     "btn-theme_{$data['theme']}",
+    $data['state'] !== 'default' ? "btn-state_{$data['state']}" : '',
     $data['load'] ? 'loading' : '',
     $data['className'] ?? ''
 ];

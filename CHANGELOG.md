@@ -14,6 +14,12 @@
   `drawPreloader()`, `drawMaintenance()`; светлая и тёмная тема). Логика как в grotesk-ui-kit: `script.js` у cookie
   (событие `sf:cookie-choose`), age-gate (`sf:age-gate`, фокус внутри окна), browser-support и preloader; параметр
   `inline` выводит закреплённые компоненты в потоке (витрина).
+- Компоненты `Layout/Components/Parts/Brand` (блок Brand в Figma): `BrandLogoAnim`, `BrandLogo`, `BrandMadeIn`,
+  `BrandMadeBy` (`drawBrandLogoAnim()`, `drawBrandLogo()`, `drawBrandMadeIn()`, `drawBrandMadeBy()`; светлая и тёмная
+  тема, у каждого своя разметка и стили: классы `brand-logo`, `brand-logo-anim`, `brand-made-in`, `brand-made-by`).
+  **Несовместимое:** компонент `UI/Other/Logo` (`Logo::drawLogo()`, классы `logo*`) удалён; шапка, мобильное меню,
+  подвал и лого админки (`Page::drawLogo()`) используют компоненты Brand. Подписи отметок в подвале теперь по Figma:
+  «Сайт сделан в студии» и «Powered by» вместо «Создано» и «На базе». Стили админки: `.logo__image` → `.brand-logo__image`.
 - Исправлено: `UI/Button/ButtonMain` приведён к Figma (Buttons/main и alt): текст кнопок `ui/m` (l, m: 16 px) и `ui/s`
   (s, xs: 14 px), вес 600, межстрочный 140%; обводка рисуется внутри (`box-shadow: inset`), ширина кнопки больше не
   растёт на 4 px; у `Monochrome` в светлой теме рамка `gray/light`; у `load` фон как у hover; у disabled текст и иконка
@@ -49,9 +55,9 @@
   Logo, Separator, StepIndicator, Placeholder → Other/<то же имя>. `Accordion`, `Badge`, `Marker`, `Tag`, `Textarea` не
   перемещены.
 - **Несовместимое изменение:** наборы Figma, которые были режимами других компонентов, стали отдельными компонентами:
-  `ButtonStyle::Success` и `Error` убраны — состояния кнопки (`Buttons/states`) рисует
-  `Button\ButtonStates\Layout::drawButtonStates()` (`ButtonStatesState`: `Disabled`, `Success`, `Error`, классы
-  `.btn-states_*`); `Skeleton::drawCard()` → `Loader\LoaderSkeletonCard\Layout::drawSkeletonCard()`;
+  `ButtonStyle::Success` и `Error` убраны — успех и ошибка кнопки (`Buttons/states`) задаются параметром
+  `state: ButtonState::Success|Error` у `Button\ButtonMain\Layout::drawButton()` (классы `.btn-state_*`), недоступная — `disabled: true`;
+  отдельного компонента `ButtonStates` нет; `Skeleton::drawCard()` → `Loader\LoaderSkeletonCard\Layout::drawSkeletonCard()`;
   `Progress::drawProgressLabel()`, `drawRing()`, `drawSteps()` → `LoaderProgressLabel::drawProgressLabel()`,
   `LoaderRing::drawRing()`, `LoaderSteps::drawSteps()` (`ProgressLabelStyle` — в `LoaderProgressLabel`);
   `Tooltip::drawInfo()` и `drawRich()` → `Tooltip\TooltipInfo\Layout::drawInfo()` и `Tooltip\TooltipRich\Layout::drawRich()`;

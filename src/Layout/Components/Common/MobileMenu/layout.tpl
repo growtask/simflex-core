@@ -8,7 +8,7 @@ use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\Layout as BrandLogoAnim;
 use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
@@ -25,7 +25,7 @@ $items = MobileMenu::getListItems($data['items']);
     aria-label="<?= htmlspecialchars($data['label']) ?>" data-mobile-menu hidden>
     <div class="mobile-menu__panel">
         <div class="mobile-menu__head">
-            <?= Logo::drawLogo(
+            <?= BrandLogoAnim::drawBrandLogoAnim(
                 className: 'mobile-menu__logo',
                 href: $data['logoHref'],
                 name: $data['logoName'],

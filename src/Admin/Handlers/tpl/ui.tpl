@@ -23,11 +23,10 @@ use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
 use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
 use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonState;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Button\ButtonStates\ButtonStatesState;
-use Simflex\Core\Layout\Components\UI\Button\ButtonStates\Layout as ButtonStates;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\ButtonIconTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonIconSmall\Layout as ButtonIcon;
@@ -357,8 +356,8 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
                     theme: RadioTheme::from($theme),
                     attributes: ['disabled' => 'disabled', 'checked' => 'checked'],
                 ) ?>
-                <?= ButtonStates::drawButtonStates(text: 'success', state: ButtonStatesState::Success, size: ButtonSize::Small) ?>
-                <?= ButtonStates::drawButtonStates(text: 'error', state: ButtonStatesState::Error, size: ButtonSize::Small) ?>
+                <?= Button::drawButton(text: 'success', state: ButtonState::Success, size: ButtonSize::Small) ?>
+                <?= Button::drawButton(text: 'error', state: ButtonState::Error, size: ButtonSize::Small) ?>
                 <?= LoaderIcon::drawLoader(theme: LoaderTheme::from($theme)) ?>
                 <?= LoaderIcon::drawLoader(LoaderSize::Small, LoaderStyle::Monochrome, LoaderTheme::from($theme)) ?>
             </div>

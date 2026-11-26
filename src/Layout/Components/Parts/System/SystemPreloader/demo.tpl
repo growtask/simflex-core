@@ -8,9 +8,8 @@
 
 use Simflex\Core\Layout\Components\Parts\System\SystemPreloader\Layout as Preloader;
 use Simflex\Core\Layout\Components\Parts\System\SystemPreloader\PreloaderTheme;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogo;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\LogoTheme;
 
 $preloaderTheme = PreloaderTheme::from($theme);
 
@@ -19,7 +18,7 @@ $preloaderTheme = PreloaderTheme::from($theme);
 <div class="ui-showcase__row" style="height: 320px">
     <?= Preloader::drawPreloader(
         theme: $preloaderTheme,
-        logoHtml: Logo::drawLogo(name: 'Мой сайт', text: false, type: LogoType::Static, theme: LogoTheme::from($theme)),
+        logoHtml: BrandLogo::drawBrandLogo(name: 'Мой сайт', theme: LogoTheme::from($theme)),
         inline: true,
     ) ?>
 </div>

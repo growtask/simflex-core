@@ -8,9 +8,8 @@ use Simflex\Core\Admin\Handlers\Group;
 use Simflex\Core\Http\Assets;
 use Simflex\Core\Http\View;
 use Simflex\Core\Layout\LayoutManager;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as LogoLayout;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogoLayout;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\LogoTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
@@ -586,13 +585,12 @@ class Page
             ? asset($siteSrc, siteOnly: true)
             : asset('img/brand/logo' . ($isDark ? '-dark' : '') . '.svg');
 
-        return LogoLayout::drawLogo(
+        return BrandLogoLayout::drawBrandLogo(
             className: $className,
             href: $href,
             name: $logo['name'],
             label: $logo['name'] . ($isHomeLink ? ' — главная админки' : ''),
             src: $src,
-            type: LogoType::Static,
             theme: $isDark ? LogoTheme::Dark : LogoTheme::Light,
         );
     }

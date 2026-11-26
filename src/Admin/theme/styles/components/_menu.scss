@@ -45,7 +45,7 @@
     &__logo {
         min-width: 0;
 
-        .logo__image {
+        .brand-logo__image {
             display: block;
             width: auto;
             @include spacing(height, 40px);

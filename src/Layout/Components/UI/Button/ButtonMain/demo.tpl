@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Демо Button: размеры × стили, иконка слева и справа, загрузка, отключённая (витрина Layout\LayoutShowcase)
+ * Демо Button: размеры × стили, иконка слева и справа, загрузка, отключённая, успех и ошибка (витрина Layout\LayoutShowcase)
  * @var string $theme Тема витрины: light или dark
  */
 
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonIconPos;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
+use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonState;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
@@ -56,6 +57,12 @@ $buttonTheme = ButtonTheme::from($theme);
             <?php endforeach; ?>
         <?php endforeach; ?>
         <?= Button::drawButton(text: 'Загрузка', load: true, size: $size, theme: $buttonTheme) ?>
+        <?php foreach (ButtonState::cases() as $state): ?>
+            <?php if ($state === ButtonState::Default) { continue; } ?>
+            <?= Button::drawButton(text: $state->name, state: $state, size: $size, theme: $buttonTheme) ?>
+            <?= Button::drawButton(text: $state->name, icon: 'plus', state: $state, size: $size, theme: $buttonTheme) ?>
+            <?= Button::drawButton(iconLeft: 'plus', state: $state, size: $size, theme: $buttonTheme, attributes: ['aria-label' => $state->name]) ?>
+        <?php endforeach; ?>
         <?= Button::drawButton(text: 'Ссылка', link: '#link', size: $size, theme: $buttonTheme) ?>
     </div>
 <?php endforeach; ?>

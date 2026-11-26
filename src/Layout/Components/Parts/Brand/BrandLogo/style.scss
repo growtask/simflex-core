@@ -1,0 +1,23 @@
+/*
+ * Статичный логотип (Figma, блок Brand: logo 289:82894): знак высотой 40 px, ширина по пропорциям.
+ * Тёмная тема - другой файл знака (logo-dark.svg), стили те же
+ */
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    text-decoration: none;
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+        border-radius: var(--radius-ui-xsmall);
+    }
+
+    &__image {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        @include spacing(height, 40px);
+    }
+}

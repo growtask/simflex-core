@@ -13,7 +13,7 @@ use Simflex\Core\Layout\LayoutBase;
 class Layout extends LayoutBase
 {
     /**
-     * @param string $logoHtml HTML логотипа (Logo::drawLogo); пусто - без логотипа
+     * @param string $logoHtml HTML логотипа (BrandLogo::drawBrandLogo); пусто - без логотипа
      * @param bool $inline Не закрывать страницу, а выводить в рамке в потоке (витрина)
      * @param array<string,string> $attributes Атрибуты корня
      */

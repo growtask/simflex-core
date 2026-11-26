@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\UI\Other\Logo;
+namespace Simflex\Core\Layout\Components\Parts\Brand\BrandLogo;
 
 enum LogoTheme: string
 {

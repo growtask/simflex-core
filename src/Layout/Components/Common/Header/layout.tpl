@@ -10,7 +10,7 @@ use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactStyle;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogoAnim\Layout as BrandLogoAnim;
 use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\SocialNetwork;
@@ -29,7 +29,7 @@ $drawBar = function (string $idPrefix, bool $fixed) use ($data, $hasCta, $ctaAtt
     <div class="header__bar">
         <div class="header__top">
             <div class="header__container header__top-container">
-                <?= Logo::drawLogo(
+                <?= BrandLogoAnim::drawBrandLogoAnim(
                     className: 'header__logo',
                     href: $data['logoHref'],
                     name: $data['logoName'],

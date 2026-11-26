@@ -5,7 +5,7 @@ namespace Simflex\Core\Layout\Components\UI\Button\ButtonMain;
 use Simflex\Core\Layout\LayoutBase;
 
 /**
- * Кнопка (набор Figma Buttons/main, alt): ссылка вместо button, иконки слева и справа, load, disabled
+ * Кнопка (наборы Figma Buttons/main, alt, states): ссылка вместо button, иконки слева и справа, load, disabled, success, error
  */
 class Layout extends LayoutBase
 {
@@ -20,6 +20,7 @@ class Layout extends LayoutBase
      * @param string $iconRight Иконка справа от текста
      * @param bool $load Состояние загрузки: спиннер вместо иконок и текста, ширина сохраняется, aria-busy
      * @param bool $disabled Кнопка недоступна: у button атрибут disabled, у ссылки aria-disabled без href
+     * @param ButtonState $state Результат действия: успех или ошибка (Figma Buttons/states), цвета не зависят от style
      */
     public static function drawButton(
         string        $className = '',
@@ -35,7 +36,8 @@ class Layout extends LayoutBase
         string        $iconLeft = '',
         string        $iconRight = '',
         bool          $load = false,
-        bool          $disabled = false
+        bool          $disabled = false,
+        ButtonState   $state = ButtonState::Default
     ): string {
         if ($icon !== '') {
             if ($iconPos === ButtonIconPos::Right) {
@@ -69,6 +71,7 @@ class Layout extends LayoutBase
                 'style' => $style->value,
                 'size' => $size->value,
                 'theme' => $theme->value,
+                'state' => $state->value,
                 'iconPos' => $iconPos->value,
             ]
         );

@@ -13,7 +13,7 @@ class Layout extends LayoutBase
 {
     /**
      * @param string $buttonLink Ссылка кнопки (mailto:, tel:, страница контактов); пусто - без кнопки
-     * @param string $logoHtml HTML логотипа (Logo::drawLogo); пусто - без логотипа
+     * @param string $logoHtml HTML логотипа (BrandLogo::drawBrandLogo); пусто - без логотипа
      * @param bool $inline Не занимать весь экран, а выводить в рамке в потоке (витрина)
      * @param array<string,string> $attributes Атрибуты корня
      */

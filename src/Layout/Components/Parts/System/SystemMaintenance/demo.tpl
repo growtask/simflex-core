@@ -8,9 +8,8 @@
 
 use Simflex\Core\Layout\Components\Parts\System\SystemMaintenance\Layout as Maintenance;
 use Simflex\Core\Layout\Components\Parts\System\SystemMaintenance\MaintenanceTheme;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogo;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\LogoTheme;
 
 $maintenanceTheme = MaintenanceTheme::from($theme);
 
@@ -20,7 +19,7 @@ $maintenanceTheme = MaintenanceTheme::from($theme);
     <?= Maintenance::drawMaintenance(
         theme: $maintenanceTheme,
         buttonLink: 'mailto:info@example.com',
-        logoHtml: Logo::drawLogo(name: 'Мой сайт', text: false, type: LogoType::Static, theme: LogoTheme::from($theme)),
+        logoHtml: BrandLogo::drawBrandLogo(name: 'Мой сайт', theme: LogoTheme::from($theme)),
         inline: true,
     ) ?>
 </div>

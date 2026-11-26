@@ -8,9 +8,8 @@
 
 use Simflex\Core\Layout\Components\Parts\System\SystemAgeGate\AgeGateTheme;
 use Simflex\Core\Layout\Components\Parts\System\SystemAgeGate\Layout as AgeGate;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoTheme;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogo;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\LogoTheme;
 
 $gateTheme = AgeGateTheme::from($theme);
 
@@ -19,7 +18,7 @@ $gateTheme = AgeGateTheme::from($theme);
 <div class="ui-showcase__row">
     <?= AgeGate::drawAgeGate(
         theme: $gateTheme,
-        logoHtml: Logo::drawLogo(name: 'Мой сайт', text: false, type: LogoType::Static, theme: LogoTheme::from($theme)),
+        logoHtml: BrandLogo::drawBrandLogo(name: 'Мой сайт', theme: LogoTheme::from($theme)),
         inline: true,
     ) ?>
 </div>

@@ -1,0 +1,114 @@
+/*
+ * Логотип с анимацией (Figma, блок Brand: logo-anim 37:21616): окно 181x48; по наведению и фокусу знак уезжает вверх,
+ * снизу выезжает «Главная» (ui/m). Справа через 12 разделитель 2 px и подпись t4-lh. prefers-reduced-motion: без движения
+ */
+.brand-logo-anim {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    text-decoration: none;
+    color: var(--color-main-gray-darker);
+    @include spacing(gap, 12px);
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+        border-radius: var(--radius-ui-xsmall);
+    }
+
+    &__slide {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        flex-shrink: 0;
+        @include spacing(width, 181px);
+        @include spacing(height, 48px);
+    }
+
+    &__image,
+    &__home {
+        position: absolute;
+        inset: 0;
+        @include transition((transform, opacity), 0.3s);
+    }
+
+    &__image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: left center;
+    }
+
+    &__home {
+        display: flex;
+        align-items: center;
+        transform: translateY(100%);
+        opacity: 0;
+        white-space: nowrap;
+        @include ui-m;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            .brand-logo-anim__image {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            .brand-logo-anim__home {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    }
+
+    &:focus-visible {
+        .brand-logo-anim__image {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .brand-logo-anim__home {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    &__divider {
+        flex-shrink: 0;
+        align-self: stretch;
+        @include spacing(margin-block, 8px);
+        @include spacing(width, 2px);
+        @include border-r(2px);
+        background: var(--color-main-gray-lighter);
+    }
+
+    &__caption {
+        color: var(--color-main-gray-medium);
+        @include t4-lh;
+    }
+
+    &-theme_dark {
+        color: var(--color-main-gray-white);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__image,
+        &__home {
+            transition: none;
+        }
+
+        &:hover .brand-logo-anim__image,
+        &:focus-visible .brand-logo-anim__image {
+            transform: none;
+            opacity: 1;
+        }
+
+        &:hover .brand-logo-anim__home,
+        &:focus-visible .brand-logo-anim__home {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+}

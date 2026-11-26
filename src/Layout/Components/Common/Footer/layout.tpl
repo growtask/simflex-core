@@ -7,8 +7,9 @@ use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactSize;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\ContactType;
 use Simflex\Core\Layout\Components\UI\Link\LinkContact\Layout as Contact;
-use Simflex\Core\Layout\Components\UI\Other\Logo\Layout as Logo;
-use Simflex\Core\Layout\Components\UI\Other\Logo\LogoType;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandLogo\Layout as BrandLogo;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeBy\Layout as BrandMadeBy;
+use Simflex\Core\Layout\Components\Parts\Brand\BrandMadeIn\Layout as BrandMadeIn;
 use Simflex\Core\Layout\Components\UI\Other\Separator\Layout as Separator;
 use Simflex\Core\Layout\Components\UI\Other\Separator\SeparatorOrientation;
 use Simflex\Core\Layout\Components\UI\Button\ButtonSocialSmall\Layout as Social;
@@ -29,11 +30,10 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
     <div class="footer__container">
         <div class="footer__contact-us">
             <div class="footer__callback">
-                <?= Logo::drawLogo(
+                <?= BrandLogo::drawBrandLogo(
                     className: 'footer__logo',
                     name: $data['logoName'],
-                    src: $data['logoSrc'],
-                    type: LogoType::Static
+                    src: $data['logoSrc']
                 ) ?>
                 <?= Button::drawButton(
                     className: 'footer__button',
@@ -120,21 +120,17 @@ $buttonAttrs = $data['modal'] !== '' ? ['data-modal' => $data['modal']] : [];
     <div class="footer__bottom-info">
         <p class="footer__copyright">© <?= $e($data['company']) ?> <?= (int)$data['year'] ?></p>
         <div class="footer__dev-info">
-            <?= Logo::drawLogo(
+            <?= BrandMadeIn::drawBrandMadeIn(
                 className: 'footer__made-in',
                 href: $data['madeInHref'],
                 name: $data['madeInName'],
-                label: 'Создано в студии ' . $data['madeInName'],
-                external: true,
-                type: LogoType::MadeIn
+                label: 'Создано в студии ' . $data['madeInName']
             ) ?>
-            <?= Logo::drawLogo(
+            <?= BrandMadeBy::drawBrandMadeBy(
                 className: 'footer__made-by',
                 href: $data['madeByHref'],
                 name: $data['madeByName'],
-                label: 'Сайт работает на ' . $data['madeByName'],
-                external: true,
-                type: LogoType::MadeBy
+                label: 'Сайт работает на ' . $data['madeByName']
             ) ?>
         </div>
     </div>

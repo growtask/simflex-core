@@ -656,4 +656,46 @@
             background: var(--color-main-gray-dark);
         }
     }
+}
+
+/* Результат действия (Figma Buttons/states): цвета не зависят от стиля кнопки и не меняются при hover и нажатии */
+.btn.btn-state_success,
+.btn.btn-state_error {
+    box-shadow: none;
+}
+
+.btn.btn-state_success {
+    &,
+    &:hover,
+    &:active {
+        background: var(--color-states-success-light);
+        color: var(--color-states-success-dark);
+    }
+
+    &.btn-theme_dark {
+        &,
+        &:hover,
+        &:active {
+            background: var(--color-states-success-dark);
+            color: var(--color-states-success-light);
+        }
+    }
+}
+
+.btn.btn-state_error {
+    &,
+    &:hover,
+    &:active {
+        background: var(--color-states-error-light);
+        color: var(--color-states-error-dark);
+    }
+
+    &.btn-theme_dark {
+        &,
+        &:hover,
+        &:active {
+            background: var(--color-states-error-dark);
+            color: var(--color-states-error-light);
+        }
+    }
 }
