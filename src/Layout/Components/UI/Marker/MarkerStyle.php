@@ -21,7 +21,7 @@ enum MarkerStyle: string
     {
         return match ($this) {
             self::Main, self::Gray, self::Success => 'check',
-            self::Alert => 'alert',
+            self::Alert => 'notify-alert',
             self::Error => 'close',
             self::Load => '',
         };

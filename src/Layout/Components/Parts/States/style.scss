@@ -1,0 +1,92 @@
+/* Состояния States (Figma states/empty, load, alert, success, error): ширина блока 700 / 628 / 480 px, на телефоне на весь экран */
+.states {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-inline: auto;
+    max-width: vw(700px);
+
+    @include HD {
+        max-width: vwh(628px);
+    }
+    @include Tablet {
+        max-width: vwt(480px);
+    }
+    @include Mobile {
+        max-width: none;
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        @include spacing(gap, 40px, 40px, 20px, 20px);
+    }
+
+    /* маркер: xl на десктопе, l (56 px, иконка 24 px) на планшете и телефоне */
+    &__marker.marker {
+        @include icon(80px, 80px, 56px, 56px);
+
+        @include Tablet {
+            border-radius: var(--radius-ui-medium);
+        }
+
+        .marker__icon {
+            @include icon(40px, 40px, 24px, 24px);
+        }
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        @include spacing(gap, 12px, 12px, 8px, 8px);
+    }
+
+    &__title {
+        @include h3;
+        margin: 0;
+        width: 100%;
+        word-break: break-word;
+        color: var(--color-text-icon-gray-darker);
+    }
+
+    &__desc {
+        @include t2;
+        margin: 0;
+        width: 100%;
+        word-break: break-word;
+        color: var(--color-text-icon-gray-dark);
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        @include spacing(gap, 12px);
+
+        @include Mobile {
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+
+    &__button.btn {
+        @include Mobile {
+            width: 100%;
+        }
+    }
+
+    /*----------THEME-----------*/
+    &-theme_dark {
+        .states__title {
+            color: var(--color-text-icon-gray-white);
+        }
+
+        .states__desc {
+            color: var(--color-text-icon-gray-lighter);
+        }
+    }
+}

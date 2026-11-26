@@ -6,6 +6,10 @@
 
 ## [4.0.0] — не выпущена
 
+- Компонент `Layout/Components/Parts/States` (блок States в Figma): `Parts\States\Layout::drawStates()` - состояния
+  `Empty`, `Load`, `Alert`, `Success`, `Error` (маркер, заголовок, текст, кнопки; тёмная тема; на телефоне кнопки друг под
+  другом). Витрина UI получила раздел «Части страниц» (`LayoutShowcase::SECTIONS['Parts']`).
+- Исправлено: у `MarkerStyle::Alert` иконка `notify-alert` вместо `alert` (иконки `alert` в спрайте нет, маркер был пустым).
 - `LayoutFoundations::getIconGroups()` — иконки спрайта по группам страницы Icons в Figma (раздел и подгруппы,
   `slim` отдельно); страница UI «Иконки» разбита на разделы и подгруппы.
 - Скругления: все скругления компонентов ядра (`Layout/Components`, тема админки) заданы переменными `--radius-*`
