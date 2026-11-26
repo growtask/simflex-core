@@ -16,10 +16,10 @@ use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout as LoaderIcon;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderSize;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderStyle;
 use Simflex\Core\Layout\Components\UI\Loader\LoaderMain\LoaderTheme;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarStyle;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarStyle;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
 use Simflex\Core\Layout\Components\UI\Badge\BadgeStyle;
 use Simflex\Core\Layout\Components\UI\Badge\Layout as Badge;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
@@ -200,15 +200,15 @@ use Simflex\Core\Layout\Components\UI\Switch\SwitchSort\Layout as Sort;
             <h3 class="ui-showcase__subtitle ui-m">placeholders/avatar, no-image</h3>
             <div class="ui-showcase__row">
                 <?php foreach (AvatarSize::cases() as $size): ?>
-                    <?= Placeholder::drawAvatar('Иван Петров', size: $size, theme: PlaceholderTheme::from($theme)) ?>
+                    <?= Placeholder::drawAvatar('Иван Петров', size: $size, theme: AvatarTheme::from($theme)) ?>
                     <?= Placeholder::drawAvatar(
                         'Иван Петров',
                         size: $size,
                         style: AvatarStyle::Silhouette,
-                        theme: PlaceholderTheme::from($theme),
+                        theme: AvatarTheme::from($theme),
                     ) ?>
                 <?php endforeach; ?>
-                <span class="ui-showcase__image"><?= Placeholder::drawNoImage(theme: PlaceholderTheme::from($theme)) ?></span>
+                <span class="ui-showcase__image"><?= Placeholder::drawNoImage(theme: AvatarTheme::from($theme)) ?></span>
             </div>
 
             <h3 class="ui-showcase__subtitle ui-m">Tabs/main</h3>

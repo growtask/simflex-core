@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\UI\Other\Placeholder;
+namespace Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar;
 
 enum AvatarSize: string
 {

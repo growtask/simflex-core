@@ -7,8 +7,8 @@
  */
 
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
 
 ?>
 <span class="td-image table__row-photo">
@@ -16,6 +16,6 @@ use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
         <img src="<?= htmlspecialchars($src) ?>" alt="" loading="lazy"
              onerror="this.onerror=null;this.src='<?= htmlspecialchars($defaultImg) ?>'">
     <?php else: ?>
-        <?= Placeholder::drawNoImage(theme: PlaceholderTheme::from(Page::get()->getTheme())) ?>
+        <?= Placeholder::drawNoImage(theme: AvatarTheme::from(Page::get()->getTheme())) ?>
     <?php endif ?>
 </span>

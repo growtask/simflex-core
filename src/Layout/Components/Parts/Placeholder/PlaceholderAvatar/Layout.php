@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\UI\Other\Placeholder;
+namespace Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar;
 
 use Simflex\Core\Layout\LayoutBase;
 
@@ -19,7 +19,7 @@ class Layout extends LayoutBase
         string           $image = '',
         AvatarSize       $size = AvatarSize::Medium,
         AvatarStyle      $style = AvatarStyle::Initials,
-        PlaceholderTheme $theme = PlaceholderTheme::Light,
+        AvatarTheme $theme = AvatarTheme::Light,
         string           $className = '',
     ): string {
         $initials = static::getInitials($name);
@@ -40,7 +40,7 @@ class Layout extends LayoutBase
      */
     public static function drawNoImage(
         string           $label = 'Нет изображения',
-        PlaceholderTheme $theme = PlaceholderTheme::Light,
+        AvatarTheme $theme = AvatarTheme::Light,
         string           $className = '',
     ): string {
         return static::draw(['view' => 'no-image'] + compact('label', 'className') + ['theme' => $theme->value]);

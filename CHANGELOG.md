@@ -20,6 +20,13 @@
   **Несовместимое:** компонент `UI/Other/Logo` (`Logo::drawLogo()`, классы `logo*`) удалён; шапка, мобильное меню,
   подвал и лого админки (`Page::drawLogo()`) используют компоненты Brand. Подписи отметок в подвале теперь по Figma:
   «Сайт сделан в студии» и «Powered by» вместо «Создано» и «На базе». Стили админки: `.logo__image` → `.brand-logo__image`.
+- Исправлено: аватар `PlaceholderAvatar` приведён к Figma (placeholders/avatar): радиус `ui-xlarge` вместо круга (у `l` и `xl` скруглённый
+  квадрат), фон `gray/lighter`, инициалы `gray/dark` размером 12, 15, 18, 24, 32 px, иконка `gray/medium`.
+- **Несовместимое изменение:** компонент `UI/Other/Placeholder` (аватар и «нет картинки») перенесён в
+  `Parts/Placeholder/PlaceholderAvatar`, namespace `Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar`;
+  `PlaceholderTheme` переименован в `AvatarTheme`. Методы `drawAvatar()` и `drawNoImage()` и css-классы не менялись.
+  Переход: замените `Components\UI\Other\Placeholder` на `Components\Parts\Placeholder\PlaceholderAvatar`,
+  `PlaceholderTheme` на `AvatarTheme`.
 - Компонент `Layout/Components/Parts/Placeholder/PlaceholderImg` (`drawPlaceholderImg()`) переписан: через него выводятся
   все картинки компонентов и страниц (Brand, Payment, Delivery, Banner, TabImage). Возвращает HTML (раньше ничего не
   возвращал), проверяет файл (путь от корня сайта проверяется в `public/`, `http(s)://` и `data:` считаются

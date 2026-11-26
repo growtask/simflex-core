@@ -1,6 +1,7 @@
 /* Заглушки: аватар и «нет картинки» (design-parts-placeholders.md) */
 .avatar {
     --avatar-size: #{vw(40px)};
+    --avatar-font-size: #{vw(18px)};
 
     display: inline-flex;
     flex-shrink: 0;
@@ -10,40 +11,51 @@
     width: var(--avatar-size);
     height: var(--avatar-size);
     object-fit: cover;
-    border-radius: 50%;
-    background: var(--color-main-color1-lighter);
-    color: var(--color-text-icon-color1-dark);
+    /* Figma Parts/placeholders avatar: радиус ui-xlarge (у l и xl - скруглённый квадрат), фон gray/lighter */
+    border-radius: var(--radius-ui-xlarge);
+    background: var(--color-main-gray-lighter);
+    color: var(--color-main-gray-dark);
 
     &.placeholder-theme_dark {
         background: var(--color-main-gray-dark);
         color: var(--color-text-icon-gray-lighter);
     }
 
+    /* Силуэт: иконка 60% аватара, цвет gray/medium (в Figma не зависит от цвета инициалов) */
     &__icon {
         width: 60%;
         height: 60%;
-        fill: currentColor;
+        fill: var(--color-main-gray-medium);
     }
 
+    /* Инициалы: Inter 600, межстрочный 100%, размер по ступеням Figma (12, 15, 18, 24, 32) */
     &__initials {
-        font-size: calc(var(--avatar-size) * 0.4);
+        font-size: var(--avatar-font-size);
         font-weight: 600;
         line-height: 1;
     }
 
-    $sizes: (xs: 24px, s: 32px, m: 40px, l: 56px, xl: 80px);
-    @each $name, $size in $sizes {
+    /* Размер аватара и размер букв инициалов */
+    $sizes: (xs: (24px, 12px), s: (32px, 15px), m: (40px, 18px), l: (56px, 24px), xl: (80px, 32px));
+    @each $name, $px in $sizes {
+        $size: nth($px, 1);
+        $font: nth($px, 2);
+
         &_size_#{$name} {
             --avatar-size: #{vw($size)};
+            --avatar-font-size: #{vw($font)};
 
             @include HD {
                 --avatar-size: #{vwh($size)};
+                --avatar-font-size: #{vwh($font)};
             }
             @include Tablet {
                 --avatar-size: #{vwt($size)};
+                --avatar-font-size: #{vwt($font)};
             }
             @include Mobile {
                 --avatar-size: #{vwm($size)};
+                --avatar-font-size: #{vwm($font)};
             }
         }
     }

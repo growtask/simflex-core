@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Демо Placeholder: аватары всех размеров и стилей, заглушка изображения (витрина Layout\LayoutShowcase)
+ * Демо PlaceholderAvatar: аватары всех размеров и стилей, заглушка изображения (витрина Layout\LayoutShowcase)
  * @var string $theme Тема витрины: light или dark
  */
 
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarStyle;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarStyle;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
 
-$placeholderTheme = PlaceholderTheme::from($theme);
+$placeholderTheme = AvatarTheme::from($theme);
 
 ?>
 <?php foreach (AvatarStyle::cases() as $style): ?>

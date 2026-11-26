@@ -11,9 +11,9 @@ use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
@@ -39,6 +39,6 @@ $userName = (string)($user?->name ?: $user?->login);
         <div class="topbar__slots"><?= $slotsHtml ?></div>
     <?php endif ?>
     <a class="topbar__account" href="<?= Page::url('account') ?>" aria-label="Профиль: <?= htmlspecialchars($userName) ?>">
-        <?= Placeholder::drawAvatar($userName, size: AvatarSize::Small, theme: PlaceholderTheme::from($theme)) ?>
+        <?= Placeholder::drawAvatar($userName, size: AvatarSize::Small, theme: AvatarTheme::from($theme)) ?>
     </a>
 </header>

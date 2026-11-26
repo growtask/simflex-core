@@ -19,9 +19,9 @@ use Simflex\Core\Layout\Components\UI\Input\InputMain\TextInputTheme;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\Layout as Tooltip;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipPosition;
 use Simflex\Core\Layout\Components\UI\Tooltip\TooltipMain\TooltipTheme;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\AvatarSize;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\Layout as Placeholder;
-use Simflex\Core\Layout\Components\UI\Other\Placeholder\PlaceholderTheme;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarSize;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\Layout as Placeholder;
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderAvatar\AvatarTheme;
 use Simflex\Core\System\Container;
 
 $theme = $page->getTheme();
@@ -98,7 +98,7 @@ $action = fn(string $icon, string $label, array $attributes) => Tooltip::drawToo
             <?= Placeholder::drawAvatar(
                 $userName,
                 size: AvatarSize::Medium,
-                theme: PlaceholderTheme::from($theme),
+                theme: AvatarTheme::from($theme),
                 className: 'menu-account__avatar',
             ) ?>
             <span class="menu-account__text">
