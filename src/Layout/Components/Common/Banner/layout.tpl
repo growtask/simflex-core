@@ -1,6 +1,7 @@
 <?php
 /** @var array $data */
 
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\Layout as PlaceholderImg;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
@@ -49,8 +50,12 @@ if ($multiple) {
                 ?>
                 <div class="banner__slide" <?= buildAttrs($slideAttrs) ?>>
                     <?php if (($slide['image'] ?? '') !== ''): ?>
-                        <img class="banner__img" src="<?= $esc($slide['image']) ?>" alt="<?= $esc($slide['alt'] ?? '') ?>"
-                             loading="<?= $i === 0 ? 'eager' : 'lazy' ?>" decoding="async" draggable="false">
+                        <?= PlaceholderImg::drawPlaceholderImg(
+                            src: $slide['image'],
+                            alt: $slide['alt'] ?? '',
+                            imgClass: 'banner__img',
+                            attributes: ['loading' => $i === 0 ? 'eager' : 'lazy', 'draggable' => 'false']
+                        ) ?>
                     <?php endif; ?>
                     <div class="banner__content">
                         <?php if (($slide['title'] ?? '') !== ''): ?>

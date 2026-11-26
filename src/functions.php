@@ -44,6 +44,22 @@ function asset(string $path, bool $siteOnly = false): string
 }
 
 /**
+ * Есть ли файл статики темы (по тем же правилам, что и asset())
+ * @param string $path Путь внутри темы, например images/payment/visa.svg
+ * @param bool $siteOnly Искать только в статике сайта, даже в админке
+ */
+function assetExists(string $path, bool $siteOnly = false): bool
+{
+    if (!$siteOnly && \Simflex\Core\System\Container::getLocation() === \Simflex\Core\System\Location::Admin) {
+        return is_file(\Simflex\Core\Admin\Page::vendorPath() . '/theme/' . $path);
+    }
+
+    $theme = \Simflex\Core\System\Container::getConfig()->theme;
+
+    return is_file(\Simflex\Core\System\Container::getPaths()->getPublic('assets/' . $theme . '/' . $path));
+}
+
+/**
  * Версия Simflex
  * @return string Версия Simflex
  */

@@ -1,0 +1,23 @@
+/*
+ * Знак (Figma, блок Delivery): высота 40, ширина по знаку. Вариант знака выбирает файл (цветной, mono, dark),
+ * поэтому стили общие
+ */
+.delivery-logo {
+    display: inline-flex;
+    vertical-align: top;
+    width: fit-content;
+    text-decoration: none;
+
+    &:focus-visible {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+        border-radius: var(--radius-ui-xsmall);
+    }
+
+    &__image {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        @include spacing(height, 40px);
+    }
+}

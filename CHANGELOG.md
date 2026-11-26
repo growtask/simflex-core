@@ -20,6 +20,22 @@
   **Несовместимое:** компонент `UI/Other/Logo` (`Logo::drawLogo()`, классы `logo*`) удалён; шапка, мобильное меню,
   подвал и лого админки (`Page::drawLogo()`) используют компоненты Brand. Подписи отметок в подвале теперь по Figma:
   «Сайт сделан в студии» и «Powered by» вместо «Создано» и «На базе». Стили админки: `.logo__image` → `.brand-logo__image`.
+- Компонент `Layout/Components/Parts/Placeholder/PlaceholderImg` (`drawPlaceholderImg()`) переписан: через него выводятся
+  все картинки компонентов и страниц (Brand, Payment, Delivery, Banner, TabImage). Возвращает HTML (раньше ничего не
+  возвращал), проверяет файл (путь от корня сайта проверяется в `public/`, `http(s)://` и `data:` считаются
+  существующими), без файла выводит заглушку темы `images/placeholders/fallback-img.webp` или ничего
+  (`missing: ImgMissing::Hide`), `srcMobile` задаёт картинку для телефона (`size` - граница в px), по умолчанию
+  `loading="lazy"` и `decoding="async"`, есть `width`, `height`, `imgClass`, `placeholder`, `deferred`
+  (`sfPlaceholderImg.reveal()`). Классы `placeholder-img*` вместо `img`; корень `picture` с `display: contents`,
+  оформлять нужно `img` через `imgClass`. Новая функция `assetExists()` - есть ли файл статики темы.
+  **Несовместимое:** у компонентов с картинками (`BrandLogo*`, `BrandMade*`, `TabImage`, `Banner`) свой `src` и
+  `image`, которых нет в `public/`, заменяются заглушкой; у `Brand*` `img` теперь внутри `picture`.
+- Компоненты `Layout/Components/Parts/Payment` и `Parts/Delivery` (блоки Payment и Delivery в Figma): `PaymentLogo`,
+  `PaymentList`, `DeliveryLogo`, `DeliveryList` (`drawPaymentLogo()`, `drawPaymentList()`, `drawDeliveryLogo()`,
+  `drawDeliveryList()`). Знак выбирается перечислением (`PaymentSystem`: Google Pay, Maestro, Mastercard, Мир, PayPal,
+  QIWI, Visa, Яндекс Пэй; `DeliveryService`: 5Post, СДЭК, Ozon, Почта России, Яндекс Доставка) и вариантом
+  (`PaymentStyle`/`DeliveryStyle`: `Color`, `Monochrome`, `MonochromeDark`); список выводит все знаки или выбранные.
+  Знаки лежат в шаблоне: `public/assets/<тема>/images/payment` и `images/delivery`.
 - Исправлено: `UI/Button/ButtonMain` приведён к Figma (Buttons/main и alt): текст кнопок `ui/m` (l, m: 16 px) и `ui/s`
   (s, xs: 14 px), вес 600, межстрочный 140%; обводка рисуется внутри (`box-shadow: inset`), ширина кнопки больше не
   растёт на 4 px; у `Monochrome` в светлой теме рамка `gray/light`; у `load` фон как у hover; у disabled текст и иконка

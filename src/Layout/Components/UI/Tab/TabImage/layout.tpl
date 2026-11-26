@@ -1,6 +1,8 @@
 <?php
 /** @var array $data */
 
+use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\Layout as PlaceholderImg;
+
 $classes = [
     'tab-image',
     "tab-image-style_{$data['style']}",
@@ -40,7 +42,7 @@ $tag = $isLink ? 'a' : 'button';
     <?php endif; ?>
     <?= buildAttrs($attributes) ?>>
     <?php if ($data['image'] !== ''): ?>
-        <span class="tab-image__img"><img src="<?= htmlspecialchars($data['image'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($data['imageAlt'], ENT_QUOTES, 'UTF-8') ?>" loading="lazy"></span>
+        <span class="tab-image__img"><?= PlaceholderImg::drawPlaceholderImg(src: $data['image'], alt: $data['imageAlt']) ?></span>
     <?php else: ?>
         <span class="tab-image__img tab-image__img_empty"><?php if ($data['icon'] !== ''): ?><?= renderIcon($data['icon'], 'tab-image__icon') ?><?php endif; ?></span>
     <?php endif; ?>

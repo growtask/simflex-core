@@ -1,0 +1,17 @@
+/*
+ * Картинка сайта. Корень picture без собственного блока (display: contents): размеры, позиционирование и
+ * проценты считаются от родителя, поэтому оформлять нужно сам img (параметр imgClass)
+ */
+.placeholder-img {
+    display: contents;
+
+    &__image {
+        display: block;
+        max-width: 100%;
+    }
+
+    /* Заглушка вместо недостающего файла */
+    &_missing &__image {
+        object-fit: cover;
+    }
+}
