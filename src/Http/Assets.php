@@ -13,8 +13,9 @@ use Simflex\Core\System\Container;
  * в публичную директорию не попадает, независимо от настроек веб-сервера.
  *
  * В режиме разработчика опубликованные файлы сверяются с исходниками на каждом запросе (по mtime).
- * В рабочем режиме каталог публикуется один раз, а в хеш входит mtime исходника - после деплоя
- * или composer update опубликованная копия получает новый адрес.
+ * В рабочем режиме каталог публикуется один раз, а в хеш входит версия исходника (у файла - mtime, у каталога -
+ * пути, mtime и размеры файлов внутри): после деплоя или composer update опубликованная копия получает новый адрес.
+ * Прежние копии остаются в public/cache/assets: это кэш, его можно удалить целиком.
  */
 class Assets
 {
@@ -59,7 +60,10 @@ class Assets
         }
 
         $devMode = Container::getConfig()->devMode;
-        $hash = substr(md5(($isDir ? $real : dirname($real)) . ($devMode ? '' : '|' . filemtime($real))), 0, 16);
+        // версия - по содержимому: у каталога mtime самого каталога не меняется, когда меняются файлы внутри
+        // (обновили пакет - копия осталась бы прежней)
+        $version = $devMode ? '' : '|' . ($isDir ? static::getDirVersion($real) : filemtime($real));
+        $hash = substr(md5(($isDir ? $real : dirname($real)) . $version), 0, 16);
         $target = Container::getPaths()->getPublic() . static::DIR . '/' . $hash;
         $url = static::DIR . '/' . $hash;
 
@@ -98,22 +102,43 @@ class Assets
     }
 
     /**
+     * Версия каталога для адреса копии: путь, время изменения и размер каждого публикуемого файла внутри.
+     * Меняется, когда файл добавлен, удалён или изменён (в том числе заменён более старым при откате)
+     */
+    protected static function getDirVersion(string $dir): string
+    {
+        $files = [];
+        foreach (static::getStaticFiles($dir) as $file) {
+            $files[] = substr($file->getPathname(), strlen($dir)) . ':' . $file->getMTime() . ':' . $file->getSize();
+        }
+        sort($files);
+
+        return md5(implode('|', $files));
+    }
+
+    /**
+     * Публикуемые файлы каталога со всеми вложенными: только статические, без скрытых (с точки)
+     * @return iterable<\SplFileInfo>
+     */
+    protected static function getStaticFiles(string $dir): iterable
+    {
+        return new \RecursiveIteratorIterator(
+            new \RecursiveCallbackFilterIterator(
+                new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+                fn(\SplFileInfo $file) => !str_starts_with($file->getFilename(), '.')
+                    && ($file->isDir() || static::isStatic($file->getFilename()))
+            )
+        );
+    }
+
+    /**
      * Копирует из $source в $target статические файлы, которых там нет или которые изменились
      */
     protected static function sync(string $source, string $target): void
     {
         static::makeDir($target);
 
-        $it = new \RecursiveIteratorIterator(
-            new \RecursiveCallbackFilterIterator(
-                new \RecursiveDirectoryIterator($source, \FilesystemIterator::SKIP_DOTS),
-                fn(\SplFileInfo $file) => !str_starts_with($file->getFilename(), '.')
-                    && ($file->isDir() || static::isStatic($file->getFilename()))
-            )
-        );
-
-        /** @var \SplFileInfo $file */
-        foreach ($it as $file) {
+        foreach (static::getStaticFiles($source) as $file) {
             $dest = $target . substr($file->getPathname(), strlen($source));
             if (!is_file($dest) || filemtime($dest) !== $file->getMTime() || filesize($dest) !== $file->getSize()) {
                 static::copyFile($file->getPathname(), $dest);
