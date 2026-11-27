@@ -22,6 +22,7 @@ $inputTheme = InputMainTheme::from($theme);
             <span class="ui-showcase__field"><?= InputPassword::drawInputPassword(placeholder: 'Пароль', labelText: 'Подпись', labelPos: InputMainLabelPos::Standard, value: 'secret123', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputPassword::drawInputPassword(placeholder: 'Пароль', value: 'secret123', error: 'Ошибка ввода', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputPassword::drawInputPassword(placeholder: 'Пароль', value: 'secret123', success: true, style: $style, size: $size, theme: $inputTheme) ?></span>
+            <span class="ui-showcase__field"><?= InputPassword::drawInputPassword(placeholder: 'Пароль', value: 'secret123', attributes: ['disabled' => 'disabled'], style: $style, size: $size, theme: $inputTheme) ?></span>
         </div>
     <?php endforeach; ?>
 <?php endforeach; ?>

@@ -1,6 +1,6 @@
 /*
  * Поле тегов Inputs/tags (design-ui-inputs.md): поле, под ним ряд тегов Tag secondary s с отступом 8, ряд
- * переносится с тем же отступом; подсказки — панель под полем, как у Dropdown
+ * переносится с тем же отступом (position top — над полем); подсказки — панель под полем, как у Dropdown
  */
 .tags-input {
     display: flex;
@@ -14,7 +14,7 @@
 
     &__panel {
         position: absolute;
-        top: calc(100% + #{vw(4px)});
+        top: calc(100% + #{vw(12px)}); // Dropdown/input: панель через 12 под полем
         left: 0;
         right: 0;
         z-index: 20;
@@ -27,6 +27,22 @@
 
         &[hidden] {
             display: none;
+        }
+
+        // появление (классы tags-input-panel-*, SfUi.transition в script.js): прозрачность и сдвиг 6 px от поля; скрытие быстрее
+        &.tags-input-panel-enter-active {
+            transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+        }
+
+        &.tags-input-panel-leave-active {
+            pointer-events: none;
+            transition: opacity var(--motion-fast) var(--ease-in), transform var(--motion-fast) var(--ease-in);
+        }
+
+        &.tags-input-panel-enter-from,
+        &.tags-input-panel-leave-to {
+            opacity: 0;
+            transform: translateY(-6px);
         }
     }
 
@@ -70,12 +86,66 @@
     }
 
     &__tags {
+        position: relative;
         display: flex;
         flex-wrap: wrap;
         @include spacing(gap, 8px);
 
+        // теги (классы tags-input-tag-*): появляются масштабом и прозрачностью, удаляемый гаснет
+        // на своём месте вне потока (координаты ставит pinLeaving), соседи доезжают transform-ом
+        > .tags-input-tag-enter-active {
+            transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+        }
+
+        > .tags-input-tag-leave-active {
+            position: absolute;
+            pointer-events: none;
+            transition: opacity var(--motion-fast) var(--ease-in), transform var(--motion-fast) var(--ease-in);
+        }
+
+        > .tags-input-tag-enter-from,
+        > .tags-input-tag-leave-to {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        > .tags-input-tag-move {
+            transition: transform var(--motion-base) var(--ease-in-out);
+        }
+
         &:empty {
             display: none;
         }
+    }
+
+    &_position_top &__tags {
+        order: -1;
+    }
+}
+
+/* Каскад подсказок при открытии панели (класс tags-input__panel_cascade ставит script.js на время открытия):
+ * пункты появляются друг за другом с шагом 18 мс (не дольше 12 шагов); ввод текста каскад не перезапускает */
+.tags-input__panel_cascade .tags-input__option {
+    animation: tags-input-option-in var(--motion-base) var(--ease-out) backwards;
+
+    @for $i from 2 through 12 {
+        &:nth-child(#{$i}) {
+            animation-delay: ($i - 1) * 18ms;
+        }
+    }
+
+    &:nth-child(n + 13) {
+        animation-delay: 12 * 18ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@keyframes tags-input-option-in {
+    from {
+        opacity: 0;
+        translate: 0 -3px;
     }
 }

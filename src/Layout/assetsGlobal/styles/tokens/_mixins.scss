@@ -82,7 +82,9 @@
 }
 
 /*----------TRANSITIONS-----------*/
-@mixin transition($properties: (), $duration: 0.2s, $timing-function: cubic-bezier(0.14, 0.18, 0.16, 1.02)) {
+/* Переход на токенах движения (_motion.scss): по умолчанию fast и ease-in-out; длительность и кривую передавайте
+   токенами (var(--motion-base), var(--ease-out)), тогда prefers-reduced-motion выключает переход сам */
+@mixin transition($properties: (), $duration: var(--motion-fast), $timing-function: var(--ease-in-out)) {
     @if length($properties) == 0 {
         transition: #{$duration} #{$timing-function};
     } @else {
@@ -258,4 +260,11 @@
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
+}
+/*----------FOCUS-----------*/
+/* Кольцо фокуса (Figma: наборы focus): 2px цвета бренда с зазором 2px, только с клавиатуры (:focus-visible),
+   по клику кольца нет. Вызывать внутри &:focus-visible { ... }; отрицательный $offset - кольцо внутри элемента */
+@mixin focus-ring($offset: 2px, $color: var(--color-main-color1-main)) {
+    outline: 2px solid $color;
+    outline-offset: $offset;
 }

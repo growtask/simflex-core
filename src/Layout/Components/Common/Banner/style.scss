@@ -25,7 +25,7 @@
     &__track {
         display: flex;
         align-items: stretch;
-        @include transition((transform), 0.6s, ease-in-out);
+        @include transition((transform), var(--motion-slow), var(--ease-in-out));
     }
 
     &__slide {

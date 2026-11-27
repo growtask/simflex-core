@@ -1,90 +1,113 @@
-/**
- * @typedef {Object} AccordionOptions
- * @property {string} [selector='.accordion'] - CSS selector for the accordion container.
- * @property {string} [buttonClass='accordion__button'] - Class name for the accordion button.
- * @property {string} [contentClass='accordion__content'] - Class name for the accordion content.
- * @property {string} [activeClass='active'] - Class name for the active state of the accordion item.
- * @property {boolean} [multipleOpen=false] - Whether to allow multiple items to be open simultaneously.
+/*
+ * Аккордеон (Accordion): клик по пункту вне содержимого
+ * или кнопка-шеврон (Enter/Space) переключают его; свои ссылки, кнопки и поля в заголовке, комментарии и бейдже
+ * работают как обычно. Кнопка — aria-expanded (и класс active), закрытое содержимое — inert. Без data-multiple-open
+ * (у пункта или у списка) открытие закрывает другие пункты того же списка (не всего документа).
+ * Высота содержимого анимируется Web Animations от фактической текущей высоты (в т. ч. середины прерванной
+ * анимации) к целевой: открытие — --motion-slow и --ease-out, закрытие — --motion-base и --ease-in-out; при
+ * prefers-reduced-motion — без анимации. Проявление содержимого — opacity и transform в style.scss.
+ * Разметка без id/aria (старые шаблоны) дополняется при запуске. Событие accordion:toggle ({detail: {open}}) на li.
  */
-class Accordion {
-    /**
-     * @param {AccordionOptions} [options={}]
-     */
-    constructor(options = {}) {
-        const defaults = {
-            selector: '.accordion',
-            buttonClass: 'accordion__button',
-            contentClass: 'accordion__content',
-            activeClass: 'active',
-            multipleOpen: false
-        };
-
-        this.options = { ...defaults, ...options };
-        this.accordionItems = document.querySelectorAll(this.options.selector);
-        this.init();
+(() => {
+    if (window.SimflexAccordionReady) {
+        return;
     }
+    window.SimflexAccordionReady = true;
 
-    init() {
-        if (!this.accordionItems.length) {
-            console.warn(`No accordion items found with selector: ${this.options.selector}`);
+    const ITEM = '.accordion';
+    const INTERACTIVE = 'a[href], button, input, select, textarea, label, summary, [contenteditable=""], '
+        + '[contenteditable="true"], [tabindex]';
+    let counter = 0;
+
+    const parts = (item) => ({
+        button: item.querySelector(':scope > .accordion__header .accordion__button'),
+        content: item.querySelector(':scope > .accordion__content'),
+        title: item.querySelector(':scope > .accordion__header .accordion__title'),
+    });
+
+    /** id, роли и связи для разметки без них */
+    const prepare = (item) => {
+        const {button, content, title} = parts(item);
+        if (!button || !content || item.dataset.sfAccordionReady) {
             return;
         }
-
-        this.accordionItems.forEach(item => {
-            const toggleButton = item.querySelector(`.${this.options.buttonClass}`);
-            const content = item.querySelector(`.${this.options.contentClass}`);
-
-            if (!toggleButton || !content) {
-                console.warn('Accordion item missing required elements:', item);
-                return;
-            }
-
-            item.addEventListener('click', (e) => this.handleClick(e, item, toggleButton, content));
-        });
-    }
-
-    handleClick(event, item, toggleButton, content) {
-        // Only toggle if clicking outside content area
-        if (!content.contains(event.target)) {
-            event.preventDefault();
-
-            if (!this.options.multipleOpen) {
-                this.closeOthers(item);
-            }
-
-            const isActive = item.classList.contains(this.options.activeClass);
-            this.toggleState(item, toggleButton, !isActive);
+        item.dataset.sfAccordionReady = '1';
+        const base = (content.id || title?.id || `sf-accordion-js-${++counter}`).replace(/-(content|title)$/, '');
+        content.id ||= `${base}-content`;
+        if (title) {
+            title.id ||= `${base}-title`;
+            button.hasAttribute('aria-labelledby') || button.setAttribute('aria-labelledby', title.id);
+            content.hasAttribute('aria-labelledby') || content.setAttribute('aria-labelledby', title.id);
         }
-    }
+        item.querySelector(':scope > .accordion__header[role="tab"]')?.removeAttribute('role');
+        content.setAttribute('role', 'region');
+        button.setAttribute('aria-controls', content.id);
+        sync(item, item.classList.contains('active'));
+    };
 
-    /**
-     * Closes all other accordion items
-     * @param {HTMLElement} exceptItem - Item to exclude from closing
-     */
-    closeOthers(exceptItem) {
-        this.accordionItems.forEach(item => {
-            if (item !== exceptItem && item.classList.contains(this.options.activeClass)) {
-                const button = item.querySelector(`.${this.options.buttonClass}`);
-                this.toggleState(item, button, false);
-            }
+    const sync = (item, open) => {
+        const {button, content} = parts(item);
+        item.classList.toggle('active', open);
+        button.classList.toggle('active', open);
+        button.setAttribute('aria-expanded', String(open));
+        content.inert = !open;
+    };
+
+    const animations = new WeakMap();
+
+    // плавная высота: от видимой сейчас к целевой (после смены класса)
+    const animateHeight = (content, open, change) => {
+        const from = content.getBoundingClientRect().height;
+        animations.get(content)?.cancel();
+        change();
+        if (typeof content.animate !== 'function' || window.SfUi?.reduced?.()) {
+            return;
+        }
+        const to = open ? content.scrollHeight : 0;
+        if (Math.abs(to - from) < 1) {
+            return;
+        }
+        const ms = (name, fallback) => window.SfUi?.motionMs?.(null, name, fallback) ?? fallback;
+        const easing = getComputedStyle(document.documentElement).getPropertyValue(open ? '--ease-out' : '--ease-in-out').trim() || 'ease';
+        const animation = content.animate([{height: `${from}px`, overflow: 'hidden'}, {height: `${to}px`, overflow: 'hidden'}], {
+            duration: open ? ms('--motion-slow', 240) : ms('--motion-base', 180),
+            easing,
         });
-    }
+        animations.set(content, animation);
+        animation.onfinish = () => animations.get(content) === animation && animations.delete(content);
+    };
 
-    /**
-     * Toggles the state of an accordion item
-     * @param {HTMLElement} item
-     * @param {HTMLElement} button
-     * @param {boolean} active
-     */
-    toggleState(item, button, active) {
-        item.classList.toggle(this.options.activeClass, active);
-        button.classList.toggle(this.options.activeClass, active);
-    }
-}
+    const setOpen = (item, open) => {
+        if (item.classList.contains('active') === open) {
+            return;
+        }
+        animateHeight(parts(item).content, open, () => sync(item, open));
+        item.dispatchEvent(new CustomEvent('accordion:toggle', {bubbles: true, detail: {open}}));
+    };
 
-// Advanced usage with options
-document.addEventListener('DOMContentLoaded', () => {
-    const accordion = new Accordion({
-        multipleOpen: false,
+    document.addEventListener('click', (event) => {
+        const item = event.target.closest?.(ITEM);
+        if (!item || !parts(item).button || parts(item).content.contains(event.target)) {
+            return;
+        }
+        prepare(item);
+        const control = event.target.closest(INTERACTIVE);
+        if (control && item.contains(control) && control !== item && !control.classList.contains('accordion__button')) {
+            return;
+        }
+        const open = !item.classList.contains('active');
+        const list = item.parentElement;
+        if (open && !item.hasAttribute('data-multiple-open') && !list?.hasAttribute('data-multiple-open')) {
+            [...list.children].forEach((other) => {
+                if (other !== item && other.matches(ITEM) && other.classList.contains('active')) {
+                    prepare(other);
+                    setOpen(other, false);
+                }
+            });
+        }
+        setOpen(item, open);
     });
-});
+
+    const init = () => document.querySelectorAll(ITEM).forEach(prepare);
+    document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+})();

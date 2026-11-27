@@ -15,7 +15,9 @@ $attributes['role'] ??= in_array($data['style'], ['error', 'alert'], true) ? 'al
             <?= renderIcon($data['iconId'], 'notice__icon') ?>
         <?php endif; ?>
         <div class="notice__body">
-            <div class="notice__title"><?= htmlspecialchars($data['title']) ?></div>
+            <?php if ($data['title'] !== ''): ?>
+                <div class="notice__title"><?= htmlspecialchars($data['title']) ?></div>
+            <?php endif; ?>
             <?php if ($data['text'] !== ''): ?>
                 <div class="notice__text"><?= htmlspecialchars($data['text']) ?></div>
             <?php endif; ?>

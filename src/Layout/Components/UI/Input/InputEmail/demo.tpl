@@ -22,6 +22,7 @@ $inputTheme = InputMainTheme::from($theme);
             <span class="ui-showcase__field"><?= InputEmail::drawInputEmail(placeholder: 'name@example.com', labelText: 'Подпись', labelPos: InputMainLabelPos::Standard, value: 'name@example.com', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputEmail::drawInputEmail(placeholder: 'name@example.com', value: 'name@example.com', error: 'Ошибка ввода', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputEmail::drawInputEmail(placeholder: 'name@example.com', value: 'name@example.com', success: true, style: $style, size: $size, theme: $inputTheme) ?></span>
+            <span class="ui-showcase__field"><?= InputEmail::drawInputEmail(placeholder: 'name@example.com', value: 'name@example.com', attributes: ['disabled' => 'disabled'], style: $style, size: $size, theme: $inputTheme) ?></span>
         </div>
     <?php endforeach; ?>
 <?php endforeach; ?>

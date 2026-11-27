@@ -57,10 +57,17 @@
             sync();
         };
 
+        // открыта ли панель: по aria-expanded (во время ухода панель ещё видна); появление и уход — классы
+        // phone-input-panel-* (style.scss, SfUi.transition)
+        const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+        const show = (on) => (window.SfUi?.transition ? window.SfUi.transition(panel, 'phone-input-panel', on) : Promise.resolve(panel.hidden = !on));
+
         const close = (focus = false) => {
-            panel.hidden = true;
+            if (!isOpen()) {
+                return;
+            }
             toggle.setAttribute('aria-expanded', 'false');
-            panel.classList.remove('phone-input__panel_up');
+            show(false).then(() => !isOpen() && panel.classList.remove('phone-input__panel_up'));
             if (focus) {
                 toggle.focus();
             }
@@ -68,6 +75,7 @@
 
         const open = () => {
             panel.hidden = false;
+            show(true);
             toggle.setAttribute('aria-expanded', 'true');
             // не помещается снизу и помещается сверху — открываем вверх
             const rect = panel.getBoundingClientRect();
@@ -92,12 +100,12 @@
             close(true);
         };
 
-        toggle.addEventListener('click', () => (panel.hidden ? open() : close()));
+        toggle.addEventListener('click', () => (isOpen() ? close() : open()));
         options.forEach((option) => option.addEventListener('click', () => choose(option)));
         field.addEventListener('input', applyMask);
 
         root.addEventListener('keydown', (event) => {
-            if (panel.hidden) {
+            if (!isOpen()) {
                 return;
             }
             if (event.key === 'Escape') {
@@ -113,7 +121,7 @@
             }
         });
         document.addEventListener('click', (event) => {
-            if (!panel.hidden && !root.contains(event.target)) {
+            if (isOpen() && !root.contains(event.target)) {
                 close();
             }
         });

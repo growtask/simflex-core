@@ -9,4 +9,27 @@
     --shadow-primary-m: 0 0 25px 5px rgba(20, 75, 153, .07);
     --shadow-primary-s: 0 0 10px 2px rgba(20, 75, 153, .10);
     --shadow-primary-xs: 0 0 4px 1px rgba(20, 75, 153, .14);
+
+    /*----------NEON (Figma: neon/*) — свечение для box-shadow-----------*/
+    --shadow-neon-red-dark: 0 0 20px 0 rgba(252, 151, 168, .5);
+    --shadow-neon-purple-dark: 0 0 20px 0 rgba(150, 127, 254, 1);
+    --shadow-neon-purple-dark-s: 0 0 10px 0 rgba(150, 127, 254, 1);
+    --shadow-neon-purple-medium: 0 0 20px 0 rgba(150, 127, 254, 1), 0 0 100px 0 rgba(137, 122, 204, .6);
+    --shadow-neon-purple-medium-s: 0 0 10px 0 rgba(150, 127, 254, 1), 0 0 50px 0 rgba(137, 122, 204, .6);
+    --shadow-neon-purple-promo: 0 0 40px 0 rgba(150, 127, 254, .3);
+    --shadow-neon-social-tg: 0 0 20px 0 rgba(113, 208, 255, .5);
+    --shadow-neon-social-vk: 0 0 20px 0 rgba(109, 177, 255, .5);
+    --shadow-neon-social-max: 0 0 20px 0 rgba(179, 107, 255, .5);
+    --shadow-neon-social-insta: 0 0 20px 0 rgba(254, 106, 167, .5);
+    --shadow-neon-social-youtube: 0 0 20px 0 rgba(255, 110, 110, .5);
+    --shadow-neon-social-rutube: 0 0 20px 0 rgba(148, 134, 255, .5);
+    --shadow-neon-social-zen: 0 0 20px 0 rgba(253, 231, 106, .5);
+
+    /* star/l: свечение + размытие слоя (filter: var(--blur-star-l)) */
+    --shadow-star-l: 0 0 20px 0 rgba(255, 255, 255, 1);
+
+    /*----------BLUR (Figma: blur/*). В CSS радиус вдвое меньше, чем в Figma-----------*/
+    --blur-glass: blur(5px);      /* Figma: background blur 10 → backdrop-filter */
+    --blur-glass-s: blur(2.5px);  /* Figma: background blur 5 → backdrop-filter */
+    --blur-star-l: blur(2.5px);   /* Figma: layer blur 5 → filter */
 }

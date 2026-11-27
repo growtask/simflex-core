@@ -5,7 +5,7 @@ $state = $data['state'];
 $selected = in_array($state, ['selected', 'range-start', 'range-end'], true);
 $classes = [
     'calendar__day',
-    in_array($state, ['weekend', 'muted', 'range-start', 'range-end', 'in-range'], true) ? 'calendar__day_' . $state : '',
+    in_array($state, ['weekend', 'muted', 'range-start', 'range-end'], true) ? 'calendar__day_' . $state : ($state === 'in-range' ? 'calendar__day_range' : ''),
     $data['className'],
 ];
 ?>

@@ -22,6 +22,8 @@ $inputTheme = InputMainTheme::from($theme);
             <span class="ui-showcase__field"><?= InputDate::drawInputDate( labelText: 'Подпись', labelPos: InputMainLabelPos::Standard, value: '24.11.2026', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputDate::drawInputDate( value: '24.11.2026', error: 'Ошибка ввода', style: $style, size: $size, theme: $inputTheme) ?></span>
             <span class="ui-showcase__field"><?= InputDate::drawInputDate( value: '24.11.2026', success: true, style: $style, size: $size, theme: $inputTheme) ?></span>
+
+            <span class="ui-showcase__field"><?= InputDate::drawInputDate( value: '24.11.2026', attributes: ['disabled' => 'disabled'], style: $style, size: $size, theme: $inputTheme) ?></span>
         </div>
     <?php endforeach; ?>
 <?php endforeach; ?>

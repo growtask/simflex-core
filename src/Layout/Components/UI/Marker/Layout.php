@@ -23,6 +23,8 @@ class Layout extends LayoutBase
         MarkerTheme $theme = MarkerTheme::Light,
         string      $label = ''
     ): string {
+        // галочка стилей main и success по умолчанию рисуется линией при появлении (svg.marker__check в layout.tpl)
+        $drawn = $icon === '' && in_array($style, [MarkerStyle::Main, MarkerStyle::Success], true);
         if ($icon === '') {
             $icon = $style->getIcon();
         }
@@ -32,7 +34,8 @@ class Layout extends LayoutBase
                 'className',
                 'icon',
                 'label',
-                'attributes'
+                'attributes',
+                'drawn'
             ) + [
                 'size' => $size->value,
                 'style' => $style->value,

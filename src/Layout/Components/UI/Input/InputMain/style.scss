@@ -1,14 +1,70 @@
+/*
+ * Поле ввода Inputs/main (Figma «UI»): стили filled / outline / underline, размеры xs / s / m / l, подпись
+ * outside (standard) / inside / none (hidden), состояния static / hover / focus / error / success / disabled, тема.
+ * Геометрия из Figma: высота 32 / 40 / 48 / 56, край поля 8 / 8 / 12 / 16 (иконки и кнопка очистки), текст
+ * начинается в 12 / 12 / 16 / 16 от края, с иконкой — в 36 / 40 / 44 / 48. Обводка 2 px внутрь: отступы ниже — без неё.
+ * Радиус ui/small у xs, ui/medium у s, m, l; у underline радиуса нет.
+ */
+
+/* Размеры — CSS-переменные блока: --ti-h высота, --ti-pad отступ текста, --ti-pad-icon отступ текста при иконке
+ * (и справа при кнопке очистки или слоте), --ti-edge край иконок, --ti-gap зазор кнопка — счётчик,
+ * --ti-label-top верх подписи inside */
+$text-input-sizes: (
+    xs: (h: 32px, pad: 10px, pad-icon: 34px, edge: 8px, gap: 0px, label-top: 0px),
+    s: (h: 40px, pad: 10px, pad-icon: 38px, edge: 8px, gap: 4px, label-top: 4px),
+    m: (h: 48px, pad: 14px, pad-icon: 42px, edge: 12px, gap: 4px, label-top: 6px),
+    l: (h: 56px, pad: 14px, pad-icon: 46px, edge: 16px, gap: 8px, label-top: 7px),
+);
+$text-input-counter-room: 40px;
+
+@mixin text-input-vars($size) {
+    @each $name, $value in $size {
+        --ti-#{$name}: #{vw($value)};
+    }
+
+    @include HD {
+        @each $name, $value in $size {
+            --ti-#{$name}: #{vwh($value)};
+        }
+    }
+    @include Tablet {
+        @each $name, $value in $size {
+            --ti-#{$name}: #{vwt($value)};
+        }
+    }
+    @include Mobile {
+        @each $name, $value in $size {
+            --ti-#{$name}: #{vwm($value)};
+        }
+    }
+}
+
 .text-input {
+    @include text-input-vars(map-get($text-input-sizes, m));
+    --ti-radius: var(--radius-ui-medium);
+    --ti-counter-room: #{vw($text-input-counter-room)};
+
+    @include Tablet {
+        --ti-counter-room: #{vwt($text-input-counter-room)};
+    }
+    @include Mobile {
+        --ti-counter-room: #{vwm($text-input-counter-room)};
+    }
+
+    @each $name, $size in $text-input-sizes {
+        &-size_#{$name} {
+            @include text-input-vars($size);
+        }
+    }
+
+    &-size_xs {
+        --ti-radius: var(--radius-ui-small);
+    }
+
     /*----------CORE STYLE-----------*/
     &__wrapper {
         position: relative;
         width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    &__inner-wrapper {
-        position: relative;
         display: flex;
         flex-direction: column;
     }
@@ -18,51 +74,95 @@
         display: flex;
         align-items: center;
         width: 100%;
+        min-width: 0;
     }
 
     &__icon {
         position: absolute;
+        left: var(--ti-edge);
         pointer-events: none;
         z-index: 2;
+        color: var(--color-text-icon-gray-light);
+        fill: currentColor;
         @include icon(24px);
+        @include transition(color);
     }
 
     &__reset {
         position: absolute;
+        right: var(--ti-edge);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        background: none;
         cursor: pointer;
         pointer-events: none;
         opacity: 0;
         z-index: 2;
+        color: var(--color-text-icon-gray-light);
+        border-radius: var(--radius-ui-small);
         @include transition((color, opacity));
 
         &-icon {
-            color: var(--color-main-gray-light);
+            fill: currentColor;
             @include icon(24px);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--color-text-icon-color1-light);
+            }
+        }
+
+        &:active {
+            color: var(--color-text-icon-color1-dark);
         }
     }
 
     &__label {
-        color: var(--color-main-gray-medium);
-        @include spacing(margin-bottom, 2px);
+        display: block;
         flex-shrink: 0;
+        color: var(--color-text-icon-gray-medium);
+        @include spacing(margin-bottom, 2px);
         @include t4;
+        @include transition(color);
     }
 
     &__field {
         width: 100%;
+        min-width: 0;
+        height: var(--ti-h);
+        padding: 0 var(--ti-pad);
         border: solid transparent;
+        border-radius: var(--ti-radius);
+        color: var(--color-text-icon-gray-darker);
         @include border-w(2px);
-        @include transition((background, border, color, filter, opacity));
+        @include t2;
+        @include transition((background-color, border-color, color));
+
+        &::placeholder {
+            color: var(--color-text-icon-gray-medium);
+            opacity: 1;
+        }
 
         &:focus {
             outline: none;
         }
 
-        &:disabled {
-            cursor: not-allowed;
-            opacity: .8;
-            filter: grayscale(1);
+        // свой крестик браузера у type="search" не нужен: есть кнопка очистки
+        &::-webkit-search-cancel-button {
+            appearance: none;
         }
+    }
+
+    &-size_xs &__field {
+        @include t3;
+    }
+
+    &-size_l &__field {
+        @include t1;
     }
 
     &__error-message {
@@ -71,41 +171,104 @@
         @include t4;
     }
 
+    /* Отступы текста: иконка слева, кнопка очистки или слот справа */
+    &__input-container:has(.text-input__icon) &__field {
+        padding-left: var(--ti-pad-icon);
+    }
+
+    &__input-container:has(.text-input__reset) &__field,
+    &__input-container:has(.text-input__slot) &__field {
+        padding-right: var(--ti-pad-icon);
+    }
+
     /*----------LABEL POSITION-----------*/
-    &-pos_standard {
-        &.text-input__label {
-            display: block;
-            @include spacing(margin-bottom, 2px);
-            color: var(--color-main-gray-medium);
-            order: -1;
-            @include t4;
+    /* outside (standard) — над полем; none (hidden) — только для чтения с экрана */
+    &-pos_none &__label,
+    &-pos_hidden &__label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    /* inside — подпись в поле: пустое поле без фокуса показывает её вместо подсказки, иначе она мелко сверху */
+    &-pos_inside:not(.text-input-size_xs) {
+        /* Подпись всегда набрана мелко (t4-lh) и стоит наверху; в пустом поле она увеличена transform-ом
+           (scale = кегль текста поля / t4) и опущена к середине поля. Переход — только transform и цвет: шрифт
+           не перескакивает, раскладка не пересчитывается. --ti-label-scale: t2/t4, у s — t3/t4, у l — t1/t4 */
+        --ti-label-scale: #{16 / 11};
+        --ti-label-left: calc(var(--ti-pad) + #{vw(2px)});
+
+        .text-input__label {
+            position: absolute;
+            z-index: 1;
+            top: var(--ti-label-top);
+            left: var(--ti-label-left);
+            right: calc(var(--ti-pad) + #{vw(2px)});
+            margin: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            pointer-events: none;
+            transform-origin: left top;
+            @include t4-lh;
+            transition: color var(--motion-fast) var(--ease-in-out), transform var(--motion-base) var(--ease-in-out);
         }
 
-        &.text-input__wrapper {
-            display: flex;
-            flex-direction: column;
+        .text-input__input-container:has(.text-input__icon) {
+            --ti-label-left: calc(var(--ti-pad-icon) + #{vw(2px)});
+        }
+
+        &:not(.text-input_label-up) .text-input__label {
+            // ширина до масштаба: после увеличения подпись не выходит за поле
+            right: auto;
+            width: calc((100% - var(--ti-label-left) - var(--ti-pad) - #{vw(2px)}) / var(--ti-label-scale));
+            // центр увеличенной строки (высота 1.1em × scale) — на середине поля
+            transform: translateY(calc(var(--ti-h) / 2 - var(--ti-label-top) - 0.55em * var(--ti-label-scale))) scale(var(--ti-label-scale));
+        }
+
+        .text-input__field {
+            padding-top: calc(var(--ti-label-top) + #{vw(10px)});
+            padding-bottom: calc(var(--ti-label-top) - #{vw(2px)});
+        }
+
+        &:not(.text-input_label-up) .text-input__field::placeholder {
+            color: transparent;
         }
     }
 
-    &-pos_hidden {
-        &.text-input__label {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
+    &-pos_inside.text-input-size_s {
+        --ti-label-scale: #{13 / 11};
+
+        .text-input__field {
+            @include t3;
         }
+    }
+
+    &-pos_inside.text-input-size_l {
+        --ti-label-scale: #{20 / 11};
+    }
+
+    /* у xs нет варианта inside в Figma — подпись остаётся для чтения с экрана, подсказка видна */
+    &-pos_inside.text-input-size_xs .text-input__label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
     }
 
     /*----------STYLES-----------*/
     &-style_filled {
         .text-input__field {
             background: var(--color-main-gray-lighter);
-            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
@@ -117,20 +280,6 @@
                 background: var(--color-main-gray-white);
                 border-color: var(--color-main-gray-light);
             }
-
-            &::placeholder {
-                color: var(--color-main-gray-medium);
-            }
-        }
-
-        .text-input__icon {
-            color: var(--color-main-gray-light);
-        }
-
-        .text-input__reset {
-            &-icon {
-                color: var(--color-main-gray-light);
-            }
         }
     }
 
@@ -138,7 +287,6 @@
         .text-input__field {
             background: var(--color-main-gray-white);
             border-color: var(--color-main-gray-light);
-            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
@@ -149,20 +297,17 @@
             &:focus {
                 border-color: var(--color-main-color1-main);
             }
+        }
 
-            &::placeholder {
-                color: var(--color-main-gray-medium);
+        // подпись снаружи окрашивается вместе с обводкой
+        @media (hover: hover) and (pointer: fine) {
+            .text-input__wrapper:has(.text-input__field:hover:not(:disabled)) > .text-input__label {
+                color: var(--color-text-icon-color1-light);
             }
         }
 
-        .text-input__icon {
-            color: var(--color-main-gray-light);
-        }
-
-        .text-input__reset {
-            &-icon {
-                color: var(--color-main-gray-light);
-            }
+        .text-input__wrapper:has(.text-input__field:focus) > .text-input__label {
+            color: var(--color-text-icon-color1-main);
         }
     }
 
@@ -170,8 +315,7 @@
         .text-input__field {
             background: transparent;
             border-bottom-color: var(--color-main-gray-light);
-            color: var(--color-main-gray-darker);
-            border-radius: 0 !important;
+            border-radius: 0;
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
@@ -182,279 +326,65 @@
             &:focus {
                 border-bottom-color: var(--color-main-color1-main);
             }
-
-            &::placeholder {
-                color: var(--color-main-gray-medium);
-            }
-        }
-
-        .text-input__icon {
-            color: var(--color-main-gray-light);
-        }
-
-        .text-input__reset {
-            &-icon {
-                color: var(--color-main-gray-light);
-            }
-        }
-    }
-
-    /*----------SIZES-----------*/
-    &-size_l {
-        .text-input__icon {
-            @include spacing(left, 16px);
-        }
-
-        .text-input__reset {
-            @include spacing(right, 16px);
-        }
-
-        .text-input__input-container {
-            &:has(.text-input__icon) .text-input__field {
-                @include spacing(padding-left, 48px);
-            }
-
-            &:has(.text-input__reset) .text-input__field {
-                @include spacing(padding-right, 48px);
-            }
-        }
-
-        .text-input__field {
-            @include spacing(height, 56px);
-            padding: 0 vw(16px);
-            @include t2;
-            border-radius: var(--radius-ui-medium);
-
-            @include HD {
-                padding: 0 vwh(16px);
-            }
-            @include Tablet {
-                padding: 0 vwt(16px);
-            }
-            @include Mobile {
-                padding: 0 vwm(16px);
-            }
-        }
-    }
-
-    &-size_m {
-        .text-input__icon {
-            @include spacing(left, 12px);
-        }
-
-        .text-input__reset {
-            @include spacing(right, 12px);
-        }
-
-        .text-input__input-container {
-            &:has(.text-input__icon) .text-input__field {
-                @include spacing(padding-left, 44px);
-            }
-
-            &:has(.text-input__reset) .text-input__field {
-                @include spacing(padding-right, 44px);
-            }
-        }
-
-        .text-input__field {
-            @include spacing(height, 48px);
-            padding: 0 vw(16px);
-            @include t2;
-            border-radius: var(--radius-ui-medium);
-
-            @include HD {
-                padding: 0 vwh(16px);
-            }
-            @include Tablet {
-                padding: 0 vwt(16px);
-            }
-            @include Mobile {
-                padding: 0 vwm(16px);
-            }
-        }
-    }
-
-    &-size_s {
-        .text-input__icon {
-            @include spacing(left, 10px);
-        }
-
-        .text-input__reset {
-            @include spacing(right, 10px);
-        }
-
-        .text-input__input-container {
-            &:has(.text-input__icon) .text-input__field {
-                @include spacing(padding-left, 40px);
-            }
-
-            &:has(.text-input__reset) .text-input__field {
-                @include spacing(padding-right, 40px);
-            }
-        }
-
-        .text-input__field {
-            @include spacing(height, 40px);
-            padding: 0 vw(12px);
-            @include t2;
-            border-radius: var(--radius-ui-medium);
-
-            @include HD {
-                padding: 0 vwh(12px);
-            }
-            @include Tablet {
-                padding: 0 vwt(12px);
-            }
-            @include Mobile {
-                padding: 0 vwm(12px);
-            }
-        }
-    }
-
-    &-size_xs {
-        .text-input__icon {
-            @include spacing(left, 8px);
-        }
-
-        .text-input__reset {
-            @include spacing(right, 8px);
-        }
-
-        .text-input__input-container {
-            &:has(.text-input__icon) .text-input__field {
-                @include spacing(padding-left, 36px);
-            }
-
-            &:has(.text-input__reset) .text-input__field {
-                @include spacing(padding-right, 36px);
-            }
-        }
-
-        .text-input__field {
-            @include spacing(height, 32px);
-            padding: 0 vw(12px);
-            @include t3;
-            border-radius: var(--radius-ui-small);
-
-            @include HD {
-                padding: 0 vwh(12px);
-            }
-            @include Tablet {
-                padding: 0 vwt(12px);
-            }
-            @include Mobile {
-                padding: 0 vwm(12px);
-            }
-        }
-    }
-
-    /*----------LABEL INSIDE-----------*/
-    /* подпись внутри поля (Figma label=inside): в пустом поле стоит на месте текста, при фокусе и вводе
-       уменьшается и поднимается, текст опускается под неё */
-    $inside-sizes: (
-        l: (pad: 18px, icon: 50px, top: 8px, shift: 16px),
-        m: (pad: 18px, icon: 46px, top: 6px, shift: 14px),
-        s: (pad: 14px, icon: 42px, top: 5px, shift: 12px),
-        xs: (pad: 14px, icon: 38px, top: 3px, shift: 10px),
-    );
-
-    &-pos_inside {
-        .text-input__label {
-            position: absolute;
-            top: 50%;
-            z-index: 1;
-            margin: 0;
-            max-width: calc(100% - #{vw(60px)});
-            overflow: hidden;
-            pointer-events: none;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            transform: translateY(-50%);
-            @include t2;
-            @include transition((top, transform, font-size, line-height), 0.15s);
-        }
-
-        .text-input__field::placeholder {
-            color: transparent;
-        }
-
-        .text-input__field:focus::placeholder {
-            color: var(--color-main-gray-medium);
-        }
-
-        .text-input__field:focus ~ .text-input__label,
-        .text-input__field:not(:placeholder-shown) ~ .text-input__label {
-            transform: none;
-            @include t4-lh;
-        }
-
-        @each $name, $size in $inside-sizes {
-            &.text-input-size_#{$name} {
-                .text-input__label {
-                    left: vw(map-get($size, pad));
-                }
-
-                .text-input__input-container:has(.text-input__icon) .text-input__label {
-                    left: vw(map-get($size, icon));
-                }
-
-                .text-input__field:focus ~ .text-input__label,
-                .text-input__field:not(:placeholder-shown) ~ .text-input__label {
-                    top: vw(map-get($size, top));
-                }
-
-                .text-input__field:focus,
-                .text-input__field:not(:placeholder-shown) {
-                    padding-top: vw(map-get($size, shift));
-                }
-            }
         }
     }
 
     /*----------THEME-----------*/
     &-theme_dark {
         .text-input__label {
-            color: var(--color-main-gray-light);
+            color: var(--color-text-icon-gray-light);
         }
 
-        &.text-input-style_filled {
-            .text-input__field {
-                background: var(--color-main-gray-dark);
-                border-color: var(--color-main-gray-dark);
-                color: var(--color-main-gray-white);
+        .text-input__field {
+            color: var(--color-text-icon-gray-white);
 
-                @media (hover: hover) and (pointer: fine) {
-                    &:hover {
-                        border-color: var(--color-main-gray-medium);
-                    }
+            &::placeholder {
+                color: var(--color-text-icon-gray-light);
+            }
+        }
+
+        .text-input__icon {
+            color: var(--color-text-icon-gray-medium);
+        }
+
+        .text-input__reset {
+            color: var(--color-text-icon-gray-medium);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: var(--color-text-icon-color1-darker);
                 }
+            }
 
-                &:focus {
-                    background: var(--color-main-gray-black);
+            &:active {
+                color: var(--color-text-icon-color1-main);
+            }
+        }
+
+        &.text-input-style_filled .text-input__field {
+            background: var(--color-main-gray-dark);
+            border-color: var(--color-main-gray-dark);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
                     border-color: var(--color-main-gray-medium);
                 }
-
-                &::placeholder {
-                    color: var(--color-main-gray-light);
-                }
             }
 
-            .text-input__icon {
-                color: var(--color-main-gray-light);
-            }
-
-            .text-input__reset {
-                &-icon {
-                    color: var(--color-main-gray-light);
-                }
+            &:focus {
+                background: var(--color-main-gray-black);
+                border-color: var(--color-main-gray-dark);
             }
         }
 
         &.text-input-style_outline {
+            .text-input__wrapper > .text-input__label {
+                color: var(--color-text-icon-gray-medium);
+            }
+
             .text-input__field {
                 background: var(--color-main-gray-black);
                 border-color: var(--color-main-gray-dark);
-                color: var(--color-main-gray-white);
 
                 @media (hover: hover) and (pointer: fine) {
                     &:hover {
@@ -465,240 +395,189 @@
                 &:focus {
                     border-color: var(--color-main-color1-main);
                 }
+            }
 
-                &::placeholder {
-                    color: var(--color-main-gray-light);
+            @media (hover: hover) and (pointer: fine) {
+                .text-input__wrapper:has(.text-input__field:hover:not(:disabled)) > .text-input__label {
+                    color: var(--color-text-icon-color1-light);
                 }
             }
 
-            .text-input__icon {
-                color: var(--color-main-gray-medium);
-            }
-
-            .text-input__reset {
-                &-icon {
-                    color: var(--color-main-gray-medium);
-                }
+            .text-input__wrapper:has(.text-input__field:focus) > .text-input__label {
+                color: var(--color-text-icon-color1-main);
             }
         }
 
-        &.text-input-style_underline {
-            .text-input__field {
-                background: transparent;
-                border-bottom-color: var(--color-main-gray-dark);
-                color: var(--color-main-gray-white);
-                border-radius: 0 !important;
+        &.text-input-style_underline .text-input__field {
+            border-bottom-color: var(--color-main-gray-dark);
 
-                @media (hover: hover) and (pointer: fine) {
-                    &:hover {
-                        border-bottom-color: var(--color-main-color1-darker);
-                    }
-                }
-
-                &:focus {
-                    border-bottom-color: var(--color-main-color1-main);
-                }
-
-                &::placeholder {
-                    color: var(--color-main-gray-light);
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    border-bottom-color: var(--color-main-color1-darker);
                 }
             }
 
-            .text-input__icon {
-                color: var(--color-main-gray-medium);
-            }
-
-            .text-input__reset {
-                &-icon {
-                    color: var(--color-main-gray-medium);
-                }
+            &:focus {
+                border-bottom-color: var(--color-main-color1-main);
             }
         }
     }
 }
 
-/* Show reset button when input has value */
-.text-input__field:not(:placeholder-shown) ~ .text-input__reset,
+/* Кнопка очистки видна, только когда в поле есть текст. Поле без подсказки всегда :not(:placeholder-shown),
+ * поэтому проверка по подсказке — только у полей с атрибутом placeholder, иначе по классу has-value */
+.text-input__field[placeholder]:not(:placeholder-shown) ~ .text-input__reset,
 .text-input__field.has-value ~ .text-input__reset {
     pointer-events: auto;
     opacity: 1;
 }
 
 /*----------COUNTER-----------*/
+/* Счётчик (t4) стоит у правого края, с кнопкой очистки — левее неё на ширину кнопки и зазор */
 .text-input__counter {
     position: absolute;
+    right: var(--ti-edge);
     pointer-events: none;
     z-index: 2;
-    color: var(--color-main-gray-medium);
+    color: var(--color-text-icon-gray-medium);
     @include t4;
 }
 
-/* Отступ счётчика от края поля = отступ кнопки очистки; с кнопкой счётчик стоит левее неё */
-$text-input-edges: (l: 16px, m: 12px, s: 10px, xs: 8px);
-$text-input-paddings: (l: 16px, m: 16px, s: 12px, xs: 12px);
-$text-input-counter-room: 40px;
+.text-input__input-container:has(.text-input__reset) .text-input__counter {
+    right: calc(var(--ti-edge) + #{vw(24px)} + var(--ti-gap));
+}
 
-@each $size, $edge in $text-input-edges {
-    .text-input-size_#{$size} {
-        .text-input__counter {
-            right: vw($edge);
-        }
+.text-input .text-input__input-container:has(.text-input__counter) .text-input__field {
+    padding-right: calc(var(--ti-pad) + var(--ti-counter-room));
+}
 
-        .text-input__input-container:has(.text-input__reset) .text-input__counter {
-            right: vw($edge + 28px);
-        }
-
-        .text-input__input-container:has(.text-input__counter) .text-input__field {
-            padding-right: vw(map-get($text-input-paddings, $size) + $text-input-counter-room);
-        }
-
-        .text-input__input-container:has(.text-input__counter):has(.text-input__reset) .text-input__field {
-            padding-right: vw($edge + 28px + $text-input-counter-room);
-        }
-
-        @include HD {
-            .text-input__counter {
-                right: vwh($edge);
-            }
-
-            .text-input__input-container:has(.text-input__reset) .text-input__counter {
-                right: vwh($edge + 28px);
-            }
-
-            .text-input__input-container:has(.text-input__counter) .text-input__field {
-                padding-right: vwh(map-get($text-input-paddings, $size) + $text-input-counter-room);
-            }
-
-            .text-input__input-container:has(.text-input__counter):has(.text-input__reset) .text-input__field {
-                padding-right: vwh($edge + 28px + $text-input-counter-room);
-            }
-        }
-
-        @include Tablet {
-            .text-input__counter {
-                right: vwt($edge);
-            }
-
-            .text-input__input-container:has(.text-input__reset) .text-input__counter {
-                right: vwt($edge + 28px);
-            }
-
-            .text-input__input-container:has(.text-input__counter) .text-input__field {
-                padding-right: vwt(map-get($text-input-paddings, $size) + $text-input-counter-room);
-            }
-
-            .text-input__input-container:has(.text-input__counter):has(.text-input__reset) .text-input__field {
-                padding-right: vwt($edge + 28px + $text-input-counter-room);
-            }
-        }
-
-        @include Mobile {
-            .text-input__counter {
-                right: vwm($edge);
-            }
-
-            .text-input__input-container:has(.text-input__reset) .text-input__counter {
-                right: vwm($edge + 28px);
-            }
-
-            .text-input__input-container:has(.text-input__counter) .text-input__field {
-                padding-right: vwm(map-get($text-input-paddings, $size) + $text-input-counter-room);
-            }
-
-            .text-input__input-container:has(.text-input__counter):has(.text-input__reset) .text-input__field {
-                padding-right: vwm($edge + 28px + $text-input-counter-room);
-            }
-        }
-    }
+.text-input .text-input__input-container:has(.text-input__counter):has(.text-input__reset) .text-input__field {
+    padding-right: calc(var(--ti-pad-icon) + var(--ti-counter-room));
 }
 
 /*----------FOCUS-----------*/
-/* Кольцо фокуса: 2 px цвета бренда, зазор 2 px (вид самого поля в focus задан выше) */
-.text-input__field:focus-visible {
-    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
-    outline-offset: 2px;
-}
-
+/* Кольцо фокуса Inputs/focus: 2 px цвета бренда, зазор 2 px (вид самого поля в focus задан выше). У поля ввода
+   браузер включает :focus-visible и по клику, поэтому кольцо - только в клавиатурном режиме (html.sf-kbd, assetsGlobal/script.js) */
+:root.sf-kbd .text-input__field:focus-visible,
 .text-input__reset:focus-visible {
-    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
+    outline: 2px solid var(--color-main-color1-main);
     outline-offset: 2px;
 }
 
 /*----------STATES-----------*/
-/* error: цвет меняют набранный текст, счётчик и сообщение; заливка и обводка остаются как в focus */
-.text-input_error {
-    .text-input__field {
-        color: var(--color-states-error-dark);
-    }
-
-    .text-input__counter {
-        color: var(--color-states-error-dark);
-    }
-
+/* error и success только уведомляют: цвет меняют набранный текст, иконка и сообщение; поле выглядит как в focus */
+.text-input_error,
+.text-input_success {
     &.text-input-style_filled .text-input__field {
         background: var(--color-main-gray-white);
         border-color: var(--color-main-gray-light);
+    }
+
+    &.text-input-style_outline .text-input__field {
+        border-color: var(--color-main-color1-main);
+    }
+
+    &.text-input-style_underline .text-input__field {
+        border-bottom-color: var(--color-main-color1-main);
+    }
+
+    &.text-input-theme_dark.text-input-style_filled .text-input__field {
+        background: var(--color-main-gray-black);
+        border-color: var(--color-main-gray-dark);
+    }
+}
+
+.text-input_error {
+    .text-input__field,
+    .text-input__icon {
+        color: var(--color-states-error-dark);
     }
 
     &.text-input-theme_dark {
         .text-input__field,
-        .text-input__counter,
+        .text-input__icon,
         .text-input__error-message {
             color: var(--color-states-error-medium);
         }
-
-        &.text-input-style_filled .text-input__field {
-            background: var(--color-main-gray-black);
-            border-color: var(--color-main-gray-dark);
-        }
     }
 }
 
-/* success: ввод принят (design-ui-inputs.md) */
 .text-input_success {
-    .text-input__field {
+    .text-input__field,
+    .text-input__icon {
         color: var(--color-states-success-dark);
     }
 
-    &.text-input-style_filled .text-input__field {
-        background: var(--color-main-gray-white);
-        border-color: var(--color-main-gray-light);
-    }
-
     &.text-input-theme_dark {
-        .text-input__field {
+        .text-input__field,
+        .text-input__icon {
             color: var(--color-states-success-medium);
-        }
-
-        &.text-input-style_filled .text-input__field {
-            background: var(--color-main-gray-black);
-            border-color: var(--color-main-gray-dark);
         }
     }
 }
 
-/* слот справа (кнопка-глаз пароля, календарь): на месте кнопки очистки */
+/* disabled: заливка по набору states/disabled, у outline обводка того же цвета, у underline — линия */
+.text-input .text-input__field:disabled {
+    cursor: not-allowed;
+    background: var(--color-states-disabled-light);
+    border-color: var(--color-states-disabled-light);
+    color: var(--color-text-icon-gray-medium);
+
+    &::placeholder {
+        color: var(--color-text-icon-gray-medium);
+    }
+}
+
+.text-input.text-input-style_filled .text-input__field:disabled {
+    border-color: transparent;
+}
+
+.text-input.text-input-theme_dark .text-input__field:disabled {
+    background: var(--color-states-disabled-dark);
+    border-color: var(--color-states-disabled-dark);
+    color: var(--color-text-icon-gray-medium);
+}
+
+.text-input.text-input-style_underline .text-input__field:disabled {
+    background: transparent;
+    border-color: transparent;
+    border-bottom-color: var(--color-states-disabled-medium);
+}
+
+.text-input.text-input-theme_dark.text-input-style_underline .text-input__field:disabled {
+    background: transparent;
+    border-color: transparent;
+    border-bottom-color: var(--color-states-disabled-dark);
+}
+
+.text-input_disabled {
+    .text-input__icon {
+        color: var(--color-text-icon-gray-medium);
+    }
+
+    .text-input__counter,
+    .text-input__reset {
+        display: none;
+    }
+}
+
+/*----------SLOT-----------*/
+/* Слот справа (кнопка «глаз» пароля, кнопка календаря): на месте кнопки очистки */
 .text-input__slot {
     position: absolute;
+    right: var(--ti-edge);
     z-index: 2;
     display: flex;
     align-items: center;
     @include spacing(gap, 4px);
 }
 
-$text-input-slot-edges: (l: 16px, m: 12px, s: 10px, xs: 8px);
-@each $size, $edge in $text-input-slot-edges {
-    .text-input-size_#{$size} {
-        .text-input__slot {
-            @include spacing(right, $edge);
-        }
-
-        .text-input__input-container:has(.text-input__slot) .text-input__field {
-            @include spacing(padding-right, $edge + 32px);
-        }
-    }
+/* Кнопка «глаз» Inputs/eye: у показанного пароля иконка eye-off цвета бренда */
+.text-input__password-toggle[aria-pressed='true']:not(:hover) {
+    color: var(--color-text-icon-color1-main);
 }
 
+/*----------CALENDAR-----------*/
 /* Календарь поля даты (Inputs/calendar): слой в 8 под полем по правому краю, сверху — если снизу нет места */
 .text-input__calendar {
     position: absolute;
@@ -716,31 +595,274 @@ $text-input-slot-edges: (l: 16px, m: 12px, s: 10px, xs: 8px);
     }
 }
 
-/* disabled: заливка и текст по набору states/disabled */
-.text-input__field:disabled {
-    opacity: 1;
-    filter: none;
-    background: var(--color-states-disabled-light);
-    color: var(--color-main-gray-medium);
+/*----------PHONE: COUNTRY-----------*/
+/* Поле телефона с кнопкой страны (Inputs/phone, country, country-item, flag): кнопка слева через 8 */
+.text-input__phone-row {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    @include spacing(gap, 8px);
 
-    &::placeholder {
-        color: var(--color-main-gray-medium);
+    > .text-input__input-container {
+        flex: 1;
     }
 }
 
-.text-input-theme_dark .text-input__field:disabled {
-    background: var(--color-states-disabled-dark);
-    color: var(--color-main-gray-medium);
+.country-select {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        height: var(--ti-h, #{vw(48px)});
+        padding: 0 vw(8px) 0 var(--ti-edge, #{vw(12px)});
+        border: 0;
+        cursor: pointer;
+        background: var(--color-main-gray-lighter);
+        color: var(--color-text-icon-gray-medium);
+        border-radius: var(--ti-radius, var(--radius-ui-medium));
+        @include spacing(gap, 4px);
+        @include transition((background-color, color, box-shadow));
+
+        @include Tablet {
+            padding-right: vwt(8px);
+        }
+        @include Mobile {
+            padding-right: vwm(8px);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--color-text-icon-color1-main);
+            }
+        }
+
+        &:active {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-text-icon-color1-darker);
+        }
+
+        &[aria-expanded='true'] {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-text-icon-gray-darker);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            background: var(--color-states-disabled-light);
+            color: var(--color-states-disabled-medium);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    &__flag {
+        display: block;
+        flex-shrink: 0;
+        object-fit: cover;
+        border-radius: var(--radius-ui-xsmall);
+        @include spacing(width, 24px);
+        @include spacing(height, 16px);
+    }
+
+    &__chevron {
+        fill: currentColor;
+        @include icon(24px);
+        @include transition((transform), var(--motion-base));
+    }
+
+    &__button[aria-expanded="true"] &__chevron {
+        transform: rotate(180deg);
+    }
+
+    &__panel {
+        position: absolute;
+        top: calc(100% + #{vw(8px)});
+        left: 0;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        background: var(--color-main-gray-white);
+        border-radius: var(--radius-ui-xlarge);
+        box-shadow: var(--shadow-gray-m);
+        @include spacing(width, 320px);
+        @include spacing(max-height, 300px);
+        @include spacing(padding, 12px);
+        @include spacing(gap, 4px);
+
+        &[hidden] {
+            display: none;
+        }
+
+        // появление (классы country-select-panel-*): прозрачность и сдвиг 6 px; скрытие быстрее
+        &.country-select-panel-enter-active {
+            transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+        }
+
+        &.country-select-panel-leave-active {
+            pointer-events: none;
+            transition: opacity var(--motion-fast) var(--ease-in), transform var(--motion-fast) var(--ease-in);
+        }
+
+        &.country-select-panel-enter-from,
+        &.country-select-panel-leave-to {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+    }
+
+    &__item {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        width: 100%;
+        padding: 0 vw(12px);
+        border: 0;
+        cursor: pointer;
+        text-align: left;
+        background: transparent;
+        color: var(--color-text-icon-gray-darker);
+        border-radius: var(--radius-ui-medium);
+        @include spacing(height, 40px);
+        @include spacing(gap, 12px);
+        @include t2;
+        @include transition((background-color, color));
+
+        @include Tablet {
+            padding: 0 vwt(12px);
+        }
+        @include Mobile {
+            padding: 0 vwm(12px);
+        }
+
+        &[aria-selected='true'] {
+            background: var(--color-main-gray-lighter);
+        }
+
+        &:hover {
+            background: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-color1-main);
+        }
+
+        &:active {
+            background: var(--color-main-color1-lighter);
+            color: var(--color-text-icon-color1-darker);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: -2px;
+        }
+    }
+
+    &__name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    &__code {
+        flex-shrink: 0;
+        color: var(--color-text-icon-gray-medium);
+    }
+
+    &-theme_dark {
+        .country-select__button {
+            background: var(--color-main-gray-dark);
+            color: var(--color-text-icon-gray-medium);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: var(--color-text-icon-color1-light);
+                }
+            }
+
+            &:active {
+                background: var(--color-main-gray-darker);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+                color: var(--color-text-icon-color1-main);
+            }
+
+            &[aria-expanded='true'] {
+                background: var(--color-main-gray-darker);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+                color: var(--color-text-icon-gray-white);
+            }
+
+            &:disabled {
+                background: var(--color-states-disabled-dark);
+            }
+        }
+
+        .country-select__panel {
+            background: var(--color-main-gray-darker);
+            box-shadow: var(--shadow-gray-m), inset 0 0 0 2px var(--color-main-gray-dark);
+        }
+
+        .country-select__item {
+            color: var(--color-text-icon-gray-white);
+
+            &[aria-selected='true'] {
+                background: var(--color-main-gray-dark);
+            }
+
+            &:hover {
+                background: var(--color-main-gray-dark);
+                color: var(--color-text-icon-color1-light);
+            }
+
+            &:active {
+                background: var(--color-main-gray-darker);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+                color: var(--color-text-icon-color1-main);
+            }
+        }
+    }
 }
 
-.text-input-style_underline .text-input__field:disabled {
-    background: transparent;
-    border-bottom-color: var(--color-states-disabled-medium);
+@media (prefers-reduced-motion: reduce) {
+    .text-input__field,
+    .text-input__label,
+    .text-input__icon,
+    .text-input__reset,
+    .country-select__button,
+    .country-select__item {
+        transition: none;
+    }
 }
 
-.text-input_disabled {
-    .text-input__counter,
-    .text-input__reset {
-        display: none;
+/* Каскад списка стран: при каждом открытии (панель выходит из display: none — анимации стартуют заново) пункты
+ * появляются друг за другом с шагом 18 мс */
+.country-select__panel .country-select__item {
+    animation: country-select-item-in var(--motion-base) var(--ease-out) backwards;
+
+    @for $i from 2 through 12 {
+        &:nth-child(#{$i}) {
+            animation-delay: ($i - 1) * 18ms;
+        }
+    }
+
+    &:nth-child(n + 13) {
+        animation-delay: 12 * 18ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@keyframes country-select-item-in {
+    from {
+        opacity: 0;
+        translate: 0 -3px;
     }
 }

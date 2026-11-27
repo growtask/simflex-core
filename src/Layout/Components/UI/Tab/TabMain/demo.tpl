@@ -13,6 +13,22 @@ use Simflex\Core\Layout\Components\UI\Tab\TabMain\TabMainTheme;
 $tabTheme = TabMainTheme::from($theme);
 
 ?>
+<h3 class="ui-showcase__subtitle ui-m">Группа вкладок: клик, стрелки, Home/End; подложка переезжает к новой</h3>
+<?php foreach (TabMainStyle::cases() as $style): ?>
+    <div class="ui-showcase__row" data-sf-tabs role="tablist" aria-label="Вкладки <?= $style->name ?>">
+        <?php foreach (['Описание', 'Характеристики', 'Отзывы', 'Доставка'] as $i => $text): ?>
+            <?= Tab::drawTabMain(
+                text: $text,
+                style: $style,
+                size: TabMainSize::Medium,
+                theme: $tabTheme,
+                active: $i === 0,
+                disabled: $i === 3,
+                attributes: ['role' => 'tab'],
+            ) ?>
+        <?php endforeach; ?>
+    </div>
+<?php endforeach; ?>
 <?php foreach (TabMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">

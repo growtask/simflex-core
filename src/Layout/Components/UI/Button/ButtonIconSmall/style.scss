@@ -1,4 +1,4 @@
-/* Кнопка-иконка Buttons/icon-small (design-ui-buttons.md): 24 px, иконка 16, flat и secondary */
+/* Кнопка-иконка Buttons/icon-small: 24 px; flat — иконка 24 без плашки, secondary — плашка ui/small и иконка 16 */
 .btn-icon {
     display: inline-flex;
     flex-shrink: 0;
@@ -11,10 +11,23 @@
     border-radius: var(--radius-ui-small);
     @include spacing(width, 24px);
     @include spacing(height, 24px);
-    @include transition((background, color, box-shadow));
+    @include transition((background-color, color, box-shadow));
 
     &__icon {
         fill: currentColor;
+        @include spacing(width, 24px);
+        @include spacing(height, 24px);
+        // отпускание — пружинный возврат
+        transition: transform calc(var(--motion-slow) * 2) var(--ease-spring);
+    }
+
+    // нажатие: иконка слегка «утапливается» (transform — без сдвига раскладки), быстро; возврат — пружиной
+    &:not(:disabled, [aria-disabled="true"]):active &__icon {
+        transform: scale(0.9);
+        transition: transform var(--motion-fast) var(--ease-out);
+    }
+
+    &-secondary &__icon {
         @include spacing(width, 16px);
         @include spacing(height, 16px);
     }
@@ -93,5 +106,13 @@
 
     @media (prefers-reduced-motion: reduce) {
         transition: none;
+
+        &__icon {
+            transition: none;
+        }
+
+        &:not(:disabled, [aria-disabled="true"]):active &__icon {
+            transform: none;
+        }
     }
 }

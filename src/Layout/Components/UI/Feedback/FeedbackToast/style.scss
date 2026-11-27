@@ -1,4 +1,5 @@
-/* Тост Feedback/toast и стопка Feedback/stack (design-ui-feedback.md) */
+/* Тост Feedback/toast и стопка Feedback/stack (Figma 5093:6642, design-ui-feedback.md): ui/medium, тень shadows/gray/s,
+ * отступы 8/12, промежуток 12, иконка 20, текст t3, действие — ссылка Links flat m тёмной темы со стрелкой */
 .toast-stack {
     position: fixed;
     z-index: z('notification');
@@ -10,6 +11,10 @@
     transform: translateX(-50%);
     pointer-events: none;
     @include spacing(gap, 8px);
+    // колода: все тосты в одной ячейке у нижнего края, место каждого — transform от script.js (layout)
+    display: grid;
+    align-items: end;
+    justify-items: center;
 
     @include Tablet {
         bottom: vwt(16px);
@@ -20,6 +25,36 @@
     }
 
     > * {
+        pointer-events: auto;
+    }
+
+    > .toast {
+        grid-row: 1;
+        grid-column: 1;
+        transform: translateY(var(--toast-y, 0)) scale(var(--toast-scale, 1));
+        transform-origin: 50% var(--toast-clip, 0);
+        // задний тост обрезан до размера переднего; без обрезки рамка клипа на 32 px за краями — тень видна целиком
+        clip-path: inset(var(--toast-clip-t, -32px) var(--toast-clip-x, -32px) -32px round var(--radius-ui-medium));
+        transition: transform var(--motion-slow) var(--ease-out), clip-path var(--motion-slow) var(--ease-out);
+
+        > * {
+            transition: opacity var(--motion-base) var(--ease-out), color var(--motion-fast) var(--ease-out);
+        }
+    }
+
+    // задние тосты колоды: видна только кромка, содержимое скрыто
+    > .toast[data-toast-back] > * {
+        opacity: 0;
+    }
+
+    // раскрытая колода: невидимая подложка на всю высоту списка, чтобы курсор не «проваливался» в промежутки
+    &[data-expanded]::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--toast-stack-h, 100%);
         pointer-events: auto;
     }
 }
@@ -42,6 +77,27 @@
     @include spacing(padding-block, 8px);
     @include spacing(gap, 12px);
 
+    // появление и скрытие (классы toast-*, SfUi.transition): снизу вверх на 8 px с проявлением, скрытие быстрее;
+    // соседи по стопке съезжают через FLIP (transform), поэтому здесь сдвиг — свойством translate
+    &.toast-enter-active {
+        transition: opacity var(--motion-base) var(--ease-out), translate var(--motion-base) var(--ease-out);
+    }
+
+    &.toast-leave-active {
+        pointer-events: none;
+        transition: opacity var(--motion-fast) var(--ease-in), translate var(--motion-fast) var(--ease-in);
+    }
+
+    &.toast-enter-from {
+        opacity: 0;
+        translate: 0 8px;
+    }
+
+    &.toast-leave-to {
+        opacity: 0;
+        translate: 0 4px;
+    }
+
     &_width_fill {
         width: 100%;
     }
@@ -57,28 +113,67 @@
         }
     }
 
+    // иконка success: кружок и галочка линией; галочка рисуется после появления тоста
+    &__icon_draw {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        path {
+            stroke-dasharray: 1 2;
+            animation: toast-check-draw var(--motion-slow) var(--ease-out) var(--motion-base) backwards;
+        }
+    }
+
     &__text {
         flex: 1;
         @include t3;
     }
 
     &__action {
+        display: inline-flex;
         flex-shrink: 0;
+        align-items: center;
         cursor: pointer;
         padding: 0;
         border: 0;
         background: none;
-        color: inherit;
-        text-decoration: underline;
-        @include ui-s;
+        color: var(--color-text-icon-color1-light);
+        text-decoration: none;
+        @include t3;
+        @include spacing(gap, 2px);
+        @include transition((color));
 
-        &:hover {
-            text-decoration: none;
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--color-text-icon-color1-lighter);
+            }
         }
 
         &:focus-visible {
-            outline: 2px solid var(--color-main-gray-white);
+            outline: 2px solid currentColor;
             outline-offset: 2px;
+            border-radius: var(--radius-ui-xsmall);
+        }
+    }
+
+    &__action-icon {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include icon(16px);
+    }
+
+    // на цветных тостах success и error ссылка белая: color1/light на них не читается
+    &_style_success &__action,
+    &_style_error &__action {
+        color: var(--color-text-icon-gray-white);
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--color-text-icon-gray-lighter);
+            }
         }
     }
 
@@ -118,6 +213,16 @@
         &__timer {
             opacity: 0;
         }
+
+        &__icon_draw path {
+            animation: none;
+        }
+    }
+}
+
+@keyframes toast-check-draw {
+    from {
+        stroke-dashoffset: 1.05;
     }
 }
 

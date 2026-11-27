@@ -6,7 +6,9 @@
     &__item {
         flex-shrink: 0;
         background: var(--color-main-gray-medium);
-        @include transition((width, background));
+        // активная полоса длиннее; ширина меняется сразу (не анимируется: перерасчёт раскладки на каждом кадре),
+        // плавно — только цвет
+        @include transition((background-color), var(--motion-base));
         border-radius: var(--radius-ui-small);
     }
 

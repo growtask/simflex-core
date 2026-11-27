@@ -1,16 +1,99 @@
+/*
+ * Маленькая ссылка на соцсеть (Figma Buttons/social-small): style=default — серая плашка с цветным знаком,
+ * style=<сеть> (у нас brand) — заливка цветом сети и белый знак. Размеры xs–l, радиус ui/small у xs, ui/medium у s–l.
+ */
+
+// Толщина рамки как у border-w(2px), но в переменной: слоям состояний нужно выйти на рамку (inset: -рамка)
+@mixin social-bw($name, $width) {
+    #{$name}: max(#{vw($width), $width});
+
+    @include HD {
+        #{$name}: max(#{vwh($width), $width});
+    }
+    @include Tablet {
+        #{$name}: max(#{vwt($width), $width});
+    }
+    @include Mobile {
+        #{$name}: max(#{vwm($width), $width});
+    }
+}
+
 .social {
     /*----------CORE STYLE-----------*/
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    @include social-bw(--social-bw, 2px);
+    position: relative;
+    isolation: isolate;
+    display: inline-grid;
+    place-items: center;
     flex-shrink: 0;
     cursor: pointer;
     text-decoration: none;
-    @include transition((background, color, filter));
+    border: var(--social-bw) solid transparent;
+    // scale: наведение — лёгкое увеличение в пределах контейнера (--sf-grow, JS), нажатие — лёгкое уменьшение
+    transition: background-color var(--motion-fast) var(--ease-in-out), color var(--motion-fast) var(--ease-in-out),
+        border-color var(--motion-fast) var(--ease-in-out), scale var(--motion-base) var(--ease-out);
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            scale: var(--sf-grow, 1.02);
+        }
+    }
+
+    /* Слои состояний: ::before — наведение, ::after — нажатие. Цвет или градиент состояния лежит поверх основы,
+       меняется только opacity: переход между градиентами (instagram, max) браузер не интерполирует — фон мигал */
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        inset: calc(-1 * var(--social-bw));
+        z-index: -1;
+        border: var(--social-bw) solid transparent;
+        border-radius: inherit;
+        opacity: 0;
+        pointer-events: none;
+        @include transition((opacity));
+    }
+
+    &::before {
+        background: var(--social-bg-hover, transparent) border-box;
+    }
+
+    &::after {
+        background: var(--social-bg-press, transparent) border-box;
+        border-color: var(--social-border-press, transparent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover::before {
+            opacity: 1;
+        }
+    }
+
+    &:active::after {
+        opacity: 1;
+    }
+
+    &:active {
+        scale: var(--sf-press, 0.99);
+        transition: background-color var(--motion-fast) var(--ease-in-out), color var(--motion-fast) var(--ease-in-out),
+            border-color var(--motion-fast) var(--ease-in-out), scale var(--motion-fast) var(--ease-out);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &:hover,
+        &:active {
+            scale: none;
+        }
+    }
 
     &__icon {
+        // знаки (цветной и монохромный) в одной ячейке сетки: меняются прозрачностью, без скачка
+        // не grid-area: 1 / 1 — scssphp считает это делением и выдаёт grid-area: 1
+        grid-row: 1;
+        grid-column: 1;
         flex-shrink: 0;
         @include icon(24px);
+        @include transition((opacity));
     }
 
     &__icon_mono {
@@ -23,69 +106,78 @@
     }
 
     /*----------STYLES-----------*/
-    /* Серая плашка: цветной знак, по наведению и нажатию знак монохромный и синий */
+    /* Серая плашка: цветной знак; по наведению и нажатию плашка розовеет, знак монохромный color1/darker */
     &-default {
+        --social-bg-hover: var(--color-main-color1-lighter);
+        --social-bg-press: var(--color-main-color1-light);
         background: var(--color-main-gray-lighter);
-        color: var(--color-main-color1-main);
+        color: var(--color-text-icon-color1-darker);
 
         .social__icon_mono {
-            display: none;
+            opacity: 0;
         }
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
                 .social__icon_color {
-                    display: none;
+                    opacity: 0;
                 }
 
                 .social__icon_mono {
-                    display: block;
+                    opacity: 1;
                 }
             }
         }
 
         &:active {
-            background: var(--color-main-color1-lighter);
-            color: var(--color-main-color1-dark);
-
             .social__icon_color {
-                display: none;
+                opacity: 0;
             }
 
             .social__icon_mono {
-                display: block;
+                opacity: 1;
             }
         }
     }
 
-    /* Заливка цветом сети, знак белый; hover и press — через яркость, пока у сетей нет светлой и тёмной версий */
+    /* Заливка цветом сети (social/<сеть>/main, light по наведению, dark по нажатию), знак белый */
     &-brand {
-        color: var(--color-main-gray-white);
-        background: var(--social-bg, var(--color-main-color1-main));
+        color: var(--color-text-icon-gray-white);
+        // border-box: градиенты сетей (instagram, max) не повторяются под рамкой
+        background: var(--social-bg, var(--color-main-color1-main)) border-box;
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                filter: brightness(1.12);
-            }
+        &::before {
+            background: var(--social-bg-hover, var(--social-bg, var(--color-main-color1-light))) border-box;
         }
 
-        &:active {
-            filter: brightness(.88);
+        &::after {
+            background: var(--social-bg-press, var(--social-bg, var(--color-main-color1-dark))) border-box;
         }
     }
 
     /*----------NETWORKS-----------*/
-    &-network_vkontakte { --social-bg: var(--color-social-vk-main); }
-    &-network_telegram { --social-bg: var(--color-social-telegram-main); }
-    &-network_whatsapp { --social-bg: var(--color-social-whatsapp-main); }
-    &-network_yandex { --social-bg: var(--color-social-yandex-main); }
-    &-network_instagram { --social-bg: var(--color-social-instagram-main); }
-    &-network_google { --social-bg: var(--social-google-main, var(--color-main-color1-main)); }
-    &-network_youtube { --social-bg: var(--social-youtube-main, var(--color-states-error-dark)); }
-    &-network_figma { --social-bg: var(--social-figma-main, var(--color-main-color1-main)); }
-    &-network_rutube { --social-bg: var(--social-rutube-main, var(--color-main-gray-black)); }
-    &-network_yandex-zen { --social-bg: var(--social-zen-main, var(--color-main-gray-black)); }
-    &-network_max { --social-bg: var(--social-max-main, var(--color-main-color1-main)); }
+    $networks: (
+        vkontakte: vk,
+        telegram: telegram,
+        whatsapp: whatsapp,
+        yandex: yandex,
+        instagram: instagram,
+        google: google,
+        youtube: youtube,
+        figma: figma,
+        rutube: ru,
+        yandex-zen: zen,
+        max: max,
+    );
+
+    // только brand: у default свои цвета состояний (иначе сеть перекрыла бы их)
+    @each $network, $token in $networks {
+        &-brand.social-network_#{$network} {
+            --social-bg: var(--color-social-#{$token}-main);
+            --social-bg-hover: var(--color-social-#{$token}-light);
+            --social-bg-press: var(--color-social-#{$token}-dark);
+        }
+    }
 
     /*----------SIZES-----------*/
     &-size_xs {
@@ -117,29 +209,21 @@
     }
 
     /*----------THEME-----------*/
-    /* В тёмной теме серый стиль монохромный, цвета текста */
+    /* В тёмной теме default монохромный: белый знак на тёмной плашке */
     &-theme_dark {
         &.social-default {
+            --social-bg-hover: var(--color-main-gray-medium);
+            --social-bg-press: var(--color-main-gray-darker);
+            --social-border-press: var(--color-main-gray-dark);
             background: var(--color-main-gray-dark);
-            color: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-gray-white);
 
             .social__icon_color {
                 display: none;
             }
 
             .social__icon_mono {
-                display: block;
-            }
-
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    color: var(--color-main-color1-light);
-                }
-            }
-
-            &:active {
-                background: var(--color-main-gray-darker);
-                color: var(--color-main-color1-main);
+                opacity: 1;
             }
         }
     }

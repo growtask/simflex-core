@@ -4,11 +4,7 @@
     align-items: center;
     justify-content: center;
     width: fit-content;
-    @include transition((background, color, opacity));
-
-    &__icon {
-        @include transition((color));
-    }
+    @include transition((background-color, color, opacity));
 
     &__text {
         display: flex;
@@ -61,7 +57,7 @@
         @include spacing(height, 16px);
         padding: 0 vw(4px);
         @include t4;
-        border-radius: var(--radius-ui-medium);
+        border-radius: var(--radius-pill);
 
         @include HD {
             padding: 0 vwh(4px);

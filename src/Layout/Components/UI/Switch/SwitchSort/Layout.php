@@ -43,7 +43,16 @@ class Layout extends LayoutBase
             theme: $theme,
         );
 
-        return static::draw(compact('text', 'buttons', 'className') + [
+        // скользящий индикатор: копия пары стрелок цветом active, видна окном над выбранной (style.scss)
+        $glide = '';
+        foreach ([true, false] as $up) {
+            $glide .= '<span class="sort-button sort-button_style_' . $style->value . ' sort-button_size_s sort-button-theme_'
+                . $theme->value . ' active">' . renderIcon($style === SwitchSortButtonStyle::Solid
+                    ? ($up ? 'triangle-up' : 'triangle-down')
+                    : ($up ? 'chevron-s-up' : 'chevron-s-down'), 'sort-button__icon') . '</span>';
+        }
+
+        return static::draw(compact('text', 'buttons', 'className', 'glide') + [
             'theme' => $theme->value,
             'direction' => $direction->value,
         ]);

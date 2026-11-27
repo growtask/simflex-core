@@ -1,6 +1,17 @@
 /*
- * Календарь Calendar/calendar, day, item (design-ui-calendar.md): ширина 304 (7 × 40 и отступы 12), день 40 × 40,
- * месяц и год 70 × 40, зазор 8 между шапкой, днями недели и сеткой; радиус карточки ui/xlarge, ячеек ui/medium.
+ * Календарь Calendar/calendar, day, item (Figma «UI»): ширина 304 (7 × 40 и отступы 12), день 40 × 40, месяц и год
+ * 70 × 40, зазор 8 между шапкой, днями недели и сеткой; стрелки — Buttons/alt flat s (40 × 40); числа t3,
+ * заголовок ui/m. Радиус карточки ui/xlarge, ячеек ui/medium (12 + 12 = 24). Сегодня — кольцо 1 px, период —
+ * сплошная полоса: края скруглены снаружи, середина без радиуса. Дни вне min/max только тускнеют.
+ * Колонки времени высотой 5 строк (200), выбранное на средней строке: часы и минуты — колонки с прокруткой
+ * без полосы, AM / PM — два пункта без прокрутки, сдвиг к выбранному.
+ * Движение (SfUi.transition, см. script.js): экраны — .calendar-zoom-in/out (scale 0,96/1,04 + opacity),
+ * страницы — .calendar-slide (сдвиг 12 % по --calendar-dir + opacity), строка «Время» — .calendar-fade; всё
+ * var(--motion-slow) var(--ease-in-out). Уходящий элемент — absolute на своём месте; высота карточки на время перехода
+ * задаётся из JS и идёт плавно (transition height у корня действует, только пока высота задана явно).
+ * Высота карточки — осознанное исключение из правила «движение — только transform/opacity»: высота экранов разная,
+ * без её перехода карточка прыгала бы; анимируется один раз на смену экрана.
+ * hover/press — var(--motion-fast).
  */
 .calendar {
     --calendar-text: var(--color-text-icon-gray-darker);
@@ -11,11 +22,19 @@
     --calendar-press: var(--color-main-gray-light);
     --calendar-accent: var(--color-text-icon-color1-main);
     --calendar-line: var(--color-main-gray-lighter);
+    --calendar-range: var(--color-main-color1-lighter);
+    --calendar-range-text: var(--color-text-icon-color1-dark);
+    --calendar-range-hover: var(--color-main-color1-light);
+    --calendar-range-hover-text: var(--color-text-icon-color1-darker);
 
+    position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    // сдвиг и масштаб экранов не выходят за карточку
+    overflow: hidden;
     color: var(--calendar-text);
+    transition: height var(--motion-slow) var(--ease-in-out);
     @include spacing(width, 304px);
     @include spacing(padding, 12px);
     @include spacing(gap, 8px);
@@ -28,6 +47,10 @@
         --calendar-press: var(--color-main-gray-medium);
         --calendar-accent: var(--color-text-icon-color1-light);
         --calendar-line: var(--color-main-gray-dark);
+        --calendar-range: var(--color-main-color1-darker);
+        --calendar-range-text: var(--color-text-icon-color1-lighter);
+        --calendar-range-hover: var(--color-main-color1-dark);
+        --calendar-range-hover-text: var(--color-text-icon-gray-white);
     }
 
     &_card {
@@ -44,12 +67,18 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        @include spacing(gap, 8px);
 
         .calendar__arrow[hidden] {
             visibility: hidden;
             display: inline-flex;
         }
+    }
+
+    // место стрелки, когда её нет (вид time): заголовок остаётся по центру
+    &__spacer {
+        flex-shrink: 0;
+        @include spacing(width, 40px);
+        @include spacing(height, 40px);
     }
 
     &__title {
@@ -58,7 +87,7 @@
         justify-content: center;
         flex: 1;
         min-width: 0;
-        @include spacing(gap, 8px);
+        @include spacing(gap, 4px);
         @include ui-m;
     }
 
@@ -70,6 +99,7 @@
         font: inherit;
         cursor: pointer;
         border-radius: var(--radius-ui-xsmall);
+        @include transition(color);
 
         &:hover {
             color: var(--calendar-accent);
@@ -91,13 +121,19 @@
     }
 
     &__line {
-        width: 1px;
         align-self: stretch;
         background: var(--calendar-line);
+        @include spacing(width, 2px);
+        @include spacing(margin-inline, 2px);
 
         &[hidden] {
             display: none;
         }
+    }
+
+    &__body,
+    &__pages {
+        position: relative;
     }
 
     &__days {
@@ -133,8 +169,8 @@
         cursor: pointer;
         border-radius: var(--radius-ui-medium);
         @include spacing(height, 40px);
-        @include ui-s;
-        font-weight: 400;
+        @include t3;
+        @include transition((background-color, color, box-shadow));
 
         &:hover {
             background: var(--calendar-hover);
@@ -170,7 +206,6 @@
 
         &:disabled {
             color: var(--calendar-disabled);
-            text-decoration: line-through;
             background: none;
             cursor: default;
         }
@@ -188,21 +223,29 @@
             color: var(--calendar-muted);
         }
 
-        // диапазон: дни внутри — светлая плашка, края — сплошные, скруглены только внешние стороны
-        &_in-range:not([aria-selected='true']) {
-            background: var(--calendar-hover);
+        // период: середина — полоса без радиуса, края скруглены снаружи
+        &_range:not([aria-selected='true']) {
+            background: var(--calendar-range);
+            color: var(--calendar-range-text);
             border-radius: 0;
-            @include spacing(width, 48px);
+            box-shadow: none;
+
+            &:hover {
+                background: var(--calendar-range-hover);
+                color: var(--calendar-range-hover-text);
+            }
         }
 
-        &_range-start[aria-selected='true'] {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
+        &_range-start {
+            border-radius: var(--radius-ui-medium) 0 0 var(--radius-ui-medium);
         }
 
-        &_range-end[aria-selected='true'] {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
+        &_range-end {
+            border-radius: 0 var(--radius-ui-medium) var(--radius-ui-medium) 0;
+        }
+
+        &_range-start#{&}_range-end {
+            border-radius: var(--radius-ui-medium);
         }
     }
 
@@ -222,8 +265,9 @@
         grid-template-columns: 1fr 1fr;
         @include spacing(gap, 8px);
 
-        &_12h {
-            grid-template-columns: repeat(3, 1fr);
+        &_12h,
+        &_3 {
+            grid-template-columns: 1fr 1fr 1fr;
         }
     }
 
@@ -240,12 +284,35 @@
         @include t4;
     }
 
+    // часы и минуты — барабан (бесконечный, перенос scrollTop из JS): 5 строк по 40, без полосы — у кольца нет
+    // начала и конца, ползунок при переносе прыгал бы; прокрутка не уходит на страницу
+    &__column-scroll {
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        @include hide-scrollbar;
+        @include spacing(height, 200px);
+    }
+
+    // AM / PM — два пункта без прокрутки: первый на средней строке, пара сдвигается на --calendar-shift строк вверх,
+    // чтобы выбранный стоял на одной линии с выбранными часами и минутами
+    &__column-static {
+        overflow: hidden;
+        @include spacing(height, 200px);
+        @include spacing(padding-top, 80px);
+        box-sizing: border-box;
+
+        .calendar__column-list {
+            transform: translateY(calc(-100% / 2 * var(--calendar-shift, 0)));
+            transition: transform var(--motion-base) var(--ease-out);
+        }
+    }
+
     &__column-list {
+        position: relative;
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
-        scrollbar-width: thin;
-        @include spacing(height, 200px);
 
         .calendar__item {
             flex-shrink: 0;
@@ -253,12 +320,14 @@
         }
     }
 
+    // строка «Время» под днями (свойство time): линия, подпись t3 и поле Inputs/main filled s 120 × 40
     &__time-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         border-top: 1px solid var(--calendar-line);
         @include spacing(padding-top, 8px);
+        @include spacing(gap, 8px);
     }
 
     &__time-label {
@@ -275,10 +344,18 @@
         background: var(--color-main-gray-lighter);
         color: var(--calendar-text);
         cursor: pointer;
-        border-radius: var(--radius-ui-small);
+        text-align: left;
+        border-radius: var(--radius-ui-medium);
+        box-shadow: inset 0 0 0 2px transparent;
         @include spacing(width, 120px);
         @include spacing(height, 40px);
-        @include ui-s;
+        @include spacing(padding-inline, 12px);
+        @include t2;
+        @include transition((background, box-shadow));
+
+        &:hover {
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
+        }
 
         &:focus-visible {
             outline: 2px solid var(--color-main-color1-main);
@@ -288,5 +365,81 @@
 
     &-theme_dark &__time-field {
         background: var(--color-main-gray-dark);
+
+        &:hover {
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-medium);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+
+        &__day,
+        &__item,
+        &__title-button,
+        &__time-field,
+        &__column-static .calendar__column-list {
+            transition: none;
+        }
+    }
+}
+
+/* ---------- Переходы экранов и страниц (классы SfUi.transition, script.js) ---------- */
+.calendar-zoom-in-enter-active,
+.calendar-zoom-in-leave-active,
+.calendar-zoom-out-enter-active,
+.calendar-zoom-out-leave-active,
+.calendar-slide-enter-active,
+.calendar-slide-leave-active,
+.calendar-fade-enter-active,
+.calendar-fade-leave-active {
+    transition: opacity var(--motion-slow) var(--ease-in-out), transform var(--motion-slow) var(--ease-in-out);
+}
+
+// уходящий — поверх нового на своём месте (top/left/width из JS), на высоту не влияет
+.calendar-zoom-in-leave-active,
+.calendar-zoom-out-leave-active,
+.calendar-slide-leave-active,
+.calendar-fade-leave-active {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+}
+
+.calendar-zoom-in-enter-from,
+.calendar-zoom-out-leave-to {
+    opacity: 0;
+    transform: scale(0.96);
+}
+
+.calendar-zoom-in-leave-to,
+.calendar-zoom-out-enter-from {
+    opacity: 0;
+    transform: scale(1.04);
+}
+
+.calendar-slide-enter-from {
+    opacity: 0;
+    transform: translateX(calc(var(--calendar-dir, 1) * 12%));
+}
+
+.calendar-slide-leave-to {
+    opacity: 0;
+    transform: translateX(calc(var(--calendar-dir, 1) * -12%));
+}
+
+.calendar-fade-enter-from,
+.calendar-fade-leave-to {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .calendar-zoom-in-enter-from,
+    .calendar-zoom-in-leave-to,
+    .calendar-zoom-out-enter-from,
+    .calendar-zoom-out-leave-to,
+    .calendar-slide-enter-from,
+    .calendar-slide-leave-to {
+        transform: none;
     }
 }

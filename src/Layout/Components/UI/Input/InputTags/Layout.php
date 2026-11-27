@@ -19,7 +19,7 @@ use Simflex\Core\Layout\LayoutBase;
 /**
  * Поле тегов (Figma Inputs/tags, design-ui-inputs.md): поле с подсказками и ряд удаляемых тегов (Tag secondary s
  * с крестиком) под ним. Выбранные значения — в скрытом поле name через запятую (событие change). Подсказки —
- * варианты options или поиск на сервере: GET <searchUrl>&text=<строка>, ответ [{id, name}]; allowNew — Enter
+ * варианты options или поиск на сервере: GET <searchUrl>?text=<строка> (адрес с ? и без), ответ [{id, name}] или {items: […]}; allowNew — Enter
  * добавляет введённый текст как значение. Клавиатура: стрелки по подсказкам, Enter — выбрать, Esc — закрыть
  * подсказки, Backspace в пустом поле — удалить последний тег (script.js)
  */

@@ -1,4 +1,9 @@
-/* Степпер Stepper/main, Stepper/quantity (design-ui-stepper.md) */
+/*
+ * Степпер Stepper/main, Stepper/quantity, Stepper/focus (Figma «UI»): стили default (минус, число, плюс на одной
+ * плашке), among (пагинация «1/8» со стрелками) и input (три плитки через 8: кнопка, поле Inputs/main, кнопка);
+ * fill filled / outline, размеры xs / s / m / l (высота 32 / 40 / 48 / 56, кнопка 20 / 24 / 36 / 40,
+ * поле input 48 / 56 / 64 / 72), ширина hug / fill. Радиус ui/small у xs, ui/medium у остальных.
+ */
 .stepper-field {
     display: inline-flex;
     flex-direction: column;
@@ -20,6 +25,7 @@
     --stepper-width: #{vw(118px)};
     --stepper-field: #{vw(64px)};
     --stepper-button: #{vw(36px)};
+    --stepper-loader: #{vw(24px)};
     --stepper-radius: var(--radius-ui-medium);
     --stepper-bg: var(--color-main-gray-lighter);
 
@@ -31,30 +37,30 @@
     color: var(--color-text-icon-gray-darker);
 
     $sizes: (
-        xs: (height: 32px, width: 66px, field: 48px, button: 20px),
-        s: (height: 40px, width: 82px, field: 56px, button: 24px),
-        m: (height: 48px, width: 118px, field: 64px, button: 36px),
-        l: (height: 56px, width: 142px, field: 72px, button: 40px),
+        xs: (height: 32px, width: 66px, field: 48px, button: 20px, loader: 24px),
+        s: (height: 40px, width: 82px, field: 56px, button: 24px, loader: 24px),
+        m: (height: 48px, width: 118px, field: 64px, button: 36px, loader: 24px),
+        l: (height: 56px, width: 142px, field: 72px, button: 40px, loader: 32px),
     );
     @each $name, $size in $sizes {
         &_size_#{$name} {
-            @each $var in (height, width, field, button) {
-                --stepper-#{$var}: #{vw(map-get($size, $var))};
+            @each $var, $value in $size {
+                --stepper-#{$var}: #{vw($value)};
             }
 
             @include HD {
-                @each $var in (height, width, field, button) {
-                    --stepper-#{$var}: #{vwh(map-get($size, $var))};
+                @each $var, $value in $size {
+                    --stepper-#{$var}: #{vwh($value)};
                 }
             }
             @include Tablet {
-                @each $var in (height, width, field, button) {
-                    --stepper-#{$var}: #{vwt(map-get($size, $var))};
+                @each $var, $value in $size {
+                    --stepper-#{$var}: #{vwt($value)};
                 }
             }
             @include Mobile {
-                @each $var in (height, width, field, button) {
-                    --stepper-#{$var}: #{vwm(map-get($size, $var))};
+                @each $var, $value in $size {
+                    --stepper-#{$var}: #{vwm($value)};
                 }
             }
         }
@@ -64,15 +70,21 @@
         --stepper-radius: var(--radius-ui-small);
     }
 
-    &_size_xs &__input {
+    &_size_xs &__input,
+    &_size_xs &__roll,
+    &_size_xs &__among {
         @include t4;
     }
 
-    &_size_s &__input {
+    &_size_s &__input,
+    &_size_s &__roll,
+    &_size_s &__among {
         @include t3;
     }
 
-    &_size_l &__input {
+    &_size_l &__input,
+    &_size_l &__roll,
+    &_size_l &__among {
         @include t1;
     }
 
@@ -87,10 +99,56 @@
         text-align: center;
         font-variant-numeric: tabular-nums;
         @include t2;
+        @include transition((background-color, box-shadow, color));
 
+        // у default/among кольцо рисует плашка (ниже), у input — подсветка поля
         &:focus-visible {
             outline: none;
         }
+    }
+
+    // табло поверх поля на время прокрутки разрядов: тот же шрифт и выравнивание, что у текста поля;
+    // текст поля в это время прозрачен (-webkit-text-fill-color не анимируется — подмена без вспышки)
+    &__input_rolling {
+        -webkit-text-fill-color: transparent;
+    }
+
+    &__roll {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        white-space: nowrap;
+        pointer-events: none;
+        visibility: hidden;
+        @include t2;
+
+        &_active {
+            visibility: visible;
+        }
+    }
+
+    &_loading &__roll {
+        visibility: hidden;
+    }
+
+    // among: «текущий/всего», всего — приглушённо
+    &__among {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        @include t2;
+    }
+
+    &__total {
+        color: var(--color-text-icon-gray-medium);
     }
 
     &__button {
@@ -106,26 +164,32 @@
         background: var(--stepper-bg);
         color: var(--color-text-icon-gray-darker);
         border-radius: var(--stepper-radius);
-        @include transition((background, color));
+        @include transition((background-color, color, box-shadow));
 
-        &:hover:not(:disabled) {
-            background: var(--color-main-color1-lighter);
-            color: var(--color-text-icon-color1-dark);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled, [aria-disabled='true']) {
+                background: var(--color-main-color1-lighter);
+                color: var(--color-text-icon-color1-dark);
+            }
         }
 
-        &:active:not(:disabled) {
+        &:active:not(:disabled, [aria-disabled='true']) {
             background: var(--color-main-color1-light);
             color: var(--color-text-icon-color1-darker);
         }
 
-        &:disabled {
+        // aria-disabled — кнопка на границе, пока на ней фокус (script.js)
+        &:disabled,
+        &[aria-disabled='true'] {
             cursor: not-allowed;
             background: var(--color-states-disabled-light);
             color: var(--color-states-disabled-medium);
         }
 
+        // кольцо фокуса Stepper/focus: 2 px через 2 px, радиус кнопки + 4
         &:focus-visible {
             position: relative;
+            z-index: 1;
             outline: 2px solid var(--color-main-color1-main);
             outline-offset: 2px;
         }
@@ -142,29 +206,40 @@
         }
     }
 
-    // default: минус, число и плюс на одной плашке
-    &_style_default {
+    // default и among: минус, число и плюс на одной плашке
+    &_style_default,
+    &_style_among {
         width: var(--stepper-width);
         background: var(--stepper-bg);
         border-radius: var(--stepper-radius);
+
+        // поле под фокусом с клавиатуры — кольцо Stepper/focus на всей плашке
+        :root.sf-kbd &:has(.stepper__input:focus-visible) {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
     }
 
-    // input: три плитки — минус, поле, плюс — через 8 px
+    // input: три плитки — кнопка, поле Inputs/main, кнопка — через 8 px
     &_style_input {
         @include spacing(gap, 8px);
 
-        .stepper__button {
-            width: var(--stepper-height);
-        }
-
         .stepper__input {
             flex: 0 0 var(--stepper-field);
-            background: var(--stepper-bg);
+            background: var(--color-main-gray-lighter);
             border-radius: var(--stepper-radius);
+            box-shadow: inset 0 0 0 2px transparent;
 
-            &:focus-visible {
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled, :read-only) {
+                    box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
+                }
+            }
+
+            // поле в фокусе — как focus у Inputs/main filled
+            &:focus:not(:read-only) {
                 background: var(--color-main-gray-white);
-                box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
             }
         }
     }
@@ -210,13 +285,21 @@
     &_width_fill {
         width: 100%;
 
-        .stepper__input {
+        .stepper__input,
+        .stepper__among {
             flex: 1;
         }
     }
 
-    &_error .stepper__input {
-        box-shadow: inset 0 0 0 2px var(--color-states-error-dark);
+    // error (только у input): поле как в focus, число цвета ошибки
+    &_error .stepper__input,
+    &_error .stepper__roll {
+        color: var(--color-states-error-dark);
+    }
+
+    &_style_input.stepper_error .stepper__input {
+        background: var(--color-main-gray-white);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
     }
 
     // outline: обводка 2 px без заливки, у кнопок плашка на hover и press
@@ -224,16 +307,26 @@
         --stepper-bg: transparent;
 
         &.stepper_style_default,
-        .stepper__input {
+        &.stepper_style_among {
             box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
         }
 
-        .stepper__button:disabled {
-            background: transparent;
+        &.stepper_style_input .stepper__input {
+            background: var(--color-main-gray-white);
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
+
+            &:focus:not(:read-only) {
+                box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+            }
+        }
+
+        &.stepper_style_input.stepper_error .stepper__input {
+            box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
         }
     }
 
-    &_loading &__input {
+    &_loading &__input,
+    &_loading &__among {
         visibility: hidden;
     }
 
@@ -247,11 +340,12 @@
         color: var(--color-text-icon-color1-main);
 
         .loader-icon {
-            @include spacing(width, 24px);
-            @include spacing(height, 24px);
+            width: var(--stepper-loader);
+            height: var(--stepper-loader);
         }
     }
 
+    /*----------THEME-----------*/
     &-theme_dark {
         --stepper-bg: var(--color-main-gray-dark);
         color: var(--color-text-icon-gray-white);
@@ -259,36 +353,77 @@
         .stepper__button {
             color: var(--color-text-icon-gray-white);
 
-            &:hover:not(:disabled) {
-                background: var(--color-main-gray-medium);
-                color: var(--color-text-icon-gray-white);
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled, [aria-disabled='true']) {
+                    background: var(--color-main-gray-medium);
+                    color: var(--color-text-icon-gray-white);
+                }
             }
 
-            &:active:not(:disabled) {
+            // press в тёмной теме: darker с обводкой 2 px внутрь gray/dark
+            &:active:not(:disabled, [aria-disabled='true']) {
                 background: var(--color-main-gray-darker);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
                 color: var(--color-text-icon-gray-white);
             }
 
-            &:disabled {
+            &:disabled,
+            &[aria-disabled='true'] {
                 background: var(--color-states-disabled-dark);
+                color: var(--color-states-disabled-medium);
             }
+        }
+
+        .stepper__total {
+            color: var(--color-text-icon-gray-medium);
+        }
+
+        &.stepper_style_input .stepper__input {
+            background: var(--color-main-gray-dark);
+
+            @media (hover: hover) and (pointer: fine) {
+                &:hover:not(:disabled, :read-only) {
+                    box-shadow: inset 0 0 0 2px var(--color-main-gray-medium);
+                }
+            }
+
+            &:focus:not(:read-only) {
+                background: var(--color-main-gray-black);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+            }
+        }
+
+        &.stepper_error .stepper__input,
+        &.stepper_error .stepper__roll {
+            color: var(--color-states-error-medium);
+        }
+
+        &.stepper_style_input.stepper_error .stepper__input {
+            background: var(--color-main-gray-black);
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
         }
 
         &.stepper_fill_outline {
             --stepper-bg: transparent;
 
             &.stepper_style_default,
-            .stepper__input {
+            &.stepper_style_among {
                 box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
             }
 
-            .stepper__button:disabled {
+            &.stepper_style_input .stepper__input {
+                background: var(--color-main-gray-black);
+                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+
+                &:focus:not(:read-only) {
+                    box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+                }
+            }
+
+            .stepper__button:disabled,
+            .stepper__button[aria-disabled='true'] {
                 background: transparent;
             }
-        }
-
-        .stepper__input:focus-visible {
-            background: var(--color-main-gray-black);
         }
     }
 
@@ -297,7 +432,8 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        &__button {
+        &__button,
+        &__input {
             transition: none;
         }
     }

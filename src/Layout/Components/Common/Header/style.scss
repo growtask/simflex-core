@@ -100,13 +100,13 @@
         transform: translateY(-100%);
         visibility: hidden;
         box-shadow: var(--shadow-gray-m);
-        transition: transform 0.25s var(--cubic-bezier, ease), visibility 0s linear 0.25s;
+        transition: transform var(--motion-slow) var(--ease-in-out), visibility 0s linear var(--motion-slow);
         will-change: transform;
 
         &.header--fixed-visible {
             transform: translateY(0);
             visibility: visible;
-            transition: transform 0.25s var(--cubic-bezier, ease), visibility 0s;
+            transition: transform var(--motion-slow) var(--ease-out), visibility 0s;
         }
 
         @media (prefers-reduced-motion: reduce) {

@@ -10,5 +10,5 @@ $badgeStockClasses = [
 ?>
 
 <div class="<?= implode(' ', $badgeStockClasses) ?>" <?= buildAttrs($data['attributes'] ?? []) ?>>
-    <span class="badge__text"><?= $data['text'] ?></span>
+    <span class="badge-stock__text"><?= $data['text'] ?></span>
 </div>

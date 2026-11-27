@@ -1,3 +1,77 @@
+/*
+ * Чекбокс (Figma Switches/check-box): стили solid и line, размеры s/m/l, active off/on/partial,
+ * состояния static/hover/press/disabled (+ error), темы light/dark, подпись слева или справа.
+ * solid — глиф 20/28/36 в рамке 24/32/40: квадрат со скруглением, галочка и чёрточка вырезаны (видна подложка).
+ * line — рамка 26/34/42 с обводкой 2 px (ui/small у s, ui/medium у m и l), галочка цветом обводки.
+ * Форма глифов — маска (геометрия из Figma), цвет — токены text-icon/*, states/*.
+ */
+
+// маска-глиф: путь Figma в SVG (fill-rule evenodd — внутренние контуры вырезаются)
+@function sf-checkbox-mask($d, $box: '0 0 20 20') {
+    @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='#{$box}'%3E%3Cpath fill-rule='evenodd' d='#{$d}'/%3E%3C/svg%3E");
+}
+
+@mixin sf-checkbox-glyph($image) {
+    -webkit-mask-image: $image;
+    mask-image: $image;
+}
+
+// solid: контуры глифа 20×20 (m и l — тот же глиф в масштабе, чёрточка partial у них толще)
+$sf-cb-box: 'M5.76 0h8.48A5.76 5.76 0 0 1 20 5.76v8.48A5.76 5.76 0 0 1 14.24 20H5.76A5.76 5.76 0 0 1 0 14.24V5.76A5.76 5.76 0 0 1 5.76 0z';
+$sf-cb-hole: 'M5.8 2A3.8 3.8 0 0 0 2 5.8v8.4A3.8 3.8 0 0 0 5.8 18h8.4a3.8 3.8 0 0 0 3.8-3.8V5.8A3.8 3.8 0 0 0 14.2 2z';
+$sf-cb-check: 'M15.21 6.29a1 1 0 0 1 0 1.42l-6 6a1 1 0 0 1-1.42 0l-3-3a1 1 0 1 1 1.42-1.42l2.29 2.3 5.29-5.3a1 1 0 0 1 1.42 0z';
+$sf-cb-solid-off: sf-checkbox-mask($sf-cb-box + $sf-cb-hole);
+$sf-cb-solid-off-check: sf-checkbox-mask($sf-cb-box + $sf-cb-hole + $sf-cb-check);
+$sf-cb-solid-box: sf-checkbox-mask($sf-cb-box);
+$sf-cb-solid-check: sf-checkbox-mask($sf-cb-check);
+$sf-cb-solid-dash: (
+    s: sf-checkbox-mask('M5 9h10v2H5z'),
+    m: sf-checkbox-mask('M5 8.57h10v2.86H5z'),
+    l: sf-checkbox-mask('M5 8.89h10v2.22H5z'),
+);
+// «шторка» отрисовки: заливка, растущая слева направо (mask-size 0 → 100%)
+$sf-cb-wiper: linear-gradient(#000, #000);
+
+// solid — три слоя маски: квадрат минус (знак ∩ шторка). Знак (галочка или чёрточка) вырезается по мере роста
+// шторки — «рисуется» слева направо; у выключенного шторка пуста и знак не вырезается
+@mixin sf-checkbox-solid-layers($base, $mark) {
+    -webkit-mask-image: $base, $mark, $sf-cb-wiper;
+    mask-image: $base, $mark, $sf-cb-wiper;
+}
+
+@mixin sf-checkbox-wiper($size) {
+    -webkit-mask-size: 100% 100%, 100% 100%, $size 100%;
+    mask-size: 100% 100%, 100% 100%, $size 100%;
+}
+// line: галочка 14×10 (s, m) и 18×14 (l)
+$sf-cb-line-check: sf-checkbox-mask('M12.28 0.31C12.66-0.09 13.3-0.1 13.69 0.28C14.09 0.66 14.1 1.3 13.72 1.69L6.01 9.69L5.93 9.76C5.75 9.92 5.52 10 5.29 10C5.01 10 4.75 9.89 4.57 9.69L0.28 5.25C-0.1 4.85-0.09 4.22 0.31 3.84C0.7 3.45 1.34 3.46 1.72 3.86L5.29 7.56L12.28 0.31Z', '0 0 14 10');
+$sf-cb-line-check-l: sf-checkbox-mask('M15.79 0.43C16.28-0.13 17.1-0.14 17.61 0.39C18.12 0.93 18.13 1.82 17.64 2.37L7.72 13.57L7.63 13.67C7.4 13.88 7.1 14 6.8 14C6.45 14 6.11 13.85 5.87 13.57L0.36 7.35C-0.13 6.79-0.12 5.91 0.39 5.37C0.9 4.83 1.72 4.85 2.21 5.41L6.8 10.58L15.79 0.43Z', '0 0 18 14');
+
+// наведение и нажатие: на самом чекбоксе и на строке дерева (Switches/tree-item), где чекбокс только показывает значение
+@mixin sf-checkbox-hover {
+    @media (hover: hover) and (pointer: fine) {
+        &:hover,
+        .tree-item:not(.tree-item_disabled):hover & {
+            @content;
+        }
+    }
+}
+
+@mixin sf-checkbox-press {
+    &:active,
+    .tree-item:not(.tree-item_disabled):active & {
+        @content;
+    }
+}
+
+// line: появление знака — отрисовка линией (clip-path) и масштаб с пружиной
+@mixin sf-checkbox-line-appear {
+    transition: background-color var(--motion-fast) var(--ease-in-out), opacity var(--motion-fast) var(--ease-out), transform calc(var(--motion-slow) * 1.75) var(--ease-spring), clip-path var(--motion-slow) var(--ease-out);
+}
+
+$sf-cb-off: '.checkbox__input:not(:checked):not(:indeterminate)';
+$sf-cb-enabled-off: '.checkbox__input:not(:disabled):not(:checked):not(:indeterminate)';
+
 .checkbox {
     /*----------CORE STYLE-----------*/
     position: relative;
@@ -5,11 +79,8 @@
     align-items: center;
     cursor: pointer;
     width: fit-content;
-    @include spacing(padding, 2px);
-    @include spacing(margin, -2px);
-    @include spacing(gap, 10px);
+    @include spacing(gap, 8px);
     touch-action: manipulation;
-    @include transition((background-color));
 
     &-position {
         &_left {
@@ -26,39 +97,44 @@
         opacity: 0;
         width: 0;
         height: 0;
-
-        &:checked ~ .checkbox__custom::after,
-&:indeterminate ~ .checkbox__custom::after {
-            transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
-        }
+        margin: 0;
     }
 
     &__custom {
         flex-shrink: 0;
         position: relative;
-        border: solid var(--color-main-gray-medium);
-        @include transition((border, background));
-        @include border-w(2px);
+        // нажатие — лёгкое вдавливание, отпускание — пружиной (см. STATES)
+        transition: border-color var(--motion-fast) var(--ease-in-out), transform calc(var(--motion-slow) * 1.75) var(--ease-spring);
 
-        /* Checkmark */
+        // глиф (галочка, чёрточка; у solid — весь квадрат)
         &::after {
             content: '';
             position: absolute;
-            top: 45%;
-            left: 50%;
-            width: 30%;
-            height: 50%;
-            border-top: 0 !important;
-            border-left: 0 !important;
-            transform-origin: center;
-            transform: translate(-50%, -50%) rotate(45deg) scale(0);
-            @include transition((transform));
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+            // галочка line появляется прозрачностью и масштабом (base), цвет — быстро
+            transition: background-color var(--motion-fast) var(--ease-in-out), opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+        }
+
+        // кольцо фокуса с клавиатуры (Switches/focus): 2 px, зазор 2 px от рамки 24/32/40
+        &::before {
+            content: '';
+            position: absolute;
+            border: solid var(--color-main-color1-main);
+            @include border-w(2px);
+            opacity: 0;
+            pointer-events: none;
         }
     }
 
     &__text {
         user-select: none;
         @include t2;
+        @include transition((color));
     }
 
     &__policy {
@@ -67,218 +143,392 @@
         @include t3;
 
         a {
-            color: var(--color-main-color1-dark);
+            color: var(--color-text-icon-color1-dark);
             @include transition((color));
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color-main-color1-main);
+                    color: var(--color-text-icon-color1-main);
                 }
             }
 
             &:active {
-                color: var(--color-main-color1-darker);
+                color: var(--color-text-icon-color1-darker);
+            }
+
+            // кольцо фокуса ссылки политики (только с клавиатуры — html.sf-kbd дописывает сборка)
+            &:focus-visible {
+                outline: 2px solid var(--color-main-color1-main);
+                outline-offset: 2px;
+                border-radius: var(--radius-ui-xsmall);
             }
         }
     }
 
-    /*----------STYLES-----------*/
+    /*----------STYLE: SOLID-----------*/
     &-solid {
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                .checkbox__input:not(:checked) ~ .checkbox__custom::after {
-                    border-color: var(--color-main-gray-medium);
-                    transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
-                }
+        .checkbox__custom::after {
+            @include spacing(inset, 2px);
+            background-color: var(--color-text-icon-gray-medium);
+            @include sf-checkbox-solid-layers($sf-cb-solid-off, $sf-cb-solid-check);
+            -webkit-mask-position: center, center, left center;
+            mask-position: center, center, left center;
+            @include sf-checkbox-wiper(0%);
+            -webkit-mask-composite: source-out, source-in, source-over;
+            mask-composite: subtract, intersect, add;
+            transition: background-color var(--motion-fast) var(--ease-in-out), -webkit-mask-size var(--motion-slow) var(--ease-out), mask-size var(--motion-slow) var(--ease-out);
+        }
 
-                .checkbox__input:checked ~ .checkbox__custom,
-.checkbox__input:indeterminate ~ .checkbox__custom {
-                    background: var(--color-main-color1-light);
-                    border-color: var(--color-main-color1-light);
-                }
+        .checkbox__custom::before {
+            @include spacing(inset, -4px);
+        }
+
+        .checkbox__input:checked ~ .checkbox__custom::after {
+            background-color: var(--color-text-icon-color1-main);
+            @include sf-checkbox-solid-layers($sf-cb-solid-box, $sf-cb-solid-check);
+            @include sf-checkbox-wiper(100%);
+        }
+
+        .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            background-color: var(--color-text-icon-color1-main);
+            @include sf-checkbox-wiper(100%);
+        }
+
+        .checkbox__input:disabled ~ .checkbox__custom::after {
+            background-color: var(--color-states-disabled-medium);
+        }
+
+        &.checkbox_error #{$sf-cb-off} ~ .checkbox__custom::after {
+            background-color: var(--color-states-error-dark);
+        }
+
+        // hover выключенного — показывается галочка (предпросмотр), включённого — светлее
+        @include sf-checkbox-hover {
+            #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                @include sf-checkbox-solid-layers($sf-cb-solid-off-check, $sf-cb-solid-check);
+            }
+
+            .checkbox__input:not(:disabled):checked ~ .checkbox__custom::after,
+            .checkbox__input:not(:disabled):indeterminate ~ .checkbox__custom::after {
+                background-color: var(--color-text-icon-color1-light);
             }
         }
 
-        .checkbox__input {
-            &:checked ~ .checkbox__custom,
-&:indeterminate ~ .checkbox__custom {
-                background: var(--color-main-color1-main);
-                border-color: var(--color-main-color1-main);
+        @include sf-checkbox-press {
+            #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                background-color: var(--color-text-icon-gray-dark);
+                @include sf-checkbox-solid-layers($sf-cb-solid-off-check, $sf-cb-solid-check);
+            }
+
+            .checkbox__input:not(:disabled):checked ~ .checkbox__custom::after,
+            .checkbox__input:not(:disabled):indeterminate ~ .checkbox__custom::after {
+                background-color: var(--color-text-icon-color1-dark);
             }
         }
 
-        .checkbox__custom {
-            &::after {
-                border: solid var(--color-main-gray-white);
-                @include border-w(1px);
+        &.checkbox-theme_dark {
+            .checkbox__input:disabled ~ .checkbox__custom::after {
+                background-color: var(--color-states-disabled-dark);
+            }
+
+            &.checkbox_error #{$sf-cb-off} ~ .checkbox__custom::after {
+                background-color: var(--color-states-error-medium);
+            }
+
+            @include sf-checkbox-press {
+                #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                    background-color: var(--color-text-icon-gray-light);
+                }
             }
         }
     }
 
+    /*----------STYLE: LINE-----------*/
     &-line {
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                .checkbox__input:not(:checked) ~ .checkbox__custom::after {
-                    border-color: var(--color-main-color1-light);
-                    transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
-                }
-
-                .checkbox__input:checked ~ .checkbox__custom,
-.checkbox__input:indeterminate ~ .checkbox__custom {
-                    background: transparent;
-                    border-color: var(--color-main-color1-dark);
-                }
-
-                .checkbox__input:checked ~ .checkbox__custom::after,
-.checkbox__input:indeterminate ~ .checkbox__custom::after {
-                    border-color: var(--color-main-color1-dark);
-                }
-            }
-        }
-
-        .checkbox__input {
-            &:checked ~ .checkbox__custom,
-&:indeterminate ~ .checkbox__custom {
-                background: transparent;
-                border-color: var(--color-main-color1-main);
-            }
-        }
-
         .checkbox__custom {
+            border: solid var(--color-text-icon-gray-medium);
+            @include border-w(2px);
+
             &::after {
-                border: solid var(--color-main-color1-main);
-                @include border-w(1px);
+                top: 50%;
+                left: 50%;
+                background-color: var(--color-text-icon-color1-main);
+                transform: translate(-50%, -50%) scale(.7);
+                opacity: 0;
+                // знак «рисуется» слева направо (clip-path), уходит — быстрее, без пружины
+                clip-path: inset(0 100% 0 0);
+                transition: background-color var(--motion-fast) var(--ease-in-out), opacity var(--motion-fast) var(--ease-in), transform var(--motion-base) var(--ease-in), clip-path var(--motion-base) var(--ease-in);
+                @include sf-checkbox-glyph($sf-cb-line-check);
+            }
+
+            // кольцо снаружи обводки: зазор 2 px от края рамки
+            &::before {
+                @include spacing(inset, -6px);
+            }
+        }
+
+        // появление: отрисовка линией ~240 мс и масштаб с пружиной (лёгкий перелёт)
+        .checkbox__input:checked ~ .checkbox__custom,
+        .checkbox__input:indeterminate ~ .checkbox__custom {
+            &::after {
+                @include sf-checkbox-line-appear;
+            }
+        }
+
+        .checkbox__input:checked ~ .checkbox__custom,
+        .checkbox__input:indeterminate ~ .checkbox__custom {
+            border-color: var(--color-text-icon-color1-main);
+
+            &::after {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+                clip-path: inset(0);
+            }
+        }
+
+        // partial — чёрточка 2 px
+        .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+
+        .checkbox__input:disabled ~ .checkbox__custom {
+            border-color: var(--color-states-disabled-medium);
+
+            &::after {
+                background-color: var(--color-states-disabled-medium);
+            }
+        }
+
+        &.checkbox_error #{$sf-cb-off} ~ .checkbox__custom {
+            border-color: var(--color-states-error-dark);
+        }
+
+        @include sf-checkbox-hover {
+            #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+                clip-path: inset(0);
+                background-color: var(--color-text-icon-color1-light);
+                @include sf-checkbox-line-appear;
+            }
+
+            .checkbox__input:not(:disabled):checked ~ .checkbox__custom,
+            .checkbox__input:not(:disabled):indeterminate ~ .checkbox__custom {
+                border-color: var(--color-text-icon-color1-dark);
+
+                &::after {
+                    background-color: var(--color-text-icon-color1-dark);
+                }
+            }
+        }
+
+        @include sf-checkbox-press {
+            #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+                clip-path: inset(0);
+                background-color: var(--color-text-icon-color1-dark);
+                @include sf-checkbox-line-appear;
+            }
+
+            .checkbox__input:not(:disabled):checked ~ .checkbox__custom,
+            .checkbox__input:not(:disabled):indeterminate ~ .checkbox__custom {
+                border-color: var(--color-text-icon-color1-darker);
+
+                &::after {
+                    background-color: var(--color-text-icon-color1-darker);
+                }
+            }
+        }
+
+        &.checkbox-theme_dark {
+            .checkbox__input:disabled ~ .checkbox__custom {
+                border-color: var(--color-states-disabled-dark);
+
+                &::after {
+                    background-color: var(--color-states-disabled-dark);
+                }
+            }
+
+            &.checkbox_error #{$sf-cb-off} ~ .checkbox__custom {
+                border-color: var(--color-states-error-medium);
+            }
+
+            @include sf-checkbox-hover {
+                #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                    background-color: var(--color-text-icon-color1-darker);
+                }
+
+                .checkbox__input:not(:disabled):checked ~ .checkbox__custom,
+                .checkbox__input:not(:disabled):indeterminate ~ .checkbox__custom {
+                    border-color: var(--color-text-icon-color1-light);
+
+                    &::after {
+                        background-color: var(--color-text-icon-color1-light);
+                    }
+                }
+            }
+
+            @include sf-checkbox-press {
+                #{$sf-cb-enabled-off} ~ .checkbox__custom::after {
+                    background-color: var(--color-text-icon-color1-light);
+                }
+
+                .checkbox__input:not(:disabled):checked ~ .checkbox__custom,
+                .checkbox__input:not(:disabled):indeterminate ~ .checkbox__custom {
+                    border-color: var(--color-text-icon-color1-main);
+
+                    &::after {
+                        background-color: var(--color-text-icon-color1-main);
+                    }
+                }
             }
         }
     }
 
     /*----------SIZES-----------*/
-    &-size_m {
-        .checkbox__custom {
-            /* 6px: радиус нарисован в иконке чекбокса Figma, токена у него нет (l - ui-small, s - ui-xsmall) */
-            @include border-r(6px);
-            @include icon(28px);
+    &-size_s {
+        &.checkbox-solid .checkbox__custom {
+            @include icon(24px);
+        }
+
+        &.checkbox-solid .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            @include sf-checkbox-solid-layers($sf-cb-solid-box, map-get($sf-cb-solid-dash, s));
+        }
+
+        &.checkbox-line .checkbox__custom {
+            @include icon(26px);
+            border-radius: var(--radius-ui-small);
+
+            &::after {
+                @include spacing(width, 14px);
+                @include spacing(height, 10px);
+            }
+        }
+
+        &.checkbox-line .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            @include spacing(width, 12px);
+            @include spacing(height, 2px);
+        }
+
+        .checkbox__custom::before {
+            border-radius: var(--radius-ui-medium);
         }
     }
 
-    &-size_s {
-        .checkbox__custom {
-            border-radius: var(--radius-ui-xsmall);
-            @include icon(20px);
+    &-size_m {
+        &.checkbox-solid .checkbox__custom {
+            @include icon(32px);
+        }
+
+        &.checkbox-solid .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            @include sf-checkbox-solid-layers($sf-cb-solid-box, map-get($sf-cb-solid-dash, m));
+        }
+
+        &.checkbox-line .checkbox__custom {
+            @include icon(34px);
+            border-radius: var(--radius-ui-medium);
+
+            &::after {
+                @include spacing(width, 14px);
+                @include spacing(height, 10px);
+            }
+        }
+
+        &.checkbox-line .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            @include spacing(width, 14px);
+            @include spacing(height, 2px);
+        }
+
+        .checkbox__custom::before {
+            border-radius: var(--radius-ui-medium);
         }
     }
 
     &-size_l {
-        .checkbox__custom {
-            border-radius: var(--radius-ui-small);
-            @include icon(36px);
+        &.checkbox-solid .checkbox__custom {
+            @include icon(40px);
+        }
+
+        &.checkbox-solid .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            @include sf-checkbox-solid-layers($sf-cb-solid-box, map-get($sf-cb-solid-dash, l));
+        }
+
+        &.checkbox-line .checkbox__custom {
+            @include icon(42px);
+            border-radius: var(--radius-ui-medium);
+
+            &::after {
+                @include spacing(width, 18px);
+                @include spacing(height, 14px);
+                @include sf-checkbox-glyph($sf-cb-line-check-l);
+            }
+        }
+
+        &.checkbox-line .checkbox__input:indeterminate ~ .checkbox__custom::after {
+            @include spacing(width, 18px);
+            @include spacing(height, 2px);
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+
+        .checkbox__custom::before {
+            border-radius: var(--radius-ui-large);
         }
     }
 
     /*----------THEME-----------*/
     &-theme_light {
-        .checkbox__text {
-            color: var(--color-main-gray-darker);
+        .checkbox__text,
+        .checkbox__policy {
+            color: var(--color-text-icon-gray-dark);
         }
     }
 
     &-theme_dark {
-        .checkbox__text {
-            color: var(--color-main-gray-lighter);
+        .checkbox__text,
+        .checkbox__policy {
+            color: var(--color-text-icon-gray-lighter);
+        }
+
+        .checkbox__policy a {
+            color: var(--color-text-icon-color1-light);
         }
     }
-}
 
-/*----------PARTIAL (indeterminate)-----------*/
-/* Выбрана часть вложенных: чёрточка вместо галочки */
-.checkbox .checkbox__input:indeterminate ~ .checkbox__custom::after {
-    top: 50%;
-    width: 50%;
-    height: 0;
-    border-right: 0 !important;
-    transform: translate(-50%, -50%) scale(1);
+    /*----------STATES-----------*/
+    // нажатие: рамка чуть вдавливается (быстро), при отпускании возвращается пружиной (переход в покое)
+    &:not(.checkbox_disabled):active .checkbox__custom,
+    .tree-item:not(.tree-item_disabled):active & .checkbox__custom {
+        transform: scale(.92);
+        transition: border-color var(--motion-fast) var(--ease-in-out), transform var(--motion-fast) var(--ease-out);
+    }
+
+    &_disabled {
+        cursor: not-allowed;
+
+        .checkbox__text,
+        .checkbox__policy {
+            color: var(--color-text-icon-gray-medium);
+        }
+    }
 }
 
 /*----------FOCUS-----------*/
-/* Кольцо фокуса вокруг самого бокса: 2 px цвета бренда, зазор 2 px */
-.checkbox__input:focus-visible ~ .checkbox__custom {
-    outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
-    outline-offset: 2px;
+.checkbox__input:focus-visible ~ .checkbox__custom::before {
+    opacity: 1;
 }
 
-/*----------STATES-----------*/
-.checkbox_error .checkbox__custom {
-    border-color: var(--color-states-error-dark);
-}
-
-/* ошибка при наведении: галочка и рамка остаются красными, а не синими/серыми */
-@media (hover: hover) and (pointer: fine) {
-    .checkbox_error:hover {
-        .checkbox__input:not(:checked):not(:indeterminate) ~ .checkbox__custom::after,
-        .checkbox__input:checked ~ .checkbox__custom::after {
-            border-color: var(--color-states-error-dark);
-        }
-
-        .checkbox__input:checked ~ .checkbox__custom,
-        .checkbox__input:indeterminate ~ .checkbox__custom {
-            border-color: var(--color-states-error-dark);
-        }
+// без движения: знаки появляются сразу, без отрисовки, пружины и вдавливания
+@media (prefers-reduced-motion: reduce) {
+    .checkbox__custom,
+    .checkbox__custom::after,
+    .checkbox__text {
+        transition: none !important;
     }
 
-    .checkbox-theme_dark.checkbox_error:hover {
-        .checkbox__input:not(:checked):not(:indeterminate) ~ .checkbox__custom::after,
-        .checkbox__input:checked ~ .checkbox__custom::after,
-        .checkbox__input:checked ~ .checkbox__custom,
-        .checkbox__input:indeterminate ~ .checkbox__custom {
-            border-color: var(--color-states-error-medium);
-        }
-    }
-}
-
-.checkbox_disabled {
-    cursor: not-allowed;
-
-    .checkbox__text,
-    .checkbox__policy {
-        color: var(--color-main-gray-medium);
-    }
-}
-
-.checkbox__input:disabled ~ .checkbox__custom {
-    border-color: var(--color-states-disabled-medium);
-}
-
-.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom,
-.checkbox-solid .checkbox__input:disabled:indeterminate ~ .checkbox__custom {
-    background: var(--color-states-disabled-medium);
-    border-color: var(--color-states-disabled-medium);
-}
-
-.checkbox-line .checkbox__input:disabled:checked ~ .checkbox__custom,
-.checkbox-line .checkbox__input:disabled:indeterminate ~ .checkbox__custom {
-    background: transparent;
-    border-color: var(--color-states-disabled-medium);
-}
-
-.checkbox-line .checkbox__input:disabled:checked ~ .checkbox__custom::after {
-    border-color: var(--color-states-disabled-medium);
-}
-
-.checkbox-theme_dark {
-    .checkbox__input:disabled ~ .checkbox__custom,
-    &.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom {
-        border-color: var(--color-states-disabled-dark);
-    }
-
-    &.checkbox-solid .checkbox__input:disabled:checked ~ .checkbox__custom {
-        background: var(--color-states-disabled-dark);
-    }
-
-    &.checkbox_error .checkbox__custom {
-        border-color: var(--color-states-error-medium);
-    }
-
-    .checkbox__policy a {
-        color: var(--color-main-color1-light);
+    .checkbox .checkbox__custom {
+        transform: none !important;
     }
 }

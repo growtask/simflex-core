@@ -46,4 +46,5 @@ $nextId = static function () use ($theme): string {
         theme: $inputTheme,
     ) ?>
     <?= LoginInput::drawInputLogin(id: $nextId(), value: 'Иван', theme: $inputTheme, attributes: ['disabled' => 'disabled']) ?>
+    <?= LoginInput::drawInputLogin(id: $nextId(), value: 'ivan', error: 'Такого логина нет', theme: $inputTheme) ?>
 </div>

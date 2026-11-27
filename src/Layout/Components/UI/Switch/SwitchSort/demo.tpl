@@ -20,3 +20,9 @@ $sortTheme = SwitchSortButtonTheme::from($theme);
         <?php endforeach; ?>
     <?php endforeach; ?>
 </div>
+<h3 class="ui-showcase__subtitle ui-m">Сортировка на месте (кнопки без ссылок): индикатор переезжает к выбранной стрелке</h3>
+<div class="ui-showcase__row">
+    <?php foreach (SwitchSortButtonStyle::cases() as $style): ?>
+        <?= Sort::drawSwitchSort('Цена', '', '', SwitchSortDirection::Ascending, $style, $sortTheme) ?>
+    <?php endforeach; ?>
+</div>

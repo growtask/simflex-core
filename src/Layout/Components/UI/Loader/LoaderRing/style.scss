@@ -39,7 +39,7 @@ $progress-fills: (
     &__fill {
         stroke: var(--pr-fill);
         stroke-linecap: round;
-        transition: stroke-dasharray 0.3s ease;
+        transition: stroke-dasharray var(--motion-slow) var(--ease-in-out);
     }
 
     &__value {

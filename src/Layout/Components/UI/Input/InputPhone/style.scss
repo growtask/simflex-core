@@ -135,7 +135,7 @@
         padding: vw(8px);
         background: var(--phone-panel-bg);
         border-radius: var(--radius-ui-xlarge);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-gray-m);
         @include spacing(width, 280px);
 
         &[hidden] {
@@ -150,6 +150,26 @@
 
     &-theme_dark &__panel {
         box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+    }
+
+    // появление и уход списка стран (script.js): прозрачность и сдвиг 6 px от кнопки, уход быстрее
+    &__panel.phone-input-panel-enter-active {
+        transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+    }
+
+    &__panel.phone-input-panel-leave-active {
+        transition: opacity var(--motion-fast) var(--ease-in), transform var(--motion-fast) var(--ease-in);
+    }
+
+    &__panel.phone-input-panel-enter-from,
+    &__panel.phone-input-panel-leave-to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    &__panel_up.phone-input-panel-enter-from,
+    &__panel_up.phone-input-panel-leave-to {
+        transform: translateY(6px);
     }
 
     &__option {

@@ -1,9 +1,16 @@
-/* Кнопка сортировки Switches/sort-button (design-ui-switches.md, раздел 7) */
+/*
+ * Сортировка: Figma Switches/sort-button и Switches/sort.
+ * sort-button solid — кнопка 16×16 с иконкой triangle 24 px (выступает на 4 px за кнопку, как в Figma);
+ * line — chevron-s 16 (size s) или 24 (size m) во всю кнопку. Состояния static/hover/press/active, темы light/dark.
+ * sort — подпись (text/t2) и две кнопки solid 16×16 друг над другом, зазор 8 px.
+ */
 .sort-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     padding: 0;
+    margin: 0;
     cursor: pointer;
     border: 0;
     background: none;
@@ -11,22 +18,42 @@
     @include transition(color);
 
     &__icon {
+        flex-shrink: 0;
         fill: currentColor;
-        @include spacing(width, 16px);
-        @include spacing(height, 16px);
     }
 
     &_style_solid {
         border-radius: 50%;
+        @include icon(16px);
+
+        .sort-button__icon {
+            @include icon(24px);
+            @include spacing(margin, -4px);
+        }
     }
 
-    &_style_line.sort-button_size_m &__icon {
-        @include spacing(width, 24px);
-        @include spacing(height, 24px);
+    &_style_line {
+        &.sort-button_size_s {
+            @include icon(16px);
+
+            .sort-button__icon {
+                @include icon(16px);
+            }
+        }
+
+        &.sort-button_size_m {
+            @include icon(24px);
+
+            .sort-button__icon {
+                @include icon(24px);
+            }
+        }
     }
 
-    &:hover {
-        color: var(--color-text-icon-gray-medium);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--color-text-icon-gray-medium);
+        }
     }
 
     &:active {
@@ -37,11 +64,12 @@
         color: var(--color-text-icon-color1-dark);
     }
 
+    // тёмная тема (у line в Figma все состояния gray/white — берём цвета solid, см. отчёт)
     &-theme_dark {
         color: var(--color-text-icon-gray-dark);
 
         &.active {
-            color: var(--color-text-icon-color1-light);
+            color: var(--color-text-icon-color1-darker);
         }
     }
 

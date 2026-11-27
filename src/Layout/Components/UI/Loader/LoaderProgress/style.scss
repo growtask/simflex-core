@@ -24,7 +24,7 @@ $progress-fills: (
         height: 100%;
         background: var(--pg-fill);
         border-radius: var(--radius-pill);
-        @include transition((width), 0.3s);
+        @include transition((width), var(--motion-slow));
     }
 
     &_indeterminate &__line {

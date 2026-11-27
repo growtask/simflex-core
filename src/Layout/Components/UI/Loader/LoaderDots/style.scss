@@ -13,13 +13,16 @@
         height: var(--ld-dot);
         background: var(--ld-color);
         border-radius: 50%;
-        animation: loader-dots-pulse 1.2s ease-in-out infinite;
+        // прозрачность 1, 0.55, 0.25 бежит волной (как в демо кита)
+        animation: loader-dot 1.2s ease-in-out infinite;
 
         &:nth-child(2) {
+            opacity: 0.55;
             animation-delay: 0.2s;
         }
 
         &:nth-child(3) {
+            opacity: 0.25;
             animation-delay: 0.4s;
         }
     }
@@ -67,20 +70,17 @@
 
     @media (prefers-reduced-motion: reduce) {
         &__dot {
-            animation-duration: 3s;
+            animation: none;
         }
     }
 }
 
-@keyframes loader-dots-pulse {
+@keyframes loader-dot {
     0%,
-    80%,
     100% {
-        opacity: 0.3;
-        transform: scale(0.8);
-    }
-    40% {
         opacity: 1;
-        transform: scale(1);
+    }
+    50% {
+        opacity: 0.25;
     }
 }

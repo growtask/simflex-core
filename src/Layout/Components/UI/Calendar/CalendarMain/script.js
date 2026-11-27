@@ -2,7 +2,9 @@
  * Календарь (Calendar): виды days (сетка дней, неделя с понедельника, дни других месяцев приглушены), months,
  * years (по 20 лет), time (часы и минуты с шагом data-step). Заголовок переключает виды, стрелки листают месяц,
  * год, страницу лет. Клавиатура в днях: стрелки — день и неделя, PageUp/PageDown — месяц (с Shift — год),
- * Home/End — начало и конец недели, Enter/Space — выбор. Даты вне data-min/data-max недоступны.
+ * Home/End — начало и конец недели, Enter/Space — выбор. Даты вне data-min/data-max недоступны: курсор не выходит
+ * за диапазон, месяцы и годы вне него недоступны (disabled), стрелка к странице вне диапазона — aria-disabled.
+ * Кнопки шапки озвучивают значение («Март, выбрать месяц»). Колонки времени прокручиваются сами (не страница).
  * Выбор — событие calendar:select ({detail: {value}}): дата 'Y-m-d', дата и время 'Y-m-d H:i', время 'H:i';
  * в режиме datetime день открывает вид time. Метод: element.sfCalendar.setValue(value).
  * data-selection: none (только показ), single, range — диапазон двумя кликами, значение 'Y-m-d/Y-m-d'.
@@ -64,6 +66,21 @@
         };
 
         const isDisabled = (date) => (min && date < min) || (max && date > max);
+        // курсор (день с tabindex=0) — всегда внутри min/max
+        const clamp = (date) => (min && date < min ? new Date(min) : (max && date > max ? new Date(max) : date));
+        // пересекается ли отрезок дат [from, to] с min/max
+        const inRange = (from, to) => !(min && to < min) && !(max && from > max);
+        // страница, на которую ведёт стрелка: месяц (days), год (months), 20 лет (years)
+        const pageRange = (direction) => {
+            const year = state.cursor.getFullYear();
+            if (state.view === 'days') {
+                const month = state.cursor.getMonth() + direction;
+                return [new Date(year, month, 1), new Date(year, month + 1, 0)];
+            }
+            const span = state.view === 'years' ? YEARS_PAGE : 1;
+            const start = (state.view === 'years' ? year - (year % YEARS_PAGE) : year) + direction * span;
+            return [new Date(start, 0, 1), new Date(start + span - 1, 11, 31)];
+        };
 
         const formatTime = (time) => {
             if (!is12h) {
@@ -79,7 +96,7 @@
             }
             state.selected = mode === 'time' ? null : parseIso(value);
             state.time = parseTime(mode === 'date' ? '' : value);
-            state.cursor = state.selected ? new Date(state.selected) : new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            state.cursor = clamp(state.selected ? new Date(state.selected) : new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             state.view = mode === 'time' ? 'time' : 'days';
             render();
         };
@@ -112,24 +129,29 @@
                 ? `${state.selected.getDate()} ${MONTHS_GENITIVE[state.selected.getMonth()]}`
                 : MONTHS[state.cursor.getMonth()];
             month.dataset.sfCalendarView = isTime ? 'days' : 'months';
-            month.setAttribute('aria-label', isTime ? 'К дням' : 'Выбрать месяц');
+            // подпись кнопки содержит значение: aria-label заменяет видимый текст целиком
+            month.setAttribute('aria-label', `${month.textContent}, ${isTime ? 'к дням' : 'выбрать месяц'}`);
             const startYear = state.cursor.getFullYear() - (state.cursor.getFullYear() % YEARS_PAGE);
             year.textContent = state.view === 'years' ? `${startYear}–${startYear + YEARS_PAGE - 1}` : String(state.cursor.getFullYear());
-            year.setAttribute('aria-label', 'Выбрать год');
+            year.setAttribute('aria-label', `${year.textContent}, выбрать год`);
             const hasTime = mode !== 'date' && state.time !== null;
             timeButton.hidden = !hasTime;
             line.hidden = !hasTime || (isTime && mode === 'time');
             if (hasTime) {
                 timeButton.textContent = formatTime(state.time);
-                timeButton.setAttribute('aria-label', 'Выбрать время');
+                timeButton.setAttribute('aria-label', `${timeButton.textContent}, выбрать время`);
             }
             // в виде time стрелок нет: часы и минуты прокручиваются
             root.querySelectorAll('[data-sf-calendar-step]').forEach((button) => {
                 button.hidden = isTime;
+                // страница вне min/max: кнопка остаётся фокусируемой (не disabled — фокус не уходит в body)
+                const off = !isTime && !inRange(...pageRange(Number(button.dataset.sfCalendarStep)));
+                off ? button.setAttribute('aria-disabled', 'true') : button.removeAttribute('aria-disabled');
             });
             const field = root.querySelector('.calendar__time-field');
             if (field) {
                 field.textContent = hasTime ? formatTime(state.time) : '—:—';
+                field.setAttribute('aria-label', `${hasTime ? field.textContent : 'не выбрано'}, выбрать время`);
             }
         };
 
@@ -171,7 +193,7 @@
                         isSelected = isStart || isEnd;
                         cell.classList.toggle('calendar__day_range-start', isStart && end !== null);
                         cell.classList.toggle('calendar__day_range-end', isEnd);
-                        cell.classList.toggle('calendar__day_in-range', Boolean(start && end && date > start && date < end));
+                        cell.classList.toggle('calendar__day_range', Boolean(start && end && date > start && date < end));
                     }
                     cell.setAttribute('aria-selected', String(isSelected));
                     if (sameDay(date, today)) {
@@ -192,7 +214,7 @@
         const renderItems = (items) => {
             const grid = element('div', 'calendar__items');
             grid.setAttribute('role', 'listbox');
-            items.forEach(({text, value, isSelected, isCurrent, label}) => {
+            items.forEach(({text, value, isSelected, isCurrent, label, isOut}) => {
                 const item = element('button', 'calendar__item', text);
                 item.type = 'button';
                 item.setAttribute('role', 'option');
@@ -202,11 +224,15 @@
                 if (label) {
                     item.setAttribute('aria-label', label);
                 }
-                item.tabIndex = isSelected || (!items.some((entry) => entry.isSelected) && isCurrent) ? 0 : -1;
+                // месяц или год вне min/max
+                item.disabled = Boolean(isOut);
+                const hasSelected = items.some((entry) => entry.isSelected && !entry.isOut);
+                item.tabIndex = !isOut && (isSelected || (!hasSelected && isCurrent)) ? 0 : -1;
                 grid.append(item);
             });
             if (!grid.querySelector('[tabindex="0"]')) {
-                grid.firstChild.tabIndex = 0;
+                const first = grid.querySelector('.calendar__item:not(:disabled)') ?? grid.firstChild;
+                first.tabIndex = 0;
             }
             return grid;
         };
@@ -231,7 +257,10 @@
                     item.tabIndex = value === current ? 0 : -1;
                     list.append(item);
                 });
-                wrap.append(list);
+                // прокрутка — у своей колонки высотой 5 строк, не у страницы
+                const scroll = element('div', 'calendar__column-scroll');
+                scroll.append(list);
+                wrap.append(scroll);
                 return wrap;
             };
             const minutes = [];
@@ -256,6 +285,61 @@
             return columns;
         };
 
+        // Переходы (style.scss): смена экрана — calendar-zoom-in (глубже: годы → месяцы → дни → время) или
+        // calendar-zoom-out, смена страницы того же экрана — calendar-slide (--calendar-dir: 1 вперёд, -1 назад).
+        // Уходящий экран — absolute на своём месте; высота карточки на время перехода плавно меняется (transition height)
+        const DEPTH = {years: 0, months: 1, days: 2, time: 3};
+        let shown = null;
+        const pageOf = () => {
+            const year = state.cursor.getFullYear();
+            if (state.view === 'days') {
+                return year * 12 + state.cursor.getMonth();
+            }
+            if (state.view === 'months') {
+                return year;
+            }
+            return state.view === 'years' ? Math.floor(year / YEARS_PAGE) : 0;
+        };
+        const swap = (content) => {
+            const page = pageOf();
+            const old = body.firstElementChild;
+            const prev = shown;
+            shown = {view: state.view, page};
+            let kind = '';
+            if (old && prev && window.SfUi?.transition && !window.SfUi.reduced() && root.offsetParent !== null) {
+                if (prev.view !== state.view) {
+                    kind = DEPTH[state.view] > DEPTH[prev.view] ? 'calendar-zoom-in' : 'calendar-zoom-out';
+                } else if (prev.page !== page) {
+                    kind = 'calendar-slide';
+                    root.style.setProperty('--calendar-dir', page > prev.page ? '1' : '-1');
+                }
+            }
+            if (!kind) {
+                body.replaceChildren(content);
+                return;
+            }
+            const from = root.offsetHeight;
+            old.style.top = `${old.offsetTop}px`;
+            old.style.left = `${old.offsetLeft}px`;
+            old.style.width = `${old.offsetWidth}px`;
+            [...body.children].filter((child) => child !== old).forEach((child) => child.remove());
+            content.hidden = true;
+            // новый экран - первым: поиск фокуса и выбранного (body.querySelector) находит его, а не уходящий
+            old.inert = true;
+            body.prepend(content);
+            window.SfUi.transition(old, kind, false).then(() => old.remove());
+            window.SfUi.transition(content, kind, true);
+            const to = root.offsetHeight;
+            if (Math.abs(to - from) >= 1) {
+                root.style.height = `${from}px`;
+                root.getBoundingClientRect();
+                root.style.height = `${to}px`;
+                clearTimeout(root.sfCalendarHeight);
+                root.sfCalendarHeight = setTimeout(() => root.style.removeProperty('height'),
+                    (window.SfUi.motionMs(root, '--motion-slow', 240)) + 60);
+            }
+        };
+
         const render = () => {
             root.dataset.view = state.view;
             renderHead();
@@ -267,6 +351,7 @@
                     label: MONTHS[index],
                     isSelected: state.selected?.getMonth() === index && state.selected?.getFullYear() === state.cursor.getFullYear(),
                     isCurrent: today.getMonth() === index && today.getFullYear() === state.cursor.getFullYear(),
+                    isOut: !inRange(new Date(state.cursor.getFullYear(), index, 1), new Date(state.cursor.getFullYear(), index + 1, 0)),
                 })));
             } else if (state.view === 'years') {
                 const startYear = state.cursor.getFullYear() - (state.cursor.getFullYear() % YEARS_PAGE);
@@ -275,18 +360,31 @@
                     value: startYear + index,
                     isSelected: state.selected?.getFullYear() === startYear + index,
                     isCurrent: today.getFullYear() === startYear + index,
+                    isOut: !inRange(new Date(startYear + index, 0, 1), new Date(startYear + index, 11, 31)),
                 })));
             } else if (state.view === 'time') {
                 content = renderTime();
             } else {
                 content = renderDays();
             }
-            body.replaceChildren(content);
-            // выбранное время — в видимой части колонок
-            body.querySelectorAll('.calendar__column-list [tabindex="0"]').forEach((item) => item.scrollIntoView({block: 'center'}));
+            swap(content);
+            scrollColumns();
         };
 
-        const focusCurrent = () => body.querySelector('[tabindex="0"]')?.focus();
+        // выбранное время — на средней строке своей колонки; scrollIntoView прокручивал бы и страницу.
+        // В скрытом календаре (поле даты до открытия) размеров нет — повтор в focusCurrent после показа
+        const scrollColumns = () => body.querySelectorAll('.calendar__column-scroll').forEach((scroll) => {
+            const item = scroll.querySelector('[tabindex="0"]');
+            if (item && scroll.clientHeight) {
+                const offset = item.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
+                scroll.scrollTop = offset - (scroll.clientHeight - item.offsetHeight) / 2;
+            }
+        });
+
+        const focusCurrent = () => {
+            scrollColumns();
+            body.querySelector('[tabindex="0"]')?.focus({preventScroll: true});
+        };
 
         const moveCursor = (days, months = 0) => {
             const next = new Date(state.cursor);
@@ -298,7 +396,7 @@
             } else {
                 next.setDate(next.getDate() + days);
             }
-            state.cursor = next;
+            state.cursor = clamp(next);
             render();
             focusCurrent();
         };
@@ -345,22 +443,27 @@
                 render();
                 focusCurrent();
             } else if (stepButton) {
+                if (stepButton.getAttribute('aria-disabled') === 'true') {
+                    return;
+                }
                 const direction = Number(stepButton.dataset.sfCalendarStep);
                 if (state.view === 'days') {
                     moveCursor(0, direction);
                 } else {
-                    state.cursor = new Date(state.cursor.getFullYear() + direction * (state.view === 'years' ? YEARS_PAGE : 1), state.cursor.getMonth(), 1);
+                    state.cursor = clamp(new Date(state.cursor.getFullYear() + direction * (state.view === 'years' ? YEARS_PAGE : 1), state.cursor.getMonth(), 1));
                     render();
                 }
             } else if (day && !day.disabled) {
                 selectDay(parseIso(day.dataset.date));
+            } else if (item && item.disabled) {
+                // месяц или год вне min/max
             } else if (item && state.view === 'months') {
-                state.cursor = new Date(state.cursor.getFullYear(), Number(item.dataset.value), 1);
+                state.cursor = clamp(new Date(state.cursor.getFullYear(), Number(item.dataset.value), 1));
                 state.view = 'days';
                 render();
                 focusCurrent();
             } else if (item && state.view === 'years') {
-                state.cursor = new Date(Number(item.dataset.value), state.cursor.getMonth(), 1);
+                state.cursor = clamp(new Date(Number(item.dataset.value), state.cursor.getMonth(), 1));
                 state.view = 'months';
                 render();
                 focusCurrent();
@@ -420,11 +523,17 @@
                 const items = [...item.parentElement.children];
                 const columns = state.view === 'time' ? 1 : 4;
                 const shift = {ArrowLeft: -1, ArrowRight: 1, ArrowUp: -columns, ArrowDown: columns}[event.key];
-                const next = items[Math.max(0, Math.min(items.length - 1, items.indexOf(item) + shift))];
+                // недоступные (вне min/max) пропускаются; дальше края — остаёмся на месте
+                let index = items.indexOf(item) + shift;
+                while (items[index]?.disabled) {
+                    index += shift;
+                }
+                const next = items[index] ?? item;
                 items.forEach((entry) => {
                     entry.tabIndex = entry === next ? 0 : -1;
                 });
                 next.focus();
+                scrollColumns();
             }
         });
 

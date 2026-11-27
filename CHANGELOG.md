@@ -6,6 +6,38 @@
 
 ## [4.0.0] — не выпущена
 
+- Движение и эффекты дизайн-системы: токены `--motion-fast/base/slow`, `--ease-out/in-out/in/spring`
+  (`assetsGlobal/styles/abstract/_motion.scss`, при `prefers-reduced-motion` длительности 1 мс), эффекты Figma
+  `--shadow-neon-*`, `--shadow-star-l`, `--blur-glass(-s)`, `--blur-star-l`, цвета Figma `--color-main-bg-glass*`,
+  `--color-overlay`, `--color-gradient2-sliver`, `--color-promo-site1..3-*`, `--color-social-{google,figma,ru}-brand-*`,
+  `--backdrop-theme-split`. Миксин `transition()` по умолчанию на токенах (`--motion-fast`, `--ease-in-out`; было
+  0.2s и своя кривая), новый миксин `focus-ring()`.
+- UI-компоненты слиты с grotesk-ui-kit (стили, скрипты, разметка; наши правки Figma сохранены): типографика ui/*,
+  цвета text-icon, переходы на токенах, `prefers-reduced-motion`, кольцо фокуса только с клавиатуры (у полей ввода -
+  `html.sf-kbd`), ошибки полей и чекбокса по Figma. Новое: `Accordion::drawAccordion()` - параметры `id`, `open`,
+  `multipleOpen` (связи aria, `inert` у закрытого, высота раскрытия анимируется); маркер main и success рисует
+  галочку линией; лоадер `drawLoaderMain()` - кольцо маской (`loader__ring`) вместо svg; `Badge` - точка `badge__dot`,
+  счётчик «0» выводится; `BadgeStock` - текст `badge-stock__text`; диапазон календаря - класс `calendar__day_range`.
+- Общий скрипт `assetsGlobal/script.js` (`window.SfUi`): клавиатурный режим `html.sf-kbd`, увеличение кнопок при
+  наведении и уменьшение при нажатии (`--sf-grow`, `--sf-press`), свечение нажатия у primary и accent,
+  `SfUi.buttonLoad(btn, on)` (загрузка и морф в круг), `SfUi.buttonResult(btn, 'success'|'error')`,
+  `SfUi.transition(el, name, show)` (классы появления и скрытия), `SfUi.glide()` (скользящий индикатор вкладок и
+  селектора), `SfUi.reduced()`, `SfUi.motionMs()`, `SfUi.nextFrame()`.
+- Поведение UI на ванильном JS: группа вкладок `[data-sf-tabs]` (`TabMain/script.js`: переключение, панели по
+  `aria-controls`, стрелки и Home/End при `role="tablist"`, событие `tab:change`, переезд подложки), переезд подложки
+  селектора, появление панели и каскад пунктов `DropdownMain` и подсказок `InputTags`, появление и уход тегов,
+  колода тостов (раскрытие при наведении и фокусе, появление и уход), переходы экранов и страниц календаря.
+- `SfUi.loaderOverlay(el, on)` (`LoaderOverlay/script.js`) и `SfUi.menuBadge(button, text)`
+  (`ButtonMenu/script.js`); список стран `InputPhone` появляется и уходит с переходом, тень — `--shadow-gray-m`;
+  точки `LoaderDots` — волна прозрачности (как в ките). Исправлено: новый тост (`sfToast`) вставлялся перед шаблоном
+  своего типа и мог оказаться в колоде позади старых; общий скрипт искал кнопки соцсетей и меню по неверным классам.
+- В режиме разработки адрес опубликованного файла (`Http\Assets::publish()`) получает `?v=<время изменения>`: правки
+  скриптов видны без сброса кэша браузера.
+- **Несовместимое:** `UI/Switch/SwitchSort` - стили сортировки из кита (подпись t2, зазор 8 px, без наложения
+  кнопок); скрипты `Accordion`, `InputMain`, `Textarea`, `DropdownTab` - IIFE без глобальных классов (`new Accordion()`,
+  `initTextInputs()` и т. п. больше нет); у `ButtonMain` вместо рамки снова `border` 2 px прозрачного цвета (по киту);
+  из `LoaderMain/style.scss` убраны стили точек, строки и подложки (они в `LoaderDots`, `LoaderInline`, `LoaderOverlay`).
+
 - Компонент `Layout/Components/Parts/States` (блок States в Figma): `Parts\States\Layout::drawStates()` - состояния
   `Empty`, `Load`, `Alert`, `Success`, `Error` (маркер, заголовок, текст, кнопки; тёмная тема; на телефоне кнопки друг под
   другом). Витрина UI получила раздел «Части страниц» (`LayoutShowcase::SECTIONS['Parts']`).

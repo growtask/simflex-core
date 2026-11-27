@@ -1,15 +1,125 @@
+/*
+ * Кнопка: наборы Figma Buttons/main (primary, secondary, gray, accent), Buttons/alt (outline, monochrome, flat),
+ * Buttons/states (disabled, success, error), Buttons/focus (кольцо фокуса).
+ * Состояние load: заливка как у hover; без боковой иконки спиннер встаёт по центру вместо содержимого,
+ * с иконкой слева или справа — на место иконки, текст остаётся.
+ */
+
+// Наведение и загрузка выглядят одинаково (Figma: state=load = заливка hover)
+@mixin btn-hover {
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            @content;
+        }
+    }
+
+    &.loading {
+        @content;
+    }
+}
+
+// Размер: высота, отступ без иконки, отступ со стороны иконки, отступ у кнопки-иконки, промежуток, размер иконки
+@mixin btn-size($height, $pad, $pad-icon, $pad-center, $gap, $icon) {
+    @include spacing(height, $height);
+    @include spacing(padding-inline, $pad);
+    @include spacing(gap, $gap);
+
+    &:has(.btn__icon_left) {
+        @include spacing(padding-left, $pad-icon);
+    }
+
+    &:has(.btn__icon_right) {
+        @include spacing(padding-right, $pad-icon);
+    }
+
+    &:has(.btn__icon_center) {
+        @include spacing(padding-inline, $pad-center);
+    }
+
+    .btn__icon svg,
+    .btn__loader,
+    .btn__result {
+        @include icon($icon);
+    }
+}
+
+/* Занятое состояние $mark — спиннер (.loading) или знак результата (.btn_result): по центру вместо содержимого,
+   ширина кнопки сохраняется (текст остаётся в потоке, только прозрачный); с иконкой слева или справа знак встаёт на
+   её место, текст виден (Figma: state=load, icon=left/right) */
+@mixin btn-busy($mark) {
+    pointer-events: none;
+
+    #{$mark} {
+        position: absolute;
+        inset: 0;
+        display: block;
+        margin: auto;
+    }
+
+    .btn__text,
+    .btn__icon {
+        opacity: 0;
+    }
+
+    &:has(.btn__text):has(.btn__icon_left, .btn__icon_right) {
+        .btn__text,
+        .btn__icon {
+            opacity: 1;
+        }
+
+        #{$mark} {
+            position: static;
+        }
+    }
+
+    &:has(.btn__text):has(.btn__icon_left) {
+        .btn__icon_left {
+            display: none;
+        }
+
+        #{$mark} {
+            order: -1;
+        }
+    }
+
+    &:has(.btn__text):not(:has(.btn__icon_left)):has(.btn__icon_right) .btn__icon_right {
+        display: none;
+    }
+}
+
+/* position и isolation — с нулевой специфичностью: классы приложения (position: absolute …) их перекрывают */
+:where(.btn) {
+    position: relative;
+    isolation: isolate;
+}
+
 .btn {
     /*----------CORE STYLE-----------*/
+    // Переходы: цвета — fast; scale (вдавливание) — пружиной при отпускании; clip-path — морф загрузки
+    --btn-tr: border-color var(--motion-fast) var(--ease-in-out), background-color var(--motion-fast) var(--ease-in-out),
+        color var(--motion-fast) var(--ease-in-out), opacity var(--motion-fast) var(--ease-in-out),
+        clip-path calc(var(--motion-slow) + 60ms) var(--ease-in-out);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border: transparent solid;
     width: fit-content;
     touch-action: manipulation;
-    @include transition((box-shadow, background, color, opacity));
+    transition: var(--btn-tr), scale var(--motion-base) var(--ease-out);
+    @include border-w(2px);
 
-    &__text {
+    /* Наведение (мышь): лёгкое увеличение, не больше 2 px с каждой стороны и не за край контейнера —
+       --sf-grow считает assetsGlobal/script.js; нажатие — лёгкое уменьшение */
+    @media (hover: hover) and (pointer: fine) {
+        &:not(:disabled, [aria-disabled='true'], .loading, .btn_result, .btn_morph):hover {
+            scale: var(--sf-grow, 1.01);
+        }
+    }
 
+    &:not(:disabled, [aria-disabled='true'], .loading, .btn_result):active {
+        scale: var(--sf-press, 0.99);
+        transition: var(--btn-tr), scale var(--motion-fast) var(--ease-out);
     }
 
     &__icon {
@@ -17,33 +127,95 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        @include transition((opacity));
 
         svg {
             display: inline-block;
             vertical-align: middle;
+            fill: currentColor;
             @include transition((fill, stroke));
         }
     }
 
-    &__loader {
-        display: none;
+    &__text {
+        @include transition((opacity));
     }
 
-    /* Загрузка: спиннер вместо иконок и текста, ширина кнопки сохраняется, повторное нажатие блокируется */
-    &.loading {
-        position: relative;
+    &__loader,
+    &__result {
+        display: none;
+        flex-shrink: 0;
+    }
+
+    /* Свечение нажатия (primary, accent): слой под текстом (z-index -1 внутри isolation), обрезан по радиусу;
+       пятна .btn__glow-dot добавляет JS — transform и opacity, раскладку не трогают */
+    &__glow {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        border-radius: inherit;
         pointer-events: none;
+    }
+
+    &__glow-dot {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, color-mix(in srgb, var(--color-main-gray-white) 38%, transparent), transparent);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Загрузка: спиннер вместо содержимого, повторное нажатие блокируется; спиннер проявляется мягко */
+    &.loading {
+        @include btn-busy('.btn__loader');
 
         .btn__loader {
-            position: absolute;
-            inset: 0;
-            display: block;
-            margin: auto;
+            animation: btn-fade-in var(--motion-base) var(--ease-out) 60ms both;
         }
+    }
+
+    /* Результат после загрузки (prop result): галочка или крестик рисуются линией */
+    &.btn_result {
+        @include btn-busy('.btn__result');
+
+        .btn__result svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .btn__result path {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: btn-draw var(--motion-slow) var(--ease-out) 40ms forwards;
+        }
+
+        .btn__result path + path {
+            animation-delay: 140ms;
+        }
+    }
+
+    /* Перетекание (SfUi.buttonLoad): clip-path сжимает кнопку в круг по центру; бокс и место в потоке те же.
+       --btn-morph-x / -r / -round задаёт JS (полуразность ширины и высоты, радиус кнопки, половина высоты) */
+    &.btn_morph {
+        clip-path: inset(0 0 round var(--btn-morph-r, 0));
+    }
+
+    &.btn_morph-shrink {
+        clip-path: inset(0 var(--btn-morph-x, 0) round var(--btn-morph-round, 0));
 
         .btn__text,
         .btn__icon {
-            visibility: hidden;
+            opacity: 0;
+        }
+    }
+
+    /* Разворот: текст проявляется, когда кнопка почти раскрылась (не обрезается кругом) */
+    &.btn_morph:not(.btn_morph-shrink, .loading) {
+        .btn__text,
+        .btn__icon {
+            transition: opacity var(--motion-fast) var(--ease-out) calc(var(--motion-slow) - 60ms);
         }
     }
 
@@ -51,617 +223,382 @@
         cursor: not-allowed;
     }
 
-    /* Фокус с клавиатуры: кольцо 2 px цвета бренда, зазор 2 px, повторяет радиус кнопки */
+    /* Фокус с клавиатуры (Buttons/focus): кольцо 2 px цвета бренда, зазор 2 px, радиус кнопки + 4 */
     &:focus-visible {
-        outline: 2px solid var(--color-main-color1-main, var(--color-main-color1-main));
+        outline: 2px solid var(--color-main-color1-main);
         outline-offset: 2px;
     }
 
-    /*============QUICK CONFIG============*/
-    &-size_l {
-        @include ui-m;
-        border-radius: var(--radius-ui-medium);
-    }
-    &-size_m {
-        @include ui-m;
-        border-radius: var(--radius-ui-medium);
-    }
-    &-size_s {
-        @include ui-s;
-        border-radius: var(--radius-ui-medium);
-    }
-    &-size_xs {
-        @include ui-s;
-        border-radius: var(--radius-ui-small);
-    }
-    /*====================================*/
-
-    /*----------STYLES-----------*/
+    /*----------STYLES: Buttons/main-----------*/
     &-primary {
         background: var(--color-main-color1-main);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-color1-light);
-            }
+        .btn__loader {
+            color: var(--color-text-icon-gray-dark);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-color1-light);
         }
 
         &:active {
             background: var(--color-main-color1-dark);
-        }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
         }
     }
 
     &-secondary {
         background: var(--color-main-gray-lighter);
-        color: var(--color-main-gray-darker);
+        color: var(--color-text-icon-gray-darker);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-color1-lighter);
-            }
+        // в Figma спиннер градиентный (text-icon/gradient1/dark), обводка svg градиент не принимает
+        .btn__loader {
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-color1-lighter);
         }
 
         &:active {
             background: var(--color-main-color1-light);
         }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
-        }
     }
 
     &-accent {
         background: var(--color-main-color2-dark);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-color2-main);
-            }
+        .btn__loader {
+            color: var(--color-text-icon-gray-dark);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-color2-main);
         }
 
         &:active {
             background: var(--color-main-color2-darker);
         }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
-        }
     }
 
     &-gray {
         background: var(--color-main-gray-black);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-gray-dark);
-            }
+        // Figma: text-icon/gradient1/light
+        .btn__loader {
+            color: var(--color-text-icon-color1-light);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-gray-dark);
         }
 
         &:active {
             background: var(--color-main-gray-darker);
         }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
-        }
     }
 
+    /*----------STYLES: Buttons/alt-----------*/
     &-outline {
         background: transparent;
-        color: var(--color-main-gray-darker);
-        box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+        color: var(--color-text-icon-gray-darker);
+        border-color: var(--color-main-color1-main);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-color1-light);
-                color: var(--color-main-gray-white);
-                box-shadow: inset 0 0 0 2px var(--color-main-color1-light);
-            }
+        .btn__loader {
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-color1-light);
+            color: var(--color-text-icon-gray-white);
+            border-color: var(--color-main-color1-light);
         }
 
         &:active {
             background: var(--color-main-color1-dark);
-            color: var(--color-main-gray-white);
-            box-shadow: inset 0 0 0 2px var(--color-main-color1-dark);
-        }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
-            box-shadow: none;
+            color: var(--color-text-icon-gray-white);
+            border-color: var(--color-main-color1-dark);
         }
     }
 
     &-monochrome {
         background: transparent;
-        color: var(--color-main-gray-darker);
-        box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
+        color: var(--color-text-icon-gray-darker);
+        border-color: var(--color-main-gray-light);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-gray-light);
-                color: var(--color-main-color1-dark);
-                box-shadow: none;
-            }
+        .btn__loader {
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-gray-light);
+            color: var(--color-text-icon-color1-dark);
         }
 
         &:active {
             background: var(--color-main-color1-lighter);
-            color: var(--color-main-color1-darker);
-            box-shadow: none;
-        }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
-            box-shadow: none;
+            color: var(--color-text-icon-color1-darker);
+            border-color: var(--color-main-color1-lighter);
         }
     }
 
     &-flat {
         background: transparent;
-        color: var(--color-main-gray-darker);
+        color: var(--color-text-icon-gray-darker);
 
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                background: var(--color-main-gray-lighter);
-                color: var(--color-main-color1-dark);
-            }
+        .btn__loader {
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        @include btn-hover {
+            background: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-color1-dark);
         }
 
         &:active {
             background: var(--color-main-color1-lighter);
-            color: var(--color-main-color1-darker);
-        }
-
-        &:disabled,
-        &[aria-disabled='true'] {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-medium);
+            color: var(--color-text-icon-color1-darker);
         }
     }
 
-    /*----------SIZES-----------*/
+    /*----------SIZES (Figma: xs — ui/small и ui/s, s — ui/medium и ui/s, m и l — ui/medium и ui/m)-----------*/
+    /* В Figma обводка внутри кнопки, у нас рамка 2 px: горизонтальные отступы на 2 px меньше макетных */
     &-size_l {
-        @include spacing(height, 56px);
-        padding: 0 vw(24px);
-        @include spacing(gap, 12px);
-
-        @include HD {
-            padding: 0 vwh(24px);
-        }
-        @include Tablet {
-            padding: 0 vwt(24px);
-        }
-        @include Mobile {
-            padding: 0 vwm(24px);
-        }
-
-        &:has(.btn__icon_left) {
-            @include spacing(padding-left, 20px);
-        }
-
-        &:has(.btn__icon_right) {
-            @include spacing(padding-right, 20px);
-        }
-
-        &:has(.btn__icon_center) {
-            padding: 0 vw(16px);
-
-            @include HD {
-                padding: 0 vwh(16px);
-            }
-            @include Tablet {
-                padding: 0 vwt(16px);
-            }
-            @include Mobile {
-                padding: 0 vwm(16px);
-            }
-        }
-
-        .btn__icon {
-            svg {
-                @include icon(24px);
-            }
-        }
-
-        .btn__loader {
-            @include icon(24px);
-        }
+        @include ui-m;
+        border-radius: var(--radius-ui-medium);
+        @include btn-size(56px, 22px, 18px, 14px, 12px, 24px);
     }
 
     &-size_m {
-        @include spacing(height, 48px);
-        padding: 0 vw(20px);
-        @include spacing(gap, 8px);
-
-        @include HD {
-            padding: 0 vwh(20px);
-        }
-        @include Tablet {
-            padding: 0 vwt(20px);
-        }
-        @include Mobile {
-            padding: 0 vwm(20px);
-        }
-
-        &:has(.btn__icon_left) {
-            @include spacing(padding-left, 16px);
-        }
-
-        &:has(.btn__icon_right) {
-            @include spacing(padding-right, 16px);
-        }
-
-        &:has(.btn__icon_center) {
-            padding: 0 vw(12px);
-
-            @include HD {
-                padding: 0 vwh(12px);
-            }
-            @include Tablet {
-                padding: 0 vwt(12px);
-            }
-            @include Mobile {
-                padding: 0 vwm(12px);
-            }
-        }
-
-        .btn__icon {
-            svg {
-                @include icon(24px);
-            }
-        }
-
-        .btn__loader {
-            @include icon(24px);
-        }
+        @include ui-m;
+        border-radius: var(--radius-ui-medium);
+        @include btn-size(48px, 18px, 14px, 10px, 8px, 24px);
     }
 
     &-size_s {
-        @include spacing(height, 40px);
-        padding: 0 vw(16px);
-        @include spacing(gap, 8px);
-
-        @include HD {
-            padding: 0 vwh(16px);
-        }
-        @include Tablet {
-            padding: 0 vwt(16px);
-        }
-        @include Mobile {
-            padding: 0 vwm(16px);
-        }
-
-        &:has(.btn__icon_left) {
-            @include spacing(padding-left, 12px);
-        }
-
-        &:has(.btn__icon_right) {
-            @include spacing(padding-right, 12px);
-        }
-
-        &:has(.btn__icon_center) {
-            padding: 0 vw(8px);
-
-            @include HD {
-                padding: 0 vwh(8px);
-            }
-            @include Tablet {
-                padding: 0 vwt(8px);
-            }
-            @include Mobile {
-                padding: 0 vwm(8px);
-            }
-        }
-
-        .btn__icon {
-            svg {
-                @include icon(24px);
-            }
-        }
-
-        .btn__loader {
-            @include icon(24px);
-        }
+        @include ui-s;
+        border-radius: var(--radius-ui-medium);
+        @include btn-size(40px, 14px, 10px, 6px, 8px, 24px);
     }
 
     &-size_xs {
-        @include spacing(height, 32px);
-        padding: 0 vw(12px);
-        @include spacing(gap, 4px);
+        @include ui-s;
+        border-radius: var(--radius-ui-small);
+        @include btn-size(32px, 10px, 6px, 6px, 4px, 16px);
+    }
 
-        @include HD {
-            padding: 0 vwh(12px);
-        }
-        @include Tablet {
-            padding: 0 vwt(12px);
-        }
-        @include Mobile {
-            padding: 0 vwm(12px);
-        }
-
-        &:has(.btn__icon_left) {
-            @include spacing(padding-left, 8px);
-        }
-
-        &:has(.btn__icon_right) {
-            @include spacing(padding-right, 8px);
-        }
-
-        &:has(.btn__icon_center) {
-            padding: 0 vw(8px);
-
-            @include HD {
-                padding: 0 vwh(8px);
-            }
-            @include Tablet {
-                padding: 0 vwt(8px);
-            }
-            @include Mobile {
-                padding: 0 vwm(8px);
-            }
-        }
-
-        .btn__icon {
-            svg {
-                @include icon(16px);
-            }
-        }
-
-        .btn__loader {
-            @include icon(16px);
-        }
+    /* Круглая кнопка (Figma: кнопка воспроизведения в Parts/video-poster, r 9999) — для кнопки с одной иконкой;
+       в PHP — класс btn_round через className */
+    &.btn_round {
+        border-radius: var(--radius-pill);
     }
 
     /*----------THEME-----------*/
     &-theme_dark {
-        &.btn-primary {
-            background: var(--color-main-color1-main);
-            color: var(--color-main-gray-white);
-
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-color1-light);
-                }
-            }
-
-            &:active {
-                background: var(--color-main-color1-dark);
-            }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
-            }
-        }
-
-        &.btn-accent {
-            background: var(--color-main-color2-dark);
-            color: var(--color-main-gray-white);
-
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-color2-main);
-                }
-            }
-
-            &:active {
-                background: var(--color-main-color2-darker);
-            }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
-            }
+        &.btn-primary .btn__loader,
+        &.btn-accent .btn__loader {
+            color: var(--color-text-icon-gray-lighter);
         }
 
         &.btn-secondary {
             background: var(--color-main-gray-dark);
-            color: var(--color-main-gray-white);
+            color: var(--color-text-icon-gray-white);
 
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-gray-medium);
-                }
+            .btn__loader {
+                color: var(--color-text-icon-color1-light);
+            }
+
+            @include btn-hover {
+                background: var(--color-main-gray-medium);
             }
 
             &:active {
                 background: var(--color-main-gray-darker);
-                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
-            }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
+                border-color: var(--color-main-gray-dark);
             }
         }
 
         &.btn-gray {
             background: var(--color-main-gray-white);
-            color: var(--color-main-gray-darker);
+            color: var(--color-text-icon-gray-darker);
 
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-gray-light);
-                }
+            @include btn-hover {
+                background: var(--color-main-gray-light);
             }
 
             &:active {
                 background: var(--color-main-gray-medium);
             }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
-            }
         }
 
         &.btn-outline {
-            background: transparent;
-            color: var(--color-main-gray-white);
-            box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+            color: var(--color-text-icon-gray-white);
 
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-color1-light);
-                    box-shadow: inset 0 0 0 2px var(--color-main-color1-light);
-                }
-            }
-
-            &:active {
-                background: var(--color-main-color1-dark);
-                box-shadow: inset 0 0 0 2px var(--color-main-color1-dark);
-            }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
-                box-shadow: none;
+            // Figma: gradient1/light на заливке color1/light; однотонный color1/light на ней не виден — берём цвет текста
+            .btn__loader {
+                color: var(--color-text-icon-gray-white);
             }
         }
 
         &.btn-monochrome {
-            background: transparent;
-            color: var(--color-main-gray-white);
-            box-shadow: inset 0 0 0 2px var(--color-main-gray-medium);
+            color: var(--color-text-icon-gray-white);
+            border-color: var(--color-main-gray-medium);
 
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-gray-medium);
-                }
+            .btn__loader {
+                color: var(--color-text-icon-color1-light);
+            }
+
+            @include btn-hover {
+                background: var(--color-main-gray-medium);
+                color: var(--color-text-icon-gray-white);
             }
 
             &:active {
                 background: var(--color-main-gray-darker);
-            }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
-                box-shadow: none;
+                color: var(--color-text-icon-gray-white);
+                border-color: var(--color-main-gray-medium);
             }
         }
 
         &.btn-flat {
-            background: transparent;
-            color: var(--color-main-gray-white);
+            color: var(--color-text-icon-gray-white);
 
-            @media (hover: hover) and (pointer: fine) {
-                &:hover {
-                    background: var(--color-main-gray-dark);
-                    color: var(--color-main-color1-lighter);
-                }
+            .btn__loader {
+                color: var(--color-text-icon-color1-light);
+            }
+
+            @include btn-hover {
+                background: var(--color-main-gray-dark);
+                color: var(--color-text-icon-color1-lighter);
             }
 
             &:active {
                 background: var(--color-main-gray-darker);
-                color: var(--color-main-color1-light);
-                box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
-            }
-
-            &:disabled,
-        &[aria-disabled='true'] {
-                cursor: not-allowed;
-                color: var(--color-main-gray-medium);
-                background: var(--color-states-disabled-dark);
-                box-shadow: none;
+                color: var(--color-text-icon-color1-light);
+                border-color: var(--color-main-gray-dark);
             }
         }
     }
 }
 
-/* Загрузка (Figma state=load): фон как у hover, текст скрыт, вместо него спиннер */
-.btn.loading {
-    &.btn-primary {
-        background: var(--color-main-color1-light);
+/*----------STATES (Buttons/states): success и error — результат действия, без hover и press-----------*/
+.btn-success,
+.btn-error {
+    border-color: transparent;
+
+    .btn__loader {
+        color: currentColor;
+    }
+}
+
+.btn-success {
+    background: var(--color-states-success-light);
+    color: var(--color-states-success-dark);
+
+    &.btn-theme_dark {
+        background: var(--color-states-success-dark);
+        color: var(--color-states-success-light);
+    }
+}
+
+.btn-error {
+    background: var(--color-states-error-light);
+    color: var(--color-states-error-dark);
+
+    &.btn-theme_dark {
+        background: var(--color-states-error-dark);
+        color: var(--color-states-error-light);
+    }
+}
+
+/* Результат загрузки (prop result) — цвета Buttons/states success и error, плавно (переход background-color) */
+.btn.btn_result-success,
+.btn.btn_result-error {
+    border-color: transparent;
+}
+
+.btn.btn_result-success {
+    background: var(--color-states-success-light);
+    color: var(--color-states-success-dark);
+
+    &.btn-theme_dark {
+        background: var(--color-states-success-dark);
+        color: var(--color-states-success-light);
+    }
+}
+
+.btn.btn_result-error {
+    background: var(--color-states-error-light);
+    color: var(--color-states-error-dark);
+
+    &.btn-theme_dark {
+        background: var(--color-states-error-dark);
+        color: var(--color-states-error-light);
+    }
+}
+
+@keyframes btn-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes btn-draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Меньше движения: без увеличения, вдавливания и проявлений (морф и свечение выключает JS) */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        &:not(:disabled, [aria-disabled='true'], .loading, .btn_result):hover,
+        &:not(:disabled, [aria-disabled='true'], .loading, .btn_result):active {
+            scale: none;
+        }
+
+        &.loading .btn__loader {
+            animation: none;
+        }
+
+        &.btn_result .btn__result path {
+            animation: none;
+            stroke-dashoffset: 0;
+        }
     }
 
-    &.btn-accent {
-        background: var(--color-main-color2-main);
+    .btn__glow {
+        display: none;
     }
+}
 
-    &.btn-secondary {
-        background: var(--color-main-color1-lighter);
-    }
-
-    &.btn-gray {
-        background: var(--color-main-gray-dark);
-    }
-
-    &.btn-outline {
-        background: var(--color-main-color1-light);
-        box-shadow: none;
-    }
-
-    &.btn-monochrome {
-        background: var(--color-main-gray-light);
-        box-shadow: none;
-    }
-
-    &.btn-flat {
-        background: var(--color-main-gray-lighter);
+/* disabled (Buttons/states) — у всех стилей одна плашка; правило последнее и сильнее hover и press */
+.btn:disabled,
+.btn[aria-disabled='true'] {
+    &,
+    &:hover,
+    &:active {
+        cursor: not-allowed;
+        background: var(--color-states-disabled-medium);
+        color: var(--color-text-icon-gray-medium);
+        border-color: transparent;
     }
 
     &.btn-theme_dark {
-        &.btn-secondary {
-            background: var(--color-main-gray-medium);
-        }
-
-        &.btn-gray {
-            background: var(--color-main-gray-light);
-        }
-
-        &.btn-monochrome {
-            background: var(--color-main-gray-medium);
-        }
-
-        &.btn-flat {
-            background: var(--color-main-gray-dark);
+        &,
+        &:hover,
+        &:active {
+            background: var(--color-states-disabled-dark);
         }
     }
-}
+}
 
 /* Результат действия (Figma Buttons/states): цвета не зависят от стиля кнопки и не меняются при hover и нажатии */
 .btn.btn-state_success,
 .btn.btn-state_error {
-    box-shadow: none;
+    border-color: transparent;
 }
 
 .btn.btn-state_success {

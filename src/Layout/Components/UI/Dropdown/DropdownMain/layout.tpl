@@ -62,7 +62,7 @@ $id = $data['id'];
                     <?= Tab::drawTabMain(
                         className: 'dropdown__option',
                         text: htmlspecialchars($optionLabel),
-                        iconRight: 'check',
+                        iconLeft: 'check',
                         style: TabMainStyle::Soft,
                         size: $tabSize,
                         theme: $tabTheme,
@@ -80,7 +80,7 @@ $id = $data['id'];
             <?php if ($data['searchUrl'] !== ''): ?>
                 <template data-sf-dropdown-option><?= Tab::drawTabMain(
                     className: 'dropdown__option',
-                    iconRight: 'check',
+                    iconLeft: 'check',
                     style: TabMainStyle::Soft,
                     size: $tabSize,
                     theme: $tabTheme,

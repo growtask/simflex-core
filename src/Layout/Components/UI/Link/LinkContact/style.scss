@@ -1,3 +1,4 @@
+/* Ссылка-контакт (Figma Links/contact): flat, filled, monochrome; xs — text/t2, s — h5, m — h3, l — h2 */
 .contact {
     /*----------CORE STYLE-----------*/
     display: inline-flex;
@@ -9,7 +10,7 @@
     white-space: nowrap;
     border: solid transparent;
     @include border-w(2px);
-    @include transition((background, border-color, color));
+    @include transition((background-color, border-color, color));
 
     &:focus-visible {
         outline: 2px solid var(--color-main-color1-main);
@@ -17,60 +18,61 @@
     }
 
     /*----------STYLES-----------*/
-    /* Синий текст без плашки, цвета одинаковы в обеих темах */
+    /* Текст цвета бренда без плашки, цвета одинаковы в обеих темах */
     &-flat {
-        color: var(--color-main-color1-main);
+        color: var(--color-text-icon-color1-main);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color-main-color1-light);
+                color: var(--color-text-icon-color1-light);
             }
         }
 
         &:active {
-            color: var(--color-main-color1-dark);
+            color: var(--color-text-icon-color1-dark);
         }
     }
 
     &-filled {
         background: var(--color-main-gray-lighter);
-        color: var(--color-main-gray-darker);
+        color: var(--color-text-icon-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color-main-color1-main);
+                color: var(--color-text-icon-color1-main);
             }
         }
 
         &:active {
             background: var(--color-main-color1-lighter);
-            color: var(--color-main-color1-dark);
+            color: var(--color-text-icon-color1-dark);
         }
     }
 
-    /* Серый текст, синеет по наведению */
+    /* Серый текст, окрашивается по наведению */
     &-monochrome {
-        color: var(--color-main-gray-darker);
+        color: var(--color-text-icon-gray-darker);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color-main-color1-main);
+                color: var(--color-text-icon-color1-main);
             }
         }
 
         &:active {
-            color: var(--color-main-color1-dark);
+            color: var(--color-text-icon-color1-dark);
         }
     }
 
     /*----------SIZES-----------*/
+    /* Отступы filled на 2 px меньше макетных: в Figma обводка внутри, у нас рамка 2 px */
     /* Высота одинакова у всех стилей: смена стиля раскладку не двигает */
     &-size_xs {
         @include spacing(height, 40px);
-        @include t2-b;
+        @include t2;
 
         &.contact-filled {
-            @include spacing(padding-inline, 12px);
+            @include spacing(padding-inline, 10px);
             border-radius: var(--radius-ui-medium);
         }
     }
@@ -80,7 +82,7 @@
         @include h5;
 
         &.contact-filled {
-            @include spacing(padding-inline, 14px);
+            @include spacing(padding-inline, 12px);
             border-radius: var(--radius-ui-medium);
         }
     }
@@ -90,7 +92,7 @@
         @include h3;
 
         &.contact-filled {
-            @include spacing(padding-inline, 14px);
+            @include spacing(padding-inline, 12px);
             border-radius: var(--radius-ui-medium);
         }
     }
@@ -100,7 +102,7 @@
         @include h2;
 
         &.contact-filled {
-            @include spacing(padding-inline, 16px);
+            @include spacing(padding-inline, 14px);
             border-radius: var(--radius-ui-large);
         }
     }
@@ -109,32 +111,32 @@
     &-theme_dark {
         &.contact-filled {
             background: var(--color-main-gray-dark);
-            color: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color-main-color1-light);
+                    color: var(--color-text-icon-color1-light);
                 }
             }
 
             &:active {
                 background: var(--color-main-gray-darker);
                 border-color: var(--color-main-gray-dark);
-                color: var(--color-main-color1-main);
+                color: var(--color-text-icon-color1-main);
             }
         }
 
         &.contact-monochrome {
-            color: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
                 &:hover {
-                    color: var(--color-main-color1-light);
+                    color: var(--color-text-icon-color1-light);
                 }
             }
 
             &:active {
-                color: var(--color-main-color1-main);
+                color: var(--color-text-icon-color1-dark);
             }
         }
     }

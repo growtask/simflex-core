@@ -30,6 +30,17 @@
 
     &_active > &__scrim {
         display: flex;
+        animation: loader-overlay-in var(--motion-base) var(--ease-out);
+    }
+
+    // уход (script.js, классы loader-overlay-*): вуаль гаснет быстрее, чем появлялась
+    &__scrim.loader-overlay-leave-active {
+        display: flex;
+        transition: opacity var(--motion-fast) var(--ease-in);
+    }
+
+    &__scrim.loader-overlay-leave-to {
+        opacity: 0;
     }
 
     // блок под вуалью недоступен: ни клика, ни фокуса
@@ -40,5 +51,11 @@
 
     &-theme_dark {
         --lo-fill: var(--color-main-gray-darker);
+    }
+}
+
+@keyframes loader-overlay-in {
+    from {
+        opacity: 0;
     }
 }

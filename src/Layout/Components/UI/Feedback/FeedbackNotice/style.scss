@@ -1,4 +1,5 @@
-/* Уведомление Feedback/notice (design-ui-feedback.md) */
+/* Уведомление Feedback/notice (Figma 5087:18897, design-ui-feedback.md): ui/large, отступ 12, ряд кнопок через 20,
+ * в верхнем ряду иконка 24, текст и крестик через 8; заголовок t2, строка t3 */
 .notice {
     --notice-bg: var(--color-main-gray-lighter);
     --notice-title: var(--color-text-icon-gray-darker);
@@ -16,15 +17,18 @@
     &__main {
         display: flex;
         align-items: flex-start;
-        @include spacing(gap, 12px);
+        @include spacing(gap, 8px);
     }
 
     &__icon {
         flex-shrink: 0;
         fill: currentColor;
         color: var(--notice-title);
-        @include spacing(width, 24px);
-        @include spacing(height, 24px);
+        @include icon(24px);
+    }
+
+    &__close {
+        flex-shrink: 0;
     }
 
     &__body {
@@ -43,6 +47,11 @@
     &__text {
         color: var(--notice-text);
         @include t3;
+    }
+
+    // без заголовка строка встаёт по центру иконки 24 px
+    &__body > &__text:first-child {
+        @include spacing(padding-top, 2px);
     }
 
     &__buttons {

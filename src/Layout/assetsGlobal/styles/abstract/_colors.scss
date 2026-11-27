@@ -36,6 +36,29 @@
     --color-main-bg-light: #FFFFFF;
     --color-main-bg-dark: #262626;
     --color-main-bg-gradient: linear-gradient(90deg, #F2FBFF 0%, #CEE0F2 100%);
+    /* стекло (Figma main/bg/glass*): подложки с backdrop-filter: var(--blur-glass) */
+    --color-main-bg-glass: rgba(43, 43, 43, .9);
+    --color-main-bg-glass-m: rgba(153, 153, 153, .4);
+    --color-main-bg-glass-s: rgba(204, 204, 204, .4);
+    /* затемнение под окнами и шторками */
+    --color-overlay: color-mix(in srgb, var(--color-main-gray-black) 60%, transparent);
+
+    /*----------GRADIENT2-----------*/
+    --color-gradient2-sliver: linear-gradient(180deg, #F6F6F6 0%, #B2B2B2 23.08%, #6A6A6A 41.35%, #F6F6F6 45.19%, #CCCCCC 62.5%, #B2B2B2 75.96%, #4D4D4D 100%);
+
+    /*----------PROMO (палитры промо-сайтов, Figma promo/site*)-----------*/
+    --color-promo-site1-darker: #554D80;
+    --color-promo-site1-dark: #665C99;
+    --color-promo-site1-main: #897ACC;
+    --color-promo-site1-light: #CBC2F2;
+    --color-promo-site2-darker: #4D3A26;
+    --color-promo-site2-dark: #997B5C;
+    --color-promo-site2-main: #B28F6B;
+    --color-promo-site2-light: #F2D4B6;
+    --color-promo-site3-darker: #660A19;
+    --color-promo-site3-dark: #992E3F;
+    --color-promo-site3-main: #CC5266;
+    --color-promo-site3-light: #FFB2BF;
 
     /*----------TEXT-ICON (значения как у main, меняются независимо от заливок)-----------*/
     --color-text-icon-gray-black: #0D0D0D;
@@ -105,18 +128,29 @@
     --color-social-google-dark: #3367D6;
     --color-social-google-main: #4285F4;
     --color-social-google-light: #78A7F7;
+    --color-social-google-brand-1: #4285F4;
+    --color-social-google-brand-2: #34A853;
+    --color-social-google-brand-3: #FFCE21;
+    --color-social-google-brand-4: #EA4335;
     --color-social-youtube-dark: #CC0000;
     --color-social-youtube-main: #F40000;
     --color-social-youtube-light: #FF5964;
     --color-social-figma-dark: #007BE5;
     --color-social-figma-main: #0D99FF;
     --color-social-figma-light: #B2DFFF;
+    --color-social-figma-brand-1: #F24E1E;
+    --color-social-figma-brand-2: #FF7262;
+    --color-social-figma-brand-3: #A259FF;
+    --color-social-figma-brand-4: #1ABCFE;
+    --color-social-figma-brand-5: #0ACF83;
     --color-social-zen-dark: #121213;
     --color-social-zen-main: #202022;
     --color-social-zen-light: #4A4A4D;
     --color-social-ru-dark: #080226;
     --color-social-ru-main: #100943;
     --color-social-ru-light: #3927B4;
+    --color-social-ru-brand-1: #100943;
+    --color-social-ru-brand-2: #ED143B;
     --color-social-max-dark: #2B43FF;
     --color-social-max-main: radial-gradient(circle at 50% 50%, #9F4FDC 0%, #6C2FDE 25%, #5130E8 50%, #214EFA 75%, #43BBFC 100%);
     --color-social-max-light: radial-gradient(circle at 50% 50%, #B272E3 0%, #8959E5 25%, #7459ED 50%, #4D71FB 75%, #69C9FD 100%);
@@ -134,4 +168,5 @@
     /*----------BACKDROP (маска затухания внизу прокручиваемого содержимого)-----------*/
     --backdrop-fade-light: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
     --backdrop-fade-dark: linear-gradient(180deg, rgba(38, 38, 38, 0) 0%, #262626 100%);
+    --backdrop-theme-split: linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 50%, #0D0D0D 50%, #0D0D0D 100%);
 }

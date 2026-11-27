@@ -22,7 +22,7 @@ class Layout extends LayoutBase
      * @param string|int|null $value Выбранное значение; null — ничего не выбрано (виден placeholder)
      * @param bool $search Поле поиска по вариантам над списком
      * @param array<string,string> $attributes Атрибуты кнопки-поля (aria-label, если нет подписи рядом)
-     * @param string $searchUrl Поиск вариантов на сервере: GET <searchUrl>&text=<строка>, ответ JSON [{id, name}]
+     * @param string $searchUrl Поиск вариантов на сервере: GET <searchUrl>?text=<строка> (адрес с ? и без), ответ JSON [{id, name}] или {items: […]}
      *        заменяет список (поиск включается сам)
      * @param array<string,string> $inputAttributes Атрибуты скрытого поля (onchange, data-*): выбор — событие change
      * @param bool $scroll Figma scroll: список ограничен по высоте и прокручивается (по умолчанию); false — панель

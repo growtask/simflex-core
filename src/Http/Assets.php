@@ -74,6 +74,10 @@ class Assets
             if ($devMode || !is_file($target . '/' . basename($real))) {
                 static::copyFile($real, $target . '/' . basename($real));
             }
+            // в режиме разработки адрес не меняется при правке файла: версия сбрасывает кэш браузера
+            if ($devMode) {
+                $url .= '?v=' . filemtime($real);
+            }
         }
 
         return static::$published[$path] = $url;

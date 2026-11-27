@@ -1,16 +1,62 @@
-/* Переключатель направления сортировки (Figma Switches/sort) */
+/* Переключатель направления сортировки (Figma Switches/sort): подпись и две кнопки solid 16×16 друг над другом */
 .sort {
     display: inline-flex;
     align-items: center;
-    @include spacing(gap, 4px);
+    @include spacing(gap, 8px);
+
+    &__text {
+        @include t2;
+        color: var(--color-text-icon-gray-dark);
+    }
 
     &__buttons {
+        position: relative;
         display: inline-flex;
         flex-direction: column;
+    }
 
-        // две стрелки 16 px друг над другом: у треугольника поля сверху и снизу, кнопки заходят друг на друга
-        .sort-button + .sort-button {
-            @include spacing(margin-top, -6px);
+    // скользящий индикатор: копия пары стрелок цветом active, видна окном clip-path над активной стрелкой;
+    // при смене направления окно переезжает пружиной, из none раскрывается от середины. Поля окна −8 px — у solid
+    // треугольник 24 px выступает за кнопку 16 px. Сами кнопки при индикаторе в active не перекрашиваются
+    &__glide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        pointer-events: none;
+        opacity: 0;
+        clip-path: inset(50% -8px 50% -8px);
+        transition: clip-path calc(var(--motion-slow) * 1.75) var(--ease-spring), opacity var(--motion-fast) var(--ease-out);
+
+        &[data-direction='ascending'],
+        &[data-direction='descending'] {
+            opacity: 1;
         }
+
+        &[data-direction='ascending'] {
+            clip-path: inset(-8px -8px 50% -8px);
+        }
+
+        &[data-direction='descending'] {
+            clip-path: inset(50% -8px -8px -8px);
+        }
+    }
+
+    &__glide ~ .sort-button.active {
+        color: var(--color-text-icon-gray-light);
+    }
+
+    &-theme_dark &__glide ~ .sort-button.active {
+        color: var(--color-text-icon-gray-dark);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__glide {
+            transition: none;
+        }
+    }
+
+    &-theme_dark &__text {
+        color: var(--color-text-icon-gray-lighter);
     }
 }

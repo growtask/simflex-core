@@ -1,3 +1,7 @@
+/*
+ * Текстовая ссылка (Figma Links/main): flat и underline (пунктир 2/2 под текстом), размеры s–xl (text/t4–t1),
+ * иконка слева через 4 px, шеврон справа вплотную к тексту (у m — 2 px).
+ */
 .link {
     /*----------CORE STYLE-----------*/
     display: inline-flex;
@@ -5,19 +9,19 @@
     width: fit-content;
     cursor: pointer;
     text-decoration: none;
-    color: var(--color-main-color1-dark);
+    color: var(--color-text-icon-color1-dark);
     @include transition((color));
     @include spacing(gap, 4px);
 
-    &__text {
-        /* Пунктир у underline рисуется под текстом, а не под иконками */
-        border-bottom: solid transparent;
-        @include border-w(1px);
-    }
-
     &__icon-left, &__icon-right {
         flex-shrink: 0;
+        fill: currentColor;
         @include icon(16px);
+    }
+
+    /* шеврон справа стоит вплотную к тексту: компенсируем общий gap */
+    &__icon-right {
+        @include spacing(margin-left, -4px);
     }
 
     &:focus-visible {
@@ -29,19 +33,19 @@
     /*----------STATES-----------*/
     @media (hover: hover) and (pointer: fine) {
         &:hover {
-            color: var(--color-main-color1-main);
+            color: var(--color-text-icon-color1-main);
         }
     }
 
     &:active {
-        color: var(--color-main-color1-darker);
+        color: var(--color-text-icon-color1-darker);
     }
 
     /*----------STYLES-----------*/
+    /* Пунктир 1 px, штрих и промежуток по 2 px (Figma: stroke bottom, dash 2/2), рисуется под текстом, а не под иконками */
     &-underline {
         .link__text {
-            border-bottom: dashed currentColor;
-            @include border-w(1px);
+            background: linear-gradient(to right, currentColor 50%, transparent 50%) left bottom / 4px 1px repeat-x;
         }
     }
 
@@ -54,6 +58,10 @@
     &-size_m {
         @include spacing(min-height, 20px);
         @include t3;
+
+        .link__icon-right {
+            @include spacing(margin-left, -2px);
+        }
     }
 
     &-size_l {
@@ -76,16 +84,16 @@
 
     /*----------THEME-----------*/
     &-theme_dark {
-        color: var(--color-main-color1-light);
+        color: var(--color-text-icon-color1-light);
 
         @media (hover: hover) and (pointer: fine) {
             &:hover {
-                color: var(--color-main-color1-lighter);
+                color: var(--color-text-icon-color1-lighter);
             }
         }
 
         &:active {
-            color: var(--color-main-color1-main);
+            color: var(--color-text-icon-color1-main);
         }
     }
 }

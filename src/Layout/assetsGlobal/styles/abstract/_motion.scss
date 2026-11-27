@@ -1,0 +1,38 @@
+/*----------MOTION: длительности и кривые движения (Figma: Style, демо кита «Движение»)-----------*/
+/*
+ * fast - hover/press и смена цвета; base - появление панелей, переключатели; slow - смена экранов, раскрытие.
+ * Закрытие быстрее открытия (fast/base). Анимируем только цвет, opacity, transform, тени, clip-path.
+ * --ease-out - появление, --ease-in-out - перемещение, --ease-in - уход, --ease-spring - пружина с перелётом.
+ * При prefers-reduced-motion длительности 1ms: переходы на токенах выключаются сами.
+ */
+:root {
+    --motion-fast: 120ms;
+    --motion-base: 180ms;
+    --motion-slow: 240ms;
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    /* запасная пружина для браузеров без linear() (Safari < 17.2, Chrome < 113) */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+    :root {
+        --ease-spring: linear(
+            0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%,
+            0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121,
+            1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%,
+            1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991,
+            0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%,
+            1.003 76.9%, 1.004 83.8%, 1
+        );
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --motion-fast: 1ms;
+        --motion-base: 1ms;
+        --motion-slow: 1ms;
+    }
+}

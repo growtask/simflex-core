@@ -14,7 +14,23 @@ use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $buttonTheme = ButtonMainTheme::from($theme);
 
+$morphId = 'ui-btn-morph-' . $theme;
+$run = "document.querySelectorAll('#$morphId [data-demo-morph]').forEach(function (b) { %s })";
+
 ?>
+<h3 class="ui-showcase__subtitle ui-m">Загрузка и результат: спиннер по центру сжимает кнопку в круг (соседи не сдвигаются), затем success или error ~900 мс; наведение — лёгкое увеличение, нажатие — уменьшение и свечение у primary и accent</h3>
+<div class="ui-showcase__row" id="<?= $morphId ?>">
+    <?= Button::drawButtonMain(text: 'Оформить заказ', theme: $buttonTheme, attributes: ['data-demo-morph' => '']) ?>
+    <?= Button::drawButtonMain(text: 'Отправить заявку', style: ButtonMainStyle::Accent, size: ButtonMainSize::Large, theme: $buttonTheme, attributes: ['data-demo-morph' => '']) ?>
+    <?= Button::drawButtonMain(text: 'Сохранить', style: ButtonMainStyle::Outline, size: ButtonMainSize::Small, theme: $buttonTheme, attributes: ['data-demo-morph' => '']) ?>
+    <?= Button::drawButtonMain(text: 'С иконкой — без морфа', iconLeft: 'check', style: ButtonMainStyle::Secondary, theme: $buttonTheme, attributes: ['data-demo-morph' => '']) ?>
+</div>
+<div class="ui-showcase__row">
+    <?= Button::drawButtonMain(text: 'Начать загрузку', size: ButtonMainSize::ExtraSmall, style: ButtonMainStyle::Gray, theme: $buttonTheme, attributes: ['onclick' => sprintf($run, 'SfUi.buttonLoad(b, true);')]) ?>
+    <?= Button::drawButtonMain(text: '→ success', size: ButtonMainSize::ExtraSmall, style: ButtonMainStyle::Flat, theme: $buttonTheme, attributes: ['onclick' => sprintf($run, "SfUi.buttonResult(b, 'success');")]) ?>
+    <?= Button::drawButtonMain(text: '→ error', size: ButtonMainSize::ExtraSmall, style: ButtonMainStyle::Flat, theme: $buttonTheme, attributes: ['onclick' => sprintf($run, "SfUi.buttonResult(b, 'error');")]) ?>
+    <?= Button::drawButtonMain(text: '→ без результата', size: ButtonMainSize::ExtraSmall, style: ButtonMainStyle::Flat, theme: $buttonTheme, attributes: ['onclick' => sprintf($run, 'SfUi.buttonLoad(b, false);')]) ?>
+</div>
 <?php foreach (ButtonMainSize::cases() as $size): ?>
     <h3 class="ui-showcase__subtitle ui-m"><?= $size->name ?></h3>
     <div class="ui-showcase__row">

@@ -1,4 +1,53 @@
+/*
+ * Многострочное поле Textarea/textarea (Figma «UI»): стили filled / outline / underline, размеры xs / s / m / l,
+ * подпись outside / inside / none, состояния static / hover / focus / error / success / disabled, тема.
+ * Геометрия из Figma: высота 72 / 88 / 96 / 116, текст с отступом 12×6 / 12×8 / 16×12 / 16×13 от края,
+ * текст t3 у xs, t2 у s и m, t1 у l; счётчик t4 — абсолютный слой в правом нижнем углу, высоту поля не меняет.
+ * Радиус ui/small у xs, ui/medium у остальных; у underline радиуса нет. Обводка 2 px внутрь: отступы — без неё.
+ */
+$textarea-sizes: (
+    xs: (h: 72px, px: 10px, py: 4px),
+    s: (h: 88px, px: 10px, py: 6px),
+    m: (h: 96px, px: 14px, py: 10px),
+    l: (h: 116px, px: 14px, py: 11px),
+);
+
+@mixin textarea-vars($size) {
+    @each $name, $value in $size {
+        --ta-#{$name}: #{vw($value)};
+    }
+
+    @include HD {
+        @each $name, $value in $size {
+            --ta-#{$name}: #{vwh($value)};
+        }
+    }
+    @include Tablet {
+        @each $name, $value in $size {
+            --ta-#{$name}: #{vwt($value)};
+        }
+    }
+    @include Mobile {
+        @each $name, $value in $size {
+            --ta-#{$name}: #{vwm($value)};
+        }
+    }
+}
+
 .textarea {
+    @include textarea-vars(map-get($textarea-sizes, m));
+    --ta-radius: var(--radius-ui-medium);
+
+    @each $name, $size in $textarea-sizes {
+        &-size_#{$name} {
+            @include textarea-vars($size);
+        }
+    }
+
+    &-size_xs {
+        --ta-radius: var(--radius-ui-small);
+    }
+
     /*----------CORE STYLE-----------*/
     &__wrapper {
         position: relative;
@@ -15,54 +64,74 @@
 
     &__label {
         flex-shrink: 0;
-        color: var(--color-main-gray-medium);
+        color: var(--color-text-icon-gray-medium);
         @include t4;
         @include spacing(margin-bottom, 2px);
+        @include transition(color);
     }
 
     &__field {
         display: block;
         width: 100%;
+        min-height: var(--ta-h);
+        padding: var(--ta-py) var(--ta-px);
         border: solid transparent;
+        border-radius: var(--ta-radius);
         resize: vertical;
         font-family: inherit;
+        color: var(--color-text-icon-gray-darker);
         @include t2;
         @include border-w(2px);
-        @include transition((background, border, color, opacity));
+        @include transition((background-color, border-color, color));
 
         &::placeholder {
-            color: var(--color-main-gray-medium);
+            color: var(--color-text-icon-gray-medium);
+            opacity: 1;
         }
 
         &:focus {
             outline: none;
         }
 
-        &:focus-visible {
+        // кольцо - только с клавиатуры (html.sf-kbd): у поля ввода :focus-visible срабатывает и по клику
+        :root.sf-kbd &:focus-visible {
             outline: 2px solid var(--color-main-color1-main);
             outline-offset: 2px;
         }
-
-        &:disabled {
-            cursor: not-allowed;
-            color: var(--color-main-gray-medium);
-            background: var(--color-states-disabled-light);
-            border-color: transparent;
-        }
     }
 
-    /* Счётчик лежит поверх поля и высоту поля не меняет */
+    &-size_xs &__field {
+        @include t3;
+    }
+
+    &-size_l &__field {
+        @include t1;
+    }
+
+    /* Счётчик поверх поля в правом нижнем углу (12 от низа, ~10 от правого края до текста) */
     &__counter {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        right: vw(7px);
+        bottom: vw(8px);
         pointer-events: none;
-        color: var(--color-main-gray-medium);
+        color: var(--color-text-icon-gray-medium);
         @include t4;
         @include spacing(padding-block, 4px);
         @include spacing(padding-inline, 3px);
-        @include spacing(margin-right, 9px);
-        @include spacing(margin-bottom, 4px);
+
+        @include Tablet {
+            right: vwt(7px);
+            bottom: vwt(8px);
+        }
+        @include Mobile {
+            right: vwm(7px);
+            bottom: vwm(8px);
+        }
+    }
+
+    // текст не заходит под счётчик
+    &__container:has(.textarea__counter) &__field {
+        @include spacing(padding-bottom, 30px);
     }
 
     &__message {
@@ -71,35 +140,68 @@
     }
 
     /*----------LABEL POSITION-----------*/
-    /* Подпись внутри поля: маленький текст в верхней части поля */
+    /* inside: пустое поле без фокуса показывает подпись на месте текста, при вводе и фокусе она мелко сверху */
     &-pos_inside {
+        /* Подпись всегда набрана мелко (t4-lh) и стоит наверху; в пустом поле она увеличена transform-ом
+           (scale = кегль текста / t4) и опущена на строку ввода. Переход — только transform и цвет:
+           шрифт не перескакивает, раскладка не пересчитывается. Центр строки t2 в пустом поле — py + 28 px */
+        --ta-label-scale: #{16 / 11};
+        // от верха подписи до центра первой строки пустого поля: 16 + половина строки (t2 — 24) − 2
+        --ta-label-shift: #{vw(26px)};
+
         .textarea__label {
             position: absolute;
             z-index: 1;
+            top: calc(var(--ta-py) + #{vw(2px)});
+            left: calc(var(--ta-px) + #{vw(2px)});
+            right: calc(var(--ta-px) + #{vw(2px)});
+            margin: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             pointer-events: none;
-            margin-bottom: 0;
-            @include spacing(top, 6px);
-            @include spacing(left, 14px);
+            transform-origin: left top;
+            @include t4-lh;
+            transition: color var(--motion-fast) var(--ease-in-out), transform var(--motion-base) var(--ease-in-out);
+        }
+
+        &:not(.textarea_label-up) .textarea__label {
+            right: auto;
+            width: calc((100% - 2 * var(--ta-px) - #{vw(4px)}) / var(--ta-label-scale));
+            transform: translateY(calc(var(--ta-label-shift) - 0.55em * var(--ta-label-scale))) scale(var(--ta-label-scale));
         }
 
         .textarea__field {
-            @include spacing(padding-top, 22px);
+            padding-top: calc(var(--ta-py) + #{vw(16px)});
         }
+
+        &:not(.textarea_label-up) .textarea__field::placeholder {
+            color: transparent;
+        }
+    }
+
+    &-pos_inside.textarea-size_xs {
+        --ta-label-scale: #{13 / 11};
+        --ta-label-shift: #{vw(23.75px)};
+    }
+
+    &-pos_inside.textarea-size_l {
+        --ta-label-scale: #{20 / 11};
+        --ta-label-shift: #{vw(29px)};
     }
 
     /*----------STYLES-----------*/
     &-style_filled {
         .textarea__field {
             background: var(--color-main-gray-lighter);
-            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
-                &:hover:not(:disabled) {
+                &:hover {
                     border-color: var(--color-main-gray-light);
                 }
             }
 
-            &:focus:not(:disabled) {
+            &:focus {
                 background: var(--color-main-gray-white);
                 border-color: var(--color-main-gray-light);
             }
@@ -110,17 +212,26 @@
         .textarea__field {
             background: var(--color-main-gray-white);
             border-color: var(--color-main-gray-light);
-            color: var(--color-main-gray-darker);
 
             @media (hover: hover) and (pointer: fine) {
-                &:hover:not(:disabled) {
+                &:hover {
                     border-color: var(--color-main-color1-light);
                 }
             }
 
-            &:focus:not(:disabled) {
+            &:focus {
                 border-color: var(--color-main-color1-main);
             }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .textarea__wrapper:has(.textarea__field:hover:not(:disabled)) > .textarea__label {
+                color: var(--color-text-icon-color1-light);
+            }
+        }
+
+        .textarea__wrapper:has(.textarea__field:focus) > .textarea__label {
+            color: var(--color-text-icon-color1-main);
         }
     }
 
@@ -128,129 +239,181 @@
         .textarea__field {
             background: transparent;
             border-bottom-color: var(--color-main-gray-light);
-            color: var(--color-main-gray-darker);
-            border-radius: 0 !important;
+            border-radius: 0;
 
             @media (hover: hover) and (pointer: fine) {
-                &:hover:not(:disabled) {
+                &:hover {
                     border-bottom-color: var(--color-main-color1-light);
                 }
             }
 
-            &:focus:not(:disabled) {
+            &:focus {
                 border-bottom-color: var(--color-main-color1-main);
             }
-
-            &:disabled {
-                background: transparent;
-                border-bottom-color: var(--color-states-disabled-medium);
-            }
-        }
-    }
-
-    /*----------SIZES-----------*/
-    &-size_xs {
-        .textarea__field {
-            @include spacing(min-height, 72px);
-            @include spacing(padding, 8px);
-            border-radius: var(--radius-ui-small);
-        }
-    }
-
-    &-size_s {
-        .textarea__field {
-            @include spacing(min-height, 80px);
-            @include spacing(padding, 12px);
-            border-radius: var(--radius-ui-medium);
-        }
-    }
-
-    &-size_m {
-        .textarea__field {
-            @include spacing(min-height, 96px);
-            @include spacing(padding, 14px);
-            border-radius: var(--radius-ui-medium);
-        }
-    }
-
-    &-size_l {
-        .textarea__field {
-            @include spacing(min-height, 116px);
-            @include spacing(padding, 16px);
-            border-radius: var(--radius-ui-medium);
-        }
-    }
-
-    /*----------STATES-----------*/
-    /* Error и Success только уведомляют: цвет получают текст и сообщение, заливка и обводка не меняются */
-    &-state_error {
-        .textarea__field,
-        .textarea__message {
-            color: var(--color-states-error-dark);
-        }
-    }
-
-    &-state_success {
-        .textarea__field,
-        .textarea__message {
-            color: var(--color-states-success-dark);
         }
     }
 
     /*----------THEME-----------*/
     &-theme_dark {
-        .textarea__label,
-        .textarea__counter {
-            color: var(--color-main-gray-medium);
+        .textarea__label {
+            color: var(--color-text-icon-gray-light);
+        }
+
+        .textarea__field {
+            color: var(--color-text-icon-gray-white);
+
+            &::placeholder {
+                color: var(--color-text-icon-gray-light);
+            }
         }
 
         &.textarea-style_filled .textarea__field {
             background: var(--color-main-gray-dark);
-            color: var(--color-main-gray-lighter);
-
-            &:focus:not(:disabled) {
-                background: var(--color-main-gray-black);
-            }
-        }
-
-        &.textarea-style_outline .textarea__field {
-            background: transparent;
             border-color: var(--color-main-gray-dark);
-            color: var(--color-main-gray-lighter);
 
             @media (hover: hover) and (pointer: fine) {
-                &:hover:not(:disabled) {
+                &:hover {
                     border-color: var(--color-main-gray-medium);
                 }
             }
 
-            &:focus:not(:disabled) {
-                border-color: var(--color-main-color1-main);
+            &:focus {
+                background: var(--color-main-gray-black);
+                border-color: var(--color-main-gray-dark);
+            }
+        }
+
+        &.textarea-style_outline {
+            .textarea__wrapper > .textarea__label {
+                color: var(--color-text-icon-gray-medium);
+            }
+
+            .textarea__field {
+                background: var(--color-main-gray-black);
+                border-color: var(--color-main-gray-dark);
+
+                @media (hover: hover) and (pointer: fine) {
+                    &:hover {
+                        border-color: var(--color-main-color1-darker);
+                    }
+                }
+
+                &:focus {
+                    border-color: var(--color-main-color1-main);
+                }
+            }
+
+            @media (hover: hover) and (pointer: fine) {
+                .textarea__wrapper:has(.textarea__field:hover:not(:disabled)) > .textarea__label {
+                    color: var(--color-text-icon-color1-light);
+                }
+            }
+
+            .textarea__wrapper:has(.textarea__field:focus) > .textarea__label {
+                color: var(--color-text-icon-color1-main);
             }
         }
 
         &.textarea-style_underline .textarea__field {
             border-bottom-color: var(--color-main-gray-dark);
-            color: var(--color-main-gray-lighter);
-        }
 
-        &.textarea-state_error {
-            .textarea__field,
-            .textarea__message {
-                color: var(--color-states-error-medium);
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    border-bottom-color: var(--color-main-color1-darker);
+                }
+            }
+
+            &:focus {
+                border-bottom-color: var(--color-main-color1-main);
             }
         }
+    }
+}
 
-        &.textarea-state_success {
-            .textarea__field,
-            .textarea__message {
-                color: var(--color-states-success-medium);
-            }
-        }
+/*----------STATES-----------*/
+/* Error и Success только уведомляют: цвет получают текст и сообщение, поле выглядит как в focus */
+.textarea-state_error,
+.textarea-state_success {
+    &.textarea-style_filled .textarea__field {
+        background: var(--color-main-gray-white);
+        border-color: var(--color-main-gray-light);
+    }
 
-        .textarea__field:disabled {
-            background: var(--color-states-disabled-dark);
-            color: var(--color-main-gray-medium);
+    &.textarea-style_outline .textarea__field {
+        border-color: var(--color-main-color1-main);
+    }
+
+    &.textarea-style_underline .textarea__field {
+        border-bottom-color: var(--color-main-color1-main);
+    }
+
+    &.textarea-theme_dark.textarea-style_filled .textarea__field {
+        background: var(--color-main-gray-black);
+        border-color: var(--color-main-gray-dark);
+    }
+}
+
+.textarea-state_error {
+    .textarea__field,
+    .textarea__message {
+        color: var(--color-states-error-dark);
+    }
+
+    &.textarea-theme_dark {
+        .textarea__field,
+        .textarea__message {
+            color: var(--color-states-error-medium);
         }
+    }
+}
+
+.textarea-state_success {
+    .textarea__field,
+    .textarea__message {
+        color: var(--color-states-success-dark);
+    }
+
+    &.textarea-theme_dark {
+        .textarea__field,
+        .textarea__message {
+            color: var(--color-states-success-medium);
+        }
+    }
+}
+
+/* disabled: серая заливка states/disabled, у outline обводка того же цвета, у underline — линия, без hover */
+.textarea .textarea__field:disabled {
+    cursor: not-allowed;
+    resize: none;
+    background: var(--color-states-disabled-light);
+    border-color: var(--color-states-disabled-light);
+    color: var(--color-text-icon-gray-medium);
+}
+
+.textarea.textarea-style_filled .textarea__field:disabled {
+    border-color: transparent;
+}
+
+.textarea.textarea-theme_dark .textarea__field:disabled {
+    background: var(--color-states-disabled-dark);
+    border-color: var(--color-states-disabled-dark);
+}
+
+.textarea.textarea-style_underline .textarea__field:disabled {
+    background: transparent;
+    border-color: transparent;
+    border-bottom-color: var(--color-states-disabled-medium);
+}
+
+.textarea.textarea-theme_dark.textarea-style_underline .textarea__field:disabled {
+    background: transparent;
+    border-color: transparent;
+    border-bottom-color: var(--color-states-disabled-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .textarea__field,
+    .textarea__label {
+        transition: none;
     }
 }

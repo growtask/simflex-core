@@ -1,21 +1,34 @@
+/* Бейдж Badges/main (Figma 101:2707): style × size xs–xl × dot × icon (off/on/only) */
 .badge {
     /*----------CORE STYLE-----------*/
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     width: fit-content;
-    @include transition((background, color, opacity));
+    white-space: nowrap;
+    @include transition((background-color, color, opacity));
 
     &__icon {
         flex-shrink: 0;
+        fill: currentColor;
         @include transition((fill, stroke));
     }
 
-    /* Только иконка: круглый бейдж, ширина равна высоте */
+    /* Точка (иконка dot size=l): states/success/medium, переливается от светлого тона к тёмному */
+    &__dot {
+        fill: var(--color-states-success-medium);
+        animation: badge-dot 1.6s ease-in-out infinite alternate;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+
+    /* Только иконка (icon=only): квадрат по размеру иконки с отступами размера, скругление — как у размера */
     &_icon-only {
         aspect-ratio: 1;
         padding: 0 !important;
-        border-radius: var(--radius-pill);
     }
 
     &__text {
@@ -26,212 +39,130 @@
     }
 
     /*============QUICK CONFIG============*/
+    /* xs и s — капсулы (ui/xsmall в режиме full), m — ui/small, l и xl — ui/medium */
     &-size_xl {
         border-radius: var(--radius-ui-medium);
-        @include t2;
+        @include ui-m;
     }
     &-size_l {
         border-radius: var(--radius-ui-medium);
-        @include t3;
+        @include ui-s;
     }
     &-size_m {
         border-radius: var(--radius-ui-small);
-        @include t3;
+        @include ui-s;
     }
     &-size_s {
         border-radius: var(--radius-pill);
-        @include t4;
+        @include ui-xs;
     }
     &-size_xs {
         border-radius: var(--radius-pill);
-        @include t4;
+        @include ui-xs;
     }
     /*====================================*/
 
     /*----------STYLES-----------*/
     &-primary {
         background: var(--color-main-color1-dark);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
     }
 
     &-primary-light {
         background: var(--color-main-color1-light);
-        color: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-darker);
     }
 
     &-secondary {
         background: var(--color-main-color1-lighter);
-        color: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-accent {
         background: var(--color-main-color2-dark);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
     }
 
     &-accent-light {
         background: var(--color-main-color2-main);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
     }
 
     &-error {
         background: var(--color-states-error-dark);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
     }
 
     &-alert {
         background: var(--color-states-alert-light);
-        color: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-success {
         background: var(--color-states-success-light);
-        color: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-gray {
         background: var(--color-main-gray-lighter);
-        color: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-dark {
         background: var(--color-main-gray-dark);
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
     }
 
     &-white {
         background: var(--color-main-gray-white);
-        color: var(--color-main-color1-dark);
+        color: var(--color-text-icon-color1-dark);
     }
 
     &-gradient {
         background: var(--color-main-gradient1-main);
-        color: var(--color-main-gray-white);
+        background-color: var(--color-main-color1-main);
+        // сплошной цвет под градиентом: при смене стиля картинка-градиент не интерполируется, без него — вспышка прозрачного фона
+        color: var(--color-text-icon-gray-white);
     }
 
     &-gradient-light {
-        background: var(--color-main-gradient1-light);
-        color: var(--color-main-gray-black);
+        background: var(--color-text-icon-gradient1-light);
+        background-color: var(--color-main-color1-light);
+        color: var(--color-text-icon-gray-black);
     }
 
     /*----------SIZES-----------*/
-    &-size_xl {
-        @include spacing(height, 48px);
-        padding: 0 vw(20px);
-        @include spacing(gap, 4px);
+    /* Высота, отступ по бокам, левый отступ с иконкой или точкой, промежуток, размер иконки (Figma) */
+    $sizes: (
+        xl: (48px, 20px, 12px, 4px, 24px),
+        l: (40px, 16px, 8px, 4px, 24px),
+        m: (32px, 12px, 8px, 2px, 16px),
+        s: (24px, 8px, 4px, 2px, 16px),
+        xs: (16px, 5px, 1px, 2px, 16px),
+    );
 
-        @include HD {
-            padding: 0 vwh(20px);
-        }
-        @include Tablet {
-            padding: 0 vwt(20px);
-        }
-        @include Mobile {
-            padding: 0 vwm(20px);
-        }
+    @each $name, $size in $sizes {
+        &-size_#{$name} {
+            @include spacing(height, nth($size, 1));
+            @include spacing(padding-inline, nth($size, 2));
+            @include spacing(gap, nth($size, 4));
 
-        &:has(.badge__icon) {
-            @include spacing(padding-left, 12px);
-        }
+            &:has(.badge__icon) {
+                @include spacing(padding-left, nth($size, 3));
+            }
 
-        .badge__icon {
-            @include icon(24px)
+            .badge__icon {
+                @include icon(nth($size, 5));
+            }
         }
     }
+}
 
-    &-size_l {
-        @include spacing(height, 40px);
-        padding: 0 vw(16px);
-        @include spacing(gap, 4px);
-
-        @include HD {
-            padding: 0 vwh(16px);
-        }
-        @include Tablet {
-            padding: 0 vwt(16px);
-        }
-        @include Mobile {
-            padding: 0 vwm(16px);
-        }
-
-        &:has(.badge__icon) {
-            @include spacing(padding-left, 8px);
-        }
-
-        .badge__icon {
-            @include icon(24px)
-        }
+@keyframes badge-dot {
+    from {
+        fill: var(--color-states-success-light);
     }
-
-    &-size_m {
-        @include spacing(height, 32px);
-        padding: 0 vw(12px);
-        @include spacing(gap, 2px);
-
-        @include HD {
-            padding: 0 vwh(12px);
-        }
-        @include Tablet {
-            padding: 0 vwt(12px);
-        }
-        @include Mobile {
-            padding: 0 vwm(12px);
-        }
-
-        &:has(.badge__icon) {
-            @include spacing(padding-left, 8px);
-        }
-
-        .badge__icon {
-            @include icon(16px)
-        }
-    }
-
-    &-size_s {
-        @include spacing(height, 24px);
-        padding: 0 vw(8px);
-        @include spacing(gap, 2px);
-
-        @include HD {
-            padding: 0 vwh(8px);
-        }
-        @include Tablet {
-            padding: 0 vwt(8px);
-        }
-        @include Mobile {
-            padding: 0 vwm(8px);
-        }
-
-        &:has(.badge__icon) {
-            @include spacing(padding-left, 4px);
-        }
-
-        .badge__icon {
-            @include icon(16px)
-        }
-    }
-
-    &-size_xs {
-        @include spacing(height, 16px);
-        padding: 0 vw(4px);
-        @include spacing(gap, 2px);
-
-        @include HD {
-            padding: 0 vwh(4px);
-        }
-        @include Tablet {
-            padding: 0 vwt(4px);
-        }
-        @include Mobile {
-            padding: 0 vwm(4px);
-        }
-
-        &:has(.badge__icon) {
-            @include spacing(padding-left, 1px);
-        }
-
-        .badge__icon {
-            @include icon(16px)
-        }
+    to {
+        fill: var(--color-states-success-dark);
     }
 }

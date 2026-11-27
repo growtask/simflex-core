@@ -29,7 +29,7 @@
     &__home {
         position: absolute;
         inset: 0;
-        @include transition((transform, opacity), 0.3s);
+        @include transition((transform, opacity), var(--motion-slow));
     }
 
     &__image {

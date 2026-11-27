@@ -2,6 +2,8 @@
  * Выпадающий список (Dropdown): открытие по кнопке, закрытие по клику снаружи и Esc (фокус возвращается на кнопку),
  * стрелки и Home/End по пунктам, Enter и клик — выбор, ввод буквы — переход к пункту. Панель открывается вверх, если
  * снизу не хватает места. Селект: выбранное значение в скрытом поле (событие change), подпись и галочка, поиск.
+ * Поиск на сервере (data-sf-dropdown-url): url?text=… (адрес с «?» и без), ответ — массив или {items}, сбой — пустой
+ * список, устаревший ответ (пришёл после более нового запроса) отбрасывается.
  */
 (() => {
     const ROOT = '[data-sf-dropdown]';
@@ -12,7 +14,15 @@
     const getOptions = (root) => [...root.querySelectorAll(OPTION)]
         .filter((option) => !option.hidden && option.getAttribute('aria-disabled') !== 'true' && !option.disabled);
 
-    const isOpen = (root) => !getPanel(root).hidden;
+    const isOpen = (root) => root.classList.contains('dropdown_open');
+    // переходы панели (dropdown-panel-* в style.scss) и каскад пунктов при открытии; без общего скрипта - сразу
+    const showPanel = (panel, show) => {
+        if (window.SfUi?.transition) {
+            return window.SfUi.transition(panel, 'dropdown-panel', show);
+        }
+        panel.hidden = !show;
+        return Promise.resolve();
+    };
 
     // ближайший предок, который обрезает содержимое (прокрутка таблицы и т. п.)
     const getClipParent = (root) => {
@@ -61,8 +71,11 @@
         if (!isOpen(root)) {
             return;
         }
-        getPanel(root).hidden = true;
-        unfix(getPanel(root));
+        root.classList.remove('dropdown_open');
+        const panel = getPanel(root);
+        panel.classList.remove('dropdown__panel_cascade');
+        // позиция fixed снимается после ухода панели, иначе она прыгнет на время перехода
+        showPanel(panel, false).then(() => !isOpen(root) && unfix(panel));
         getTrigger(root)?.setAttribute('aria-expanded', 'false');
         root.classList.remove('dropdown_open');
         if (focusTrigger) {
@@ -78,6 +91,10 @@
             root.dataset.sfDropdownPosition = panel.classList.contains('dropdown__panel_position_top') ? 'top' : '';
         }
         panel.hidden = false;
+        panel.classList.add('dropdown__panel_cascade');
+        showPanel(panel, true);
+        // каскад только при открытии: фильтр поиска и перерисовка его не повторяют
+        setTimeout(() => panel.classList.remove('dropdown__panel_cascade'), 600);
         getTrigger(root)?.setAttribute('aria-expanded', 'true');
         root.classList.add('dropdown_open');
         place(root);
@@ -200,13 +217,36 @@
         }
     });
 
-    // поиск на сервере: items ответа ([{id, name}]) заменяют варианты списка
+    // запрос подсказок url?text=… — адрес с «?» и без; ответ — массив или
+    // {items}; сбой сети и не-JSON — пустой список; null — ответ устарел (после него этот же root запросил снова)
+    const requests = new WeakMap();
+    const fetchSuggest = async (url, text, owner) => {
+        const no = (requests.get(owner) || 0) + 1;
+        requests.set(owner, no);
+        let list = [];
+        try {
+            const address = new URL(url, document.baseURI);
+            address.searchParams.set('text', String(text ?? ''));
+            const response = await fetch(address.href, {
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                credentials: 'same-origin',
+            });
+            if (response.ok) {
+                const data = await response.json();
+                list = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : []);
+            }
+        } catch (error) {
+            list = [];
+        }
+        return requests.get(owner) === no ? list : null;
+    };
+
+    // поиск на сервере: ответ ([{id, name}] или {items: […]}) заменяет варианты списка
     const searchRemote = async (root, query) => {
-        const response = await fetch(`${root.dataset.sfDropdownUrl}&text=${encodeURIComponent(query)}`, {
-            headers: {'X-Requested-With': 'XMLHttpRequest'},
-            credentials: 'same-origin',
-        });
-        const items = response.ok ? ((await response.json()).items ?? []) : [];
+        const items = await fetchSuggest(root.dataset.sfDropdownUrl, query, root);
+        if (items === null) {
+            return;
+        }
         const list = root.querySelector('.dropdown__list');
         const template = root.querySelector('template[data-sf-dropdown-option]');
         const value = root.querySelector('input[type="hidden"]').value;

@@ -24,7 +24,7 @@
     }
 
     &__toggle .tab__icon-right {
-        transition: transform 300ms ease-out;
+        transition: transform var(--motion-slow) var(--ease-out);
     }
 
     &__item_open > &__toggle .tab__icon-right {
@@ -35,7 +35,7 @@
         display: grid;
         grid-template-rows: 0fr;
         opacity: 0;
-        transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out;
+        transition: grid-template-rows var(--motion-slow) var(--ease-out), opacity var(--motion-slow) var(--ease-out);
         @include spacing(padding-left, 12px);
     }
 

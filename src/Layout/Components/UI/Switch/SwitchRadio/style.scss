@@ -1,3 +1,8 @@
+/*
+ * Радиокнопка (Figma Switches/radio): кольцо 24/32/40 с обводкой 2/2/4 px и точка 12/20/22 того же цвета;
+ * состояния static/hover/press/disabled, темы light/dark, подпись слева или справа.
+ * Hover невыбранной показывает точку (предпросмотр выбора).
+ */
 .radio-option {
     width: fit-content;
     touch-action: manipulation;
@@ -21,90 +26,109 @@
         opacity: 0;
         width: 0;
         height: 0;
-
-
-
-        &:checked + .radio-option__label .radio-option__indicator {
-            animation: select 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        &:checked + .radio-option__label .radio-option__indicator {
-            border-color: var(--color-main-color1-main);
-            background-color: var(--color-main-color1-main);
-        }
-
-        &:checked + .radio-option__label .radio-option__indicator::after {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        // disabled: кольцо и точка states/disabled/medium (тёмная — states/disabled/dark), подпись gray/medium
-        &:disabled + .radio-option__label {
-            cursor: not-allowed;
-
-            .radio-option__indicator {
-                border-color: var(--color-states-disabled-medium);
-            }
-
-            .radio-option__text {
-                color: var(--color-text-icon-gray-medium);
-            }
-        }
-
-        &:disabled:checked + .radio-option__label .radio-option__indicator {
-            background-color: var(--color-states-disabled-medium);
-        }
-
-        &:focus-visible + .radio-option__label .radio-option__indicator {
-            outline: 2px solid var(--color-main-color1-main);
-            outline-offset: 2px;
-        }
+        margin: 0;
     }
 
     &__label {
         display: flex;
         align-items: center;
         cursor: pointer;
-        @include transition((background));
     }
 
     &__indicator {
         flex-shrink: 0;
         position: relative;
-        border: solid var(--color-main-gray-medium);
+        border: solid var(--color-text-icon-gray-medium);
         border-radius: 50%;
-        @include transition((background, border));
+        color: var(--color-text-icon-color1-main);
+        @include transition((border-color, color));
 
+        // точка — цветом кольца (currentColor)
         &::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            background-color: white;
+            background-color: currentColor;
             border-radius: 50%;
-            @include transition((transform));
+            transition: transform var(--motion-base) var(--ease-out), background-color var(--motion-fast) var(--ease-in-out);
         }
     }
 
     &__text {
+        user-select: none;
         @include t2;
+        color: var(--color-text-icon-gray-dark);
     }
 
-    /*----------SIZES-----------*/
-    &-size_l {
-        .radio-option__label {
-            @include spacing(gap, 12px);
-        }
+    /*----------STATES-----------*/
+    // появление точки — пружиной (лёгкий перелёт), исчезновение — без пружины (иначе масштаб уходит в минус)
+    &__input:checked + .radio-option__label .radio-option__indicator {
+        border-color: var(--color-text-icon-color1-main);
 
-        .radio-option__indicator {
-            @include icon(40px);
-            @include border-w(6px);
+        &::after {
+            transform: translate(-50%, -50%) scale(1);
+            transition: transform calc(var(--motion-slow) * 1.75) var(--ease-spring), background-color var(--motion-fast) var(--ease-in-out);
+        }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &__input:not(:disabled) + .radio-option__label:hover .radio-option__indicator {
+            border-color: var(--color-text-icon-color1-light);
+            color: var(--color-text-icon-color1-light);
 
             &::after {
-                @include icon(28px);
+                transform: translate(-50%, -50%) scale(1);
             }
         }
     }
+
+    &__input:not(:disabled) + .radio-option__label:active .radio-option__indicator {
+        border-color: var(--color-text-icon-color1-dark);
+        color: var(--color-text-icon-color1-dark);
+
+        &::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    // disabled: кольцо и точка states/disabled/medium (тёмная — states/disabled/dark), подпись gray/medium
+    &__input:disabled + .radio-option__label {
+        cursor: not-allowed;
+
+        .radio-option__indicator {
+            border-color: var(--color-states-disabled-medium);
+            color: var(--color-states-disabled-medium);
+        }
+
+        .radio-option__text {
+            color: var(--color-text-icon-gray-medium);
+        }
+    }
+
+    // кольцо фокуса (Switches/focus): 2 px, зазор 2 px, круг
+    &__input:focus-visible + .radio-option__label .radio-option__indicator {
+        outline: 2px solid var(--color-main-color1-main);
+        outline-offset: 2px;
+    }
+
+    /*----------SIZES-----------*/
+    &-size_s {
+        .radio-option__label {
+            @include spacing(gap, 8px);
+        }
+
+        .radio-option__indicator {
+            @include icon(24px);
+            @include border-w(2px);
+
+            &::after {
+                @include icon(12px);
+            }
+        }
+    }
+
     &-size_m {
         .radio-option__label {
             @include spacing(gap, 8px);
@@ -112,6 +136,21 @@
 
         .radio-option__indicator {
             @include icon(32px);
+            @include border-w(2px);
+
+            &::after {
+                @include icon(20px);
+            }
+        }
+    }
+
+    &-size_l {
+        .radio-option__label {
+            @include spacing(gap, 12px);
+        }
+
+        .radio-option__indicator {
+            @include icon(40px);
             @include border-w(4px);
 
             &::after {
@@ -120,65 +159,40 @@
         }
     }
 
-    &-size_s {
-        .radio-option__label {
-            @include spacing(gap, 8px);
-        }
-
-        .radio-option__indicator {
-            @include icon(24px);
-            @include border-w(4px);
-
-            &::after {
-                @include icon(16px);
-            }
-        }
-    }
-
     /*----------THEME-----------*/
-    &-theme_light {
-        .radio-option__input {
-            &:not(:disabled, :checked) + .radio-option__label:hover .radio-option__indicator {
-                border-color: var(--color-main-color1-light);
-            }
-        }
-
-        .radio-option__text {
-            color: var(--color-main-gray-dark);
-        }
-
-
-    }
     &-theme_dark {
-        .radio-option__input {
-            &:not(:disabled, :checked) + .radio-option__label:hover .radio-option__indicator {
-                border-color: var(--color-main-color1-darker);
+        .radio-option__text {
+            color: var(--color-text-icon-gray-lighter);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .radio-option__input:not(:disabled) + .radio-option__label:hover .radio-option__indicator {
+                border-color: var(--color-text-icon-color1-darker);
+                color: var(--color-text-icon-color1-darker);
             }
         }
 
-        .radio-option__text {
-            color: var(--color-main-gray-lighter);
+        .radio-option__input:not(:disabled) + .radio-option__label:active .radio-option__indicator {
+            border-color: var(--color-text-icon-color1-dark);
+            color: var(--color-text-icon-color1-dark);
+        }
+
+        .radio-option__input:disabled + .radio-option__label {
+            .radio-option__indicator {
+                border-color: var(--color-states-disabled-dark);
+                color: var(--color-states-disabled-dark);
+            }
+
+            .radio-option__text {
+                color: var(--color-text-icon-gray-medium);
+            }
         }
     }
-}
 
-/* Selection animation */
-@keyframes select {
-    0% {
-        transform: scale(0.8);
+    @media (prefers-reduced-motion: reduce) {
+        .radio-option__indicator,
+        .radio-option__indicator::after {
+            transition: none !important;
+        }
     }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.radio-option-theme_dark .radio-option__input:disabled + .radio-option__label .radio-option__indicator {
-    border-color: var(--color-states-disabled-dark);
-}
-
-.radio-option-theme_dark .radio-option__input:disabled:checked + .radio-option__label .radio-option__indicator {
-    background-color: var(--color-states-disabled-dark);
 }

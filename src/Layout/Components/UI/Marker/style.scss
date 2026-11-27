@@ -1,19 +1,20 @@
+/* Маркер состояния (Figma Marker/main): радиус ui/small у xs, ui/medium у s–l, ui/large у xl */
 .marker {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: transparent solid;
+    flex-shrink: 0;
     width: fit-content;
-    color: var(--color-main-gray-white);
+    color: var(--color-text-icon-gray-white);
     background: var(--color-main-color1-main);
-    @include transition((border, background, color, opacity));
-    @include border-w(2px);
+    @include transition((background-color, color, opacity));
 
     &__icon {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        fill: currentColor;
         @include transition((fill, stroke));
     }
 
@@ -53,6 +54,7 @@
             @include icon(24px);
         }
     }
+
     &-size_xs {
         @include icon(32px);
         border-radius: var(--radius-ui-small);
@@ -64,17 +66,18 @@
 
     /*----------STYLES (Figma Marker/main)-----------*/
     &-main {
-        color: var(--color-main-gray-white);
+        color: var(--color-text-icon-gray-white);
         background: var(--color-main-color1-main);
     }
 
     &-gray {
-        color: var(--color-main-gray-darker);
+        color: var(--color-text-icon-gray-darker);
         background: var(--color-main-gray-lighter);
     }
 
+    // в Figma спиннер градиентный (text-icon/gradient1/dark, в тёмной теме light), обводка svg градиент не принимает
     &-load {
-        color: var(--color-main-color1-main);
+        color: var(--color-text-icon-color1-main);
         background: var(--color-main-color1-lighter);
     }
 
@@ -97,11 +100,12 @@
     /* В тёмной теме заливка и иконка меняются местами: плотная заливка и светлая иконка */
     &-theme_dark {
         &.marker-gray {
-            color: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-gray-lighter);
             background: var(--color-main-gray-dark);
         }
 
         &.marker-load {
+            color: var(--color-text-icon-color1-light);
             background: var(--color-main-color1-darker);
         }
 
@@ -119,5 +123,31 @@
             color: var(--color-states-error-light);
             background: var(--color-states-error-dark);
         }
+    }
+}
+
+/* Галочка стилей main и success рисуется линией при появлении (layout.tpl выводит svg.marker__check вместо иконки check) */
+.marker__check {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    path {
+        stroke-dasharray: 1 2;
+        animation: marker-check-draw var(--motion-slow) var(--ease-out) 60ms backwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        path {
+            animation: none;
+        }
+    }
+}
+
+@keyframes marker-check-draw {
+    from {
+        stroke-dashoffset: 1.05;
     }
 }

@@ -1,8 +1,14 @@
+/*
+ * Переключатель (Figma Switches/toggle): размеры s 44×24, m 60×32, l 74×40, бегунок 16/24/28, галочка 16/16/24
+ * цветом дорожки; состояния static/hover/press/disabled, темы light/dark. Форма — таблетка: в Figma у toggle
+ * явно включён режим скруглений full (ui/xsmall = 9999 px), поэтому от режима скруглений сайта не зависит.
+ */
 .toggle {
     /*----------CORE STYLE-----------*/
     display: inline-flex;
     align-items: center;
     width: fit-content;
+    cursor: pointer;
     touch-action: manipulation;
 
     &__wrapper {
@@ -15,6 +21,7 @@
         opacity: 0;
         width: 100%;
         height: 100%;
+        margin: 0;
         cursor: pointer;
         z-index: 2;
     }
@@ -25,13 +32,35 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--color-main-gray-light);
+        background-color: var(--color-text-icon-gray-light);
+        color: var(--color-text-icon-gray-light);
         border-radius: var(--radius-pill);
-        @include transition((background-color));
+        @include transition((background-color, color));
+    }
+
+    &__thumb {
+        position: absolute;
+        background-color: var(--color-main-gray-white);
+        border-radius: var(--radius-pill);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        // бегунок едет transform-ом с пружиной (--ease-spring: доезд с лёгким перелётом), без анимации left/width
+        transition: transform calc(var(--motion-slow) * 1.75) var(--ease-spring);
+    }
+
+    // галочка — цветом дорожки (currentColor фона)
+    &__check {
+        fill: currentColor;
+        opacity: 0;
+        @include transition((opacity, color), var(--motion-base));
     }
 
     &__text {
+        user-select: none;
         @include t2;
+        color: var(--color-text-icon-gray-dark);
     }
 
     &-position {
@@ -44,56 +73,37 @@
         }
     }
 
-    /* Hover states */
-    &__input:not(:checked):hover + .toggle__background {
-        background-color: var(--color-main-gray-medium);
-    }
-
-    &__input:checked:hover + .toggle__background {
-        background-color: var(--color-main-color1-light);
-    }
-
-    /* Active states */
-    &__input:not(:checked):active + .toggle__background {
-        background-color: var(--color-main-gray-dark);
-    }
-
-    &__input:checked:active + .toggle__background {
-        background-color: var(--color-main-color1-dark);
-    }
-
-    &__thumb {
-        position: absolute;
-        background-color: var(--color-main-gray-white);
-        border-radius: 50%;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        @include transition((transform));
-    }
-
-    /* Checkmark styles */
-    &__check {
-        fill: currentColor;
-        color: var(--color-main-color1-main);
-        opacity: 0;
-        @include transition((opacity));
-    }
-
+    /*----------STATES-----------*/
     &__input:checked + .toggle__background {
-        background-color: var(--color-main-color1-main);
-    }
-
-    &__input:checked + .toggle__background .toggle__thumb {
-        transform: translateX(116%);
+        background-color: var(--color-text-icon-color1-main);
+        color: var(--color-text-icon-color1-main);
     }
 
     &__input:checked + .toggle__background .toggle__check {
         opacity: 1;
     }
 
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .toggle__input:not(:disabled):not(:checked) + .toggle__background {
+            background-color: var(--color-text-icon-gray-medium);
+        }
+
+        &:hover .toggle__input:not(:disabled):checked + .toggle__background {
+            background-color: var(--color-text-icon-color1-light);
+            color: var(--color-text-icon-color1-light);
+        }
+    }
+
+    &:active .toggle__input:not(:disabled):not(:checked) + .toggle__background {
+        background-color: var(--color-text-icon-gray-dark);
+    }
+
+    &:active .toggle__input:not(:disabled):checked + .toggle__background {
+        background-color: var(--color-text-icon-color1-dark);
+        color: var(--color-text-icon-color1-dark);
+    }
+
+    // кольцо фокуса (Switches/focus): 2 px, зазор 2 px от дорожки, таблетка
     &__input:focus-visible + .toggle__background {
         outline: 2px solid var(--color-main-color1-main);
         outline-offset: 2px;
@@ -107,75 +117,18 @@
             cursor: not-allowed;
         }
 
-        .toggle__input + .toggle__background,
-        .toggle__input:hover + .toggle__background,
-        .toggle__input:active + .toggle__background {
+        .toggle__input + .toggle__background {
             background-color: var(--color-states-disabled-medium);
-        }
-
-        .toggle__check {
             color: var(--color-states-disabled-medium);
         }
 
         .toggle__text {
             color: var(--color-text-icon-gray-medium);
         }
-
-        &.toggle-theme_dark {
-            .toggle__input + .toggle__background,
-            .toggle__input:hover + .toggle__background,
-            .toggle__input:active + .toggle__background {
-                background-color: var(--color-states-disabled-dark);
-            }
-
-            .toggle__check {
-                color: var(--color-states-disabled-dark);
-            }
-        }
     }
 
     /*----------SIZES-----------*/
-    &-size_l {
-        @include spacing(gap, 12px);
-
-        .toggle__wrapper {
-            @include spacing(width, 74px);
-            @include spacing(height, 40px);
-        }
-
-        .toggle__thumb {
-            @include spacing(top, 6px);
-            @include spacing(left, 6px);
-            @include spacing(bottom, 6px);
-            @include icon(28px);
-        }
-
-        .toggle__check {
-            @include icon(24px);
-        }
-    }
-
-    &-size_m {
-        @include spacing(gap, 8px);
-
-        .toggle__wrapper {
-            flex-shrink: 0;
-            @include spacing(width, 60px);
-            @include spacing(height, 32px);
-        }
-
-        .toggle__thumb {
-            @include spacing(top, 4px);
-            @include spacing(left, 4px);
-            @include spacing(bottom, 4px);
-            @include icon(24px);
-        }
-
-        .toggle__check {
-            @include icon(16px);
-        }
-    }
-
+    // сдвиг бегунка во включённом состоянии — в долях его ширины: (дорожка − 2 отступа − бегунок) / бегунок
     &-size_s {
         @include spacing(gap, 8px);
 
@@ -187,19 +140,96 @@
         .toggle__thumb {
             @include spacing(top, 4px);
             @include spacing(left, 4px);
-            @include spacing(bottom, 4px);
             @include icon(16px);
         }
 
         .toggle__check {
             @include icon(16px);
         }
+
+        .toggle__input:checked + .toggle__background .toggle__thumb {
+            transform: translateX(125%);
+        }
+    }
+
+    &-size_m {
+        @include spacing(gap, 8px);
+
+        .toggle__wrapper {
+            @include spacing(width, 60px);
+            @include spacing(height, 32px);
+        }
+
+        .toggle__thumb {
+            @include spacing(top, 4px);
+            @include spacing(left, 4px);
+            @include icon(24px);
+        }
+
+        .toggle__check {
+            @include icon(16px);
+        }
+
+        .toggle__input:checked + .toggle__background .toggle__thumb {
+            transform: translateX(116.667%);
+        }
+    }
+
+    &-size_l {
+        @include spacing(gap, 12px);
+
+        .toggle__wrapper {
+            @include spacing(width, 74px);
+            @include spacing(height, 40px);
+        }
+
+        .toggle__thumb {
+            @include spacing(top, 6px);
+            @include spacing(left, 6px);
+            @include icon(28px);
+        }
+
+        .toggle__check {
+            @include icon(24px);
+        }
+
+        .toggle__input:checked + .toggle__background .toggle__thumb {
+            transform: translateX(121.429%);
+        }
     }
 
     /*----------THEME-----------*/
     &-theme_dark {
+        .toggle__background {
+            background-color: var(--color-text-icon-gray-dark);
+            color: var(--color-text-icon-gray-dark);
+        }
+
         .toggle__text {
-            color: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-gray-lighter);
+        }
+
+        &:active .toggle__input:not(:disabled):not(:checked) + .toggle__background {
+            background-color: var(--color-text-icon-gray-darker);
+        }
+
+        &.toggle_disabled {
+            .toggle__input + .toggle__background {
+                background-color: var(--color-states-disabled-dark);
+                color: var(--color-states-disabled-dark);
+            }
+
+            .toggle__text {
+                color: var(--color-text-icon-gray-medium);
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .toggle__background,
+        .toggle__thumb,
+        .toggle__check {
+            transition: none;
         }
     }
 }

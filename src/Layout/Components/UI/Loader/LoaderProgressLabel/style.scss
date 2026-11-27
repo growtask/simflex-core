@@ -27,7 +27,7 @@
         bottom: 0;
         left: 0;
         background: var(--pl-bar);
-        @include transition((width), 0.3s);
+        @include transition((width), var(--motion-slow));
     }
 
     &__value,

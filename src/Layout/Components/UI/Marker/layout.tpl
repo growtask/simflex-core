@@ -17,7 +17,9 @@ if ($data['label'] !== '') {
 ?>
 
 <div class="<?= implode(' ', array_filter($markerClasses)) ?>" <?= buildAttrs($attributes) ?>>
-    <?php if ($data['icon'] !== ''): ?>
+    <?php if (!empty($data['drawn'])): ?>
+        <svg class="marker__icon marker__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6" pathLength="1"/></svg>
+    <?php elseif ($data['icon'] !== ''): ?>
         <?= renderIcon($data['icon'], 'marker__icon') ?>
     <?php else: ?>
         <?= Simflex\Core\Layout\Components\UI\Loader\LoaderMain\Layout::draw(['className' => 'marker__icon']) ?>

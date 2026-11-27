@@ -6,6 +6,8 @@
     --dropdown-max-height: #{vw(348px)};
     --dropdown-field-height: #{vw(48px)};
     --dropdown-field-padding: #{vw(12px)};
+    --dropdown-corner-width: #{vw(8px)};
+    --dropdown-corner-offset: #{vw(24px)};
 
     position: relative;
     display: inline-flex;
@@ -61,7 +63,8 @@
         width: 100%;
     }
 
-    // поле-селект: как Inputs/main filled
+
+    // поле-селект: Inputs/main filled (Dropdown/input); открытое — белое с обводкой 2 px gray/light
     &__field {
         display: flex;
         align-items: center;
@@ -77,13 +80,17 @@
         border-radius: var(--radius-ui-medium);
         @include spacing(gap, 4px);
         @include t2;
-        @include transition((background, box-shadow));
+        @include transition((background-color, box-shadow));
 
-        &:focus-visible,
         &[aria-expanded="true"] {
-            outline: none;
             background: var(--color-main-gray-white);
-            box-shadow: inset 0 0 0 2px var(--color-main-color1-main);
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-light);
+        }
+
+        // кольцо фокуса с клавиатуры, как у кнопок: 2 px, зазор 2 px
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
         }
 
         &:disabled {
@@ -112,16 +119,17 @@
     &__chevron {
         flex-shrink: 0;
         fill: currentColor;
-        color: var(--color-text-icon-gray-medium);
+        color: var(--color-text-icon-gray-light);
         @include spacing(width, 24px);
         @include spacing(height, 24px);
-        @include transition(transform);
+        @include transition((transform), var(--motion-base));
     }
 
     &__field[aria-expanded="true"] &__chevron {
         transform: rotate(180deg);
     }
 
+    // панель Dropdown/main: 8 px от кнопки, отступ и промежуток 12 px (xs — 8), ui/xlarge (xs — ui/large)
     &__panel {
         position: absolute;
         z-index: z('dropdown');
@@ -141,7 +149,25 @@
             display: none;
         }
 
+        // появление и скрытие (классы dropdown-panel-*, SfUi.transition в script.js): прозрачность и сдвиг 6 px от кнопки;
+        // сдвиг — свойством translate, чтобы не спорить с transform у side_center; закрытие быстрее открытия
+        &.dropdown-panel-enter-active {
+            transition: opacity var(--motion-base) var(--ease-out), translate var(--motion-base) var(--ease-out);
+        }
+
+        &.dropdown-panel-leave-active {
+            pointer-events: none;
+            transition: opacity var(--motion-fast) var(--ease-in), translate var(--motion-fast) var(--ease-in);
+        }
+
+        &.dropdown-panel-enter-from,
+        &.dropdown-panel-leave-to {
+            opacity: 0;
+            translate: 0 var(--dropdown-enter-y, -6px);
+        }
+
         &_position_top {
+            --dropdown-enter-y: 6px;
             top: auto;
             bottom: calc(100% + var(--dropdown-gap));
         }
@@ -151,12 +177,46 @@
             right: 0;
         }
 
+        &_side_center {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         // поверх предка с overflow (script.js): координаты экрана задаёт скрипт
         &_fixed {
             position: fixed;
             right: auto;
             bottom: auto;
             min-width: 0;
+            transform: none;
+        }
+
+        // стрелка corner 8×4 px к кнопке: у side left и right — в 24 px от края, у center — по центру
+        &_corner::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: calc(var(--dropdown-corner-offset) - var(--dropdown-corner-width) / 2);
+            width: var(--dropdown-corner-width);
+            height: calc(var(--dropdown-corner-width) / 2);
+            background: var(--color-main-gray-white);
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+            pointer-events: none;
+        }
+
+        &_corner#{&}_position_top::after {
+            top: 100%;
+            bottom: auto;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+
+        &_corner#{&}_side_center::after {
+            left: calc(50% - var(--dropdown-corner-width) / 2);
+        }
+
+        &_corner#{&}_side_right::after {
+            left: auto;
+            right: calc(var(--dropdown-corner-offset) - var(--dropdown-corner-width) / 2);
         }
     }
 
@@ -167,19 +227,31 @@
 
     &_view_menu &__panel {
         @include spacing(width, 200px);
-        gap: 0;
     }
 
     &__list {
         display: flex;
         flex-direction: column;
+        gap: var(--dropdown-padding);
         overflow-y: auto;
         max-height: var(--dropdown-max-height);
         overscroll-behavior: contain;
         @include scrollbar(overlay, s);
     }
 
-    &__option {
+    // разделитель групп пунктов (line): 2 px main/gray/lighter
+    &__line {
+        flex-shrink: 0;
+        @include spacing(height, 2px);
+        background: var(--color-main-gray-lighter);
+
+        &[hidden] {
+            display: none;
+        }
+    }
+
+    // пункт — Tabs/main soft
+    & &__option {
         flex-shrink: 0;
         justify-content: flex-start;
         width: 100%;
@@ -193,19 +265,27 @@
             white-space: nowrap;
         }
 
-        // галочка только у выбранного: выбор виден не только цветом
-        &:not(.active) .tab__icon-right {
-            visibility: hidden;
-        }
-
         &[hidden] {
             display: none;
         }
     }
 
+    // селект: галочка слева только у выбранного пункта — выбор виден не только цветом
+    &__list &__option:not(.active) .tab__icon-left {
+        display: none;
+    }
+
+    &__panel_align_center &__empty {
+        text-align: center;
+    }
+
     &__panel_align_center &__option {
         justify-content: center;
         text-align: center;
+
+        .tab__text {
+            flex: 0 1 auto;
+        }
     }
 
     &__empty {
@@ -218,7 +298,7 @@
         }
     }
 
-    // тёмная тема: панель main/gray/darker с обводкой 2 px внутрь main/gray/dark, без тени
+    // тёмная тема: панель main/gray/darker с обводкой 2 px внутрь main/gray/dark, без тени; стрелка и линия — gray/dark
     &-theme_dark &__list {
         @include scrollbar(overlay, s, dark);
     }
@@ -226,20 +306,37 @@
     &-theme_dark &__panel {
         background: var(--color-main-gray-darker);
         box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
+
+        &::after {
+            background: var(--color-main-gray-dark);
+        }
+    }
+
+    &-theme_dark &__line {
+        background: var(--color-main-gray-dark);
     }
 
     &-theme_dark &__field {
         background: var(--color-main-gray-dark);
-        color: var(--color-text-icon-gray-lighter);
+        color: var(--color-text-icon-gray-white);
 
-        &:focus-visible,
         &[aria-expanded="true"] {
             background: var(--color-main-gray-black);
+            box-shadow: inset 0 0 0 2px var(--color-main-gray-dark);
         }
 
         &:disabled {
             background: var(--color-states-disabled-dark);
+            color: var(--color-text-icon-gray-medium);
         }
+    }
+
+    &-theme_dark &__value_placeholder {
+        color: var(--color-text-icon-gray-light);
+    }
+
+    &-theme_dark &__chevron {
+        color: var(--color-text-icon-gray-medium);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -247,5 +344,36 @@
         &__chevron {
             transition: none;
         }
+    }
+}
+
+/* Каскад при открытии (класс dropdown__panel_cascade ставит script.js на время открытия): пункты и разделители
+ * появляются друг за другом с шагом 18 мс (не дольше 12 шагов) — прозрачность и сдвиг 3 px со стороны кнопки.
+ * Только при открытии: фильтр поиска и повторная отрисовка каскад не запускают. */
+.dropdown__panel_cascade {
+    .dropdown__option,
+    .dropdown__line {
+        animation: dropdown-item-in var(--motion-base) var(--ease-out) backwards;
+
+        @for $i from 2 through 12 {
+            &:nth-child(#{$i}) {
+                animation-delay: ($i - 1) * 18ms;
+            }
+        }
+
+        &:nth-child(n + 13) {
+            animation-delay: 12 * 18ms;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+}
+
+@keyframes dropdown-item-in {
+    from {
+        opacity: 0;
+        translate: 0 calc(var(--dropdown-enter-y, -6px) / 2);
     }
 }
