@@ -6,6 +6,18 @@
 
 ## [4.0.0] — не выпущена
 
+- **Несовместимое изменение:** `UI/Other/BadgeStock` перенесён в расширение «Каталог» (в Figma это
+  `Catalog/badges/stock`): `Simflex\Catalog\Layout\Components\Catalog\Badge\BadgeStock`; текст стал первым
+  обязательным параметром, добавлены `BadgeStockStyle::Preorder` и тема (`BadgeStockTheme`). Переход: замените
+  `Core\Layout\Components\UI\Other\BadgeStock` на `Catalog\Layout\Components\Catalog\Badge\BadgeStock`.
+- `Base/Nav/NavMenu::drawNavMenu()`: параметры `before` и `after` — HTML до и после списка пунктов (пункт «Каталог»
+  и кнопки кабинета расширения).
+
+- Витрина компонентов расширений: `ExtensionConfig::$layoutSections` (разделы витрины, папка `src/Layout/Components`
+  пакета; пакет — `$package`, по умолчанию `simflex/<имя>`), `ExtensionConfig::getLayoutRoot()`,
+  `LayoutShowcase::getSections()`; у компонента в `getComponents()` — `package` и `root`; описания Figma расширения —
+  `src/Layout/figma-docs.php` пакета.
+
 - Компоненты страницы Services (`Layout/Components/Services`, раздел витрины «Услуги»): `Card/CardMain`
   (`drawCardMain()`), `Price/PriceMain` (`drawPriceMain()`, панель Sticky на телефоне), `Tariff/TariffMain`,
   `Tariff/TariffList` (период месяц/год, слайдер на планшете и телефоне), `Tariff/TariffTable` (тариф по селектору на

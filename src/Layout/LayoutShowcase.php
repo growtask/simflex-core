@@ -4,14 +4,16 @@ namespace Simflex\Core\Layout;
 
 use Simflex\Core\Http\View;
 use Simflex\Core\System\Container;
+use Simflex\Core\System\ExtensionConfig;
 
 /**
  * Витрина компонентов Layout: находит компоненты с демо и рисует демо в темах.
  *
  * Файл витрины лежит в папке компонента рядом с Layout.php и layout.tpl:
  * - demo.tpl - все варианты компонента (стили, размеры, состояния) в теме $theme ('light' или 'dark').
- * Компоненты ищутся в Layout/Components ядра и в Layout/Components сайта. Компонент сайта с тем же путём
- * (UI/Badge) переопределяет компонент ядра: его demo.tpl заменяет ядровый. Если у сайта
+ * Компоненты ищутся в Layout/Components ядра, в src/Layout/Components расширений (разделы, которые расширение
+ * объявило в ExtensionConfig::$layoutSections, например Catalog) и в Layout/Components сайта. Компонент сайта с тем
+ * же путём (UI/Badge, Catalog/Search/SearchMain) переопределяет компонент ядра или расширения: его demo.tpl заменяет ядровый. Если у сайта
  * его нет, берётся файл ядра, но он рисует класс ядра: чтобы показать сайтовую версию, добавьте в сайт свой demo.tpl.
  * Витрина (страница) живёт в шаблоне сайта и работает только в режиме разработки.
  */
@@ -20,7 +22,7 @@ class LayoutShowcase
     /** Имя файла демо в папке компонента */
     public const DEMO_FILE = 'demo.tpl';
 
-    /** Разделы витрины: папка в Layout/Components => название */
+    /** Разделы витрины ядра: папка в Layout/Components => название; разделы расширений - getSections() */
     public const SECTIONS = ['UI' => 'UI-компоненты', 'Parts' => 'Части страниц', 'Base' => 'Базовые компоненты', 'Services' => 'Услуги'];
 
     /** Названия групп (папок блоков), которые отличаются от имени папки */
@@ -35,24 +37,48 @@ class LayoutShowcase
     /** Источник файла: сайт */
     public const SOURCE_SITE = 'site';
 
+    /** Пакет компонента: ядро (иначе - имя расширения) */
+    public const PACKAGE_CORE = 'core';
+
+    /**
+     * Разделы витрины: ядра, затем расширений в порядке загрузки
+     *
+     * @return array<string, string> Папка => название
+     */
+    public static function getSections(): array
+    {
+        $sections = static::SECTIONS;
+        foreach (static::packages() as $section => $package) {
+            $sections[$section] ??= $package['title'];
+        }
+
+        return $sections;
+    }
+
     /**
      * Находит компоненты раздела, у которых есть демо (в ядре или в сайте)
      *
-     * @param string|null $section Раздел (ключ SECTIONS); null - все разделы
+     * @param string|null $section Раздел (ключ getSections()); null - все разделы
      * @return array<string, array{
-     *     key: string, section: string, group: string, name: string,
+     *     key: string, section: string, group: string, name: string, package: string, root: string,
      *     inCore: bool, inSite: bool, overrides: bool,
      *     demo: string|null, demoSource: string|null
-     * }> Ключ - путь папки компонента от Layout/Components (UI/Badge), в порядке страницы UI в Figma (figma-docs.php), затем по алфавиту
+     * }> Ключ - путь папки компонента от Layout/Components (UI/Badge), в порядке страниц Figma (figma-docs.php ядра,
+     *    затем расширений), затем по алфавиту. inCore - компонент есть в пакете (ядре или расширении `package`),
+     *    root - папка компонентов этого пакета
      */
     public static function getComponents(?string $section = null): array
     {
-        $core = static::scan(static::coreRoot());
-        $site = static::scan(static::siteRoot());
+        $sections = static::getSections();
+        $core = [];
+        foreach (static::roots() as $root) {
+            $core += static::scan($root['root'], $root['sections']);
+        }
+        $site = static::scan(static::siteRoot(), array_keys($sections));
         $components = [];
         foreach (array_keys($core + $site) as $key) {
             $sectionKey = strstr($key, '/', true);
-            if (!isset(static::SECTIONS[$sectionKey]) || ($section !== null && $section !== $sectionKey)) {
+            if (!isset($sections[$sectionKey]) || ($section !== null && $section !== $sectionKey)) {
                 continue;
             }
             $demo = static::pick($key, static::DEMO_FILE, isset($core[$key]), isset($site[$key]));
@@ -65,6 +91,8 @@ class LayoutShowcase
                 'section' => $sectionKey,
                 'group' => $group,
                 'name' => basename($key),
+                'package' => static::packageOf($sectionKey),
+                'root' => static::packageRoot($sectionKey),
                 'inCore' => isset($core[$key]),
                 'inSite' => isset($site[$key]),
                 'overrides' => isset($core[$key]) && isset($site[$key]),
@@ -72,8 +100,8 @@ class LayoutShowcase
                 'demoSource' => $demo[1],
             ];
         }
-        // порядок как на странице UI в Figma (его задаёт figma-docs.php), остальные - по алфавиту в конце
-        $figmaOrder = array_flip(array_keys(require __DIR__ . '/figma-docs.php'));
+        // порядок как на страницах Figma (его задают figma-docs.php), остальные - по алфавиту в конце
+        $figmaOrder = array_flip(array_keys(static::getAllFigmaDocs()));
         uksort($components, static fn(string $left, string $right): int => [
             $figmaOrder[$left] ?? PHP_INT_MAX,
             strtolower($left),
@@ -112,7 +140,7 @@ class LayoutShowcase
      */
     public static function getFiles(string $key): array
     {
-        $core = static::listFiles(static::coreRoot() . '/' . $key);
+        $core = static::listFiles(static::packageRoot((string)strstr($key . '/', '/', true)) . '/' . $key);
         $site = static::listFiles(static::siteRoot() . '/' . $key);
         $names = array_unique(array_merge(array_keys($core), array_keys($site)));
         sort($names, SORT_NATURAL | SORT_FLAG_CASE);
@@ -146,7 +174,7 @@ class LayoutShowcase
     }
 
     /**
-     * Инструкции из Figma всех компонентов
+     * Инструкции из Figma всех компонентов: figma-docs.php ядра и src/Layout/figma-docs.php расширений
      *
      * @return array<string, list<array{set: string, what: string, why: string, how: string, limits: string}>>
      *         Ключ - компонент (UI/Badge)
@@ -154,9 +182,17 @@ class LayoutShowcase
     public static function getAllFigmaDocs(): array
     {
         $all = [];
-        foreach (require __DIR__ . '/figma-docs.php' as $key => $rows) {
-            foreach ($rows as [$set, $what, $why, $how, $limits]) {
-                $all[$key][] = ['set' => $set, 'what' => $what, 'why' => $why, 'how' => $how, 'limits' => $limits];
+        $files = [__DIR__ . '/figma-docs.php'];
+        foreach (static::roots() as $root) {
+            if ($root['package'] !== static::PACKAGE_CORE && is_file(dirname($root['root']) . '/figma-docs.php')) {
+                $files[] = dirname($root['root']) . '/figma-docs.php';
+            }
+        }
+        foreach ($files as $file) {
+            foreach (require $file as $key => $rows) {
+                foreach ($rows as [$set, $what, $why, $how, $limits]) {
+                    $all[$key][] = ['set' => $set, 'what' => $what, 'why' => $why, 'how' => $how, 'limits' => $limits];
+                }
             }
         }
 
@@ -168,6 +204,68 @@ class LayoutShowcase
         return __DIR__ . '/Components';
     }
 
+    /**
+     * Разделы расширений с компонентами в пакете
+     *
+     * @return array<string, array{package: string, title: string, root: string}> Раздел => расширение, название,
+     *         папка компонентов пакета
+     */
+    protected static function packages(): array
+    {
+        // кэш по набору загруженных расширений (тесты подменяют их ExtensionConfig::reset())
+        static $cache = [];
+        $extensions = ExtensionConfig::getAll();
+        $cacheKey = implode(',', array_map('spl_object_id', $extensions));
+        if (isset($cache[$cacheKey])) {
+            return $cache[$cacheKey];
+        }
+        $packages = [];
+        foreach ($extensions as $extension) {
+            $root = $extension->getLayoutRoot();
+            foreach ($root === null ? [] : $extension->getLayoutSections() as $section => $title) {
+                if (!isset(static::SECTIONS[$section])) {
+                    $packages[$section] ??= ['package' => $extension->name, 'title' => $title, 'root' => $root];
+                }
+            }
+        }
+
+        return $cache[$cacheKey] = $packages;
+    }
+
+    /**
+     * Папки компонентов пакетов: ядро, затем расширения
+     *
+     * @return list<array{package: string, root: string, sections: list<string>}>
+     */
+    protected static function roots(): array
+    {
+        $roots = [
+            static::PACKAGE_CORE => [
+                'package' => static::PACKAGE_CORE,
+                'root' => static::coreRoot(),
+                'sections' => array_keys(static::SECTIONS),
+            ],
+        ];
+        foreach (static::packages() as $section => $package) {
+            $roots[$package['package']] ??= ['package' => $package['package'], 'root' => $package['root'], 'sections' => []];
+            $roots[$package['package']]['sections'][] = $section;
+        }
+
+        return array_values($roots);
+    }
+
+    /** Пакет раздела: PACKAGE_CORE или имя расширения */
+    protected static function packageOf(string $section): string
+    {
+        return static::packages()[$section]['package'] ?? static::PACKAGE_CORE;
+    }
+
+    /** Папка компонентов пакета раздела */
+    protected static function packageRoot(string $section): string
+    {
+        return static::packages()[$section]['root'] ?? static::coreRoot();
+    }
+
     protected static function siteRoot(): string
     {
         return Container::getPaths()->getRoot('Layout/Components');
@@ -176,12 +274,13 @@ class LayoutShowcase
     /**
      * Папки компонентов разделов витрины
      *
+     * @param list<string> $sections Разделы (папки в корне)
      * @return array<string, true> Ключ - путь папки от корня компонентов
      */
-    protected static function scan(string $root): array
+    protected static function scan(string $root, array $sections): array
     {
         $keys = [];
-        foreach (array_keys(static::SECTIONS) as $section) {
+        foreach ($sections as $section) {
             if (!is_dir($root . '/' . $section)) {
                 continue;
             }
@@ -210,7 +309,7 @@ class LayoutShowcase
         if ($inSite && is_file($site)) {
             return [$site, static::SOURCE_SITE];
         }
-        $core = static::coreRoot() . '/' . $key . '/' . $name;
+        $core = static::packageRoot((string)strstr($key, '/', true)) . '/' . $key . '/' . $name;
         if ($inCore && is_file($core)) {
             return [$core, static::SOURCE_CORE];
         }

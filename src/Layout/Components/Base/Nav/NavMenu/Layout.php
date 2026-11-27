@@ -22,6 +22,8 @@ class Layout extends LayoutBase
      * @param string $buttonLink Адрес кнопки; пусто — кнопка без перехода (открывает форму через атрибуты $buttonAttributes)
      * @param array<string, mixed> $buttonAttributes Атрибуты кнопки
      * @param string $logoHref Адрес логотипа, пусто — без логотипа
+     * @param string $before HTML перед списком пунктов (после города): например, пункт «Каталог» расширения
+     * @param string $after HTML после списка пунктов (перед контактами): например, кнопки «Сравнение» и «Избранное»
      */
     public static function drawNavMenu(
         array        $items,
@@ -36,6 +38,8 @@ class Layout extends LayoutBase
         string       $label = 'Меню сайта',
         string       $closeLabel = 'Закрыть меню',
         string       $className = '',
+        string       $before = '',
+        string       $after = '',
     ): string {
         return static::draw(compact(
             'items',
@@ -49,6 +53,8 @@ class Layout extends LayoutBase
             'label',
             'closeLabel',
             'className',
+            'before',
+            'after',
         ) + ['theme' => $theme->value]);
     }
 }

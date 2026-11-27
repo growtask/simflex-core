@@ -49,7 +49,9 @@ $theme = $data['theme'];
             theme: TabMainTheme::from($theme),
         ) ?>
     <?php endif; ?>
+    <?= $data['before'] ?>
     <?= NavMenuList::drawNavMenuList($data['items'], NavMenuListTheme::from($theme), className: 'nav-menu__list') ?>
+    <?= $data['after'] ?>
     <?php if ($data['contacts'] !== []): ?>
         <div class="nav-menu__contacts">
             <?php foreach ($data['contacts'] as $contact): ?>

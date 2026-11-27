@@ -2,6 +2,7 @@
 
 namespace Simflex\Core\System;
 
+use Composer\InstalledVersions;
 use Simflex\Core\Admin\HeadSlot;
 use Simflex\Core\Admin\NoticeSource;
 use Simflex\Core\Admin\Handler;
@@ -41,6 +42,15 @@ abstract class ExtensionConfig
 
     /** @var list<class-string<NoticeSource>> источники уведомлений админки (под заголовком страницы) */
     protected array $adminNoticeSources = [];
+
+    /**
+     * @var array<string, string> разделы витрины компонентов Layout: папка в `src/Layout/Components` пакета => название
+     *      (компоненты Catalog/Search/SearchMain - `Simflex\Catalog\Layout\Components\Catalog\Search\SearchMain`)
+     */
+    protected array $layoutSections = [];
+
+    /** @var string composer-пакет расширения; пусто - `simflex/<name>` */
+    protected string $package = '';
 
     /** @var list<self>|null загруженные расширения сайта */
     private static ?array $all = null;
@@ -103,6 +113,29 @@ abstract class ExtensionConfig
     public function getAdminNoticeSources(): array
     {
         return $this->adminNoticeSources;
+    }
+
+    /**
+     * @return array<string, string> разделы витрины компонентов Layout расширения: папка => название
+     */
+    public function getLayoutSections(): array
+    {
+        return $this->layoutSections;
+    }
+
+    /**
+     * @return string|null папка компонентов Layout пакета (`src/Layout/Components`); null - пакет не установлен
+     *                     или папки нет
+     */
+    public function getLayoutRoot(): ?string
+    {
+        $package = $this->package !== '' ? $this->package : 'simflex/' . $this->name;
+        if (!InstalledVersions::isInstalled($package)) {
+            return null;
+        }
+        $root = InstalledVersions::getInstallPath($package) . '/src/Layout/Components';
+
+        return is_dir($root) ? (string)realpath($root) : null;
     }
 
     /**
