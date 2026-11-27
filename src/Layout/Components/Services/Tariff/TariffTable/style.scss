@@ -1,0 +1,194 @@
+/*
+ * Таблица сравнения тарифов Services/Tariff/table (Figma): main/gray/lighter (тёмная — gray/dark), ui/xlarge.
+ * Шапка: «Функции» ui/l, у тарифа название ui/l, цена ui/xl gray/dark, кнопка Buttons/main s (secondary, у featured —
+ * primary) через 8; ячейки — отступ 14 24; строки через линию 1 px gray/light; возможность t2 gray/dark с подсказкой,
+ * отметки — иконки 20 (check color1/main, close gray/medium). Колонка featured — фон color1/lighter.
+ * Телефон: селектор тарифов SelectorMain s на всю ширину, название ui/l, цена ui/xl, кнопка m; строки — иконка, текст и
+ * подсказка через 10, отступ 12 16; виден один тариф (класс tariff-table_plan_N, script.js).
+ */
+.tariff-table {
+    --tt-bg: var(--color-main-gray-lighter);
+    --tt-title: var(--color-text-icon-gray-darker);
+    --tt-text: var(--color-text-icon-gray-dark);
+    --tt-muted: var(--color-text-icon-gray-medium);
+    --tt-line: var(--color-main-gray-light);
+    --tt-featured: var(--color-main-color1-lighter);
+
+    overflow: hidden;
+    background: var(--tt-bg);
+    border-radius: var(--radius-ui-xlarge);
+
+    &-theme_dark {
+        --tt-bg: var(--color-main-gray-dark);
+        --tt-title: var(--color-text-icon-gray-white);
+        --tt-text: var(--color-text-icon-gray-lighter);
+        --tt-muted: var(--color-text-icon-gray-light);
+        --tt-line: var(--color-main-gray-darker);
+        --tt-featured: var(--color-main-color1-darker);
+    }
+
+    &__mobile {
+        display: none;
+    }
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    th,
+    td {
+        text-align: left;
+        vertical-align: middle;
+        @include spacing(padding-block, 14px);
+        @include spacing(padding-inline, 24px);
+    }
+
+    tbody tr {
+        border-top: 1px solid var(--tt-line);
+    }
+
+    &__title,
+    &__name {
+        display: block;
+        color: var(--tt-title);
+        @include ui-l;
+    }
+
+    &__title {
+        display: table-cell;
+        @include spacing(width, 456px);
+    }
+
+    thead th {
+        vertical-align: top;
+    }
+
+    thead &__col > * + * {
+        @include spacing(margin-top, 8px);
+    }
+
+    &__price {
+        display: block;
+        color: var(--tt-text);
+        @include ui-xl;
+    }
+
+    &__button {
+        width: 100%;
+    }
+
+    &__col_featured {
+        background: var(--tt-featured);
+    }
+
+    &__feature {
+        font-weight: inherit;
+    }
+
+    &__feature-text {
+        color: var(--tt-text);
+        @include t2;
+    }
+
+    &__feature .tooltip-info {
+        vertical-align: middle;
+        @include spacing(margin-left, 10px);
+    }
+
+    &__icon {
+        display: block;
+        fill: var(--color-text-icon-color1-main);
+        @include icon(20px);
+    }
+
+    &__mark_off &__icon {
+        fill: var(--tt-muted);
+    }
+
+    // телефон: селектор, один тариф, строки — иконка, текст, подсказка
+    @mixin table-mobile($px: false) {
+        border-radius: var(--radius-ui-large);
+
+        .tariff-table__mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .tariff-table__plan {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .tariff-table__plan-name {
+            margin: 0;
+            color: var(--tt-title);
+            @include ui-l;
+        }
+
+        .tariff-table__plan-price {
+            margin: 0;
+            color: var(--tt-title);
+            @include ui-xl;
+        }
+
+        .tariff-table__plan-button {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody tr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+        }
+
+        th,
+        td {
+            padding: 0;
+        }
+
+        .tariff-table__feature {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .tariff-table__mark {
+            display: none;
+            order: -1;
+            background: none;
+        }
+
+        @for $i from 0 through 2 {
+            &.tariff-table_plan_#{$i} {
+                .tariff-table__plan_#{$i} {
+                    display: flex;
+                }
+
+                .tariff-table__mark.tariff-table__col_#{$i} {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    @include Mobile {
+        @include table-mobile;
+    }
+
+    &_view_mobile {
+        @include table-mobile(true);
+    }
+}

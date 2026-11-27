@@ -1,0 +1,90 @@
+/*
+ * Галерея Services/Hero/gallery (Figma): большая картинка 480 × 360 (4:3), ui/xlarge; под ней через 12 миниатюры в ряд
+ * через 12, ui/medium: активная — рамка 2 px color1/main, остальные — прозрачность 60 %. Телефон: картинки свайпом
+ * (ui/large), под ними через 12 индикатор SliderStepItem m по центру, миниатюр нет.
+ */
+.hero-gallery {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    @include spacing(gap, 12px);
+
+    &__main {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        border-radius: var(--radius-ui-xlarge);
+    }
+
+    &__slide {
+        overflow: hidden;
+        border-radius: inherit;
+    }
+
+    &__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__thumbs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        @include spacing(gap, 12px);
+    }
+
+    &__thumb {
+        overflow: hidden;
+        aspect-ratio: 111 / 80;
+        padding: 0;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: none;
+        border-radius: var(--radius-ui-medium);
+        opacity: 0.6;
+        @include transition((opacity, border-color));
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+
+        &_active {
+            border-color: var(--color-main-color1-main);
+            opacity: 1;
+        }
+    }
+
+    &__steps {
+        display: none;
+        justify-content: center;
+    }
+
+    @mixin gallery-mobile {
+        .hero-gallery__main {
+            aspect-ratio: 342 / 240;
+            border-radius: var(--radius-ui-large);
+        }
+
+        .hero-gallery__thumbs {
+            display: none;
+        }
+
+        .hero-gallery__steps {
+            display: flex;
+        }
+    }
+
+    @include Mobile {
+        @include gallery-mobile;
+    }
+
+    &_view_mobile {
+        @include gallery-mobile;
+    }
+}

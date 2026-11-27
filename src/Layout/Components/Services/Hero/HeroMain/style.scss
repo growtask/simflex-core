@@ -1,0 +1,174 @@
+/*
+ * Верх страницы услуги Services/Hero/main (Figma): отступ 32, ui/blocks; содержимое и картинка (480, ui/xlarge) через 48.
+ * Содержимое через 40: текст (через 20) — бейджи Badge xs через 8, заголовок h2, описание t1 gray/dark, преимущества
+ * ItemBenefit s горизонтальные в ряд через 24; блок цены PriceMain; кнопка «Портфолио» Buttons/main secondary m.
+ * left — картинка слева; center — без картинки, по центру; cover — картинка фоном (ui/large) под затемнением
+ * gray/darker 60 %, отступ 64, текст белый. Планшет и телефон: столбиком, картинка под текстом (ui/large), отступ 20,
+ * зазоры 24, преимущества столбиком через 16.
+ */
+.hero {
+    --hero-title: var(--color-text-icon-gray-darker);
+    --hero-text: var(--color-text-icon-gray-dark);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: var(--radius-blocks);
+    @include spacing(padding, 32px, 32px, 20px, 20px);
+    @include spacing(gap, 48px, 48px, 24px, 24px);
+
+    &-theme_dark {
+        --hero-title: var(--color-text-icon-gray-white);
+        --hero-text: var(--color-text-icon-gray-lighter);
+    }
+
+    &__content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 0;
+        @include spacing(gap, 40px, 40px, 24px, 24px);
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 20px, 20px, 12px, 12px);
+    }
+
+    &__badges {
+        display: flex;
+        flex-wrap: wrap;
+        @include spacing(gap, 8px);
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--hero-title);
+        @include h2;
+    }
+
+    &__description {
+        margin: 0;
+        color: var(--hero-text);
+        @include t1;
+    }
+
+    &__benefits {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @include spacing(column-gap, 24px);
+        @include spacing(row-gap, 16px);
+
+        > .benefit {
+            flex: 1 1 0;
+            min-width: min(100%, #{vw(200px)});
+        }
+    }
+
+    &__price {
+        align-self: stretch;
+    }
+
+    &__media {
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: var(--radius-ui-xlarge);
+        @include spacing(width, 480px);
+    }
+
+    &__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+    }
+
+    &_layout_left {
+        flex-direction: row-reverse;
+    }
+
+    &_layout_center &__content {
+        align-items: center;
+        text-align: center;
+    }
+
+    &_layout_center &__badges,
+    &_layout_center &__benefits {
+        justify-content: center;
+    }
+
+    // cover: картинка фоном под затемнением, текст белый
+    &_layout_cover {
+        --hero-title: var(--color-text-icon-gray-white);
+        --hero-text: var(--color-text-icon-gray-lighter);
+
+        @include spacing(padding, 64px, 64px, 32px, 20px);
+    }
+
+    &__cover {
+        position: absolute;
+        inset: 0;
+
+        > *,
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: color-mix(in srgb, var(--color-main-gray-darker) 60%, transparent);
+        }
+    }
+
+    &_layout_cover &__content {
+        @include spacing(max-width, 720px);
+    }
+
+    // планшет и телефон: столбиком, картинка под текстом
+    @mixin hero-compact($px: false) {
+        flex-direction: column;
+        align-items: stretch;
+
+        .hero__media {
+            width: 100%;
+            border-radius: var(--radius-ui-large);
+        }
+
+        .hero__benefits {
+            flex-direction: column;
+        }
+    }
+
+    @include Tablet {
+        @include hero-compact;
+    }
+
+    &_view_mobile {
+        padding: 20px;
+        gap: 24px;
+        @include hero-compact(true);
+
+        .hero__content {
+            gap: 24px;
+        }
+
+        .hero__text {
+            gap: 12px;
+        }
+    }
+}

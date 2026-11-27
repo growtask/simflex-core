@@ -27,10 +27,18 @@ class Layout extends LayoutBase
 
     public static function initAssets(): void
     {
+        static::useSwiper();
+        parent::initAssets();
+    }
+
+    /**
+     * Подключает swiper (css и js раньше скриптов компонентов): для своих слайдеров компонентов (TariffList и др.)
+     */
+    public static function useSwiper(): void
+    {
         $dir = dirname(__DIR__, 4) . '/assetsGlobal/swiper/' . self::SWIPER;
         PageAssets::css(Assets::publish($dir . '/swiper-bundle.min.css'), 50);
         PageAssets::js(Assets::publish($dir . '/swiper-bundle.min.js'), 50);
-        parent::initAssets();
     }
 
     /**

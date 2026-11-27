@@ -21,7 +21,7 @@ class LayoutShowcase
     public const DEMO_FILE = 'demo.tpl';
 
     /** Разделы витрины: папка в Layout/Components => название */
-    public const SECTIONS = ['UI' => 'UI-компоненты', 'Parts' => 'Части страниц', 'Base' => 'Базовые компоненты'];
+    public const SECTIONS = ['UI' => 'UI-компоненты', 'Parts' => 'Части страниц', 'Base' => 'Базовые компоненты', 'Services' => 'Услуги'];
 
     /** Названия групп (папок блоков), которые отличаются от имени папки */
     public const GROUP_TITLES = ['Other' => 'Прочее (нет в Figma)'];

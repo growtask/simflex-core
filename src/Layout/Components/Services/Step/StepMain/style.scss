@@ -1,0 +1,137 @@
+/*
+ * Блок «Как мы работаем» Services/Steps/main (Figma): отступ 32 (телефон 20), ui/xlarge, зазор 32 (телефон 24);
+ * заголовок h3 (телефон mobile/h3). Шаги — ItemBenefit m (число h4 color1/main, линия 1 px, заголовок h5, текст t2,
+ * бейдж времени): FullHD/HD — в ряд поровну, у шага справа 20; планшет — сеткой по три через 24 и 32, без линии;
+ * телефон — горизонтальные: знак слева, под ним вертикальная линия до следующего шага, снизу 24; кнопка на всю
+ * ширину. Scroll — карточки ItemBenefit (фон gray/lighter, 280) в слайдере, справа без отступа.
+ */
+.steps {
+    --steps-title: var(--color-text-icon-gray-darker);
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(padding, 32px, 32px, 32px, 20px);
+    @include spacing(gap, 32px, 32px, 32px, 24px);
+
+    &-theme_dark {
+        --steps-title: var(--color-text-icon-gray-white);
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--steps-title);
+        @include h3;
+    }
+
+    &__list {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__list > &__step {
+        flex: 1 1 0;
+        min-width: 0;
+        @include spacing(padding-right, 20px);
+    }
+
+    &__footer {
+        display: flex;
+    }
+
+    // планшет: сетка по три, без линий
+    @mixin steps-tablet {
+        .steps__list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 24px;
+            row-gap: 32px;
+        }
+
+        .steps__list .benefit__line {
+            display: none;
+        }
+    }
+
+    // телефон: горизонтальные шаги, вертикальная линия под знаком, кнопка на всю ширину
+    @mixin steps-mobile {
+        .steps__list {
+            flex-direction: column;
+        }
+
+        .steps__list > .steps__step {
+            flex-direction: row;
+            padding-right: 0;
+            padding-bottom: 24px;
+            gap: 16px;
+
+            &:last-child {
+                padding-bottom: 0;
+            }
+        }
+
+        .steps__list .benefit__head {
+            flex-direction: column;
+            align-self: stretch;
+        }
+
+        .steps__list .benefit__line {
+            width: 1px;
+            height: auto;
+            flex: 1 1 0;
+        }
+
+        .steps__footer > .btn {
+            width: 100%;
+        }
+    }
+
+    &_style_default {
+        @include Tablet {
+            .steps__list {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                column-gap: vwt(24px);
+                row-gap: vwt(32px);
+            }
+
+            .steps__list .benefit__line {
+                display: none;
+            }
+        }
+
+        @include Mobile {
+            @include steps-mobile;
+        }
+    }
+
+    &_view_tablet {
+        @include steps-tablet;
+    }
+
+    &_view_mobile {
+        padding: 20px;
+        gap: 24px;
+        @include steps-mobile;
+    }
+
+    // scroll: слайдер у правого края без отступа
+    &_style_scroll {
+        padding-right: 0;
+    }
+
+    &__card {
+        display: flex;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > .benefit {
+            width: 100%;
+        }
+    }
+}

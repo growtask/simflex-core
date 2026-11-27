@@ -1,0 +1,267 @@
+/*
+ * Карточка услуги Services/Cards/main (Figma): main/gray/lighter (тёмная — gray/dark), ui/xlarge.
+ * card: FullHD/HD — картинка 120 (ui/medium) слева, текст справа, отступ 24, зазор 20; tablet и телефон — столбиком,
+ * картинка 100, отступ 20. list: картинка 80 (телефон 64), отступ 16, на широком экране текст, бейджи и кнопка в строку
+ * через 24, на телефоне столбиком через 12. Текст: ярлык Badge primary-light xs, заголовок h4 (телефон mobile/h4) со
+ * стрелкой 24 через 4, описание t2 gray/medium; бейджи цены и времени Badge secondary m (banknote, clock) через 8,
+ * «от» ui/s, старая цена ui/s зачёркнутая; кнопка Buttons/main primary xs.
+ * Наведение: заголовок color1/main, стрелка up-right → right; нажатие: фон color1/lighter, бейджи gray/lighter,
+ * заголовок color1/darker; disabled — прозрачность 50 %. Фокус — кольцо 2 px с зазором 2 px вокруг карточки (Cards/focus).
+ */
+.service-card {
+    --sc-bg: var(--color-main-gray-lighter);
+    --sc-title: var(--color-text-icon-gray-darker);
+    --sc-text: var(--color-text-icon-gray-medium);
+    --sc-muted: var(--color-text-icon-gray-dark);
+
+    position: relative;
+    display: flex;
+    box-sizing: border-box;
+    background: var(--sc-bg);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(padding, 24px, 24px, 20px, 20px);
+    @include spacing(gap, 20px);
+    @include transition((background-color));
+
+    &-theme_dark {
+        --sc-bg: var(--color-main-gray-dark);
+        --sc-title: var(--color-text-icon-gray-white);
+        --sc-text: var(--color-text-icon-gray-lighter);
+        --sc-muted: var(--color-text-icon-gray-lighter);
+    }
+
+    &__image {
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: var(--radius-ui-medium);
+        @include spacing(width, 120px, 120px, 100px, 100px);
+        @include spacing(height, 120px, 120px, 100px, 100px);
+    }
+
+    &__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__info {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 0;
+        @include spacing(gap, 20px);
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        @include spacing(gap, 12px, 12px, 8px, 8px);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        color: var(--sc-title);
+        @include h4;
+        @include spacing(gap, 4px);
+        @include transition((color));
+    }
+
+    &__arrow {
+        position: relative;
+        flex-shrink: 0;
+        @include icon(24px);
+    }
+
+    &__arrow-icon {
+        position: absolute;
+        inset: 0;
+        fill: currentColor;
+        @include icon(24px);
+        @include transition((opacity, transform), var(--motion-base), var(--ease-out));
+
+        &_hover {
+            opacity: 0;
+            transform: rotate(-45deg);
+        }
+    }
+
+    &__title {
+        color: inherit;
+        text-decoration: none;
+
+        // вся карточка — ссылка: область ссылки растянута на карточку
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: inherit;
+        }
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+
+    &__description {
+        margin: 0;
+        color: var(--sc-text);
+        @include t2;
+    }
+
+    &__badges {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        @include spacing(column-gap, 8px);
+        @include spacing(row-gap, 12px);
+    }
+
+    &__price {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        @include spacing(gap, 8px);
+    }
+
+    &__from {
+        color: var(--sc-muted);
+        @include ui-s;
+    }
+
+    &__old {
+        color: var(--color-text-icon-gray-medium);
+        @include ui-base(14px, 400);
+        text-decoration: line-through;
+    }
+
+    &__badge {
+        @include transition((background-color));
+    }
+
+    // кнопка — над растянутой ссылкой
+    &__action {
+        position: relative;
+        z-index: 2;
+    }
+
+    // фокус ссылки с клавиатуры — кольцо вокруг всей карточки (Cards/focus)
+    &:has(.service-card__title:focus-visible) {
+        @include focus-ring;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:not(.service-card_disabled):has(.service-card__title):hover {
+            .service-card__head {
+                color: var(--color-text-icon-color1-main);
+            }
+
+            .service-card__arrow-icon_static {
+                opacity: 0;
+                transform: rotate(45deg);
+            }
+
+            .service-card__arrow-icon_hover {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    }
+
+    &:not(.service-card_disabled):has(.service-card__title:active):not(:has(.service-card__action:active)) {
+        background: var(--color-main-color1-lighter);
+
+        .service-card__head {
+            color: var(--color-text-icon-color1-darker);
+        }
+
+        .service-card__badge {
+            background: var(--color-main-gray-lighter);
+        }
+    }
+
+    &_disabled {
+        opacity: 0.5;
+    }
+
+    // card на планшете и телефоне — столбиком
+    @mixin card-compact($px: false) {
+        flex-direction: column;
+        gap: if($px, 20px, vwm(20px));
+        padding: if($px, 20px, vwm(20px));
+
+        .service-card__image {
+            width: if($px, 100px, vwm(100px));
+            height: if($px, 100px, vwm(100px));
+        }
+
+        .service-card__text {
+            gap: if($px, 8px, vwm(8px));
+        }
+
+        .service-card__head {
+            @include h4;
+        }
+    }
+
+    &_layout_card {
+        @include Tablet {
+            flex-direction: column;
+        }
+    }
+
+    &_layout_card.service-card_view_mobile {
+        @include card-compact(true);
+    }
+
+    // list: картинка 80, отступ 16; на широком экране всё в строку
+    &_layout_list {
+        @include spacing(padding, 16px);
+
+        .service-card__image {
+            @include spacing(width, 80px, 80px, 80px, 64px);
+            @include spacing(height, 80px, 80px, 80px, 64px);
+        }
+
+        .service-card__info {
+            flex-direction: row;
+            align-items: center;
+            @include spacing(gap, 24px);
+
+            @include Mobile {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: vwm(12px);
+            }
+        }
+
+        .service-card__text {
+            flex: 1;
+            min-width: 0;
+        }
+    }
+
+    &_layout_list.service-card_view_mobile {
+        padding: 16px;
+
+        .service-card__image {
+            width: 64px;
+            height: 64px;
+        }
+
+        .service-card__info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .service-card__text {
+            gap: 8px;
+        }
+    }
+}

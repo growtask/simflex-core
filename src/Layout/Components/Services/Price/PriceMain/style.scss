@@ -1,0 +1,159 @@
+/*
+ * Блок цены Services/Price/main (Figma): main/gray/lighter (тёмная — gray/dark), ui/xlarge, отступ 24, зазор 32 по строке
+ * и 16 между строками: слева цена (min 331), справа кнопки Buttons/main m через 12. Строка цены: «от» ui/s,
+ * сумма ui/xl, единица ui/s, старая цена ui/m-strike (regular), скидка — плашка color1/lighter, ui/s color1/main,
+ * отступ 4 8, ui/small. Время — иконка clock 20 и t2 через 8. Mobile: столбиком, отступ 20, кнопки под ценой с
+ * переносом. Compact — без кнопок. Sticky — нижняя панель на телефоне: отступ 16, скругление сверху, тень.
+ */
+.price {
+    --price-bg: var(--color-main-gray-lighter);
+    --price-text: var(--color-text-icon-gray-darker);
+    --price-muted: var(--color-text-icon-gray-dark);
+    --price-old: var(--color-text-icon-gray-medium);
+    --price-discount-bg: var(--color-main-color1-lighter);
+    --price-discount: var(--color-text-icon-color1-main);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-sizing: border-box;
+    background: var(--price-bg);
+    color: var(--price-text);
+    border-radius: var(--radius-ui-xlarge);
+    @include spacing(padding, 24px);
+    @include spacing(column-gap, 32px);
+    @include spacing(row-gap, 16px);
+
+    &-theme_dark {
+        --price-bg: var(--color-main-gray-dark);
+        --price-text: var(--color-text-icon-gray-white);
+        --price-muted: var(--color-text-icon-gray-lighter);
+        --price-old: var(--color-text-icon-gray-lighter);
+        --price-discount-bg: var(--color-main-color1-darker);
+        --price-discount: var(--color-text-icon-color1-lighter);
+    }
+
+    &__info {
+        display: flex;
+        flex: 1 0 0;
+        flex-direction: column;
+        min-width: min(100%, #{vw(331px)});
+        @include spacing(gap, 12px);
+    }
+
+    &__row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 0;
+        @include spacing(column-gap, 8px);
+        @include spacing(row-gap, 4px);
+    }
+
+    &__from,
+    &__unit {
+        color: var(--price-muted);
+        @include ui-s;
+    }
+
+    &__sum {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        @include spacing(column-gap, 8px);
+    }
+
+    &__value,
+    &__special {
+        margin: 0;
+        color: var(--price-text);
+        @include ui-xl;
+    }
+
+    &__old {
+        color: var(--price-old);
+        @include ui-base(16px, 400);
+        text-decoration: line-through;
+    }
+
+    &__discount {
+        background: var(--price-discount-bg);
+        color: var(--price-discount);
+        border-radius: var(--radius-ui-small);
+        @include ui-s;
+        @include spacing(padding-block, 4px);
+        @include spacing(padding-inline, 8px);
+    }
+
+    &__time {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        color: var(--price-muted);
+        @include t2;
+        @include spacing(gap, 8px);
+    }
+
+    &__time-icon {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include icon(20px);
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        @include spacing(gap, 12px);
+    }
+
+    // телефон (и вид mobile в витрине): столбиком, кнопки под ценой
+    @mixin price-mobile($px: false) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: if($px, 20px, vwm(20px));
+        padding: if($px, 20px, vwm(20px));
+
+        .price__info {
+            min-width: 0;
+        }
+    }
+
+    @include Mobile {
+        &:not(.price_style_sticky):not(.price_view_desktop) {
+            @include price-mobile;
+        }
+    }
+
+    &_view_mobile:not(.price_style_sticky) {
+        @include price-mobile(true);
+    }
+
+    // нижняя панель телефона: цена и кнопка в строку с переносом, скругление сверху
+    &_style_sticky {
+        border-radius: var(--radius-ui-xlarge) var(--radius-ui-xlarge) 0 0;
+        box-shadow: var(--shadow-gray-m);
+        @include spacing(padding, 16px);
+        @include spacing(column-gap, 16px);
+        @include spacing(row-gap, 12px);
+    }
+
+    // живая панель: только на телефоне, внизу экрана, появляется сдвигом снизу (script.js ставит price_sticky-shown)
+    &_style_sticky:not(.price_inline) {
+        position: fixed;
+        z-index: z('header');
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: none;
+        transform: translateY(100%);
+        @include transition((transform), var(--motion-base), var(--ease-out));
+
+        @include Mobile {
+            display: flex;
+        }
+    }
+
+    &_style_sticky.price_sticky-shown {
+        transform: none;
+    }
+}

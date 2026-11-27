@@ -6,6 +6,12 @@
 
 ## [4.0.0] — не выпущена
 
+- Компоненты страницы Services (`Layout/Components/Services`, раздел витрины «Услуги»): `Card/CardMain`
+  (`drawCardMain()`), `Price/PriceMain` (`drawPriceMain()`, панель Sticky на телефоне), `Tariff/TariffMain`,
+  `Tariff/TariffList` (период месяц/год, слайдер на планшете и телефоне), `Tariff/TariffTable` (тариф по селектору на
+  телефоне), `Step/StepMain` (на `ItemBenefit`, вид Scroll — на `SliderMain`), `Hero/HeroMain`, `Hero/HeroGallery`.
+- `SliderMain::useSwiper()` — подключение swiper для своих слайдеров компонентов (TariffList, HeroGallery).
+
 - Base/Slider (Figma `slider`): `SliderMain` (`drawSliderMain()` — секция с заголовком, «Показать все», стрелками или
   индикатором шагов и рядом карточек; листает swiper 11.1.3 из `assetsGlobal/swiper`, компонент подключает его сам),
   `SliderStepItem` (`drawSliderStepItem()` — одна полоска индикатора).
