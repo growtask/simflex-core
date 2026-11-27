@@ -1,11 +1,11 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Benefit;
+namespace Simflex\Core\Layout\Components\Base\Item\ItemBenefit;
 
 /**
  * Размер преимущества (Figma: benefit, свойство size)
  */
-enum BenefitSize: string
+enum ItemBenefitSize: string
 {
     case Small = 's';
     case Medium = 'm';

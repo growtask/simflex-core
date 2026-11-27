@@ -1,0 +1,133 @@
+/* Выбор города GeoModal (Figma Base/GEO/modal): кнопка города в шапке и окно «Ваш город» — desktop всплывает под
+ * кнопкой с уголком (400 px, отступ 20, ui/large, shadows/gray/l), mobile — окно ModalMain на весь экран.
+ * Содержимое окна — GeoMain, список — GeoList. Классы-связи с Figma: .geo, __trigger, __panel, __corner, __body;
+ * .geo-modal (окно mobile) */
+.geo {
+    position: relative;
+    display: inline-flex;
+
+    &__trigger {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: var(--color-text-icon-gray-darker);
+        font-family: inherit;
+        border-radius: var(--radius-ui-xsmall);
+        @include ui-s;
+        @include spacing(gap, 4px);
+        @include transition((color));
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--color-text-icon-color1-dark);
+            }
+        }
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+    }
+
+    &__trigger-icon {
+        flex-shrink: 0;
+        fill: currentColor;
+        @include icon(16px);
+    }
+
+    // окно: desktop — под кнопкой, уголок 16 × 8 над окном в 20 px от левого края
+    &__panel {
+        position: absolute;
+        z-index: z('dropdown');
+        top: 100%;
+        left: 0;
+        box-sizing: border-box;
+        width: 400px;
+        max-width: calc(100vw - 32px);
+        margin-top: 8px;
+        background: var(--color-main-gray-white);
+        border-radius: var(--radius-ui-large);
+        box-shadow: var(--shadow-gray-l);
+        padding: 20px;
+    }
+
+    &__corner {
+        position: absolute;
+        bottom: 100%;
+        left: 20px;
+        width: 16px;
+        height: 8px;
+        background: var(--color-main-gray-white);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    &_inline &__panel {
+        position: relative;
+        top: auto;
+        left: auto;
+    }
+
+    &-theme_dark &__trigger {
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &-theme_dark &__panel {
+        background: var(--color-main-gray-darker);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-dark), var(--shadow-gray-l);
+    }
+
+    &-theme_dark &__corner {
+        background: var(--color-main-gray-dark);
+    }
+
+    // появление окна (script.js, SfUi.transition): прозрачность и сдвиг 4 px, уход быстрее
+    &__panel.geo-panel-enter-active {
+        transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+    }
+
+    &__panel.geo-panel-leave-active {
+        transition: opacity var(--motion-fast) var(--ease-in), transform var(--motion-fast) var(--ease-in);
+    }
+
+    &__panel.geo-panel-enter-from, &__panel.geo-panel-leave-to {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__panel.geo-panel-enter-active, &__panel.geo-panel-leave-active {
+            transition: none;
+        }
+    }
+}
+
+// mobile — окно ModalMain с классом .geo-modal: шапку, линию и отступы даёт Modal,
+// окно (по умолчанию лист снизу по высоте содержимого) растянуто на весь экран, как в Figma GEO/modal mobile;
+// содержимое растягивается на высоту экрана, заголовок окна только для чтения с экрана (имя диалога «Ваш город»;
+// в Figma заголовка нет)
+.geo-modal {
+    // сильнее правил Modal (стили Modal собираются после Geo)
+    &.modal.modal_view_mobile {
+        align-items: stretch;
+    }
+
+    .modal__head {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .modal__body {
+        flex: 1;
+    }
+}
+
+// части скрывает атрибут hidden — он важнее display блоков
+.geo [hidden] {
+    display: none !important;
+}

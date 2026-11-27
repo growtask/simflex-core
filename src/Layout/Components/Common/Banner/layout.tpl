@@ -5,9 +5,9 @@ use Simflex\Core\Layout\Components\Parts\Placeholder\PlaceholderImg\Layout as Pl
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
-use Simflex\Core\Layout\Components\UI\Other\StepIndicator\Layout as StepIndicator;
-use Simflex\Core\Layout\Components\UI\Other\StepIndicator\StepIndicatorSize;
-use Simflex\Core\Layout\Components\UI\Other\StepIndicator\StepIndicatorTheme;
+use Simflex\Core\Layout\Components\Base\Slider\SliderStep\Layout as StepIndicator;
+use Simflex\Core\Layout\Components\Base\Slider\SliderStep\SliderStepSize;
+use Simflex\Core\Layout\Components\Base\Slider\SliderStep\SliderStepTheme;
 
 $slides = $data['slides'];
 $total = count($slides);
@@ -101,13 +101,13 @@ if ($multiple) {
     </div>
 
     <?php if ($multiple): ?>
-        <?= StepIndicator::drawStepIndicator(
+        <?= StepIndicator::drawSliderStep(
             className: 'banner__steps',
             count: $total,
             active: 0,
             label: $data['label'],
-            size: StepIndicatorSize::Medium,
-            theme: $data['theme'] === 'dark' ? StepIndicatorTheme::Dark : StepIndicatorTheme::Light,
+            size: SliderStepSize::Medium,
+            theme: $data['theme'] === 'dark' ? SliderStepTheme::Dark : SliderStepTheme::Light,
             attributes: ['data-banner-steps' => '']
         ) ?>
     <?php endif; ?>

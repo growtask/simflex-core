@@ -1,8 +1,8 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\UI\Other\StepIndicator;
+namespace Simflex\Core\Layout\Components\Base\Slider\SliderStep;
 
-enum StepIndicatorSize: string
+enum SliderStepSize: string
 {
     case Small = 's';
     case Medium = 'm';

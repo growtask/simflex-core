@@ -1,0 +1,171 @@
+/*
+ * Слайдер (Figma Base/slider/main): секция с заголовком, кнопкой «Показать все», стрелками и рядом карточек.
+ * Ряд листает swiper (script.js): слайды шириной --slider-card, зазор — column-gap ряда (его читает script.js и
+ * передаёт swiper как spaceBetween).
+ * fullhd/hd: заголовок h2, справа «Показать все» и стрелки 48, отступ до ряда 40, 4 карточки через 20 (step=s — 5).
+ * tablet/mobile: заголовок mobile/h2, отступы 32, «Показать все» под рядом (на mobile на всю ширину), стрелок на
+ * mobile нет; карточки step=m 280 через 16, step=s 170 (mobile 160) через 12 — следующая карточка выглядывает.
+ * Индикатор шагов — SliderStep: size m у step=m, s у step=s, отступ над ним 24 (desktop 40 от ряда).
+ */
+// размер компактного вида: px (витрина) или vw экрана mobile/tablet
+@function slider-sz($mobile-px, $tablet-px, $mobile, $px) {
+    $v: if($mobile, $mobile-px, $tablet-px);
+    @if $px {
+        @return $v;
+    }
+    @return if($mobile, vwm($v), vwt($v));
+}
+
+.slider {
+    --slider-title: var(--color-text-icon-gray-black);
+    --slider-per-view: 4;
+
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    @include spacing(gap, 40px, 40px, 32px, 32px);
+
+    &-theme_dark {
+        --slider-title: var(--color-text-icon-gray-white);
+    }
+
+    &__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include spacing(gap, 20px);
+    }
+
+    &__title {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        color: var(--slider-title);
+        @include h2;
+    }
+
+    &__buttons,
+    &__arrows {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        @include spacing(gap, 12px);
+    }
+
+    &__viewport {
+        width: 100%;
+        @include spacing(column-gap, 20px);
+        // ширина карточки: в ряд помещается --slider-per-view карточек, зазоры — gap
+        --slider-card: calc((100% - (var(--slider-per-view) - 1) * #{vw(20px)}) / var(--slider-per-view));
+
+        @include HD {
+            --slider-card: calc((100% - (var(--slider-per-view) - 1) * #{vwh(20px)}) / var(--slider-per-view));
+        }
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+    }
+
+    &__item.swiper-slide {
+        width: var(--slider-card);
+        height: auto;
+        min-width: 0;
+
+        > * {
+            height: 100%;
+        }
+    }
+
+    // мышью тянут ряд: курсор «схвачено» (класс ставит swiper)
+    &__viewport.swiper-grab:active {
+        cursor: grabbing;
+    }
+
+    &_step_s {
+        --slider-per-view: 5;
+    }
+
+    &__bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        @include spacing(gap, 24px);
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    // «Показать все» под рядом — только на tablet и mobile (два класса: стили .btn идут в сборке позже)
+    & &__all_bottom {
+        display: none;
+    }
+
+    // компактный вид (tablet/mobile): карточки фиксированной ширины, «Показать все» внизу
+    // $px — размеры в px (принудительный вид в витрине), иначе vw экрана, как spacing()
+    @mixin compact($mobile: false, $px: false) {
+        gap: slider-sz(32px, 32px, $mobile, $px);
+
+        .slider__title {
+            font-size: slider-sz(32px, 32px, $mobile, $px);
+        }
+
+        .slider__all_top {
+            display: none;
+        }
+
+        .slider__all_bottom {
+            display: inline-flex;
+        }
+
+        .slider__viewport {
+            --slider-card: #{slider-sz(280px, 280px, $mobile, $px)};
+            column-gap: slider-sz(16px, 16px, $mobile, $px);
+        }
+
+        &.slider_step_s .slider__viewport {
+            --slider-card: #{slider-sz(160px, 170px, $mobile, $px)};
+            column-gap: slider-sz(12px, 12px, $mobile, $px);
+        }
+
+        // с индикатором шагов стрелок на tablet/mobile нет (Figma: type=steps, top — только заголовок)
+        &.slider_type_steps .slider__arrows {
+            display: none;
+        }
+
+        @if $mobile {
+            .slider__arrows {
+                display: none;
+            }
+
+            .slider__all_bottom {
+                align-self: stretch;
+                width: 100%;
+            }
+        }
+    }
+
+    @include Tablet {
+        &:not(.slider_view_fullhd):not(.slider_view_hd) {
+            @include compact;
+        }
+    }
+
+    @include Mobile {
+        &:not(.slider_view_fullhd):not(.slider_view_hd):not(.slider_view_tablet) {
+            @include compact(true);
+        }
+    }
+
+    // принудительный вид (витрина): раскладка как на этой ширине экрана
+    &_view_tablet {
+        @include compact(false, true);
+    }
+
+    &_view_mobile {
+        @include compact(true, true);
+    }
+}

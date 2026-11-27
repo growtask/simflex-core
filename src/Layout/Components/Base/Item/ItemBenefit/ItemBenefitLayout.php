@@ -1,11 +1,11 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Benefit;
+namespace Simflex\Core\Layout\Components\Base\Item\ItemBenefit;
 
 /**
  * Расположение знака: сверху или слева от текста
  */
-enum BenefitLayout: string
+enum ItemBenefitLayout: string
 {
     case Vertical = 'vertical';
     case Horizontal = 'horizontal';

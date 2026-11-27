@@ -1,12 +1,12 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Benefit;
+namespace Simflex\Core\Layout\Components\Base\Item\ItemBenefit;
 
 use Simflex\Core\Layout\LayoutBase;
 
 /**
  * Преимущество (Figma: Base/benefit): иконка в маркере или число, заголовок, текст, ссылка и бейдж.
- * Выводится элементом li, список собирает drawBenefitList() (ul) или страница.
+ * Выводится элементом li, список собирает drawItemBenefitList() (ul) или страница.
  *
  * Классы-связи с Figma: .benefit, __sign (marker / number), __body, __title, __text, __link, __badge.
  */
@@ -20,31 +20,33 @@ class Layout extends LayoutBase
      * @param array{text?:string,href?:string,label?:string}|null $link Ссылка «Подробнее»: текст, адрес и
      *        доступное имя (по умолчанию «<текст>: <заголовок>»)
      * @param string $badge Текст бейджа после текста (например, срок)
+     * @param bool $line Линия рядом со знаком (Figma line)
      * @param bool $card Блок с фоном и отступами
      * @param int $headingLevel Уровень заголовка (h3 по умолчанию, по месту h4)
      * @param string $className Дополнительные CSS-классы
      * @param array<string,mixed> $attributes Дополнительные HTML-атрибуты li
      */
-    public static function drawBenefit(
+    public static function drawItemBenefit(
         string        $title = '',
         string        $text = '',
         string        $icon = '',
         string        $number = '',
         ?array        $link = null,
         string        $badge = '',
-        BenefitSize   $size = BenefitSize::Medium,
-        BenefitType   $type = BenefitType::Icon,
-        BenefitLayout $layout = BenefitLayout::Vertical,
-        BenefitAlign  $align = BenefitAlign::Left,
+        bool          $line = true,
+        ItemBenefitSize   $size = ItemBenefitSize::Medium,
+        ItemBenefitType   $type = ItemBenefitType::Icon,
+        ItemBenefitLayout $layout = ItemBenefitLayout::Vertical,
+        ItemBenefitAlign  $align = ItemBenefitAlign::Left,
         bool          $card = false,
-        BenefitTheme  $theme = BenefitTheme::Light,
+        ItemBenefitTheme  $theme = ItemBenefitTheme::Light,
         int           $headingLevel = 3,
         string        $className = '',
         array         $attributes = []
     ): string {
         // Центрирование есть только у вертикального расположения
-        if ($layout === BenefitLayout::Horizontal) {
-            $align = BenefitAlign::Left;
+        if ($layout === ItemBenefitLayout::Horizontal) {
+            $align = ItemBenefitAlign::Left;
         }
         if ($link !== null && (($link['text'] ?? '') === '' || ($link['href'] ?? '') === '')) {
             $link = null;
@@ -58,6 +60,7 @@ class Layout extends LayoutBase
                 'number',
                 'link',
                 'badge',
+                'line',
                 'card',
                 'className',
                 'attributes'
@@ -76,21 +79,21 @@ class Layout extends LayoutBase
      * Список преимуществ: ul с элементами li
      *
      * @param array<int,array{title?:string,text?:string,icon?:string,number?:string,link?:array,badge?:string}> $items
-     *        Данные преимуществ; ключи совпадают с параметрами drawBenefit, пустые (без заголовка и текста) пропускаются
+     *        Данные преимуществ; ключи совпадают с параметрами drawItemBenefit, пустые (без заголовка и текста) пропускаются
      * @param string $className Дополнительные CSS-классы списка
      * @param string $itemClassName Дополнительные CSS-классы каждого li
      * @param array<string,mixed> $attributes Дополнительные HTML-атрибуты ul
      */
-    public static function drawBenefitList(
+    public static function drawItemBenefitList(
         array         $items = [],
         string        $className = '',
         string        $itemClassName = '',
-        BenefitSize   $size = BenefitSize::Medium,
-        BenefitType   $type = BenefitType::Icon,
-        BenefitLayout $layout = BenefitLayout::Vertical,
-        BenefitAlign  $align = BenefitAlign::Left,
+        ItemBenefitSize   $size = ItemBenefitSize::Medium,
+        ItemBenefitType   $type = ItemBenefitType::Icon,
+        ItemBenefitLayout $layout = ItemBenefitLayout::Vertical,
+        ItemBenefitAlign  $align = ItemBenefitAlign::Left,
         bool          $card = false,
-        BenefitTheme  $theme = BenefitTheme::Light,
+        ItemBenefitTheme  $theme = ItemBenefitTheme::Light,
         int           $headingLevel = 3,
         array         $attributes = []
     ): string {
@@ -99,13 +102,14 @@ class Layout extends LayoutBase
             if (!is_array($item) || (($item['title'] ?? '') === '' && ($item['text'] ?? '') === '')) {
                 continue;
             }
-            $html .= static::drawBenefit(
+            $html .= static::drawItemBenefit(
                 title: (string)($item['title'] ?? ''),
                 text: (string)($item['text'] ?? ''),
                 icon: (string)($item['icon'] ?? ''),
                 number: (string)($item['number'] ?? ''),
                 link: $item['link'] ?? null,
                 badge: (string)($item['badge'] ?? ''),
+                line: (bool)($item['line'] ?? true),
                 size: $size,
                 type: $type,
                 layout: $layout,

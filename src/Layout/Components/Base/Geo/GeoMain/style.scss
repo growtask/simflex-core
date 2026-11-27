@@ -1,0 +1,83 @@
+/* Содержимое выбора города GeoMain (Figma Base/GEO/main): вопрос h5, поле поиска (Inputs/main filled s), список
+ * GeoList, кнопки Buttons/main gray и secondary s через 12. Классы: .geo-main, __question, __city, __search, __actions;
+ * .geo-main-screen_mobile — вид mobile (кнопки внизу столбиком, список в потоке) */
+.geo-main {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    @include spacing(gap, 20px);
+
+    &__question {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+        color: var(--color-text-icon-gray-darker);
+        @include h5;
+        @include spacing(column-gap, 4px);
+    }
+
+    &__city {
+        color: var(--color-text-icon-color1-dark);
+    }
+
+    &__search {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        @include spacing(gap, 12px);
+    }
+
+    &__actions {
+        display: flex;
+        @include spacing(gap, 12px);
+
+        > * {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+    }
+
+    // desktop: список выпадает поверх кнопок
+    &:not(.geo-main-screen_mobile) .geo-list {
+        position: absolute;
+        z-index: z('dropdown');
+        top: 100%;
+        right: 0;
+        left: 0;
+        @include spacing(margin-top, 12px);
+    }
+
+    // mobile: кнопки внизу экрана столбиком, главная — последней; список — в потоке
+    &-screen_mobile {
+        flex: 1;
+        min-height: 100%;
+    }
+
+    &-screen_mobile &__actions {
+        flex-direction: column;
+        margin-top: auto;
+
+        > * {
+            flex: none;
+            width: 100%;
+        }
+    }
+
+    &-screen_mobile &__action_primary {
+        order: 2;
+    }
+
+    &-theme_dark &__question {
+        color: var(--color-text-icon-gray-white);
+    }
+
+    &-theme_dark &__city {
+        color: var(--color-text-icon-color1-light);
+    }
+}
+
+// части скрывает атрибут hidden; .geo-main — и когда содержимое перенесено в окно ModalMain (в body, вне .geo)
+.geo-main [hidden] {
+    display: none !important;
+}

@@ -1,11 +1,11 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Benefit;
+namespace Simflex\Core\Layout\Components\Base\Item\ItemBenefit;
 
 /**
  * Тема преимущества
  */
-enum BenefitTheme: string
+enum ItemBenefitTheme: string
 {
     case Light = 'light';
     case Dark = 'dark';

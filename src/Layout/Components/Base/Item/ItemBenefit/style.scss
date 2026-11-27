@@ -1,25 +1,45 @@
 /*
- * Преимущество (Figma: Base/benefit). Слои Figma и классы: benefit - .benefit, marker/число - .benefit__sign,
- * текстовый блок - .benefit__body, title - .benefit__title, text - .benefit__text, link - .benefit__link,
- * badge - .benefit__badge. Расстановка в сетке - css сайта.
+ * Преимущество benefit (Figma 9562:7052, 72 варианта). Слои Figma и классы: benefit — .benefit, head — .benefit__head
+ * (marker или number — .benefit__sign, line — .benefit__line), text — .benefit__body, title — .benefit__title,
+ * text — .benefit__text, link — .benefit__link, badge — .benefit__badge. Расстановка в сетке — css страницы.
+ * vertical: head (знак и линия через 12; у align=center линии с обеих сторон) над текстом через 20, справа отступ 20;
+ * horizontal: head столбцом (знак, под ним вертикальная линия до низа) слева от текста через 16.
+ * Линия 1 px text-icon/gray/medium. Размеры s/m/l: заголовок h6/h5/h4, текст t3/t2/t2, число h5/h4/h3
+ * (text-icon/color1/main, в тёмной теме color1/light). card: фон main/gray/lighter (тёмная — main/gray/darker),
+ * отступ 20, скругление ui/large.
  */
 .benefit {
     /*----------CORE STYLE-----------*/
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     box-sizing: border-box;
     min-width: 0;
     list-style: none;
     @include spacing(gap, 20px);
     @include spacing(padding-right, 20px);
 
+    &__head {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        @include spacing(gap, 12px);
+    }
+
     &__sign {
         flex-shrink: 0;
     }
 
+    &__line {
+        flex: 1 1 0;
+        min-width: 0;
+        height: 1px;
+        background: var(--color-text-icon-gray-medium);
+    }
+
     &__number {
-        color: var(--color-main-color1-main);
+        margin: 0;
+        color: var(--color-text-icon-color1-main);
     }
 
     &__body {
@@ -32,12 +52,12 @@
 
     &__title {
         margin: 0;
-        color: var(--color-main-gray-darker);
+        color: var(--color-text-icon-gray-darker);
     }
 
     &__text {
         margin: 0;
-        color: var(--color-main-gray-dark);
+        color: var(--color-text-icon-gray-dark);
     }
 
     /*----------SIZES-----------*/
@@ -84,17 +104,29 @@
     }
 
     /*----------LAYOUT-----------*/
-    /* Знак слева от текста, зазор 16 */
+    /* Знак слева от текста, под знаком вертикальная линия до низа блока, зазор 16 */
     &-layout_horizontal {
         flex-direction: row;
-        align-items: flex-start;
         @include spacing(gap, 16px);
+
+        .benefit__head {
+            flex-direction: column;
+            align-self: stretch;
+        }
+
+        .benefit__line {
+            width: 1px;
+            height: auto;
+        }
+
+        .benefit__body {
+            flex: 1 1 0;
+        }
     }
 
     /*----------ALIGN-----------*/
-    /* Центрирование: блок и текст по центру, отступа справа нет */
+    /* Центрирование (только vertical): знак между двумя линиями, текст по центру, отступа справа нет */
     &-align_center {
-        align-items: center;
         text-align: center;
         padding-right: 0;
 
@@ -113,15 +145,15 @@
     /*----------THEME-----------*/
     &-theme_dark {
         .benefit__title {
-            color: var(--color-main-gray-white);
+            color: var(--color-text-icon-gray-white);
         }
 
         .benefit__text {
-            color: var(--color-main-gray-lighter);
+            color: var(--color-text-icon-gray-lighter);
         }
 
         .benefit__number {
-            color: var(--color-main-color1-light);
+            color: var(--color-text-icon-color1-light);
         }
 
         &.benefit-card {

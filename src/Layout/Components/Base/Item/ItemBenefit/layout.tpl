@@ -33,18 +33,26 @@ $hasSign = $data['type'] === 'number' ? $data['number'] !== '' : $data['icon'] !
 ?>
 
 <li class="<?= $esc(implode(' ', array_filter($classes))) ?>" <?= buildAttrs($data['attributes'] ?? []) ?>>
-    <?php if ($hasSign): ?>
-        <?php if ($data['type'] === 'number'): ?>
-            <span class="benefit__sign benefit__number"><?= $esc($data['number']) ?></span>
-        <?php else: ?>
-            <?= Marker::drawMarker(
-                className: 'benefit__sign',
-                icon: $data['icon'],
-                size: $markerSize,
-                theme: $data['theme'] === 'dark' ? MarkerTheme::Dark : MarkerTheme::Light,
-                attributes: ['aria-hidden' => 'true']
-            ) ?>
-        <?php endif; ?>
+    <?php $line = $data['line'] ?? true; ?>
+    <?php if ($hasSign || $line): ?>
+        <div class="benefit__head" aria-hidden="true">
+            <?php if ($line && $data['align'] === 'center'): ?>
+                <span class="benefit__line"></span>
+            <?php endif; ?>
+            <?php if ($hasSign && $data['type'] === 'number'): ?>
+                <span class="benefit__sign benefit__number"><?= $esc($data['number']) ?></span>
+            <?php elseif ($hasSign): ?>
+                <?= Marker::drawMarker(
+                    className: 'benefit__sign',
+                    icon: $data['icon'],
+                    size: $markerSize,
+                    theme: $data['theme'] === 'dark' ? MarkerTheme::Dark : MarkerTheme::Light
+                ) ?>
+            <?php endif; ?>
+            <?php if ($line): ?>
+                <span class="benefit__line"></span>
+            <?php endif; ?>
+        </div>
     <?php endif; ?>
 
     <div class="benefit__body">
@@ -58,8 +66,9 @@ $hasSign = $data['type'] === 'number' ? $data['number'] !== '' : $data['icon'] !
             <?= Badge::drawBadge(
                 className: 'benefit__badge',
                 text: $esc($data['badge']),
-                style: BadgeStyle::PrimaryLight,
-                size: $data['size'] === 's' ? BadgeSize::ExtraSmall : BadgeSize::Small
+                style: BadgeStyle::Secondary,
+                size: BadgeSize::Medium,
+                icon: 'clock'
             ) ?>
         <?php endif; ?>
         <?php if ($data['link']): ?>

@@ -6,6 +6,25 @@
 
 ## [4.0.0] — не выпущена
 
+- Base/Slider (Figma `slider`): `SliderMain` (`drawSliderMain()` — секция с заголовком, «Показать все», стрелками или
+  индикатором шагов и рядом карточек; листает swiper 11.1.3 из `assetsGlobal/swiper`, компонент подключает его сам),
+  `SliderStepItem` (`drawSliderStepItem()` — одна полоска индикатора).
+- Base/Geo (Figma `GEO`): `GeoModal` (`drawGeoModal()` — кнопка города и окно «Ваш город»: на десктопе под кнопкой, на
+  телефоне ModalMain; поиск, выбор в `localStorage`, событие `sf-geo-change`), `GeoMain` (`drawGeoMain()` — содержимое,
+  состояния `GeoMainState` по Figma), `GeoList` (`drawGeoList()`). Логика и вёрстка — из grotesk-ui-kit.
+- Base/Player (Figma `Player`): `PlayerAudio` (`drawPlayerAudio()` — аудиоплеер с волной-перемоткой, клавиатурой и
+  временем), `PlayerWave` (`drawPlayerWave()` — волна, стили `primary`, `accent`). Из grotesk-ui-kit.
+- `ItemBenefit`: параметр `line` (линия рядом со знаком, Figma `line`), бейдж со значком часов, стили из
+  grotesk-ui-kit; `drawItemBenefitList()` берёт `line` из элемента.
+- **Несовместимое изменение:** `Common/Benefit` перенесён в `Base/Item/ItemBenefit`: `BenefitAlign`, `BenefitLayout`,
+  `BenefitSize`, `BenefitTheme`, `BenefitType` → `ItemBenefitAlign`, `ItemBenefitLayout`, `ItemBenefitSize`,
+  `ItemBenefitTheme`, `ItemBenefitType`; `drawBenefit()` → `drawItemBenefit()`, `drawBenefitList()` →
+  `drawItemBenefitList()`. Переход: замените `Components\Common\Benefit` на `Components\Base\Item\ItemBenefit` и имена.
+- **Несовместимое изменение:** `UI/Other/StepIndicator` перенесён в `Base/Slider/SliderStep` (в Figma это `slider/step`):
+  `StepIndicatorSize`, `StepIndicatorTheme` → `SliderStepSize`, `SliderStepTheme`; `drawStepIndicator()` →
+  `drawSliderStep()`. Переход: замените `Components\UI\Other\StepIndicator` на `Components\Base\Slider\SliderStep` и
+  имена; CSS-классы `step-indicator*` не менялись.
+
 - Движение и эффекты дизайн-системы: токены `--motion-fast/base/slow`, `--ease-out/in-out/in/spring`
   (`assetsGlobal/styles/abstract/_motion.scss`, при `prefers-reduced-motion` длительности 1 мс), эффекты Figma
   `--shadow-neon-*`, `--shadow-star-l`, `--blur-glass(-s)`, `--blur-star-l`, цвета Figma `--color-main-bg-glass*`,

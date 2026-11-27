@@ -1,8 +1,8 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\UI\Other\StepIndicator;
+namespace Simflex\Core\Layout\Components\Base\Slider\SliderStep;
 
-enum StepIndicatorTheme: string
+enum SliderStepTheme: string
 {
     case Light = 'light';
     case Dark = 'dark';

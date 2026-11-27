@@ -1,0 +1,155 @@
+/* Аудиоплеер PlayerAudio (Figma Base/Player/audio): карточка ui/large с отступом 12 (справа 20) и зазором 20: обложка
+ * ui/xsmall (120 / 128 / 140; на телефоне 64 / 72 / 80), справа круглая кнопка Buttons/main gray (40 / 48 / 56, иконка по
+ * центру; светлая — чёрная, тёмная — белая) и волна PlayerWave, под ней время t5; кнопка и волна выровнены по верху.
+ * Линия 2 px (gray/light, в тёмной — gray/darker), название и исполнитель (s: t3 и t4, m и l: t2 и t3). Тёмная карточка —
+ * gray/dark. Классы-связи с Figma: .player (audio), __cover, __body, __controls, __play, __track, __time, __line,
+ * __file, __name, __artist */
+.player {
+    --player-bg: var(--color-main-gray-lighter);
+    --player-name: var(--color-text-icon-gray-darker);
+    --player-artist: var(--color-text-icon-gray-dark);
+    --player-time: var(--color-text-icon-gray-medium);
+    --player-line: var(--color-main-gray-light);
+
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--player-bg);
+    border-radius: var(--radius-ui-large);
+    @include spacing(padding, 12px);
+    @include spacing(padding-right, 20px, 20px, 20px, 12px);
+    @include spacing(gap, 20px, 20px, 20px, 12px);
+
+    &__audio {
+        display: none;
+    }
+
+    // .player .player__cover — важнее размеров заглушки .no-image (стили UI идут в сборке позже)
+    & &__cover {
+        flex-shrink: 0;
+        overflow: hidden;
+        object-fit: cover;
+        border-radius: var(--radius-ui-xsmall);
+        @include spacing(width, 128px, 128px, 128px, 72px);
+        @include spacing(height, 128px, 128px, 128px, 72px);
+        align-self: flex-start;
+    }
+
+    &__body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+        @include spacing(gap, 8px);
+    }
+
+    &__controls {
+        display: flex;
+        align-items: flex-start;
+        @include spacing(gap, 12px);
+    }
+
+    &__play {
+        flex-shrink: 0;
+        align-self: flex-start;
+    }
+
+    &__track {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+        @include spacing(gap, 4px);
+    }
+
+    &__time {
+        display: flex;
+        justify-content: space-between;
+        color: var(--player-time);
+        font-variant-numeric: tabular-nums;
+        @include t5;
+    }
+
+    &__line {
+        flex-shrink: 0;
+        width: 100%;
+        background: var(--player-line);
+        @include spacing(height, 2px);
+    }
+
+    &__file {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    &__name {
+        color: var(--player-name);
+        @include truncate();
+        @include t2;
+    }
+
+    &__artist {
+        color: var(--player-artist);
+        @include truncate();
+        @include t3;
+    }
+
+    // громкость: кнопка звука и короткая полоса
+    &__volume {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        @include spacing(gap, 4px);
+    }
+
+    &__volume-range {
+        margin: 0;
+        cursor: pointer;
+        accent-color: var(--player-control, var(--color-main-gray-black));
+        @include spacing(width, 80px);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+            border-radius: var(--radius-ui-xsmall);
+        }
+
+        @include Mobile {
+            display: none;
+        }
+    }
+
+    &-size_s {
+        .player__cover {
+            @include spacing(width, 120px, 120px, 120px, 64px);
+            @include spacing(height, 120px, 120px, 120px, 64px);
+        }
+
+        .player__name {
+            @include t3;
+        }
+
+        .player__artist {
+            @include t4;
+        }
+    }
+
+    &-size_l {
+        .player__cover {
+            @include spacing(width, 140px, 140px, 140px, 80px);
+            @include spacing(height, 140px, 140px, 140px, 80px);
+        }
+    }
+
+    // тёмная тема: карточка main/gray/dark, линия main/gray/darker (как в Figma)
+    &-theme_dark {
+        --player-control: var(--color-main-gray-white);
+        --player-bg: var(--color-main-gray-dark);
+        --player-name: var(--color-text-icon-gray-white);
+        --player-artist: var(--color-text-icon-gray-lighter);
+        --player-line: var(--color-main-gray-darker);
+    }
+}
+

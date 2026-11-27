@@ -1,11 +1,11 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Benefit;
+namespace Simflex\Core\Layout\Components\Base\Item\ItemBenefit;
 
 /**
  * Выравнивание вертикального преимущества (у horizontal всегда по левому краю)
  */
-enum BenefitAlign: string
+enum ItemBenefitAlign: string
 {
     case Left = 'left';
     case Center = 'center';

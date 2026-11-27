@@ -1,11 +1,11 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\UI\Other\StepIndicator;
+namespace Simflex\Core\Layout\Components\Base\Slider\SliderStep;
 
 use Simflex\Core\Layout\LayoutBase;
 
 /**
- * Индикатор прокрутки слайдера: ряд полос, активная шире остальных (Figma: Base/slider/step, step-icon)
+ * Индикатор прокрутки слайдера (Figma Base/slider/step): ряд полос, активная шире остальных. Одна полоска — SliderStepItem
  */
 class Layout extends LayoutBase
 {
@@ -16,13 +16,13 @@ class Layout extends LayoutBase
      * @param string $label Доступное имя индикатора
      * @param array<string,mixed> $attributes Дополнительные HTML-атрибуты корня
      */
-    public static function drawStepIndicator(
+    public static function drawSliderStep(
         string             $className = '',
         int                $count = 10,
         int                $active = 0,
         string             $label = '',
-        StepIndicatorSize  $size = StepIndicatorSize::Medium,
-        StepIndicatorTheme $theme = StepIndicatorTheme::Light,
+        SliderStepSize  $size = SliderStepSize::Medium,
+        SliderStepTheme $theme = SliderStepTheme::Light,
         array              $attributes = []
     ): string {
         $count = max(0, $count);

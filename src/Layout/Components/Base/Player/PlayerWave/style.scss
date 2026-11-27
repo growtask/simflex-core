@@ -1,0 +1,81 @@
+/* Волна трека PlayerWave (Figma Base/Player/wave): до 85 столбиков через 2 px, растянуты на ширину, скруглены
+ * (ui/xsmall), не ниже 4 px, высота 40 / 48 / 56; проигранная часть — main, остальное — lighter (primary) или light
+ * (accent). Проигранная часть — слой __played поверх, обрезанный clip-path по --wave-progress (плавно; столбики слоя —
+ * __bar_played). Классы-связи с Figma: .player-wave (wave), __bar */
+.player-wave {
+    --wave-played: var(--color-main-color1-main);
+    --wave-rest: var(--color-main-color1-lighter);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    gap: 2px;
+    touch-action: none;
+    @include spacing(height, 48px);
+
+    &__bar {
+        flex: 1 1 0;
+        min-width: 2px;
+        min-height: 4px;
+        background: var(--wave-rest);
+        border-radius: var(--radius-ui-xsmall);
+        @include transition((background-color), var(--motion-fast));
+
+        &_played {
+            background: var(--wave-played);
+        }
+    }
+
+    // проигранная часть: тот же ряд поверх, видна доля --wave-progress слева
+    &__played {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        gap: inherit;
+        pointer-events: none;
+        clip-path: inset(0 calc((1 - var(--wave-progress, 0)) * 100%) 0 0);
+    }
+
+    &_seekable {
+        cursor: pointer;
+        border-radius: var(--radius-ui-xsmall);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-main-color1-main);
+            outline-offset: 2px;
+        }
+    }
+
+    &-size_s {
+        @include spacing(height, 40px);
+    }
+
+    &-size_l {
+        @include spacing(height, 56px);
+    }
+
+    &-accent {
+        --wave-played: var(--color-main-color2-main);
+        --wave-rest: var(--color-main-color2-light);
+    }
+
+    &-theme_dark {
+        --wave-played: var(--color-main-color1-light);
+        --wave-rest: var(--color-main-color1-darker);
+
+        &.player-wave-accent {
+            --wave-played: var(--color-main-color2-light);
+            --wave-rest: var(--color-main-color2-darker);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__bar {
+            transition: none;
+        }
+    }
+}

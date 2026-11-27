@@ -1,0 +1,47 @@
+/* Список городов GeoList (Figma Base/GEO/list): ui/large, отступ 12, пункты Tabs/main filled s через 8,
+ * shadows/gray/m; mobile (.geo-list-screen_mobile) — в потоке, без подложки */
+.geo-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    box-sizing: border-box;
+    max-height: 296px;
+    margin: 0;
+    padding: 12px;
+    list-style: none;
+    background: var(--color-main-gray-white);
+    border-radius: var(--radius-ui-large);
+    box-shadow: var(--shadow-gray-m);
+    gap: 8px;
+    @include scrollbar(overlay, s);
+
+    // .geo-list .geo-list__item — важнее ширины .tab (стили UI идут в сборке позже)
+    & &__item {
+        width: 100%;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    &__empty {
+        margin: 0;
+        padding: 4px;
+        color: var(--color-text-icon-gray-medium);
+        @include t2;
+    }
+
+    &-theme_dark {
+        background: var(--color-main-gray-darker);
+        box-shadow: inset 0 0 0 2px var(--color-main-gray-dark), var(--shadow-gray-m);
+        @include scrollbar(overlay, s, dark);
+    }
+
+    // mobile: список в потоке, без подложки
+    &-screen_mobile {
+        overflow: visible;
+        max-height: none;
+        padding: 0;
+        background: none;
+        box-shadow: none;
+    }
+}
+
