@@ -92,6 +92,12 @@ abstract class ConfigBase
     public array $fileUsageIgnoreTables = ['log', 'cron_log', 'migration', 'user_auth'];
 
     /**
+     * @var string[] Системные папки каталога загрузок (от public/uf): файловый менеджер не даёт их удалить,
+     *      переименовать и переместить. В них загружают файлы поля-таблицы и визуальный редактор
+     */
+    public array $fileManagerProtectedDirs = ['/images', '/files', '/video', '/audio'];
+
+    /**
      * @var string Тема по умолчанию
      */
     public string $theme = 'default';

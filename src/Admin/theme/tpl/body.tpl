@@ -44,6 +44,7 @@ include 'modals/confirm.tpl'; ?>
         'fileManagerApi' => \Simflex\Core\Admin\Page::url('fm'),
         'fileManagerRoot' => '/uf',
         'fileManagerAssets' => $fmAssets,
+        'fileManagerProtectedDirs' => Container::getConfig()->fileManagerProtectedDirs,
         'theme' => $page->getTheme(),
     ]
 ) ?>

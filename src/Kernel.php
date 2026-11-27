@@ -159,17 +159,21 @@ class Kernel
      */
     public function executeFileManager(): void
     {
-        // изменяющие действия - только с CSRF-токеном сессии (meta csrf-token админки, заголовок X-CSRF-Token)
+        $request = Container::getRequest() ?? new \Simflex\Core\Http\Request();
+        $config = Container::getConfig();
+        // изменяющие действия - только с CSRF-токеном сессии (meta csrf-token админки, заголовок X-CSRF-Token);
+        // менеджер - отдельный пакет: запрос ему передаётся массивами
         $mgr = new \Simflex\FileManager\Manager(
             Container::getPaths()->getPublic('uf'),
             $this->canUseFileManager(...),
-            fn(): bool => \Simflex\Core\Http\Csrf::isValid(Container::getRequest() ?? new \Simflex\Core\Http\Request()),
+            fn(): bool => \Simflex\Core\Http\Csrf::isValid($request),
+            new \Simflex\FileManager\Request($request->get(), $request->post(), $request->file(), $request->server()),
         );
-        // где стоит ссылка на файл: предупреждение перед удалением и переименованием (пакет с usage)
-        if (method_exists($mgr, 'setUsageFinder')) {
-            $usage = new \Simflex\Core\System\FileUsage(Container::getConfig()->fileUsageIgnoreTables);
-            $mgr->setUsageFinder($usage->find(...), '/uf');
-        }
+        // где стоит ссылка на файл: предупреждение перед удалением, переименованием и перемещением
+        $usage = new \Simflex\Core\System\FileUsage($config->fileUsageIgnoreTables);
+        $mgr->setUsageFinder($usage->find(...), '/uf')
+            ->setProtectedDirs($config->fileManagerProtectedDirs)
+            ->setErrorLogger(fn(string $message) => \Simflex\Core\Logger\Log::error($message));
 
         $mgr->handleRequest();
     }
