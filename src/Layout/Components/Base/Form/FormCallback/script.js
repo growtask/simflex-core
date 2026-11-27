@@ -135,7 +135,9 @@
                 }
             }
             const email = value('email');
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            if (email === '' && this.field('email').required) {
+                errors.email = MESSAGES.required;
+            } else if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 errors.email = MESSAGES.email;
             }
             const consent = this.field('consent');

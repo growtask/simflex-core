@@ -58,6 +58,25 @@
         }
     }
 
+    /* inline (витрина): окно в потоке страницы, уже открыто, без подложки; справа место под кнопку закрытия */
+    &_inline {
+        position: relative;
+        inset: auto;
+        z-index: auto;
+        justify-content: flex-start;
+        padding: 0;
+        @include spacing(padding-right, 60px);
+
+        .modal__overlay {
+            display: none;
+        }
+
+        .modal__dialog {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
     /* Кнопка закрытия: снаружи карточки справа сверху (отступ 12) */
     &__close {
         position: absolute;

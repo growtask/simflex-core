@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Form\Result;
+namespace Simflex\Core\Layout\Components\Base\Form\FormResult;
 
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
@@ -27,22 +27,22 @@ class Layout extends LayoutBase
      * @param array<string,mixed> $attributes HTML-атрибуты корня
      * @param array<string,mixed> $buttonAttributes HTML-атрибуты кнопки (например, data-callback-action)
      */
-    public static function drawResult(
+    public static function drawFormResult(
         string $title = '',
         string $text = '',
         string $buttonText = 'OK',
         bool $marker = true,
-        ResultStyle $style = ResultStyle::Success,
-        ResultType $type = ResultType::Horizontal,
-        ResultTheme $theme = ResultTheme::Light,
+        FormResultStyle $style = FormResultStyle::Success,
+        FormResultType $type = FormResultType::Horizontal,
+        FormResultTheme $theme = FormResultTheme::Light,
         string $className = '',
         array $attributes = [],
         array $buttonAttributes = []
     ): string {
-        $dark = $theme === ResultTheme::Dark;
+        $dark = $theme === FormResultTheme::Dark;
         $markerHtml = $marker ? Marker::drawMarker(
             size: MarkerSize::Medium,
-            style: $style === ResultStyle::Success ? MarkerStyle::Success : MarkerStyle::Error,
+            style: $style === FormResultStyle::Success ? MarkerStyle::Success : MarkerStyle::Error,
             theme: $dark ? MarkerTheme::Dark : MarkerTheme::Light,
         ) : '';
         $buttonHtml = $buttonText !== '' ? Button::drawButtonMain(

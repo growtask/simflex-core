@@ -1,0 +1,52 @@
+/*
+ * Подписка на рассылку Form/mailing: поле почты и кнопка в одну строку (на телефоне друг под другом),
+ * капча и согласие под ними. Остальное — стили FormCallback.
+ */
+.mailing {
+    .callback__form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        @include spacing(gap, 12px);
+    }
+
+    .callback__trap,
+    .callback__captcha,
+    .callback__consent-wrap {
+        grid-column: 1 / -1;
+    }
+
+    .callback__fields {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .callback__send {
+        display: contents;
+    }
+
+    .callback__submit {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .callback__consent-wrap {
+        grid-row: 3;
+    }
+
+    @include Mobile {
+        .callback__form {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .callback__fields,
+        .callback__submit {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .callback__submit {
+            width: 100%;
+        }
+    }
+}

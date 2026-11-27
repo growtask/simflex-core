@@ -5,6 +5,7 @@ $classes = [
     'modal',
     "modal-size_{$data['size']}",
     "modal-theme_{$data['theme']}",
+    $data['inline'] ? 'modal_inline' : '',
     $data['className'] ?? '',
 ];
 $id = $data['id'];
@@ -31,7 +32,7 @@ if ($data['closeOnOverlay']) {
 }
 ?>
 
-<div id="<?= htmlspecialchars($id) ?>" class="<?= htmlspecialchars(trim(implode(' ', array_filter($classes)))) ?>" hidden <?= buildAttrs($rootAttrs) ?>>
+<div id="<?= htmlspecialchars($id) ?>" class="<?= htmlspecialchars(trim(implode(' ', array_filter($classes)))) ?>"<?= $data['inline'] ? '' : ' hidden' ?> <?= buildAttrs($rootAttrs) ?>>
     <div class="modal__overlay" data-modal-overlay></div>
     <div class="modal__dialog" <?= buildAttrs($dialogAttrs) ?>>
         <?= $data['closeButton'] ?>

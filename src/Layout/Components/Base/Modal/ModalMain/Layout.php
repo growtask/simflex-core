@@ -1,6 +1,6 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Modal;
+namespace Simflex\Core\Layout\Components\Base\Modal\ModalMain;
 
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
@@ -32,8 +32,9 @@ class Layout extends LayoutBase
      * @param array<string,mixed> $attributes HTML-атрибуты корня
      * @param bool $alert Окно требует ответа (подтверждение удаления и т. п.): role="alertdialog"
      * @param string $headAction HTML действия в шапке справа от заголовка (ссылка «Сбросить» и т. п.)
+     * @param bool $inline Окно в потоке страницы, открытое, без подложки (витрина); обычно окно скрыто и открывается скриптом
      */
-    public static function drawModal(
+    public static function drawModalMain(
         string $id,
         string $title = '',
         string $text = '',
@@ -41,18 +42,19 @@ class Layout extends LayoutBase
         string $footer = '',
         string $closeLabel = 'Закрыть',
         bool $closeOnOverlay = true,
-        ModalSize $size = ModalSize::ExtraSmall,
-        ModalTheme $theme = ModalTheme::Light,
+        ModalMainSize $size = ModalMainSize::ExtraSmall,
+        ModalMainTheme $theme = ModalMainTheme::Light,
         string $className = '',
         array $attributes = [],
         bool $alert = false,
         string $headAction = '',
+        bool $inline = false,
     ): string {
         $closeButton = Button::drawButtonMain(
             className: 'modal__close',
             style: ButtonMainStyle::Gray,
             size: ButtonMainSize::Medium,
-            theme: $theme === ModalTheme::Dark ? ButtonMainTheme::Dark : ButtonMainTheme::Light,
+            theme: $theme === ModalMainTheme::Dark ? ButtonMainTheme::Dark : ButtonMainTheme::Light,
             iconLeft: 'close',
             attributes: ['type' => 'button', 'aria-label' => $closeLabel, 'data-modal-close' => ''],
         );
@@ -69,7 +71,8 @@ class Layout extends LayoutBase
                 'attributes',
                 'closeButton',
                 'alert',
-                'headAction'
+                'headAction',
+                'inline'
             ) + [
                 'size' => $size->value,
                 'theme' => $theme->value,

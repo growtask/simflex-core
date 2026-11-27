@@ -6,8 +6,8 @@
  * @var \Simflex\Core\Admin\Page $page
  */
 
-use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
-use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\Layout as Modal;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\ModalMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
@@ -15,7 +15,7 @@ use Simflex\Core\Layout\Components\UI\Button\ButtonMain\Layout as Button;
 
 $buttonTheme = ButtonMainTheme::from($page->getTheme());
 ?>
-<?= Modal::drawModal(
+<?= Modal::drawModalMain(
     id: 'sf-modal-delete',
     title: 'Удалить запись?',
     text: 'Действие нельзя отменить.',
@@ -29,6 +29,6 @@ $buttonTheme = ButtonMainTheme::from($page->getTheme());
             attributes: ['data-modal-close' => ''],
         )
         . '</div>',
-    theme: ModalTheme::from($page->getTheme()),
+    theme: ModalMainTheme::from($page->getTheme()),
     alert: true,
 ) ?>

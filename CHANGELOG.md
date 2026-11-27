@@ -26,6 +26,17 @@
   Компонент `Base/Seo` (`drawSeo()`, `SeoState`, `SeoTheme`): SEO-текст в 1–3 колонки, «Читать далее», облако запросов.
   Новые `Base/Nav/NavMenu` и `Base/Nav/NavMenuList` (`drawNavMenu()`, `drawNavMenuList()`). `NavPagination` получил тип
   `More` (кнопка «Показать ещё», параметры `caption`, `moreText`). У компонентов Nav появились `demo.tpl` и описания Figma.
+- Компоненты `Base/Form` и `Base/Modal`: новый `FormMailing` (`drawFormMailing()`, подписка на рассылку на основе FormCallback);
+  `FormCallback` получил параметр `emailRequired` и не требует запрос при выводе (поле `page` пустое); `ModalMain` получил
+  параметр `inline` (окно в потоке страницы для витрины). У компонентов есть `demo.tpl` и описания Figma.
+- **Несовместимое изменение:** `Common/Form/Callback`, `Common/Form/Result` и `Common/Modal` перенесены в
+  `Base/Form/FormCallback`, `Base/Form/FormResult` и `Base/Modal/ModalMain`: `CallbackLayout`, `CallbackState`,
+  `CallbackTheme` → `FormCallbackLayout`, `FormCallbackState`, `FormCallbackTheme`; `ResultStyle`, `ResultType`,
+  `ResultTheme` → `FormResultStyle`, `FormResultType`, `FormResultTheme`; `ModalSize`, `ModalTheme` → `ModalMainSize`,
+  `ModalMainTheme`; `drawCallback()` → `drawFormCallback()`, `drawResult()` → `drawFormResult()`, `drawModal()` →
+  `drawModalMain()`. Переход: замените `Components\Common\Form\Callback`, `Components\Common\Form\Result`,
+  `Components\Common\Modal` на `Components\Base\Form\FormCallback`, `Components\Base\Form\FormResult`,
+  `Components\Base\Modal\ModalMain` и перечисленные имена; css-классы не менялись.
 - **Несовместимое изменение:** `Common/Breadcrumbs` и `Common/Pagination` перенесены в `Base/Nav/NavBreadcrumbs` и
   `Base/Nav/NavPagination`; `BreadcrumbsTheme` → `NavBreadcrumbsTheme`, `drawBreadcrumbs()` → `drawNavBreadcrumbs()`,
   `PaginationTheme` → `NavPaginationTheme`, `PaginationType` → `NavPaginationType`, `drawPagination()` → `drawNavPagination()`.

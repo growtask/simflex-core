@@ -19,9 +19,9 @@
 
 use Simflex\Core\Admin\Page;
 use Simflex\Core\Admin\Plugins\Editor\Editor;
-use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
-use Simflex\Core\Layout\Components\Common\Modal\ModalSize;
-use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\Layout as Modal;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\ModalMainSize;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\ModalMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
@@ -222,7 +222,7 @@ foreach ($attributes as $key => $attribute) {
             ) ?>
         </div>
     </template>
-    <?= Modal::drawModal(
+    <?= Modal::drawModalMain(
         id: $modalId,
         title: strip_tags((string)$this->label),
         // не form: окно выводится внутри формы записи, вложенную форму браузер отбросит
@@ -240,8 +240,8 @@ foreach ($attributes as $key => $attribute) {
             theme: $buttonTheme,
             attributes: ['data-modal-close' => ''],
         ),
-        size: ModalSize::Medium,
-        theme: ModalTheme::from($theme),
+        size: ModalMainSize::Medium,
+        theme: ModalMainTheme::from($theme),
         className: 'edit-table__modal',
     ) ?>
 </div>

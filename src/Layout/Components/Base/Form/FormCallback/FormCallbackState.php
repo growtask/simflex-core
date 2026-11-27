@@ -1,11 +1,11 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Form\Callback;
+namespace Simflex\Core\Layout\Components\Base\Form\FormCallback;
 
 /**
  * Состояние формы (Figma: Form/callback, state)
  */
-enum CallbackState: string
+enum FormCallbackState: string
 {
     case Default = 'default';
     /** Поля с ошибками из $errors помечены */

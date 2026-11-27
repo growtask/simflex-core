@@ -18,9 +18,9 @@ use Simflex\Core\Admin\Fields\Field;
 use Simflex\Core\Admin\Fields\FieldString;
 use Simflex\Core\Admin\Fields\FieldText;
 use Simflex\Core\Admin\Page;
-use Simflex\Core\Layout\Components\Common\Modal\Layout as Modal;
-use Simflex\Core\Layout\Components\Common\Modal\ModalSize;
-use Simflex\Core\Layout\Components\Common\Modal\ModalTheme;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\Layout as Modal;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\ModalMainSize;
+use Simflex\Core\Layout\Components\Base\Modal\ModalMain\ModalMainTheme;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
@@ -382,7 +382,7 @@ echo Page::get()->drawPageHead(
         }
     }
     ?>
-    <?= Modal::drawModal(
+    <?= Modal::drawModalMain(
         id: 'sf-modal-filters',
         title: 'Фильтры',
         content: '<div class="modal-filters" data-sf-filters-modal>' . $modalFilters . '</div>',
@@ -393,8 +393,8 @@ echo Page::get()->drawPageHead(
             theme: $buttonTheme,
             attributes: ['data-sf-filters-apply' => ''],
         ),
-        size: ModalSize::Small,
-        theme: ModalTheme::from($theme),
+        size: ModalMainSize::Small,
+        theme: ModalMainTheme::from($theme),
         className: 'modal-filters-window',
         headAction: Link::drawLinkMain(
             className: 'modal-filters__reset',

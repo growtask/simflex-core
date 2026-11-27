@@ -1,12 +1,12 @@
 <?php
 
-namespace Simflex\Core\Layout\Components\Common\Form\Callback;
+namespace Simflex\Core\Layout\Components\Base\Form\FormCallback;
 
 use Simflex\Core\Extensions\Form\FormGuard;
-use Simflex\Core\Layout\Components\Common\Form\Result\Layout as Result;
-use Simflex\Core\Layout\Components\Common\Form\Result\ResultStyle;
-use Simflex\Core\Layout\Components\Common\Form\Result\ResultTheme;
-use Simflex\Core\Layout\Components\Common\Form\Result\ResultType;
+use Simflex\Core\Layout\Components\Base\Form\FormResult\Layout as Result;
+use Simflex\Core\Layout\Components\Base\Form\FormResult\FormResultStyle;
+use Simflex\Core\Layout\Components\Base\Form\FormResult\FormResultTheme;
+use Simflex\Core\Layout\Components\Base\Form\FormResult\FormResultType;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainSize;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainStyle;
 use Simflex\Core\Layout\Components\UI\Button\ButtonMain\ButtonMainTheme;
@@ -43,6 +43,7 @@ class Layout extends LayoutBase
      * @param bool $phone Поле «Телефон» (обязательное)
      * @param bool $email Поле «Почта»
      * @param bool $comment Поле «Комментарий»
+     * @param bool $emailRequired Почта обязательна (подписка на рассылку)
      * @param bool $consent Согласие на обработку данных (обязательно для отправки)
      * @param string $policyUrl Адрес политики обработки персональных данных
      * @param string $consentText HTML подписи согласия; пусто - стандартная со ссылкой на политику
@@ -56,7 +57,7 @@ class Layout extends LayoutBase
      * @param string $className Дополнительные CSS-классы корня
      * @param array<string,mixed> $attributes HTML-атрибуты корня
      */
-    public static function drawCallback(
+    public static function drawFormCallback(
         string $id = '',
         string $action = '/form/callback',
         string $form = 'callback',
@@ -64,6 +65,7 @@ class Layout extends LayoutBase
         bool $phone = true,
         bool $email = true,
         bool $comment = true,
+        bool $emailRequired = false,
         bool $consent = true,
         string $policyUrl = '/policy',
         string $consentText = '',
@@ -74,9 +76,9 @@ class Layout extends LayoutBase
         array $errors = [],
         array $texts = [],
         array $hidden = [],
-        CallbackLayout $layout = CallbackLayout::Grid,
-        CallbackState $state = CallbackState::Default,
-        CallbackTheme $theme = CallbackTheme::Light,
+        FormCallbackLayout $layout = FormCallbackLayout::Grid,
+        FormCallbackState $state = FormCallbackState::Default,
+        FormCallbackTheme $theme = FormCallbackTheme::Light,
         string $className = '',
         array $attributes = []
     ): string {
@@ -93,10 +95,10 @@ class Layout extends LayoutBase
             'errorButton' => 'Повторить',
         ];
 
-        $dark = $theme === CallbackTheme::Dark;
+        $dark = $theme === FormCallbackTheme::Dark;
         $inputTheme = $dark ? InputMainTheme::Dark : InputMainTheme::Light;
-        $hasErrors = $state === CallbackState::Error;
-        $sending = $state === CallbackState::Sending;
+        $hasErrors = $state === FormCallbackState::Error;
+        $sending = $state === FormCallbackState::Sending;
         $err = fn(string $field): string => $hasErrors ? (string)($errors[$field] ?? '') : '';
         $fieldAttrs = fn(string $field, array $attrs): array => $attrs
             + ($err($field) !== '' ? ['aria-invalid' => 'true'] : [])
@@ -137,13 +139,14 @@ class Layout extends LayoutBase
             $fields['email'] = TextInput::drawInputMain(
                 className: 'callback__field callback__field_email',
                 placeholder: 'name@example.com',
-                labelText: 'Почта',
+                labelText: $emailRequired ? 'Почта*' : 'Почта',
                 labelPos: InputMainLabelPos::Standard,
                 theme: $inputTheme,
                 icon: 'mail',
                 id: "$id-email",
                 attributes: $fieldAttrs('email', [
                     'name' => 'email', 'type' => 'email', 'autocomplete' => 'email', 'maxlength' => '100',
+                    ...($emailRequired ? ['required' => '', 'aria-required' => 'true'] : []),
                     'value' => (string)($values['email'] ?? ''),
                 ]),
             );
@@ -187,29 +190,31 @@ class Layout extends LayoutBase
             attributes: ['type' => 'submit'],
         );
 
-        $resultTheme = $dark ? ResultTheme::Dark : ResultTheme::Light;
-        $resultType = $layout === CallbackLayout::Stack ? ResultType::Vertical : ResultType::Horizontal;
-        $success = Result::drawResult(
+        $resultTheme = $dark ? FormResultTheme::Dark : FormResultTheme::Light;
+        $resultType = $layout === FormCallbackLayout::Stack ? FormResultType::Vertical : FormResultType::Horizontal;
+        $success = Result::drawFormResult(
             title: $texts['successTitle'],
             text: $texts['successText'],
             buttonText: $texts['successButton'],
-            style: ResultStyle::Success,
+            style: FormResultStyle::Success,
             type: $resultType,
             theme: $resultTheme,
             buttonAttributes: ['data-callback-action' => 'reset'],
         );
-        $failure = Result::drawResult(
+        $failure = Result::drawFormResult(
             title: $texts['errorTitle'],
             text: $texts['errorText'],
             buttonText: $texts['errorButton'],
-            style: ResultStyle::Error,
+            style: FormResultStyle::Error,
             type: $resultType,
             theme: $resultTheme,
             buttonAttributes: ['data-callback-action' => 'retry'],
         );
 
         // служебные поля: тип формы, страница, защита от ботов
-        $hiddenFields = ['form' => $form, 'page' => Container::getRequest()->getFullUrl()] + $hidden;
+        // адрес страницы: без запроса (вывод из консоли, витрина в тестах) поле пустое
+        $page = Container::isSet('request') ? Container::getRequest()->getFullUrl() : '';
+        $hiddenFields = ['form' => $form, 'page' => $page] + $hidden;
         $guardHtml = $guard ? [FormGuard::TOKEN_FIELD => (new FormGuard())->issueToken()] : [];
 
         return static::draw(
