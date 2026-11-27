@@ -58,6 +58,10 @@
             &:hover {
                 text-decoration: underline;
             }
+
+            &:focus-visible {
+                @include focus-ring;
+            }
         }
     }
 

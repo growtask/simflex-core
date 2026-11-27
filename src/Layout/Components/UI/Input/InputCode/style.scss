@@ -46,6 +46,11 @@
         &:focus::placeholder {
             color: transparent;
         }
+
+        // кольцо — только с клавиатуры (html.sf-kbd): у поля ввода :focus-visible срабатывает и по клику
+        :root.sf-kbd &:focus-visible {
+            @include focus-ring;
+        }
     }
 
     &__message {

@@ -199,3 +199,9 @@
         background-size: 200%;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .welcome-screen {
+        animation: none;
+    }
+}

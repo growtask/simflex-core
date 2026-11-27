@@ -170,7 +170,7 @@
         display: flex;
         flex-direction: column;
         pointer-events: auto;
-        box-shadow: 0 0 vw(10px) vw(2px) rgba(13, 13, 13, 0.1);
+        box-shadow: var(--shadow-gray-s);
         @include spacing(gap, 12px);
         @include spacing(min-width, 200px);
         @include spacing(max-width, 240px);
