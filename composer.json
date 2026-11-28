@@ -38,7 +38,8 @@
     "scssphp/scssphp": "^1.11",
     "tubalmartin/cssmin": "^4.1",
     "vlucas/phpdotenv": "^5.4",
-    "simflex/texted": "^1.0"
+    "simflex/texted": "^1.0",
+    "simflex/file-manager": "^1.0"
   },
   "require-dev": {},
   "suggest": {},
